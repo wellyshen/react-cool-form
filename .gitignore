@@ -1,0 +1,20 @@
+# dependencies
+node_modules
+examples/.pnp
+examples/.pnp.js
+
+# testing
+coverage
+
+# production
+dist
+examples/build
+
+# misc
+.DS_Store
+*.log
+.size-snapshot.json
+examples/.env.local
+examples/.env.development.local
+examples/.env.test.local
+examples/.env.production.local
