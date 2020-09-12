@@ -35,7 +35,8 @@
     ],
     "rules": {
       "no-undef": "off",
-      "jsx-a11y/label-has-associated-control": "off"
+      "jsx-a11y/label-has-associated-control": "off",
+      "@typescript-eslint/no-use-before-define": "off"
     }
   },
   "eslintIgnore": [
