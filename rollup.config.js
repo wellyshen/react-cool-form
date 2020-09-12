@@ -8,7 +8,7 @@ import copy from "rollup-plugin-copy";
 
 import pkg from "./package.json";
 
-const isDev = process.env.BUILD !== "prod";
+const isDev = process.env.BUILD === "dev";
 const extensions = [".js", ".ts", ".tsx", ".json"];
 
 export default {
