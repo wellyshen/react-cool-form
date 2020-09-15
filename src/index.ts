@@ -2,7 +2,7 @@ import { Reducer, useReducer, useCallback } from "react";
 
 import { Obj, State, Action, ActionType, Opts, Return } from "./types";
 
-const initialState = {};
+const initialState = { errors: {} };
 const reducer = <T>(state: State<T>, { type, payload }: Action): State<T> => {
   switch (type) {
     case ActionType.SET_VALUES:
@@ -12,7 +12,7 @@ const reducer = <T>(state: State<T>, { type, payload }: Action): State<T> => {
   }
 };
 
-export default <T extends Obj = Obj>({
+const useForm = <T extends Obj = Obj>({
   defaultValues = {},
 }: Opts = {}): Return => {
   const [state, dispatch] = useReducer<Reducer<State<T>, Action>>(reducer, {
@@ -25,9 +25,10 @@ export default <T extends Obj = Obj>({
   }, []);
 
   const getInputProps = useCallback(
-    (name) => ({
+    (name, { required }) => ({
       name,
       value: state.values[name],
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       onChange: useCallback((e) => setValue(name, e.target.value), [name]),
     }),
     [state.values, setValue]
@@ -35,3 +36,5 @@ export default <T extends Obj = Obj>({
 
   return { getInputProps };
 };
+
+export default useForm;
