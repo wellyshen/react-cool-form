@@ -1,38 +1,6 @@
-import {
-  Reducer,
-  ChangeEvent as RChangeEvent,
-  useReducer,
-  useCallback,
-} from "react";
+import { Reducer, useReducer, useCallback } from "react";
 
-interface Obj {
-  [key: string]: any;
-}
-
-interface State<T> {
-  values: T | Record<string, unknown>;
-}
-
-enum ActionType {
-  SET_VALUES = "SET_VALUES",
-}
-
-type Action = {
-  type: ActionType.SET_VALUES;
-  payload: Obj;
-};
-
-interface Opts {
-  defaultValues?: Obj;
-}
-
-type ChangeEvent = RChangeEvent<HTMLInputElement>;
-
-interface Return {
-  getInputProps: (
-    name: string
-  ) => { name: string; value: any; onChange: (event: ChangeEvent) => void };
-}
+import { Obj, State, Action, ActionType, Opts, Return } from "./types";
 
 const initialState = {};
 const reducer = <T>(state: State<T>, { type, payload }: Action): State<T> => {
@@ -60,7 +28,7 @@ export default <T extends Obj = Obj>({
     (name) => ({
       name,
       value: state.values[name],
-      onChange: (e: ChangeEvent): void => setValue(name, e.target.value),
+      onChange: useCallback((e) => setValue(name, e.target.value), [name]),
     }),
     [state.values, setValue]
   );
