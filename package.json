@@ -55,7 +55,18 @@
   "eslintConfig": {
     "extends": [
       "welly"
-    ]
+    ],
+    "rules": {
+      "no-console": [
+        "error",
+        {
+          "allow": [
+            "warn",
+            "error"
+          ]
+        }
+      ]
+    }
   },
   "eslintIgnore": [
     "dist"
