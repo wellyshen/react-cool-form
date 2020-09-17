@@ -8,43 +8,31 @@ export interface Obj {
 // Reducer
 export interface State<T> {
   values: T | Record<string, unknown>;
-  errors: Obj;
 }
 
 export enum ActionType {
   SET_VALUES = "SET_VALUES",
-  SET_ERRORS = "SET_ERRORS",
 }
 
-export type Action =
-  | {
-      type: ActionType.SET_VALUES;
-      payload: Obj;
-    }
-  | {
-      type: ActionType.SET_ERRORS;
-      payload: Obj;
-    };
+export type Action = {
+  type: ActionType.SET_VALUES;
+  payload: Obj;
+};
 
 // useForm
 export interface Opts {
   defaultValues?: Obj;
 }
 
-interface GetInputPropsOpts {
-  required?: boolean | string;
-}
-
-interface GetInputPropsReturn {
-  name: string;
-  value: any;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-}
-
 interface GetInputProps {
-  (name: string, options?: GetInputPropsOpts): GetInputPropsReturn;
+  (name: string): {
+    name: string;
+    value: any;
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  };
 }
 
-export interface Return {
-  getInputProps: GetInputProps;
+export interface Return<T> {
+  getFieldProps: GetInputProps;
+  formState: State<T>;
 }
