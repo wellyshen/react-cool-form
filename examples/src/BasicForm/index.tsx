@@ -4,15 +4,17 @@ import { jsx } from "@emotion/core";
 import React, { memo } from "react";
 import useForm from "react-cool-form";
 
-import { container, form } from "./styles";
+import { container, form, label as labelStyle } from "./styles";
 
-const TextField = memo(
+const Input = memo(
   ({ label, name, ...rest }: any): JSX.Element => {
-    console.log(`${name} is re-rendered`);
+    console.log(`LOG ==> ${name} is re-rendered`);
 
     return (
       <React.Fragment>
-        <label htmlFor={name}>{label}</label>
+        <label css={labelStyle} htmlFor={name}>
+          {label}
+        </label>
         <input id={name} {...rest} />
       </React.Fragment>
     );
@@ -20,29 +22,33 @@ const TextField = memo(
 );
 
 export default (): JSX.Element => {
+  const defaultValues = { txt1: "", txt2: "" };
   // @ts-ignore
-  const { getInputProps } = useForm({
-    defaultValues: { firstName: "", lastName: "" },
-  });
+  const { getInputProps, formState } = useForm({ defaultValues });
+
+  console.log("LOG ==> formState: ", formState);
 
   const handleSubmit = (e: any): void => {
     e.preventDefault();
-    console.log("LOG ===> ", e);
   };
 
   return (
     <div css={container}>
       <form css={form} onSubmit={handleSubmit} noValidate>
-        <TextField
-          label="First Name: "
-          type="text"
-          {...getInputProps("firstName")}
-        />
-        <TextField
-          label="Last Name: "
-          type="text"
-          {...getInputProps("lastName")}
-        />
+        <Input label="Text:" />
+        <Input label="Checkbox:" type="checkbox" />
+        <div>
+          <Input
+            label="Checkbox Group 1:"
+            type="checkbox"
+            value="checkboxGroup"
+          />
+          <Input
+            label="Checkbox Group 2:"
+            type="checkbox"
+            value="checkboxGroup"
+          />
+        </div>
         <button type="submit">Submit</button>
       </form>
     </div>

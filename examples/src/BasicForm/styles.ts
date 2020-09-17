@@ -14,3 +14,7 @@ export const form = css`
     margin-bottom: 1rem;
   }
 `;
+
+export const label = css`
+  margin-left: 0.5rem;
+`;
