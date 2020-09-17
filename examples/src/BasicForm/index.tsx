@@ -4,7 +4,7 @@ import { jsx } from "@emotion/core";
 import React, { memo } from "react";
 import useForm from "react-cool-form";
 
-import { container, form, label as labelStyle } from "./styles";
+import { container, form, label as labelStyle, wrapper } from "./styles";
 
 const Input = memo(
   ({ label, name, ...rest }: any): JSX.Element => {
@@ -37,7 +37,7 @@ export default (): JSX.Element => {
       <form css={form} onSubmit={handleSubmit} noValidate>
         <Input label="Text:" />
         <Input label="Checkbox:" type="checkbox" />
-        <div>
+        <div css={wrapper}>
           <Input
             label="Checkbox Group 1:"
             type="checkbox"

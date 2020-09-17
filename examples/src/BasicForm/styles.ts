@@ -16,5 +16,11 @@ export const form = css`
 `;
 
 export const label = css`
-  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+`;
+
+export const wrapper = css`
+  label:not(:first-of-type) {
+    margin-left: 1rem;
+  }
 `;
