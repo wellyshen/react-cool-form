@@ -24,7 +24,7 @@ const Input = memo(
 export default (): JSX.Element => {
   const defaultValues = { txt1: "", txt2: "" };
   // @ts-ignore
-  const { getInputProps, formState } = useForm({ defaultValues });
+  const { getFieldProps, formState } = useForm({ defaultValues });
 
   console.log("LOG ==> formState: ", formState);
 
