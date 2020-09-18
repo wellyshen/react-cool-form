@@ -44,16 +44,14 @@ const useForm = <T extends Values = Values>({
     const form = formRef.current;
     const handleChange: any = (e: ChangeEvent) => {
       if (!e.target.name && __DEV__) {
-        console.error('💡react-cool-form: Field is missing "name" attribute');
+        console.warn('💡react-cool-form: Field is missing "name" attribute');
         return;
       }
 
       // @ts-expect-error
       const { type, name, value, checked } = e.target;
 
-      // TODO: handle checkbox case
-
-      if (type === "checkbox" && !value) {
+      if (type === "checkbox" && !e.target.hasAttribute("value")) {
         setValues(name, checked);
       } else {
         setValues(name, value);
