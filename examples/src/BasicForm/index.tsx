@@ -7,15 +7,15 @@ import useForm from "react-cool-form";
 import { container, form, label as labelStyle, wrapper } from "./styles";
 
 const Input = memo(
-  ({ label, name, ...rest }: any): JSX.Element => {
+  ({ label, id, name, ...rest }: any): JSX.Element => {
     console.log(`LOG ==> ${name} is re-rendered`);
 
     return (
       <React.Fragment>
-        <label css={labelStyle} htmlFor={name}>
+        <label css={labelStyle} htmlFor={id || name}>
           {label}
         </label>
-        <input id={name} name={name} {...rest} />
+        <input id={id || name} name={name} {...rest} />
       </React.Fragment>
     );
   }
@@ -56,7 +56,7 @@ export default (): JSX.Element => {
   // @ts-expect-error
   const { formRef, values } = useForm<FormProps>({ defaultValues });
 
-  // console.log("LOG ==> Values: ", values);
+  console.log("LOG ==> Values: ", values);
 
   return (
     <div css={container}>
@@ -80,8 +80,20 @@ export default (): JSX.Element => {
           />
         </div>
         <div css={wrapper}>
-          <Input label="Radio 1:" type="radio" name="radio" value="val-1" />
-          <Input label="Radio 2:" type="radio" name="radio" value="val-2" />
+          <Input
+            id="radio-1"
+            label="Radio 1:"
+            type="radio"
+            name="radio"
+            value="val-1"
+          />
+          <Input
+            id="radio-2"
+            label="Radio 2:"
+            type="radio"
+            name="radio"
+            value="val-2"
+          />
         </div>
         <Select label="Select:" name="select">
           <option value="val-1">Value 1</option>
