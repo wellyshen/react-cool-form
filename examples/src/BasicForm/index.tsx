@@ -34,6 +34,8 @@ const Select = ({ children, label, name, ...rest }: any): JSX.Element => (
 
 interface FormProps {
   text: string;
+  password: string;
+  number: string;
   checkbox: boolean;
   checkboxGroup: string[];
   radio: string;
@@ -42,6 +44,8 @@ interface FormProps {
 
 const defaultValues = {
   text: "",
+  password: "",
+  number: "",
   checkbox: false,
   checkboxGroup: [],
   radio: "",
@@ -52,12 +56,14 @@ export default (): JSX.Element => {
   // @ts-expect-error
   const { formRef, values } = useForm<FormProps>({ defaultValues });
 
-  console.log("LOG ==> Values: ", values);
+  // console.log("LOG ==> Values: ", values);
 
   return (
     <div css={container}>
       <form css={form} noValidate ref={formRef}>
         <Input label="Text:" name="text" />
+        <Input label="Password:" type="password" name="password" />
+        <Input label="Number:" type="number" name="number" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />
         <div css={wrapper}>
           <Input
