@@ -1,13 +1,13 @@
-import { ChangeEvent } from "react";
+import { RefObject, ChangeEvent as RChangeEvent } from "react";
 
 // Common
-export interface Obj {
-  [key: string]: any;
-}
+type DefaultValues = Record<string, unknown>;
+
+export type ChangeEvent = RChangeEvent<HTMLInputElement | HTMLSelectElement>;
 
 // Reducer
 export interface State<T> {
-  values: T | Record<string, unknown>;
+  values: T | DefaultValues;
 }
 
 export enum ActionType {
@@ -16,23 +16,17 @@ export enum ActionType {
 
 export type Action = {
   type: ActionType.SET_VALUES;
-  payload: Obj;
+  payload: Record<string, any>;
 };
 
 // useForm
-export interface Opts {
-  defaultValues?: Obj;
-}
+export type Values = Record<string, any>;
 
-interface GetInputProps {
-  (name: string): {
-    name: string;
-    value: any;
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  };
+export interface Opts {
+  defaultValues?: DefaultValues;
 }
 
 export interface Return<T> {
-  getFieldProps: GetInputProps;
-  formState: State<T>;
+  formRef: RefObject<HTMLFormElement>;
+  values: T | DefaultValues;
 }

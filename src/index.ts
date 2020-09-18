@@ -1,6 +1,14 @@
-import { Reducer, useReducer, useCallback } from "react";
+import { Reducer, useRef, useReducer, useCallback, useEffect } from "react";
 
-import { Obj, State, Action, ActionType, Opts, Return } from "./types";
+import {
+  ChangeEvent,
+  State,
+  Action,
+  ActionType,
+  Values,
+  Opts,
+  Return,
+} from "./types";
 
 const initialState = {};
 const reducer = <T>(state: State<T>, { type, payload }: Action): State<T> => {
@@ -12,39 +20,46 @@ const reducer = <T>(state: State<T>, { type, payload }: Action): State<T> => {
   }
 };
 
-const useForm = <T extends Obj = Obj>({
+const useForm = <T extends Values = Values>({
   defaultValues = {},
 }: Opts = {}): Return<T> => {
+  const formRef = useRef<HTMLFormElement | null>(null);
   const [state, dispatch] = useReducer<Reducer<State<T>, Action>>(reducer, {
     ...initialState,
     values: defaultValues,
   });
 
   const setValues = useCallback(
-    (target, val) =>
+    (keyOrVal, val) =>
       dispatch({
         type: ActionType.SET_VALUES,
-        payload: typeof target === "string" ? { [target]: val } : target,
+        payload: typeof keyOrVal === "string" ? { [keyOrVal]: val } : keyOrVal,
       }),
     []
   );
 
-  const handleOnChange = useCallback(
-    (e, name) => setValues(name, e.target.value),
-    [setValues]
-  );
+  useEffect(() => {
+    if (!formRef.current) return () => null;
 
-  const getFieldProps = useCallback(
-    (name) => ({
-      name,
-      value: state.values[name],
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      onChange: useCallback((e) => handleOnChange(e, name), [name]),
-    }),
-    [state.values, handleOnChange]
-  );
+    const form = formRef.current;
+    const handleChange: any = (e: ChangeEvent) => {
+      const { name, value } = e.target;
 
-  return { getFieldProps, formState: state };
+      if (!name) {
+        console.error('💡react-cool-form: Field is missing "name" attribute');
+      } else {
+        setValues(name, value);
+      }
+    };
+
+    form.addEventListener("input", handleChange);
+
+    return () => {
+      form.removeEventListener("input", handleChange);
+    };
+  }, [setValues]);
+
+  return { formRef, values: state.values };
 };
 
 export default useForm;
