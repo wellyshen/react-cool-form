@@ -1,13 +1,14 @@
-import { RefObject, ChangeEvent as RChangeEvent } from "react";
+import { RefObject } from "react";
 
 // Common
 type DefaultValues = Record<string, unknown>;
 
-export type ChangeEvent = RChangeEvent<HTMLInputElement | HTMLSelectElement>;
+type Errors = Record<string, any>;
 
 // Reducer
 export interface State<T> {
   values: T | DefaultValues;
+  errors: Errors;
 }
 
 export enum ActionType {
@@ -26,7 +27,15 @@ export interface Opts {
   defaultValues?: DefaultValues;
 }
 
-export interface Return<T> {
+export interface Return<T> extends State<T> {
   formRef: RefObject<HTMLFormElement>;
-  values: T | DefaultValues;
+}
+
+export type InputEls =
+  | HTMLInputElement
+  | HTMLSelectElement
+  | HTMLTextAreaElement;
+
+export interface CheckerFn {
+  (el: InputEls): void;
 }
