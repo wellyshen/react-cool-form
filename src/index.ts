@@ -1,16 +1,19 @@
 import { Reducer, useRef, useReducer, useCallback, useEffect } from "react";
 
 import {
-  ChangeEvent,
   State,
   Action,
   ActionType,
   Values,
   Opts,
   Return,
+  InputEls,
 } from "./types";
+// import isValidElement from "./utils/isValidElement";
 
-const initialState = {};
+const fieldNoNameWarn = '💡react-cool-form: Field is missing "name" attribute';
+
+const initialState = { errors: {} };
 const reducer = <T>(state: State<T>, { type, payload }: Action): State<T> => {
   switch (type) {
     case ActionType.SET_VALUES:
@@ -42,19 +45,24 @@ const useForm = <T extends Values = Values>({
     if (!formRef.current) return () => null;
 
     const form = formRef.current;
-    const handleChange: any = (e: ChangeEvent) => {
-      if (!e.target.name && __DEV__) {
-        console.warn('💡react-cool-form: Field is missing "name" attribute');
+
+    const handleChange = (e: Event) => {
+      const target = e.target as InputEls;
+
+      if (!target.name && __DEV__) {
+        console.warn(fieldNoNameWarn);
         return;
       }
 
       // @ts-expect-error
-      const { type, name, value, checked } = e.target;
+      const { type, name, value, checked } = target;
 
-      if (type === "checkbox" && !e.target.hasAttribute("value")) {
-        setValues(name, checked);
-      } else {
-        setValues(name, value);
+      switch (type) {
+        case "checkbox":
+          setValues(name, target.hasAttribute("value") ? value : checked);
+          break;
+        default:
+          setValues(name, value);
       }
     };
 
@@ -65,7 +73,7 @@ const useForm = <T extends Values = Values>({
     };
   }, [setValues]);
 
-  return { formRef, values: state.values };
+  return { formRef, values: state.values, errors: state.errors };
 };
 
 export default useForm;
