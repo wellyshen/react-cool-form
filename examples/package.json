@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "link-pkg": "yarn link \"react-cool-form\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "type-check": "tsc --noEmit",

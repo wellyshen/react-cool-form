@@ -19,7 +19,7 @@
     "npm": ">=6"
   },
   "scripts": {
-    "link-react": "npm link ./examples/node_modules/react",
+    "link-pkg": "npm link ./examples/node_modules/react && yarn link",
     "dev": "yarn build -w --environment BUILD:dev",
     "build": "yarn clean:build && rollup -c",
     "lint": "eslint --fix . --ext .js,.ts,.tsx",
