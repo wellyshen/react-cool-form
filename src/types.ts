@@ -19,7 +19,7 @@ export type Action = {
   payload: Record<string, any>;
 };
 
-// useForm
+// Hook
 export type Values = Record<string, any>;
 
 export interface Opts {
