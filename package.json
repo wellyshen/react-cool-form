@@ -65,7 +65,8 @@
             "error"
           ]
         }
-      ]
+      ],
+      "no-underscore-dangle": "off"
     }
   },
   "eslintIgnore": [

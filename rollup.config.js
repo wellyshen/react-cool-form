@@ -42,7 +42,7 @@ export default {
     copy({
       targets: [
         {
-          src: "src/react-cool-form.d.ts",
+          src: "src/types/react-cool-form.d.ts",
           dest: pkg.types.split("/")[0],
           rename: "index.d.ts",
         },
