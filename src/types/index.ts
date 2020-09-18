@@ -35,7 +35,3 @@ export type InputEls =
   | HTMLInputElement
   | HTMLSelectElement
   | HTMLTextAreaElement;
-
-export interface CheckerFn {
-  (el: InputEls): void;
-}
