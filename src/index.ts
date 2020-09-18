@@ -33,10 +33,11 @@ const useForm = <T extends Values = Values>({
   });
 
   const setValues = useCallback(
-    (keyOrVal, val) =>
+    (keyOrVals, val) =>
       dispatch({
         type: ActionType.SET_VALUES,
-        payload: typeof keyOrVal === "string" ? { [keyOrVal]: val } : keyOrVal,
+        payload:
+          typeof keyOrVals === "string" ? { [keyOrVals]: val } : keyOrVals,
       }),
     []
   );
