@@ -11,7 +11,8 @@ export const form = css`
   flex-direction: column;
   width: 500px;
   input,
-  select {
+  select,
+  textarea {
     margin-bottom: 1rem;
   }
 `;
