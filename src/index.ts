@@ -1,36 +1,15 @@
-import { Reducer, useRef, useReducer, useCallback, useEffect } from "react";
+import { useRef, useCallback, useEffect } from "react";
 
-import {
-  State,
-  Action,
-  ActionType,
-  Values,
-  Opts,
-  Return,
-  InputEls,
-  SetValues,
-} from "./types";
+import { ActionType, Values, Opts, Return, InputEls, SetValues } from "./types";
+import useReducer from "./useReducer";
 
 const fieldNoNameWarn = '💡react-cool-form: Field is missing "name" attribute';
-
-const initialState = { errors: {} };
-const reducer = <T>(state: State<T>, { type, payload }: Action): State<T> => {
-  switch (type) {
-    case ActionType.SET_VALUES:
-      return { ...state, values: { ...state.values, ...payload } };
-    default:
-      throw new Error(`Unknown action: ${type}`);
-  }
-};
 
 const useForm = <T extends Values = Values>({
   defaultValues = {},
 }: Opts = {}): Return<T> => {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const [state, dispatch] = useReducer<Reducer<State<T>, Action>>(reducer, {
-    ...initialState,
-    values: defaultValues,
-  });
+  const [state, dispatch] = useReducer<T>(defaultValues);
 
   const setValues = useCallback<SetValues>(
     (keyOrVals, val) =>

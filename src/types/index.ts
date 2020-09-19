@@ -1,7 +1,7 @@
 import { RefObject } from "react";
 
 // Common
-type DefaultValues = Record<string, unknown>;
+export type DefaultValues = Record<string, unknown>;
 
 type Errors = Record<string, any>;
 
