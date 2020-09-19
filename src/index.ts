@@ -1,24 +1,36 @@
 import { useRef, useCallback, useEffect } from "react";
 
-import { ActionType, Values, Opts, Return, InputEls, SetValues } from "./types";
-import useReducer from "./useReducer";
+import {
+  FormActionType,
+  FieldValues,
+  Options,
+  Return,
+  FormElements,
+  SetValues,
+} from "./types";
+import useFormReducer from "./useFormReducer";
 
-const fieldNoNameWarn = '💡react-cool-form: Field is missing "name" attribute';
+const throwFieldNameWarn = () => {
+  if (__DEV__)
+    console.warn('💡react-cool-form: Field is missing "name" attribute');
+};
 
-const useForm = <T extends Values = Values>({
+const useForm = <T extends FieldValues = FieldValues>({
   defaultValues = {},
-}: Opts = {}): Return<T> => {
+}: Options = {}): Return<T> => {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const [state, dispatch] = useReducer<T>(defaultValues);
+  const [state, dispatch] = useFormReducer<T>(defaultValues);
 
   const setValues = useCallback<SetValues>(
-    (keyOrVals, val) =>
+    (keyOrValues, value) =>
       dispatch({
-        type: ActionType.SET_VALUES,
+        type: FormActionType.SET_VALUES,
         payload:
-          typeof keyOrVals === "string" ? { [keyOrVals]: val } : keyOrVals,
+          typeof keyOrValues === "string"
+            ? { [keyOrValues]: value }
+            : keyOrValues,
       }),
-    []
+    [dispatch]
   );
 
   useEffect(() => {
@@ -26,13 +38,15 @@ const useForm = <T extends Values = Values>({
 
     const form = formRef.current;
 
-    const handleChange = (e: Event) => {
-      const target = e.target as InputEls;
+    Array.from(form.children).forEach((child) => {
+      if (!/INPUT|SELECT|TEXTAREA/.test(child.tagName)) return;
+      if (!child.hasAttribute("name")) throwFieldNameWarn();
+    });
 
-      if (!target.name && __DEV__) {
-        console.warn(fieldNoNameWarn);
-        return;
-      }
+    const handleChange = (e: Event) => {
+      const target = e.target as FormElements;
+
+      if (!target.name) throwFieldNameWarn();
 
       // @ts-expect-error
       const { type, name, value, checked } = target;

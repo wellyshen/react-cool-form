@@ -6,24 +6,24 @@ export type DefaultValues = Record<string, unknown>;
 type Errors = Record<string, any>;
 
 // Reducer
-export interface State<T> {
+export interface FormState<T> {
   values: T | DefaultValues;
   errors: Errors;
 }
 
-export enum ActionType {
+export enum FormActionType {
   SET_VALUES = "SET_VALUES",
 }
 
-export type Action = {
-  type: ActionType.SET_VALUES;
+export type FormAction = {
+  type: FormActionType.SET_VALUES;
   payload: Record<string, any>;
 };
 
 // Hook
-export type Values = Record<string, any>;
+export type FieldValues = Record<string, any>;
 
-export type InputEls =
+export type FormElements =
   | HTMLInputElement
   | HTMLSelectElement
   | HTMLTextAreaElement;
@@ -32,11 +32,11 @@ export interface SetValues {
   (keyOrValues: string | Record<string, any>, value?: any): void;
 }
 
-export interface Opts {
+export interface Options {
   defaultValues?: DefaultValues;
 }
 
-export interface Return<T> extends State<T> {
+export interface Return<T> extends FormState<T> {
   formRef: RefObject<HTMLFormElement>;
   setValues: SetValues;
 }
