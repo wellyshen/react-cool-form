@@ -35,6 +35,7 @@ export default {
       "process.env.NODE_ENV": JSON.stringify(
         isDev ? "development" : "production"
       ),
+      __DEV__: 'process.env.NODE_ENV !== "production"',
     }),
     !isDev && sizeSnapshot(),
     // Disable "module" to avoid the missing semicolon bug of .esm
