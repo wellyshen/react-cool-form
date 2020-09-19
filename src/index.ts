@@ -9,7 +9,6 @@ import {
   Return,
   InputEls,
 } from "./types";
-// import isValidElement from "./utils/isValidElement";
 
 const fieldNoNameWarn = '💡react-cool-form: Field is missing "name" attribute';
 
