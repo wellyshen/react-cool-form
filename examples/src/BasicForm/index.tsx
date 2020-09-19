@@ -59,7 +59,7 @@ interface FormProps {
 }
 
 const defaultValues = {
-  text: "",
+  text: "test",
   password: "",
   number: "",
   checkbox: false,
