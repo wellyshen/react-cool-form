@@ -23,19 +23,20 @@ export type Action = {
 // Hook
 export type Values = Record<string, any>;
 
+export type InputEls =
+  | HTMLInputElement
+  | HTMLSelectElement
+  | HTMLTextAreaElement;
+
+export interface SetValues {
+  (keyOrValues: string | Record<string, any>, value?: any): void;
+}
+
 export interface Opts {
   defaultValues?: DefaultValues;
 }
 
 export interface Return<T> extends State<T> {
   formRef: RefObject<HTMLFormElement>;
+  setValues: SetValues;
 }
-
-export interface SetValues {
-  (keyOrValues: string | Record<string, any>, value?: any): void;
-}
-
-export type InputEls =
-  | HTMLInputElement
-  | HTMLSelectElement
-  | HTMLTextAreaElement;

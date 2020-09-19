@@ -8,6 +8,7 @@ import {
   Opts,
   Return,
   InputEls,
+  SetValues,
 } from "./types";
 
 const fieldNoNameWarn = '💡react-cool-form: Field is missing "name" attribute';
@@ -31,7 +32,7 @@ const useForm = <T extends Values = Values>({
     values: defaultValues,
   });
 
-  const setValues = useCallback(
+  const setValues = useCallback<SetValues>(
     (keyOrVals, val) =>
       dispatch({
         type: ActionType.SET_VALUES,
@@ -73,7 +74,7 @@ const useForm = <T extends Values = Values>({
     };
   }, [setValues]);
 
-  return { formRef, values: state.values, errors: state.errors };
+  return { formRef, values: state.values, errors: state.errors, setValues };
 };
 
 export default useForm;
