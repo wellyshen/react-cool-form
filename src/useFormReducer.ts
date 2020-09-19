@@ -1,11 +1,14 @@
 import { Reducer, useReducer } from "react";
 
-import { DefaultValues, State, Action, ActionType } from "./types";
+import { DefaultValues, FormState, FormAction, FormActionType } from "./types";
 
 const initialState = { errors: {} };
-const reducer = <T>(state: State<T>, { type, payload }: Action): State<T> => {
+const reducer = <T>(
+  state: FormState<T>,
+  { type, payload }: FormAction
+): FormState<T> => {
   switch (type) {
-    case ActionType.SET_VALUES:
+    case FormActionType.SET_VALUES:
       return { ...state, values: { ...state.values, ...payload } };
     default:
       throw new Error(`Unknown action: ${type}`);
@@ -15,7 +18,7 @@ const reducer = <T>(state: State<T>, { type, payload }: Action): State<T> => {
 export default <T>(
   defaultValues: DefaultValues
 ): ReturnType<typeof useReducer> =>
-  useReducer<Reducer<State<T>, Action>>(reducer, {
+  useReducer<Reducer<FormState<T>, FormAction>>(reducer, {
     ...initialState,
     values: defaultValues,
   });
