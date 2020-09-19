@@ -32,7 +32,7 @@ export interface Return<T> extends State<T> {
 }
 
 export interface SetValues {
-  (keyOrValues: string | Record<string, any>, value: any): void;
+  (keyOrValues: string | Record<string, any>, value?: any): void;
 }
 
 export type InputEls =
