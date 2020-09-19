@@ -3,7 +3,7 @@ import { css } from "@emotion/core";
 export const container = css`
   display: flex;
   justify-content: center;
-  margin-top: 10rem;
+  margin: 5rem 0;
 `;
 
 export const form = css`

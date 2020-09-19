@@ -54,7 +54,9 @@ interface FormProps {
   checkbox: boolean;
   checkboxGroup: string[];
   radio: string;
+  file: FileList;
   select: string;
+  multiSelect: string[];
   textarea: string;
 }
 
@@ -66,6 +68,7 @@ const defaultValues = {
   checkboxGroup: [],
   radio: "",
   select: "",
+  multiSelect: [],
   textarea: "",
 };
 
@@ -118,8 +121,14 @@ export default (): JSX.Element => {
             name="radio"
             value="val-2"
           />
+          <Input label="File:" type="file" name="file" />
         </div>
         <Select label="Select:" name="select">
+          <option value="val-1">Value 1</option>
+          <option value="val-2">Value 2</option>
+          <option value="val-3">Value 3</option>
+        </Select>
+        <Select label="Multi-select:" name="multiSelect" multiple>
           <option value="val-1">Value 1</option>
           <option value="val-2">Value 2</option>
           <option value="val-3">Value 3</option>
