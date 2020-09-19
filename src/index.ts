@@ -5,7 +5,7 @@ import {
   FieldValues,
   Options,
   Return,
-  FormElements,
+  InputElements,
   SetValues,
 } from "./types";
 import useFormReducer from "./useFormReducer";
@@ -44,7 +44,7 @@ const useForm = <T extends FieldValues = FieldValues>({
     });
 
     const handleChange = (e: Event) => {
-      const target = e.target as FormElements;
+      const target = e.target as InputElements;
 
       if (!target.name) throwFieldNameWarn();
 
