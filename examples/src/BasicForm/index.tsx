@@ -64,10 +64,10 @@ const defaultValues = {
   text: "test",
   password: "",
   number: "",
-  checkbox: false,
-  checkboxGroup: [],
+  checkbox: true,
+  checkboxGroup: ["val-1"],
   radio: "",
-  select: "",
+  select: "val-2",
   multiSelect: [],
   textarea: "",
 };
@@ -89,7 +89,12 @@ export default (): JSX.Element => {
         <Input label="Text:" name="text" />
         <Input label="Password:" type="password" name="password" />
         <Input label="Number:" type="number" name="number" />
-        <Input label="Checkbox:" type="checkbox" name="checkbox" />
+        <Input
+          label="Checkbox:"
+          type="checkbox"
+          name="checkbox"
+          defaultChecked
+        />
         <div css={wrapper}>
           <Input
             id="checkbox-group-1"
