@@ -15,22 +15,10 @@ const warnNoFieldName = () => {
     console.warn('💡react-cool-form: Field is missing "name" attribute');
 };
 
-/* const getCheckboxValue = (
-  el: HTMLInputElement,
-  currentValue: any
-): boolean | string[] => {
-  if (!currentValue) {
-    // ...
-  } else {
-    // ...
-  }
-}; */
-
 const useForm = <T extends FieldValues = FieldValues>({
   defaultValues = {},
 }: Options = {}): Return<T> => {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const valuesRef = useRef(defaultValues);
   const [state, dispatch] = useFormReducer<T>(defaultValues);
 
   const setValues = useCallback<SetValues>(
@@ -48,31 +36,34 @@ const useForm = <T extends FieldValues = FieldValues>({
   const setDefaultValues = useCallback(() => {
     if (!formRef.current) return;
 
-    Array.from(formRef.current.children).forEach((child) => {
-      if (!/INPUT|SELECT|TEXTAREA/.test(child.tagName)) return;
+    Array.from(formRef.current.querySelectorAll("input,textarea,select"))
+      .filter(
+        (element) =>
+          /TEXTAREA|SELECT/.test(element.tagName) ||
+          !/hidden|image|file|submit|reset/.test(
+            (element as HTMLInputElement).type
+          )
+      )
+      .forEach((element) => {
+        const input = element as InputElements;
+        const { type, name, value } = input;
 
-      // @ts-expect-error
-      const { type, name, value, checked } = child as InputElements;
+        if (!name) {
+          warnNoFieldName();
+          return;
+        }
 
-      if (!name) {
-        warnNoFieldName();
-        return;
-      }
-      if (type === "file") return;
+        const val = defaultValues[name];
 
-      const val = defaultValues[name] || checked || value;
-
-      if (type === "checkbox") {
-        // TODO: handle checkbox value
-      }
-
-      setValues(name, val || "");
-    });
-  }, [defaultValues, setValues]);
-
-  useEffect(() => {
-    valuesRef.current = state.values;
-  }, [state.values]);
+        if (type === "checkbox") {
+          // eslint-disable-next-line no-param-reassign
+          (input as HTMLInputElement).checked =
+            value && Array.isArray(val) ? val.includes(value) : !!val;
+        } else {
+          input.value = val;
+        }
+      });
+  }, [defaultValues]);
 
   useEffect(() => {
     setDefaultValues();
@@ -84,21 +75,14 @@ const useForm = <T extends FieldValues = FieldValues>({
     const form = formRef.current;
 
     const handleChange = (e: Event) => {
-      // @ts-expect-error
-      const { name, type, value, checked } = e.target as InputElements;
+      const { name, value } = e.target as InputElements;
 
       if (!name) {
         warnNoFieldName();
         return;
       }
 
-      switch (type) {
-        case "checkbox":
-          // TODO: handle checkbox value
-          break;
-        default:
-          setValues(name, value);
-      }
+      setValues(name, value);
     };
 
     form.addEventListener("input", handleChange);
