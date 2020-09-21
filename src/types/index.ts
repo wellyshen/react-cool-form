@@ -23,7 +23,7 @@ export type FormAction = {
 // Hook
 export type FieldValues = Record<string, any>;
 
-export type InputElements =
+export type FieldElements =
   | HTMLInputElement
   | HTMLSelectElement
   | HTMLTextAreaElement;
