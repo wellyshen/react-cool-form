@@ -15,10 +15,33 @@ const warnNoFieldName = () => {
     console.warn('💡react-cool-form: Field is missing "name" attribute');
 };
 
+const getInputs = (form: HTMLFormElement) =>
+  Array.from(form.querySelectorAll("input,textarea,select"))
+    .filter((element) => {
+      const input = element as InputElements;
+
+      if (!input.name) {
+        warnNoFieldName();
+        return false;
+      }
+      if (
+        !/TEXTAREA|SELECT/.test(input.tagName) &&
+        /hidden|image|file|submit|reset/.test(input.type)
+      )
+        return false;
+
+      return true;
+    })
+    .reduce((acc, cur) => {
+      acc[(cur as InputElements).name] = cur;
+      return acc;
+    }, {} as Record<string, any>);
+
 const useForm = <T extends FieldValues = FieldValues>({
   defaultValues = {},
 }: Options = {}): Return<T> => {
   const formRef = useRef<HTMLFormElement | null>(null);
+  const inputsRef = useRef({});
   const [state, dispatch] = useFormReducer<T>(defaultValues);
 
   const setValues = useCallback<SetValues>(
@@ -34,38 +57,38 @@ const useForm = <T extends FieldValues = FieldValues>({
   );
 
   const setDefaultValues = useCallback(() => {
-    if (!formRef.current) return;
+    const { current: inputs } = inputsRef;
 
-    Array.from(formRef.current.querySelectorAll("input,textarea,select"))
-      .filter(
-        (element) =>
-          /TEXTAREA|SELECT/.test(element.tagName) ||
-          !/hidden|image|file|submit|reset/.test(
-            (element as HTMLInputElement).type
-          )
-      )
-      .forEach((element) => {
-        const input = element as InputElements;
-        const { type, name, value } = input;
+    if (!inputs) return;
 
-        if (!name) {
-          warnNoFieldName();
-          return;
-        }
+    Object.keys(inputs).forEach((key) => {
+      const input = (inputs as Record<string, InputElements>)[key];
+      const { tagName, name, type, value } = input;
+      const val = defaultValues[name];
 
-        const val = defaultValues[name];
-
-        if (type === "checkbox") {
-          // eslint-disable-next-line no-param-reassign
-          (input as HTMLInputElement).checked =
-            value && Array.isArray(val) ? val.includes(value) : !!val;
-        } else {
-          input.value = val;
-        }
-      });
+      if (type === "checkbox") {
+        (input as HTMLInputElement).checked =
+          value && Array.isArray(val) ? val.includes(value) : !!val;
+      } else if (
+        tagName === "SELECT" &&
+        (input as HTMLSelectElement).multiple &&
+        Array.isArray(val)
+      ) {
+        Array.from((input as HTMLSelectElement).options).forEach((option) => {
+          option.selected = !!val.includes(option.value);
+        });
+      } else if (type === "radio") {
+        (input as HTMLInputElement).checked = value === val;
+      } else {
+        input.value = val;
+      }
+    });
   }, [defaultValues]);
 
   useEffect(() => {
+    if (!formRef.current) return;
+
+    inputsRef.current = getInputs(formRef.current);
     setDefaultValues();
   }, [setDefaultValues]);
 
