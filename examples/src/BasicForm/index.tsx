@@ -65,10 +65,10 @@ const defaultValues = {
   password: "test",
   number: "123",
   checkbox: true,
-  checkboxGroup: ["val-1"],
-  radio: "val-2",
-  select: "val-2",
-  multiSelect: ["val-1", "val-2"],
+  checkboxGroup: ["value-1"],
+  radio: "value-2",
+  select: "value-2",
+  multiSelect: ["value-1", "value-2"],
   textarea: "test",
 };
 
@@ -82,7 +82,7 @@ export default (): JSX.Element => {
     <div css={container}>
       <form
         css={form}
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={(e): void => e.preventDefault()}
         noValidate
         ref={formRef}
       >
@@ -100,13 +100,13 @@ export default (): JSX.Element => {
             label="Checkbox 1:"
             type="checkbox"
             name="checkboxGroup1"
-            value="val-1"
+            value="value-1"
           />
           <Input
             label="Checkbox 2:"
             type="checkbox"
             name="checkboxGroup2"
-            value="val-2"
+            value="value-2"
           />
         </div>
         <div css={wrapper}>
@@ -115,24 +115,24 @@ export default (): JSX.Element => {
             label="Radio 1:"
             type="radio"
             name="radio"
-            value="val-1"
+            value="value-1"
           />
           <Input
             id="radio-2"
             label="Radio 2:"
             type="radio"
             name="radio"
-            value="val-2"
+            value="value-2"
           />
         </div>
         <Input label="File:" type="file" name="file" />
         <Select label="Select:" name="select">
-          <option value="val-1">Value 1</option>
-          <option value="val-2">Value 2</option>
+          <option value="value-1">Value 1</option>
+          <option value="value-2">Value 2</option>
         </Select>
         <Select label="Multi-select:" name="multiSelect" multiple>
-          <option value="val-1">Value 1</option>
-          <option value="val-2">Value 2</option>
+          <option value="value-1">Value 1</option>
+          <option value="value-2">Value 2</option>
         </Select>
         <TextArea label="Text Area:" name="textarea" />
         <button type="submit">Submit</button>
