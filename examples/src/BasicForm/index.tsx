@@ -86,7 +86,7 @@ export default (): JSX.Element => {
         noValidate
         ref={formRef}
       >
-        <Input label="Text:" name="text" />
+        <Input label="Text:" name="text" defaultValue="default value" />
         <Input label="Password:" type="password" name="password" />
         <Input label="Number:" type="number" name="number" />
         <Input
