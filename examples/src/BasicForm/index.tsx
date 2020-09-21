@@ -7,15 +7,15 @@ import useForm from "react-cool-form";
 import { container, form, label as labelStyle, wrapper } from "./styles";
 
 const Input = memo(
-  ({ label, id, name, ...rest }: any): JSX.Element => {
+  ({ label, name, ...rest }: any): JSX.Element => {
     console.log(`LOG ==> ${name} is re-rendered`);
 
     return (
       <React.Fragment>
-        <label css={labelStyle} htmlFor={id || name}>
+        <label css={labelStyle} htmlFor={name}>
           {label}
         </label>
-        <input id={id || name} name={name} {...rest} />
+        <input id={name} name={name} {...rest} />
       </React.Fragment>
     );
   }
@@ -33,15 +33,15 @@ const Select = ({ children, label, name, ...rest }: any): JSX.Element => (
 );
 
 const TextArea = memo(
-  ({ label, id, name, ...rest }: any): JSX.Element => {
+  ({ label, name, ...rest }: any): JSX.Element => {
     console.log(`LOG ==> ${name} is re-rendered`);
 
     return (
       <React.Fragment>
-        <label css={labelStyle} htmlFor={id || name}>
+        <label css={labelStyle} htmlFor={name}>
           {label}
         </label>
-        <textarea id={id || name} name={name} {...rest} />
+        <textarea id={name} name={name} {...rest} />
       </React.Fragment>
     );
   }
@@ -62,14 +62,14 @@ interface FormProps {
 
 const defaultValues = {
   text: "test",
-  password: "",
-  number: "",
+  password: "test",
+  number: "123",
   checkbox: true,
   checkboxGroup: ["val-1"],
-  radio: "",
+  radio: "val-2",
   select: "val-2",
-  multiSelect: [],
-  textarea: "",
+  multiSelect: ["val-1", "val-2"],
+  textarea: "test",
 };
 
 export default (): JSX.Element => {
@@ -97,17 +97,15 @@ export default (): JSX.Element => {
         />
         <div css={wrapper}>
           <Input
-            id="checkbox-group-1"
             label="Checkbox 1:"
             type="checkbox"
-            name="checkboxGroup"
+            name="checkboxGroup1"
             value="val-1"
           />
           <Input
-            id="checkbox-group-2"
             label="Checkbox 2:"
             type="checkbox"
-            name="checkboxGroup"
+            name="checkboxGroup2"
             value="val-2"
           />
         </div>
@@ -126,17 +124,15 @@ export default (): JSX.Element => {
             name="radio"
             value="val-2"
           />
-          <Input label="File:" type="file" name="file" />
         </div>
+        <Input label="File:" type="file" name="file" />
         <Select label="Select:" name="select">
           <option value="val-1">Value 1</option>
           <option value="val-2">Value 2</option>
-          <option value="val-3">Value 3</option>
         </Select>
         <Select label="Multi-select:" name="multiSelect" multiple>
           <option value="val-1">Value 1</option>
           <option value="val-2">Value 2</option>
-          <option value="val-3">Value 3</option>
         </Select>
         <TextArea label="Text Area:" name="textarea" />
         <button type="submit">Submit</button>
