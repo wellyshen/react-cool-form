@@ -2,7 +2,6 @@ import { Reducer, useReducer } from "react";
 
 import { DefaultValues, FormState, FormAction, FormActionType } from "./types";
 
-const initialState = { errors: {} };
 const reducer = <T>(
   state: FormState<T>,
   { type, payload }: FormAction
@@ -19,6 +18,6 @@ export default <T>(
   defaultValues: DefaultValues
 ): ReturnType<typeof useReducer> =>
   useReducer<Reducer<FormState<T>, FormAction>>(reducer, {
-    ...initialState,
+    errors: {},
     values: defaultValues,
   });
