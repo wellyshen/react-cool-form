@@ -25,15 +25,17 @@ export type FieldValues = Record<string, any>;
 
 export type FieldElements =
   | HTMLInputElement
-  | HTMLSelectElement
-  | HTMLTextAreaElement;
+  | HTMLTextAreaElement
+  | HTMLSelectElement;
 
-export interface SetValues {
-  (keyOrValues: string | Record<string, any>, value?: any): void;
-}
+export type Fields = Record<string, FieldElements>;
 
 export interface Options {
   defaultValues?: DefaultValues;
+}
+
+export interface SetValues {
+  (keyOrValues: string | Record<string, any>, value?: any): void;
 }
 
 export interface Return<T> extends FormState<T> {
