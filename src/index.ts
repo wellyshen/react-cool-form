@@ -5,7 +5,7 @@ import {
   FieldValues,
   Options,
   Return,
-  InputElements,
+  FieldElements,
   SetValues,
 } from "./types";
 import useFormReducer from "./useFormReducer";
@@ -18,22 +18,22 @@ const warnNoFieldName = () => {
 const getInputs = (form: HTMLFormElement) =>
   Array.from(form.querySelectorAll("input,textarea,select"))
     .filter((element) => {
-      const input = element as InputElements;
+      const field = element as FieldElements;
 
-      if (!input.name) {
+      if (!field.name) {
         warnNoFieldName();
         return false;
       }
       if (
-        !/TEXTAREA|SELECT/.test(input.tagName) &&
-        /hidden|image|file|submit|reset/.test(input.type)
+        !/TEXTAREA|SELECT/.test(field.tagName) &&
+        /hidden|image|file|submit|reset/.test(field.type)
       )
         return false;
 
       return true;
     })
     .reduce((acc, cur) => {
-      acc[(cur as InputElements).name] = cur;
+      acc[(cur as FieldElements).name] = cur;
       return acc;
     }, {} as Record<string, any>);
 
@@ -41,8 +41,33 @@ const useForm = <T extends FieldValues = FieldValues>({
   defaultValues = {},
 }: Options = {}): Return<T> => {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const inputsRef = useRef({});
+  const fieldsRef = useRef<Record<string, FieldElements>>({});
   const [state, dispatch] = useFormReducer<T>(defaultValues);
+
+  const setFieldValue = useCallback((name: string, value: any) => {
+    const field = fieldsRef.current[name];
+
+    if (!field) return;
+
+    if (
+      field.tagName === "SELECT" &&
+      (field as HTMLSelectElement).multiple &&
+      Array.isArray(value)
+    ) {
+      Array.from((field as HTMLSelectElement).options).forEach((option) => {
+        option.selected = !!value.includes(option.value);
+      });
+    } else if (field.type === "checkbox") {
+      (field as HTMLInputElement).checked =
+        field.value && Array.isArray(value)
+          ? value.includes(field.value)
+          : !!value;
+    } else if (field.type === "radio") {
+      (field as HTMLInputElement).checked = field.value === value;
+    } else {
+      field.value = value;
+    }
+  }, []);
 
   const setValues = useCallback<SetValues>(
     (keyOrValues, value) =>
@@ -57,38 +82,21 @@ const useForm = <T extends FieldValues = FieldValues>({
   );
 
   const setDefaultValues = useCallback(() => {
-    const { current: inputs } = inputsRef;
+    const { current: fields } = fieldsRef;
 
-    if (!inputs) return;
+    if (!fields) return;
 
-    Object.keys(inputs).forEach((key) => {
-      const input = (inputs as Record<string, InputElements>)[key];
-      const { tagName, name, type, value } = input;
-      const val = defaultValues[name];
+    Object.keys(fields).forEach((key) => {
+      const { name } = fields[key];
 
-      if (type === "checkbox") {
-        (input as HTMLInputElement).checked =
-          value && Array.isArray(val) ? val.includes(value) : !!val;
-      } else if (
-        tagName === "SELECT" &&
-        (input as HTMLSelectElement).multiple &&
-        Array.isArray(val)
-      ) {
-        Array.from((input as HTMLSelectElement).options).forEach((option) => {
-          option.selected = !!val.includes(option.value);
-        });
-      } else if (type === "radio") {
-        (input as HTMLInputElement).checked = value === val;
-      } else {
-        input.value = val;
-      }
+      setFieldValue(name, defaultValues[name]);
     });
-  }, [defaultValues]);
+  }, [setFieldValue, defaultValues]);
 
   useEffect(() => {
     if (!formRef.current) return;
 
-    inputsRef.current = getInputs(formRef.current);
+    fieldsRef.current = getInputs(formRef.current);
     setDefaultValues();
   }, [setDefaultValues]);
 
@@ -98,12 +106,14 @@ const useForm = <T extends FieldValues = FieldValues>({
     const form = formRef.current;
 
     const handleChange = (e: Event) => {
-      const { name, value } = e.target as InputElements;
+      const { name, value } = e.target as FieldElements;
 
       if (!name) {
         warnNoFieldName();
         return;
       }
+
+      // TODO: handle more cases...
 
       setValues(name, value);
     };
