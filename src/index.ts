@@ -27,13 +27,13 @@ const getFields = (form: HTMLFormElement | null) =>
   form
     ? [...form.querySelectorAll("input,textarea,select")]
         .filter((element) => {
-          const field = element as FieldElements;
+          const { name, type } = element as FieldElements;
 
-          if (!field.name) {
+          if (!name) {
             warnNoFieldName();
             return false;
           }
-          if (/hidden|image|submit|reset/.test(field.type)) return false;
+          if (/hidden|image|submit|reset/.test(type)) return false;
 
           return true;
         })
