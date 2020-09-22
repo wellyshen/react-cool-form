@@ -73,7 +73,7 @@ const useForm = <T extends FieldValues = FieldValues>({
     }
   }, []);
 
-  const setValues = useCallback<SetValues>(
+  const setValues = useCallback<SetValues<T>>(
     (keyOrValues, value) =>
       dispatch({
         type: FormActionType.SET_VALUES,

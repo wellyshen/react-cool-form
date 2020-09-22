@@ -34,11 +34,11 @@ export interface Options {
   defaultValues?: DefaultValues;
 }
 
-export interface SetValues {
-  (keyOrValues: string | Record<string, any>, value?: any): void;
+export interface SetValues<T> {
+  (keyOrValues: string | T, value?: any): void;
 }
 
 export interface Return<T> extends FormState<T> {
   formRef: RefObject<HTMLFormElement>;
-  setValues: SetValues;
+  setValues: SetValues<T>;
 }
