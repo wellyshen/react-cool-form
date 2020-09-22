@@ -3,12 +3,16 @@ import { RefObject } from "react";
 // Common
 export type DefaultValues = Record<string, any>;
 
-type Errors = Record<string, any>;
+export type Values<T> = T | DefaultValues;
 
 // Reducer
+export interface OnValuesChange<T> {
+  (values: Values<T>): void;
+}
+
 export interface FormState<T> {
-  values: T | DefaultValues;
-  errors: Errors;
+  values: Values<T>;
+  errors: Record<string, any>;
 }
 
 export enum FormActionType {
@@ -23,12 +27,12 @@ export type FormAction = {
 // Hook
 export type FieldValues = Record<string, any>;
 
-export type FieldElements =
+export type FieldElement =
   | HTMLInputElement
   | HTMLTextAreaElement
   | HTMLSelectElement;
 
-export type Fields = Record<string, FieldElements>;
+export type Fields = Record<string, FieldElement>;
 
 export interface Options {
   defaultValues?: DefaultValues;
@@ -38,7 +42,7 @@ export interface SetValues<T> {
   (keyOrValues: string | T, value?: any): void;
 }
 
-export interface Return<T> extends FormState<T> {
+export interface Return<T> extends Readonly<FormState<T>> {
   formRef: RefObject<HTMLFormElement>;
   setValues: SetValues<T>;
 }

@@ -1,15 +1,15 @@
-import { FieldElements } from "./types";
+import { FieldElement } from "./types";
 
-export const isCheckbox = (element: FieldElements): boolean =>
+export const isCheckbox = (element: FieldElement): boolean =>
   element.type === "checkbox";
 
-export const isRadio = (element: FieldElements): boolean =>
+export const isRadio = (element: FieldElement): boolean =>
   element.type === "radio";
 
-export const isMultipleSelect = (element: FieldElements): boolean =>
+export const isMultipleSelect = (element: FieldElement): boolean =>
   element.type === "select-multiple";
 
-export const isFile = (element: FieldElements): boolean =>
+export const isFile = (element: FieldElement): boolean =>
   element.type === "file";
 
 export const isString = (value: unknown): boolean => typeof value === "string";
