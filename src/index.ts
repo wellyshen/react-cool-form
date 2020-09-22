@@ -6,10 +6,11 @@ import {
   FormActionType,
   Fields,
   FieldValues,
-  FieldElements,
+  FieldElement,
+  Values,
   SetValues,
 } from "./types";
-import useFormReducer from "./useFormReducer";
+import useFormState from "./useFormState";
 import {
   isCheckbox,
   isRadio,
@@ -27,14 +28,12 @@ const getFields = (form: HTMLFormElement | null) =>
   form
     ? [...form.querySelectorAll("input,textarea,select")]
         .filter((element) => {
-          const { name, type } = element as FieldElements;
-
+          const { name, type } = element as FieldElement;
           if (!name) warnNoFieldName();
-
           return name && !/hidden|image|submit|reset/.test(type);
         })
         .reduce((acc, cur) => {
-          acc[(cur as FieldElements).name] = cur;
+          acc[(cur as FieldElement).name] = cur;
           return acc;
         }, {} as Record<string, any>)
     : {};
@@ -44,7 +43,10 @@ const useForm = <T extends FieldValues = FieldValues>({
 }: Options = {}): Return<T> => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const fieldsRef = useRef<Fields>({});
-  const [state, dispatch] = useFormReducer<T>(defaultValues);
+  const valuesRef = useRef<Values<T>>(defaultValues);
+  const [state, dispatch] = useFormState<T>(defaultValues, (values) => {
+    valuesRef.current = values;
+  });
 
   const setFieldValue = useCallback((name: string, value: any) => {
     const field = fieldsRef.current[name];
@@ -84,7 +86,6 @@ const useForm = <T extends FieldValues = FieldValues>({
     (fields: Fields = getFields(formRef.current)) =>
       Object.keys(fields).forEach((key) => {
         const { name } = fields[key];
-
         setFieldValue(name, defaultValues[name]);
       }),
     [setFieldValue, defaultValues]
@@ -109,16 +110,37 @@ const useForm = <T extends FieldValues = FieldValues>({
     const form = formRef.current;
 
     const handleChange = (e: Event) => {
-      const { name, value } = e.target as FieldElements;
+      const field = e.target as FieldElement;
+      const { name, value } = field;
 
       if (!name) {
         warnNoFieldName();
         return;
       }
 
-      // TODO: handle more cases...
+      let val: any = value;
 
-      setValues(name, value);
+      if (isCheckbox(field)) {
+        const checkbox = field as HTMLInputElement;
+
+        if (checkbox.value) {
+          const checkValues = new Set(valuesRef.current[name]);
+
+          if (checkbox.checked) {
+            checkValues.add(value);
+          } else {
+            checkValues.delete(value);
+          }
+
+          val = [...checkValues];
+        } else {
+          val = checkbox.checked;
+        }
+      } else if (isMultipleSelect(field)) {
+        // ...
+      }
+
+      setValues(name, val);
     };
 
     form.addEventListener("input", handleChange);
