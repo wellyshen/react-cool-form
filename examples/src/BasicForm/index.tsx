@@ -7,15 +7,15 @@ import useForm from "react-cool-form";
 import { container, form, label as labelStyle, wrapper } from "./styles";
 
 const Input = memo(
-  ({ label, name, ...rest }: any): JSX.Element => {
+  ({ label, id, name, ...rest }: any): JSX.Element => {
     console.log(`LOG ==> ${name} is re-rendered`);
 
     return (
       <React.Fragment>
-        <label css={labelStyle} htmlFor={name}>
+        <label css={labelStyle} htmlFor={id || name}>
           {label}
         </label>
-        <input id={name} name={name} {...rest} />
+        <input id={id || name} name={name} {...rest} />
       </React.Fragment>
     );
   }
@@ -92,15 +92,17 @@ export default (): JSX.Element => {
         <Input label="Checkbox:" type="checkbox" name="checkbox" />
         <div css={wrapper}>
           <Input
+            id="checkboxGroup-1"
             label="Checkbox 1:"
             type="checkbox"
-            name="checkboxGroup1"
+            name="checkboxGroup"
             value="value-1"
           />
           <Input
+            id="checkboxGroup-2"
             label="Checkbox 2:"
             type="checkbox"
-            name="checkboxGroup2"
+            name="checkboxGroup"
             value="value-2"
           />
         </div>
