@@ -29,13 +29,9 @@ const getFields = (form: HTMLFormElement | null) =>
         .filter((element) => {
           const { name, type } = element as FieldElements;
 
-          if (!name) {
-            warnNoFieldName();
-            return false;
-          }
-          if (/hidden|image|submit|reset/.test(type)) return false;
+          if (!name) warnNoFieldName();
 
-          return true;
+          return name && !/hidden|image|submit|reset/.test(type);
         })
         .reduce((acc, cur) => {
           acc[(cur as FieldElements).name] = cur;
