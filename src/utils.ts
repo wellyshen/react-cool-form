@@ -12,6 +12,4 @@ export const isMultipleSelect = (element: FieldElements): boolean =>
 export const isFile = (element: FieldElements): boolean =>
   element.type === "file";
 
-export const isObject = (value: unknown): boolean => typeof value === "object";
-
 export const isString = (value: unknown): boolean => typeof value === "string";

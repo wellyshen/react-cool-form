@@ -15,7 +15,6 @@ import {
   isRadio,
   isMultipleSelect,
   isFile,
-  isObject,
   isString,
 } from "./utils";
 
@@ -67,8 +66,8 @@ const useForm = <T extends FieldValues = FieldValues>({
       [...(field as HTMLSelectElement).options].forEach((option) => {
         option.selected = !!value.includes(option.value);
       });
-    } else if (isFile(field)) {
-      if (isObject(value)) (field as HTMLInputElement).files = value;
+    } else if (isFile(field) && !isString(value)) {
+      (field as HTMLInputElement).files = value;
     } else {
       field.value = value;
     }
