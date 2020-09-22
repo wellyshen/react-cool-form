@@ -10,6 +10,14 @@ import {
   SetValues,
 } from "./types";
 import useFormReducer from "./useFormReducer";
+import {
+  isCheckbox,
+  isRadio,
+  isMultipleSelect,
+  isFile,
+  isObject,
+  isString,
+} from "./utils";
 
 const warnNoFieldName = () => {
   if (__DEV__)
@@ -26,11 +34,7 @@ const getFields = (form: HTMLFormElement | null) =>
             warnNoFieldName();
             return false;
           }
-          if (
-            !/TEXTAREA|SELECT/.test(field.tagName) &&
-            /hidden|image|file|submit|reset/.test(field.type)
-          )
-            return false;
+          if (/hidden|image|submit|reset/.test(field.type)) return false;
 
           return true;
         })
@@ -52,21 +56,19 @@ const useForm = <T extends FieldValues = FieldValues>({
 
     if (!field) return;
 
-    if (
-      field.tagName === "SELECT" &&
-      (field as HTMLSelectElement).multiple &&
-      Array.isArray(value)
-    ) {
-      [...(field as HTMLSelectElement).options].forEach((option) => {
-        option.selected = !!value.includes(option.value);
-      });
-    } else if (field.type === "checkbox") {
+    if (isCheckbox(field)) {
       (field as HTMLInputElement).checked =
         field.value && Array.isArray(value)
           ? value.includes(field.value)
           : !!value;
-    } else if (field.type === "radio") {
+    } else if (isRadio(field)) {
       (field as HTMLInputElement).checked = field.value === value;
+    } else if (isMultipleSelect(field) && Array.isArray(value)) {
+      [...(field as HTMLSelectElement).options].forEach((option) => {
+        option.selected = !!value.includes(option.value);
+      });
+    } else if (isFile(field)) {
+      if (isObject(value)) (field as HTMLInputElement).files = value;
     } else {
       field.value = value;
     }
@@ -76,10 +78,9 @@ const useForm = <T extends FieldValues = FieldValues>({
     (keyOrValues, value) =>
       dispatch({
         type: FormActionType.SET_VALUES,
-        payload:
-          typeof keyOrValues === "string"
-            ? { [keyOrValues]: value }
-            : keyOrValues,
+        payload: isString(keyOrValues)
+          ? { [keyOrValues as string]: value }
+          : keyOrValues,
       }),
     [dispatch]
   );
