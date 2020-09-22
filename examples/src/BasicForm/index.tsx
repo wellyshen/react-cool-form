@@ -89,12 +89,7 @@ export default (): JSX.Element => {
         <Input label="Text:" name="text" />
         <Input label="Password:" type="password" name="password" />
         <Input label="Number:" type="number" name="number" />
-        <Input
-          label="Checkbox:"
-          type="checkbox"
-          name="checkbox"
-          defaultChecked
-        />
+        <Input label="Checkbox:" type="checkbox" name="checkbox" />
         <div css={wrapper}>
           <Input
             label="Checkbox 1:"
