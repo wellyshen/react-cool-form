@@ -18,7 +18,7 @@ const warnNoFieldName = () => {
 
 const getFields = (form: HTMLFormElement | null) =>
   form
-    ? Array.from(form.querySelectorAll("input,textarea,select"))
+    ? [...form.querySelectorAll("input,textarea,select")]
         .filter((element) => {
           const field = element as FieldElements;
 
@@ -57,7 +57,7 @@ const useForm = <T extends FieldValues = FieldValues>({
       (field as HTMLSelectElement).multiple &&
       Array.isArray(value)
     ) {
-      Array.from((field as HTMLSelectElement).options).forEach((option) => {
+      [...(field as HTMLSelectElement).options].forEach((option) => {
         option.selected = !!value.includes(option.value);
       });
     } else if (field.type === "checkbox") {
