@@ -32,7 +32,10 @@ export type FieldElement =
   | HTMLTextAreaElement
   | HTMLSelectElement;
 
-export type Fields = Record<string, FieldElement>;
+export type Fields = Record<
+  string,
+  { field: FieldElement; options?: FieldElement[] }
+>;
 
 export interface Options {
   defaultValues?: DefaultValues;

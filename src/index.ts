@@ -17,6 +17,7 @@ import {
   isMultipleSelect,
   isFile,
   isString,
+  isArray,
 } from "./utils";
 
 const warnNoFieldName = () => {
@@ -32,9 +33,15 @@ const getFields = (form: HTMLFormElement | null) =>
           if (!name) warnNoFieldName();
           return name && !/hidden|image|submit|reset/.test(type);
         })
-        .reduce((acc, cur) => {
-          acc[(cur as FieldElement).name] = cur;
-          return acc;
+        .reduce((fields, field) => {
+          const { type, name } = field as FieldElement;
+          fields[name] = { ...fields[name], field };
+          if (/checkbox|radio/.test(type)) {
+            fields[name].options = fields[name].options
+              ? [...fields[name].options, field]
+              : [field];
+          }
+          return fields;
         }, {} as Record<string, any>)
     : {};
 
@@ -49,18 +56,27 @@ const useForm = <T extends FieldValues = FieldValues>({
   });
 
   const setFieldValue = useCallback((name: string, value: any) => {
-    const field = fieldsRef.current[name];
+    const { field, options } = fieldsRef.current[name];
 
     if (!field) return;
 
     if (isCheckbox(field)) {
-      (field as HTMLInputElement).checked =
-        field.value && Array.isArray(value)
-          ? value.includes(field.value)
-          : !!value;
+      const checkboxs = options as HTMLInputElement[];
+
+      if (checkboxs.length > 1) {
+        checkboxs.forEach((checkbox) => {
+          checkbox.checked = isArray(value)
+            ? value.includes(checkbox.value)
+            : !!value;
+        });
+      } else {
+        checkboxs[0].checked = !!value;
+      }
     } else if (isRadio(field)) {
-      (field as HTMLInputElement).checked = field.value === value;
-    } else if (isMultipleSelect(field) && Array.isArray(value)) {
+      (options as HTMLInputElement[]).forEach((radio) => {
+        radio.checked = radio.value === value;
+      });
+    } else if (isMultipleSelect(field) && isArray(value)) {
       [...(field as HTMLSelectElement).options].forEach((option) => {
         option.selected = !!value.includes(option.value);
       });
@@ -85,7 +101,7 @@ const useForm = <T extends FieldValues = FieldValues>({
   const setDefaultValues = useCallback(
     (fields: Fields = getFields(formRef.current)) =>
       Object.keys(fields).forEach((key) => {
-        const { name } = fields[key];
+        const { name } = fields[key].field;
         setFieldValue(name, defaultValues[name]);
       }),
     [setFieldValue, defaultValues]
@@ -123,7 +139,7 @@ const useForm = <T extends FieldValues = FieldValues>({
       if (isCheckbox(field)) {
         const checkbox = field as HTMLInputElement;
 
-        if (checkbox.value) {
+        if (checkbox.hasAttribute("value")) {
           const checkValues = new Set(valuesRef.current[name]);
 
           if (checkbox.checked) {
