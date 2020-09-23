@@ -13,3 +13,5 @@ export const isFile = (element: FieldElement): boolean =>
   element.type === "file";
 
 export const isString = (value: unknown): boolean => typeof value === "string";
+
+export const isArray = (value: unknown): boolean => Array.isArray(value);
