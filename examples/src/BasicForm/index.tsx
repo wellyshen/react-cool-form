@@ -66,7 +66,7 @@ const defaultValues = {
   number: "123",
   checkbox: true,
   checkboxGroup: ["value-1"],
-  radio: "value-2",
+  radio: "value-1",
   select: "value-2",
   multiSelect: ["value-1", "value-2"],
   textarea: "test",
