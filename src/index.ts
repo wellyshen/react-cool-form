@@ -88,14 +88,27 @@ const useForm = <T extends FieldValues = FieldValues>({
   }, []);
 
   const setValues = useCallback<SetValues<T>>(
-    (keyOrValues, value) =>
-      dispatch({
-        type: FormActionType.SET_VALUES,
-        payload: isString(keyOrValues)
-          ? { [keyOrValues as string]: value }
-          : keyOrValues,
-      }),
-    [dispatch]
+    (nameOrValues, value) => {
+      let payload;
+
+      if (isString(nameOrValues)) {
+        const name = nameOrValues as string;
+        payload = { [name]: value };
+        setFieldValue(name, value);
+      } else {
+        payload = nameOrValues;
+        // TODO: set multiple values
+      }
+
+      dispatch({ type: FormActionType.SET_VALUES, payload });
+      // TODO: form validation
+    },
+    [setFieldValue, dispatch]
+  );
+
+  const setFormStateValue = useCallback(
+    (name: string, value: any) => setValues(name, value),
+    [setValues]
   );
 
   const setDefaultValues = useCallback(
@@ -160,7 +173,7 @@ const useForm = <T extends FieldValues = FieldValues>({
         val = (field as HTMLInputElement).files;
       }
 
-      setValues(name, val);
+      setFormStateValue(name, val);
     };
 
     form.addEventListener("input", handleChange);
@@ -168,7 +181,7 @@ const useForm = <T extends FieldValues = FieldValues>({
     return () => {
       form.removeEventListener("input", handleChange);
     };
-  }, [setValues]);
+  }, [setFormStateValue]);
 
   return { formRef, values: state.values, errors: state.errors, setValues };
 };

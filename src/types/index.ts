@@ -42,7 +42,7 @@ export interface Options {
 }
 
 export interface SetValues<T> {
-  (keyOrValues: string | T, value?: any): void;
+  (nameOrValues: string | T, value?: any): void;
 }
 
 export interface Return<T> extends Readonly<FormState<T>> {
