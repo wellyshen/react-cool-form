@@ -74,9 +74,18 @@ const defaultValues = {
 
 export default (): JSX.Element => {
   // @ts-expect-error
-  const { formRef, values } = useForm<FormProps>({ defaultValues });
+  const { formRef, values, setValues } = useForm<FormProps>({ defaultValues });
 
   console.log("LOG ==> values: ", values);
+
+  const handleBtnClick = () => {
+    setValues("text", "new test");
+    setValues("password", "");
+    setValues("number", "456");
+    setValues("checkbox", false);
+    setValues("checkboxGroup", ["value-2"]);
+    setValues("radio", "value-2");
+  };
 
   return (
     <div css={container}>
@@ -132,6 +141,9 @@ export default (): JSX.Element => {
           <option value="value-2">Value 2</option>
         </Select>
         <TextArea label="Text Area:" name="textarea" />
+        <button type="button" onClick={handleBtnClick}>
+          Set Values
+        </button>
         <button type="submit">Submit</button>
       </form>
     </div>

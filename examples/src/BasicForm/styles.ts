@@ -12,7 +12,8 @@ export const form = css`
   width: 500px;
   input,
   select,
-  textarea {
+  textarea,
+  button {
     margin-bottom: 1rem;
   }
 `;

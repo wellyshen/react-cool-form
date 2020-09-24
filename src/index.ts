@@ -153,7 +153,11 @@ const useForm = <T extends FieldValues = FieldValues>({
           val = checkbox.checked;
         }
       } else if (isMultipleSelect(field)) {
-        // ...
+        val = [...(field as HTMLSelectElement).options]
+          .filter((option) => option.selected)
+          .map((option) => option.value);
+      } else if (isFile(field)) {
+        val = (field as HTMLInputElement).files;
       }
 
       setValues(name, val);
