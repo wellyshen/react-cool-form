@@ -49,6 +49,6 @@ export default {
         },
       ],
     }),
-  ],
+  ].filter(Boolean),
   external: Object.keys(pkg.peerDependencies),
 };
