@@ -1,16 +1,21 @@
 import { FieldElement } from "./types";
 
-export const isCheckbox = (element: FieldElement): boolean =>
-  element.type === "checkbox";
+export const isNumberField = ({ type }: FieldElement): boolean =>
+  type === "number";
 
-export const isRadio = (element: FieldElement): boolean =>
-  element.type === "radio";
+export const isRangeField = ({ type }: FieldElement): boolean =>
+  type === "range";
 
-export const isMultipleSelect = (element: FieldElement): boolean =>
-  element.type === "select-multiple";
+export const isCheckboxField = ({ type }: FieldElement): boolean =>
+  type === "checkbox";
 
-export const isFile = (element: FieldElement): boolean =>
-  element.type === "file";
+export const isRadioField = ({ type }: FieldElement): boolean =>
+  type === "radio";
+
+export const isMultipleSelectField = ({ type }: FieldElement): boolean =>
+  type === "select-multiple";
+
+export const isFileField = ({ type }: FieldElement): boolean => type === "file";
 
 export const isString = (value: unknown): boolean => typeof value === "string";
 

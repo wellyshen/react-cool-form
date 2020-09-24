@@ -12,10 +12,12 @@ import {
 } from "./types";
 import useFormState from "./useFormState";
 import {
-  isCheckbox,
-  isRadio,
-  isMultipleSelect,
-  isFile,
+  isNumberField,
+  isRangeField,
+  isCheckboxField,
+  isRadioField,
+  isMultipleSelectField,
+  isFileField,
   isString,
   isArray,
 } from "./utils";
@@ -60,7 +62,7 @@ const useForm = <T extends FieldValues = FieldValues>({
 
     if (!field) return;
 
-    if (isCheckbox(field)) {
+    if (isCheckboxField(field)) {
       const checkboxs = options as HTMLInputElement[];
 
       if (checkboxs.length > 1) {
@@ -72,15 +74,15 @@ const useForm = <T extends FieldValues = FieldValues>({
       } else {
         checkboxs[0].checked = !!value;
       }
-    } else if (isRadio(field)) {
+    } else if (isRadioField(field)) {
       (options as HTMLInputElement[]).forEach((radio) => {
         radio.checked = radio.value === value;
       });
-    } else if (isMultipleSelect(field) && isArray(value)) {
+    } else if (isMultipleSelectField(field) && isArray(value)) {
       [...(field as HTMLSelectElement).options].forEach((option) => {
         option.selected = !!value.includes(option.value);
       });
-    } else if (isFile(field) && !isString(value)) {
+    } else if (isFileField(field) && !isString(value)) {
       (field as HTMLInputElement).files = value;
     } else {
       field.value = value;
@@ -89,18 +91,15 @@ const useForm = <T extends FieldValues = FieldValues>({
 
   const setValues = useCallback<SetValues<T>>(
     (nameOrValues, value) => {
-      let payload;
-
-      if (isString(nameOrValues)) {
-        const name = nameOrValues as string;
-        payload = { [name]: value };
-        setFieldValue(name, value);
-      } else {
-        payload = nameOrValues;
-        // TODO: set multiple values
-      }
+      const payload = isString(nameOrValues)
+        ? { [nameOrValues as string]: value }
+        : nameOrValues;
 
       dispatch({ type: FormActionType.SET_VALUES, payload });
+      Object.keys(payload).forEach((key) =>
+        setFieldValue(key, (payload as FieldValues)[key])
+      );
+
       // TODO: form validation
     },
     [setFieldValue, dispatch]
@@ -149,7 +148,9 @@ const useForm = <T extends FieldValues = FieldValues>({
 
       let val: any = value;
 
-      if (isCheckbox(field)) {
+      if (isNumberField(field) || isRangeField(field)) {
+        val = parseFloat(value) || "";
+      } else if (isCheckboxField(field)) {
         const checkbox = field as HTMLInputElement;
 
         if (checkbox.hasAttribute("value")) {
@@ -165,11 +166,11 @@ const useForm = <T extends FieldValues = FieldValues>({
         } else {
           val = checkbox.checked;
         }
-      } else if (isMultipleSelect(field)) {
+      } else if (isMultipleSelectField(field)) {
         val = [...(field as HTMLSelectElement).options]
           .filter((option) => option.selected)
           .map((option) => option.value);
-      } else if (isFile(field)) {
+      } else if (isFileField(field)) {
         val = (field as HTMLInputElement).files;
       }
 

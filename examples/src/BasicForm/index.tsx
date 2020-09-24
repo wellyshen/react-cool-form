@@ -81,10 +81,21 @@ export default (): JSX.Element => {
   const handleBtnClick = () => {
     setValues("text", "new test");
     setValues("password", "");
-    setValues("number", "456");
+    setValues("number", 456);
     setValues("checkbox", false);
     setValues("checkboxGroup", ["value-2"]);
     setValues("radio", "value-2");
+    setValues("multiSelect", ["value-2"]);
+
+    /* setValues({
+      text: "new test",
+      password: "",
+      number: 456,
+      checkbox: false,
+      checkboxGroup: ["value-2"],
+      radio: "value-2",
+      multiSelect: "value-2"
+    }); */
   };
 
   return (
