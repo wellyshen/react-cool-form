@@ -31,12 +31,7 @@ export default {
     resolve({ extensions }),
     commonjs(),
     babel({ exclude: "node_modules/**", extensions }),
-    replace({
-      "process.env.NODE_ENV": JSON.stringify(
-        isDev ? "development" : "production"
-      ),
-      __DEV__: 'process.env.NODE_ENV !== "production"',
-    }),
+    replace({ __DEV__: 'process.env.NODE_ENV !== "production"' }),
     !isDev && sizeSnapshot(),
     // Disable "module" to avoid the missing semicolon bug of .esm
     !isDev && terser({ module: false }),
