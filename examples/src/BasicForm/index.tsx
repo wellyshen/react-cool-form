@@ -63,7 +63,7 @@ interface FormProps {
 const defaultValues = {
   text: "test",
   password: "test",
-  number: "123",
+  number: 123,
   checkbox: true,
   checkboxGroup: ["value-1"],
   radio: "value-1",
@@ -106,7 +106,7 @@ export default (): JSX.Element => {
         noValidate
         ref={formRef}
       >
-        <Input label="Text:" name="text" />
+        <Input label="Text:" />
         <Input label="Password:" type="password" name="password" />
         <Input label="Number:" type="number" name="number" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />
