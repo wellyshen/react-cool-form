@@ -7,6 +7,7 @@ import {
   Fields,
   FieldValues,
   FieldElement,
+  DefaultValues,
   Values,
   SetValues,
 } from "./types";
@@ -58,9 +59,9 @@ const useForm = <T extends FieldValues = FieldValues>({
   });
 
   const setFieldValue = useCallback((name: string, value: any) => {
-    const { field, options } = fieldsRef.current[name];
+    if (!fieldsRef.current[name]) return;
 
-    if (!field) return;
+    const { field, options } = fieldsRef.current[name];
 
     if (isCheckboxField(field)) {
       const checkboxs = options as HTMLInputElement[];
@@ -96,9 +97,12 @@ const useForm = <T extends FieldValues = FieldValues>({
         : nameOrValues;
 
       dispatch({ type: FormActionType.SET_VALUES, payload });
-      Object.keys(payload).forEach((key) =>
-        setFieldValue(key, (payload as FieldValues)[key])
-      );
+      Object.keys(payload).forEach((key) => {
+        // Make sure a dynamic field is registered before setting value
+        if (formRef.current && !fieldsRef.current[nameOrValues as string])
+          fieldsRef.current = getFields(formRef.current);
+        setFieldValue(key, (payload as FieldValues)[key]);
+      });
 
       // TODO: form validation
     },
@@ -111,10 +115,13 @@ const useForm = <T extends FieldValues = FieldValues>({
   );
 
   const setDefaultValues = useCallback(
-    (fields: Fields = getFields(formRef.current)) =>
+    (
+      fields: Fields = getFields(formRef.current),
+      values: DefaultValues = defaultValues
+    ) =>
       Object.keys(fields).forEach((key) => {
         const { name } = fields[key].field;
-        setFieldValue(name, defaultValues[name]);
+        setFieldValue(name, values[name]);
       }),
     [setFieldValue, defaultValues]
   );
