@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import useForm from "react-cool-form";
 
 import { container, form, label as labelStyle, wrapper } from "./styles";
@@ -73,13 +73,15 @@ const defaultValues = {
 };
 
 export default (): JSX.Element => {
+  const [showInput, setShowInput] = useState(false);
   // @ts-expect-error
   const { formRef, values, setValues } = useForm<FormProps>({ defaultValues });
 
   console.log("LOG ==> values: ", values);
 
-  const handleBtnClick = () => {
+  const handleSetValueClick = () => {
     setValues("text", "new test");
+    setValues("hiddenText", "new test");
     setValues("password", "");
     setValues("number", 456);
     setValues("checkbox", false);
@@ -89,6 +91,7 @@ export default (): JSX.Element => {
 
     /* setValues({
       text: "new test",
+      hiddenText: "new test",
       password: "",
       number: 456,
       checkbox: false,
@@ -97,6 +100,8 @@ export default (): JSX.Element => {
       multiSelect: "value-2"
     }); */
   };
+
+  const handleToggleInputClick = () => setShowInput(!showInput);
 
   return (
     <div css={container}>
@@ -107,6 +112,7 @@ export default (): JSX.Element => {
         ref={formRef}
       >
         <Input label="Text:" name="text" />
+        {showInput && <Input label="Hidden Text:" name="hiddenText" />}
         <Input label="Password:" type="password" name="password" />
         <Input label="Number:" type="number" name="number" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />
@@ -152,8 +158,11 @@ export default (): JSX.Element => {
           <option value="value-2">Value 2</option>
         </Select>
         <TextArea label="Text Area:" name="textarea" />
-        <button type="button" onClick={handleBtnClick}>
+        <button type="button" onClick={handleSetValueClick}>
           Set Values
+        </button>
+        <button type="button" onClick={handleToggleInputClick}>
+          Toggle Input
         </button>
         <button type="submit">Submit</button>
       </form>
