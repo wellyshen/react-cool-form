@@ -28,6 +28,5 @@ export default <T>(
   onValuesChange: OnValuesChange<T>
 ): ReturnType<typeof useReducer> =>
   useReducer<Reducer<FormState<T>, FormAction>>(createReducer(onValuesChange), {
-    errors: {},
     values: defaultValues,
   });

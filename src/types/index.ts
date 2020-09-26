@@ -12,7 +12,6 @@ export interface OnValuesChange<T> {
 
 export interface FormState<T> {
   values: Values<T>;
-  errors: Record<string, any>;
 }
 
 export enum FormActionType {
@@ -41,11 +40,11 @@ export interface Options {
   defaultValues?: DefaultValues;
 }
 
-export interface SetValues<T> {
-  (nameOrValues: string | T, value?: any): void;
+export interface SetValue<T> {
+  (name: string, value: any): void;
 }
 
 export interface Return<T> extends Readonly<FormState<T>> {
   formRef: RefObject<HTMLFormElement>;
-  setValues: SetValues<T>;
+  setValue: SetValue<T>;
 }

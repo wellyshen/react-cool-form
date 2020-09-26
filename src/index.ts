@@ -9,7 +9,7 @@ import {
   FieldElement,
   DefaultValues,
   Values,
-  SetValues,
+  SetValue,
 } from "./types";
 import useFormState from "./useFormState";
 import {
@@ -90,19 +90,14 @@ const useForm = <T extends FieldValues = FieldValues>({
     }
   }, []);
 
-  const setValues = useCallback<SetValues<T>>(
-    (nameOrValues, value) => {
-      const payload = isString(nameOrValues)
-        ? { [nameOrValues as string]: value }
-        : nameOrValues;
+  const setValue = useCallback<SetValue<T>>(
+    (name, value) => {
+      dispatch({ type: FormActionType.SET_VALUES, payload: { [name]: value } });
 
-      dispatch({ type: FormActionType.SET_VALUES, payload });
-      Object.keys(payload).forEach((key) => {
-        // Make sure a dynamic field is registered before setting value
-        if (formRef.current && !fieldsRef.current[nameOrValues as string])
-          fieldsRef.current = getFields(formRef.current);
-        setFieldValue(key, (payload as FieldValues)[key]);
-      });
+      // Make sure a dynamic field is registered before setting value
+      if (formRef.current && !fieldsRef.current[name as string])
+        fieldsRef.current = getFields(formRef.current);
+      setFieldValue(name, value);
 
       // TODO: form validation
     },
@@ -110,8 +105,8 @@ const useForm = <T extends FieldValues = FieldValues>({
   );
 
   const setFormStateValue = useCallback(
-    (name: string, value: any) => setValues(name, value),
-    [setValues]
+    (name: string, value: any) => setValue(name, value),
+    [setValue]
   );
 
   const setDefaultValues = useCallback(
@@ -191,7 +186,7 @@ const useForm = <T extends FieldValues = FieldValues>({
     };
   }, [setFormStateValue]);
 
-  return { formRef, values: state.values, errors: state.errors, setValues };
+  return { formRef, values: state.values, setValue };
 };
 
 export default useForm;
