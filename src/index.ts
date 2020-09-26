@@ -3,6 +3,7 @@ import { useRef, useCallback, useEffect } from "react";
 import {
   Options,
   Return,
+  FormState,
   FormActionType,
   Fields,
   FieldValues,
@@ -12,6 +13,7 @@ import {
 } from "./types";
 import useFormState from "./useFormState";
 import {
+  isFieldElement,
   isNumberField,
   isRangeField,
   isCheckboxField,
@@ -31,9 +33,9 @@ const getFields = (form: HTMLFormElement | null) =>
   form
     ? [...form.querySelectorAll("input,textarea,select")]
         .filter((element) => {
-          const { name, type } = element as FieldElement;
+          const { name } = element as FieldElement;
           if (!name) warnNoFieldName();
-          return name && !/hidden|image|submit|reset/.test(type);
+          return name && isFieldElement(element);
         })
         .reduce((fields, field) => {
           const { type, name } = field as FieldElement;
@@ -52,10 +54,19 @@ const useForm = <T extends FieldValues = FieldValues>({
 }: Options<T> = {}): Return<T> => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const fieldsRef = useRef<Fields>({});
-  const valuesRef = useRef<Values<T>>(defaultValues);
-  const [state, dispatch] = useFormState<T>(defaultValues, (values) => {
-    valuesRef.current = values;
+  const { current: initialState } = useRef<FormState<T>>({
+    values: defaultValues,
+    touched: {},
   });
+  const stateRef = useRef<FormState<T>>(initialState);
+  const [state, dispatch] = useFormState<T>(initialState, (s) => {
+    stateRef.current = s;
+  });
+
+  const refreshFieldsIfNeeded = useCallback((name: string) => {
+    if (formRef.current && !fieldsRef.current[name])
+      fieldsRef.current = getFields(formRef.current);
+  }, []);
 
   const setFieldValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name]) return;
@@ -91,16 +102,14 @@ const useForm = <T extends FieldValues = FieldValues>({
 
   const setValue = useCallback<SetValue<T>>(
     (name, value) => {
-      dispatch({ type: FormActionType.SET_VALUES, payload: { [name]: value } });
+      dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value });
 
-      // Make sure a dynamic field is registered before setting value
-      if (formRef.current && !fieldsRef.current[name as string])
-        fieldsRef.current = getFields(formRef.current);
+      refreshFieldsIfNeeded(name as string);
       setFieldValue(name as string, value);
 
-      // TODO: form validation
+      // TODO: validation
     },
-    [setFieldValue, dispatch]
+    [dispatch, refreshFieldsIfNeeded, setFieldValue]
   );
 
   const setFormStateValue = useCallback(
@@ -120,6 +129,20 @@ const useForm = <T extends FieldValues = FieldValues>({
     [setFieldValue, defaultValues]
   );
 
+  const setTouched = useCallback(
+    (name: string, isTouched = true) => {
+      refreshFieldsIfNeeded(name);
+      dispatch({
+        type: FormActionType.SET_FIELD_TOUCHED,
+        name,
+        value: isTouched,
+      });
+
+      // TODO: validation
+    },
+    [refreshFieldsIfNeeded, dispatch]
+  );
+
   useEffect(() => {
     if (!formRef.current) {
       if (__DEV__)
@@ -135,8 +158,6 @@ const useForm = <T extends FieldValues = FieldValues>({
 
   useEffect(() => {
     if (!formRef.current) return () => null;
-
-    const form = formRef.current;
 
     const handleChange = (e: Event) => {
       const field = e.target as FieldElement;
@@ -155,7 +176,7 @@ const useForm = <T extends FieldValues = FieldValues>({
         const checkbox = field as HTMLInputElement;
 
         if (checkbox.hasAttribute("value")) {
-          const checkValues = new Set(valuesRef.current[name]);
+          const checkValues = new Set(stateRef.current.values[name]);
 
           if (checkbox.checked) {
             checkValues.add(value);
@@ -178,14 +199,24 @@ const useForm = <T extends FieldValues = FieldValues>({
       setFormStateValue(name, val);
     };
 
+    const handleBlur = (e: Event) => {
+      if (!isFieldElement(e.target as Element)) return;
+
+      setTouched((e.target as FieldElement).name);
+    };
+
+    const form = formRef.current;
+
     form.addEventListener("input", handleChange);
+    form.addEventListener("focusout", handleBlur);
 
     return () => {
       form.removeEventListener("input", handleChange);
+      form.removeEventListener("focusout", handleBlur);
     };
-  }, [setFormStateValue]);
+  }, [setFormStateValue, setTouched]);
 
-  return { formRef, values: state.values, setValue };
+  return { formRef, values: state.values, touched: state.touched, setValue };
 };
 
 export default useForm;

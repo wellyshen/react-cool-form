@@ -1,33 +1,36 @@
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 
 import {
-  Values,
   FormState,
   FormActionType,
   FormAction,
   FormReducer,
-  OnValuesChange,
+  OnStateChange,
 } from "./types";
 
-const createReducer = <T>(onValuesChange: OnValuesChange<T>) => (
+const reducer = <T>(
   state: FormState<T>,
-  { type, payload }: FormAction<T>
+  { type, name, value }: FormAction
 ): FormState<T> => {
   switch (type) {
-    case FormActionType.SET_VALUES: {
-      const values = { ...state.values, ...payload };
-      onValuesChange(values);
-      return { ...state, values };
-    }
+    case FormActionType.SET_FIELD_VALUE:
+      return { ...state, values: { ...state.values, [name]: value } };
+    case FormActionType.SET_FIELD_TOUCHED:
+      return { ...state, touched: { ...state.touched, [name]: value } };
     default:
       throw new Error(`Unknown action: ${type}`);
   }
 };
 
 export default <T>(
-  defaultValues: Values<T>,
-  onValuesChange: OnValuesChange<T>
-): ReturnType<typeof useReducer> =>
-  useReducer<FormReducer<T>>(createReducer(onValuesChange), {
-    values: defaultValues,
-  });
+  initialState: FormState<T>,
+  onValuesChange: OnStateChange<T>
+): ReturnType<typeof useReducer> => {
+  const [state, dispatch] = useReducer<FormReducer<T>>(reducer, initialState);
+
+  useEffect(() => {
+    onValuesChange(state);
+  }, [onValuesChange, state]);
+
+  return [state, dispatch];
+};
