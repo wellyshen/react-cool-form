@@ -57,7 +57,7 @@ const useForm = <T extends FieldValues = FieldValues>({
     valuesRef.current = values;
   });
 
-  const setFieldValue = useCallback((name: string, value: any) => {
+  const setFieldValue = useCallback<SetValue<T>>((name, value) => {
     if (!fieldsRef.current[name]) return;
 
     const { field, options } = fieldsRef.current[name];
