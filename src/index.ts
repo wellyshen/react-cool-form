@@ -20,6 +20,7 @@ import {
   isMultipleSelectField,
   isFileField,
   isString,
+  isFunction,
   isArray,
 } from "./utils";
 
@@ -105,23 +106,6 @@ const useForm = <T extends FieldValues = FieldValues>({
     }
   }, []);
 
-  const setFieldValue = useCallback<SetFieldValue<T>>(
-    (name, value) => {
-      dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value });
-
-      refreshFieldsIfNeeded(name as string);
-      setDomValue(name as string, value);
-
-      // TODO: validation
-    },
-    [dispatch, refreshFieldsIfNeeded, setDomValue]
-  );
-
-  const setStateValue = useCallback(
-    (name: string, value: any) => setFieldValue(name, value),
-    [setFieldValue]
-  );
-
   const setDomDefaultValues = useCallback(
     (
       fields: Fields = getFields(formRef.current),
@@ -134,7 +118,28 @@ const useForm = <T extends FieldValues = FieldValues>({
     [setDomValue, defaultValues]
   );
 
-  const setTouched = useCallback(
+  const setFieldValue = useCallback<SetFieldValue<T>>(
+    (name, value) => {
+      const val = isFunction(value)
+        ? value(stateRef.current.values[name])
+        : value;
+
+      dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value: val });
+
+      refreshFieldsIfNeeded(name as string);
+      setDomValue(name as string, val);
+
+      // TODO: validation
+    },
+    [dispatch, refreshFieldsIfNeeded, setDomValue]
+  );
+
+  const setStateValue = useCallback(
+    (name: string, value: any) => setFieldValue(name, value),
+    [setFieldValue]
+  );
+
+  const setFieldTouched = useCallback(
     (name: string, isTouched = true) => {
       refreshFieldsIfNeeded(name);
       dispatch({
@@ -209,7 +214,7 @@ const useForm = <T extends FieldValues = FieldValues>({
         isFieldElement(target as HTMLElement) &&
         hasChangeEvent(target as HTMLInputElement)
       )
-        setTouched((target as FieldElement).name);
+        setFieldTouched((target as FieldElement).name);
     };
 
     const form = formRef.current;
@@ -221,7 +226,7 @@ const useForm = <T extends FieldValues = FieldValues>({
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
     };
-  }, [setStateValue, setTouched]);
+  }, [setStateValue, setFieldTouched]);
 
   return {
     formRef,

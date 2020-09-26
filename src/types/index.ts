@@ -44,7 +44,7 @@ export interface Options<T> {
 }
 
 export interface SetFieldValue<T> {
-  <K extends keyof T>(name: K, value: T[K]): void;
+  <K extends keyof T>(name: K, value: (value?: T[K]) => T[K] | T[K]): void;
 }
 
 export interface Return<T> extends Readonly<FormState<T>> {

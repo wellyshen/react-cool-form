@@ -8,7 +8,7 @@ import { container, form, label as labelStyle, wrapper } from "./styles";
 
 const Input = memo(
   ({ label, id, name, ...rest }: any): JSX.Element => {
-    console.log(`LOG ==> ${name} is re-rendered`);
+    // console.log(`LOG ==> ${name} is re-rendered`);
 
     return (
       <React.Fragment>
@@ -34,7 +34,7 @@ const Select = ({ children, label, name, ...rest }: any): JSX.Element => (
 
 const TextArea = memo(
   ({ label, name, ...rest }: any): JSX.Element => {
-    console.log(`LOG ==> ${name} is re-rendered`);
+    // console.log(`LOG ==> ${name} is re-rendered`);
 
     return (
       <React.Fragment>
@@ -79,11 +79,11 @@ export default (): JSX.Element => {
     defaultValues,
   });
 
-  console.log("LOG ==> values: ", values);
+  // console.log("LOG ==> values: ", values);
   console.log("LOG ==> touched: ", touched);
 
   const handleSetValueClick = (): void => {
-    setFieldValue("text", "new test");
+    setFieldValue("text", (value: string) => `new ${value}`);
     setFieldValue("hiddenText", "new test");
     setFieldValue("password", "");
     setFieldValue("number", 456);
