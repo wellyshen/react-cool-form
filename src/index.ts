@@ -9,7 +9,7 @@ import {
   FieldValues,
   FieldElement,
   Values,
-  SetValue,
+  SetFieldValue,
 } from "./types";
 import useFormState from "./useFormState";
 import {
@@ -105,7 +105,7 @@ const useForm = <T extends FieldValues = FieldValues>({
     }
   }, []);
 
-  const setFieldValue = useCallback<SetValue<T>>(
+  const setFieldValue = useCallback<SetFieldValue<T>>(
     (name, value) => {
       dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value });
 

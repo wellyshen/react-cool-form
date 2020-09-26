@@ -43,11 +43,11 @@ export interface Options<T> {
   defaultValues?: Values<T>;
 }
 
-export interface SetValue<T> {
+export interface SetFieldValue<T> {
   <K extends keyof T>(name: K, value: T[K]): void;
 }
 
 export interface Return<T> extends Readonly<FormState<T>> {
   formRef: RefObject<HTMLFormElement>;
-  setFieldValue: SetValue<T>;
+  setFieldValue: SetFieldValue<T>;
 }
