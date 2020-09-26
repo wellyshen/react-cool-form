@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { RefObject, Reducer } from "react";
 
 // Common
 export type Values<T> = Partial<T>;
@@ -20,6 +20,8 @@ export type FormAction = {
   type: FormActionType.SET_VALUES;
   payload: Record<string, any>;
 };
+
+export type FormReducer<T> = Reducer<FormState<T>, FormAction>;
 
 // Hook
 export type FieldValues = Record<string, any>;
