@@ -91,13 +91,12 @@ const useForm = <T extends FieldValues = FieldValues>({
 
   const setValue = useCallback<SetValue<T>>(
     (name, value) => {
-      const key = name as string;
+      dispatch({ type: FormActionType.SET_VALUES, payload: { [name]: value } });
 
-      dispatch({ type: FormActionType.SET_VALUES, payload: { [key]: value } });
       // Make sure a dynamic field is registered before setting value
-      if (formRef.current && !fieldsRef.current[key])
+      if (formRef.current && !fieldsRef.current[name as string])
         fieldsRef.current = getFields(formRef.current);
-      setFieldValue(key, value);
+      setFieldValue(name as string, value);
 
       // TODO: form validation
     },
