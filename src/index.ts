@@ -94,7 +94,7 @@ const useForm = <T extends FieldValues = FieldValues>({
       dispatch({ type: FormActionType.SET_VALUES, payload: { [name]: value } });
 
       // Make sure a dynamic field is registered before setting value
-      if (formRef.current && !fieldsRef.current[name as string])
+      if (formRef.current && !fieldsRef.current[name])
         fieldsRef.current = getFields(formRef.current);
       setFieldValue(name, value);
 
