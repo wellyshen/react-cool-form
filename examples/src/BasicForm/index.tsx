@@ -75,9 +75,12 @@ const defaultValues = {
 export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
   // @ts-expect-error
-  const { formRef, values, setValue } = useForm<FormProps>({ defaultValues });
+  const { formRef, values, setValue, touched } = useForm<FormProps>({
+    defaultValues,
+  });
 
   console.log("LOG ==> values: ", values);
+  console.log("LOG ==> touched: ", touched);
 
   const handleSetValueClick = () => {
     setValue("text", "new test");
