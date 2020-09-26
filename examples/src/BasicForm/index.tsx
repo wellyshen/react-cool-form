@@ -75,30 +75,19 @@ const defaultValues = {
 export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
   // @ts-expect-error
-  const { formRef, values, setValues } = useForm<FormProps>({ defaultValues });
+  const { formRef, values, setValue } = useForm<FormProps>({ defaultValues });
 
   console.log("LOG ==> values: ", values);
 
   const handleSetValueClick = () => {
-    setValues("text", "new test");
-    setValues("hiddenText", "new test");
-    setValues("password", "");
-    setValues("number", 456);
-    setValues("checkbox", false);
-    setValues("checkboxGroup", ["value-2"]);
-    setValues("radio", "value-2");
-    setValues("multiSelect", ["value-2"]);
-
-    /* setValues({
-      text: "new test",
-      hiddenText: "new test",
-      password: "",
-      number: 456,
-      checkbox: false,
-      checkboxGroup: ["value-2"],
-      radio: "value-2",
-      multiSelect: "value-2"
-    }); */
+    setValue("text", "new test");
+    setValue("hiddenText", "new test");
+    setValue("password", "");
+    setValue("number", 456);
+    setValue("checkbox", false);
+    setValue("checkboxGroup", ["value-2"]);
+    setValue("radio", "value-2");
+    setValue("multiSelect", ["value-2"]);
   };
 
   const handleToggleInputClick = () => setShowInput(!showInput);
