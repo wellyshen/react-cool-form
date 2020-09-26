@@ -16,12 +16,12 @@ export enum FormActionType {
   SET_VALUES = "SET_VALUES",
 }
 
-export type FormAction = {
+export type FormAction<T> = {
   type: FormActionType.SET_VALUES;
-  payload: Record<string, any>;
+  payload: Values<T>;
 };
 
-export type FormReducer<T> = Reducer<FormState<T>, FormAction>;
+export type FormReducer<T> = Reducer<FormState<T>, FormAction<T>>;
 
 // Hook
 export type FieldValues = Record<string, any>;
@@ -41,7 +41,7 @@ export interface Options<T> {
 }
 
 export interface SetValue<T> {
-  (name: string, value: any): void;
+  <K extends keyof T>(name: K, value: T[K]): void;
 }
 
 export interface Return<T> extends Readonly<FormState<T>> {

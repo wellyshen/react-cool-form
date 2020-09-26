@@ -11,7 +11,7 @@ import {
 
 const createReducer = <T>(onValuesChange: OnValuesChange<T>) => (
   state: FormState<T>,
-  { type, payload }: FormAction
+  { type, payload }: FormAction<T>
 ): FormState<T> => {
   switch (type) {
     case FormActionType.SET_VALUES: {
