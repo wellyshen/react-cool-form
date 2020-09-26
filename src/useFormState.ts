@@ -1,7 +1,7 @@
 import { Reducer, useReducer } from "react";
 
 import {
-  DefaultValues,
+  Values,
   FormState,
   FormAction,
   FormActionType,
@@ -24,7 +24,7 @@ const createReducer = <T>(onValuesChange: OnValuesChange<T>) => (
 };
 
 export default <T>(
-  defaultValues: DefaultValues,
+  defaultValues: Values<T>,
   onValuesChange: OnValuesChange<T>
 ): ReturnType<typeof useReducer> =>
   useReducer<Reducer<FormState<T>, FormAction>>(createReducer(onValuesChange), {

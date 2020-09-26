@@ -7,7 +7,6 @@ import {
   Fields,
   FieldValues,
   FieldElement,
-  DefaultValues,
   Values,
   SetValue,
 } from "./types";
@@ -50,7 +49,7 @@ const getFields = (form: HTMLFormElement | null) =>
 
 const useForm = <T extends FieldValues = FieldValues>({
   defaultValues = {},
-}: Options = {}): Return<T> => {
+}: Options<T> = {}): Return<T> => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const fieldsRef = useRef<Fields>({});
   const valuesRef = useRef<Values<T>>(defaultValues);
@@ -112,7 +111,7 @@ const useForm = <T extends FieldValues = FieldValues>({
   const setDefaultValues = useCallback(
     (
       fields: Fields = getFields(formRef.current),
-      values: DefaultValues = defaultValues
+      values: Values<T> = defaultValues
     ) =>
       Object.keys(fields).forEach((key) => {
         const { name } = fields[key].field;

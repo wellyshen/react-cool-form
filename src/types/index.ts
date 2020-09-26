@@ -1,9 +1,7 @@
 import { RefObject } from "react";
 
 // Common
-export type DefaultValues = Record<string, any>;
-
-export type Values<T> = T | DefaultValues;
+export type Values<T> = Partial<T>;
 
 // Reducer
 export interface OnValuesChange<T> {
@@ -36,8 +34,8 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
-export interface Options {
-  defaultValues?: DefaultValues;
+export interface Options<T> {
+  defaultValues?: Values<T>;
 }
 
 export interface SetValue<T> {
