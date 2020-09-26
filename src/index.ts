@@ -13,7 +13,6 @@ import {
 } from "./types";
 import useFormState from "./useFormState";
 import {
-  isFieldElement,
   isNumberField,
   isRangeField,
   isCheckboxField,
@@ -29,13 +28,19 @@ const warnNoFieldName = () => {
     console.warn('💡react-cool-form: Field is missing "name" attribute');
 };
 
+const isFieldElement = ({ tagName }: HTMLElement) =>
+  /INPUT|TEXTAREA|SELECT/.test(tagName);
+
+const hasChangeEvent = ({ type }: HTMLInputElement) =>
+  !/hidden|image|submit|reset/.test(type);
+
 const getFields = (form: HTMLFormElement | null) =>
   form
     ? [...form.querySelectorAll("input,textarea,select")]
         .filter((element) => {
-          const { name } = element as FieldElement;
-          if (!name) warnNoFieldName();
-          return name && isFieldElement(element);
+          const field = element as FieldElement;
+          if (!field.name) warnNoFieldName();
+          return field.name && hasChangeEvent(field as HTMLInputElement);
         })
         .reduce((fields, field) => {
           const { type, name } = field as FieldElement;
@@ -68,7 +73,7 @@ const useForm = <T extends FieldValues = FieldValues>({
       fieldsRef.current = getFields(formRef.current);
   }, []);
 
-  const setFieldValue = useCallback((name: string, value: any) => {
+  const setDomValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name]) return;
 
     const { field, options } = fieldsRef.current[name];
@@ -100,33 +105,33 @@ const useForm = <T extends FieldValues = FieldValues>({
     }
   }, []);
 
-  const setValue = useCallback<SetValue<T>>(
+  const setFieldValue = useCallback<SetValue<T>>(
     (name, value) => {
       dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value });
 
       refreshFieldsIfNeeded(name as string);
-      setFieldValue(name as string, value);
+      setDomValue(name as string, value);
 
       // TODO: validation
     },
-    [dispatch, refreshFieldsIfNeeded, setFieldValue]
+    [dispatch, refreshFieldsIfNeeded, setDomValue]
   );
 
-  const setFormStateValue = useCallback(
-    (name: string, value: any) => setValue(name, value),
-    [setValue]
+  const setStateValue = useCallback(
+    (name: string, value: any) => setFieldValue(name, value),
+    [setFieldValue]
   );
 
-  const setDefaultValues = useCallback(
+  const setDomDefaultValues = useCallback(
     (
       fields: Fields = getFields(formRef.current),
       values: Values<T> = defaultValues
     ) =>
       Object.keys(fields).forEach((key) => {
         const { name } = fields[key].field;
-        setFieldValue(name, values[name]);
+        setDomValue(name, values[name]);
       }),
-    [setFieldValue, defaultValues]
+    [setDomValue, defaultValues]
   );
 
   const setTouched = useCallback(
@@ -153,8 +158,8 @@ const useForm = <T extends FieldValues = FieldValues>({
     }
 
     fieldsRef.current = getFields(formRef.current);
-    setDefaultValues(fieldsRef.current);
-  }, [setDefaultValues]);
+    setDomDefaultValues(fieldsRef.current);
+  }, [setDomDefaultValues]);
 
   useEffect(() => {
     if (!formRef.current) return () => null;
@@ -196,13 +201,15 @@ const useForm = <T extends FieldValues = FieldValues>({
         val = (field as HTMLInputElement).files;
       }
 
-      setFormStateValue(name, val);
+      setStateValue(name, val);
     };
 
-    const handleBlur = (e: Event) => {
-      if (!isFieldElement(e.target as Element)) return;
-
-      setTouched((e.target as FieldElement).name);
+    const handleBlur = ({ target }: Event) => {
+      if (
+        isFieldElement(target as HTMLElement) &&
+        hasChangeEvent(target as HTMLInputElement)
+      )
+        setTouched((target as FieldElement).name);
     };
 
     const form = formRef.current;
@@ -214,9 +221,14 @@ const useForm = <T extends FieldValues = FieldValues>({
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
     };
-  }, [setFormStateValue, setTouched]);
+  }, [setStateValue, setTouched]);
 
-  return { formRef, values: state.values, touched: state.touched, setValue };
+  return {
+    formRef,
+    values: state.values,
+    touched: state.touched,
+    setFieldValue,
+  };
 };
 
 export default useForm;

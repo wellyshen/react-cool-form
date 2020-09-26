@@ -1,9 +1,5 @@
 import { FieldElement } from "./types";
 
-export const isFieldElement = (element: Element): boolean =>
-  /INPUT|TEXTAREA|SELECT/.test(element.tagName) &&
-  !/hidden|image|submit|reset/.test((element as FieldElement).type);
-
 export const isNumberField = ({ type }: FieldElement): boolean =>
   type === "number";
 

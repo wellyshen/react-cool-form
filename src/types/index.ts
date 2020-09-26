@@ -49,5 +49,5 @@ export interface SetValue<T> {
 
 export interface Return<T> extends Readonly<FormState<T>> {
   formRef: RefObject<HTMLFormElement>;
-  setValue: SetValue<T>;
+  setFieldValue: SetValue<T>;
 }
