@@ -5,6 +5,7 @@ import {
   Return,
   FormState,
   FormActionType,
+  FormElement,
   Fields,
   FieldValues,
   FieldElement,
@@ -36,7 +37,7 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 const hasChangeEvent = ({ type }: HTMLInputElement) =>
   !/hidden|image|submit|reset/.test(type);
 
-const getFields = (form: HTMLFormElement | null) =>
+const getFields = (form: FormElement) =>
   form
     ? [...form.querySelectorAll("input,textarea,select")]
         .filter((element) => {
@@ -57,9 +58,9 @@ const getFields = (form: HTMLFormElement | null) =>
     : {};
 
 const useForm = <T extends FieldValues = FieldValues>({
+  formRef: configFormRef,
   defaultValues = {},
 }: Config<T>): Return<T> => {
-  const formRef = useRef<HTMLFormElement | null>(null);
   const fieldsRef = useRef<Fields>({});
   const { current: initialState } = useRef<FormState<T>>({
     values: defaultValues,
@@ -69,11 +70,16 @@ const useForm = <T extends FieldValues = FieldValues>({
   const [state, dispatch] = useFormState<T>(initialState, (s) => {
     stateRef.current = s;
   });
+  const varFormRef = useRef<FormElement>(null);
+  const formRef = configFormRef || varFormRef;
 
-  const refreshFieldsIfNeeded = useCallback((name: string) => {
-    if (formRef.current && !fieldsRef.current[name])
-      fieldsRef.current = getFields(formRef.current);
-  }, []);
+  const refreshFieldsIfNeeded = useCallback(
+    (name: string) => {
+      if (formRef.current && !fieldsRef.current[name])
+        fieldsRef.current = getFields(formRef.current);
+    },
+    [formRef]
+  );
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name]) return;
@@ -116,7 +122,7 @@ const useForm = <T extends FieldValues = FieldValues>({
         const { name } = fields[key].field;
         setDomValue(name, values[name]);
       }),
-    [setDomValue, defaultValues]
+    [formRef, setDomValue, defaultValues]
   );
 
   const setFieldValue = useCallback<SetFieldValue<T>>(
@@ -160,7 +166,7 @@ const useForm = <T extends FieldValues = FieldValues>({
 
     fieldsRef.current = getFields(formRef.current);
     setDomDefaultValues(fieldsRef.current);
-  }, [setDomDefaultValues]);
+  }, [formRef, setDomDefaultValues]);
 
   useEffect(() => {
     if (!formRef.current) return () => null;
@@ -223,7 +229,7 @@ const useForm = <T extends FieldValues = FieldValues>({
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
     };
-  }, [dispatch, setFieldTouched]);
+  }, [formRef, dispatch, setFieldTouched]);
 
   return {
     formRef,

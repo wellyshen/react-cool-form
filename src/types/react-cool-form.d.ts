@@ -5,6 +5,10 @@ declare module "react-cool-form" {
 
   export type Touched = Record<string, boolean>;
 
+  export type FormElement = HTMLFormElement | null;
+
+  export type FormRef = RefObject<FormElement>;
+
   export type FieldValues = Record<string, any>;
 
   export interface SetFieldValue<T> {
@@ -13,10 +17,11 @@ declare module "react-cool-form" {
 
   export interface Config<T> {
     defaultValues: Values<T>;
+    formRef?: FormRef;
   }
 
   export interface Return<T> {
-    formRef: RefObject<HTMLFormElement>;
+    formRef: FormRef;
     readonly values: Values<T>;
     readonly touched: Touched;
     setFieldValue: SetFieldValue<T>;

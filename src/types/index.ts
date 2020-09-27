@@ -29,6 +29,10 @@ export type FormReducer<T> = Reducer<FormState<T>, FormAction>;
 // Hook
 export type FieldValues = Record<string, any>;
 
+export type FormElement = HTMLFormElement | null;
+
+export type FormRef = RefObject<FormElement>;
+
 export type FieldElement =
   | HTMLInputElement
   | HTMLTextAreaElement
@@ -49,9 +53,10 @@ export interface SetFieldValue<T> {
 
 export interface Config<T> {
   defaultValues: Values<T>;
+  formRef?: FormRef;
 }
 
 export interface Return<T> extends Readonly<FormState<T>> {
-  formRef: RefObject<HTMLFormElement>;
+  formRef: FormRef;
   setFieldValue: SetFieldValue<T>;
 }
