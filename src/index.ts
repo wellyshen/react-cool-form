@@ -5,7 +5,6 @@ import {
   Return,
   FormState,
   FormActionType,
-  FormElement,
   Fields,
   FieldValues,
   FieldElement,
@@ -37,7 +36,7 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 const hasChangeEvent = ({ type }: HTMLInputElement) =>
   !/hidden|image|submit|reset/.test(type);
 
-const getFields = (form: FormElement) =>
+const getFields = (form: HTMLFormElement | null) =>
   form
     ? [...form.querySelectorAll("input,textarea,select")]
         .filter((element) => {
@@ -70,7 +69,7 @@ const useForm = <T extends FieldValues = FieldValues>({
   const [state, dispatch] = useFormState<T>(initialState, (s) => {
     stateRef.current = s;
   });
-  const varFormRef = useRef<FormElement>(null);
+  const varFormRef = useRef<HTMLFormElement>(null);
   const formRef = configFormRef || varFormRef;
 
   const refreshFieldsIfNeeded = useCallback(

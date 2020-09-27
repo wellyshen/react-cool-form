@@ -5,9 +5,7 @@ declare module "react-cool-form" {
 
   export type Touched = Record<string, boolean>;
 
-  export type FormElement = HTMLFormElement | null;
-
-  export type FormRef = RefObject<FormElement>;
+  export type FormRef = RefObject<HTMLFormElement>;
 
   export type FieldValues = Record<string, any>;
 

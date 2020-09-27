@@ -29,9 +29,7 @@ export type FormReducer<T> = Reducer<FormState<T>, FormAction>;
 // Hook
 export type FieldValues = Record<string, any>;
 
-export type FormElement = HTMLFormElement | null;
-
-export type FormRef = RefObject<FormElement>;
+export type FormRef = RefObject<HTMLFormElement>;
 
 export type FieldElement =
   | HTMLInputElement
