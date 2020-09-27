@@ -55,7 +55,7 @@ interface FormValues {
   checkbox: boolean;
   checkboxGroup: string[];
   radio: string;
-  file: FileList;
+  image: any;
   select: string;
   multiSelect: string[];
   textarea: string;
@@ -69,6 +69,7 @@ const defaultValues = {
   checkbox: true,
   checkboxGroup: ["value-1"],
   radio: "value-1",
+  image: "",
   select: "value-2",
   multiSelect: ["value-1", "value-2"],
   textarea: "test",
@@ -86,7 +87,7 @@ export default (): JSX.Element => {
   // console.log("LOG ==> touched: ", touched);
 
   const handleSetValueClick = (): void => {
-    setFieldValue("text", (value?: string) => `new ${value}`);
+    setFieldValue("text", (value) => `new ${value}`);
     setFieldValue("hiddenText", "new test");
     setFieldValue("password", "");
     setFieldValue("number", 456);
@@ -143,7 +144,7 @@ export default (): JSX.Element => {
             value="value-2"
           />
         </div>
-        <Input label="File:" type="file" name="file" />
+        <Input label="File:" type="file" name="image" />
         <Select label="Select:" name="select">
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
