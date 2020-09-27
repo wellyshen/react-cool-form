@@ -74,7 +74,6 @@ const defaultValues = {
 
 export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
-  // @ts-expect-error
   const { formRef, values, setFieldValue, touched } = useForm<FormProps>({
     defaultValues,
   });
