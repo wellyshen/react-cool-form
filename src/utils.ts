@@ -17,9 +17,10 @@ export const isMultipleSelectField = ({ type }: FieldElement): boolean =>
 
 export const isFileField = ({ type }: FieldElement): boolean => type === "file";
 
-export const isString = (value: unknown): boolean => typeof value === "string";
-
 export const isFunction = (value: unknown): boolean =>
   typeof value === "function";
 
 export const isArray = (value: unknown): boolean => Array.isArray(value);
+
+export const isObject = (value: unknown): boolean =>
+  value !== null && !isArray(value) && typeof value === "object";
