@@ -9,5 +9,9 @@
     "target": "esnext",
     "jsx": "react"
   },
-  "exclude": ["node_modules", "dist/index.d.ts"]
+  "exclude": [
+    "node_modules",
+    "dist/index.d.ts",
+    "src/types/react-cool-form.d.ts"
+  ]
 }
