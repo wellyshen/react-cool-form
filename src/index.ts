@@ -9,10 +9,10 @@ import {
   FieldValues,
   FieldElement,
   Values,
-  ValueFn,
+  ValueFnArg,
   SetFieldValue,
 } from "./types";
-import useFormState from "./useFormState";
+import useFormReducer from "./useFormReducer";
 import {
   isNumberField,
   isRangeField,
@@ -66,7 +66,7 @@ const useForm = <T extends FieldValues = FieldValues>({
     touched: {},
   });
   const stateRef = useRef<FormState<T>>(initialState);
-  const [state, dispatch] = useFormState<T>(initialState, (s) => {
+  const [state, dispatch] = useFormReducer<T>(initialState, (s) => {
     stateRef.current = s;
   });
   const varFormRef = useRef<HTMLFormElement>(null);
@@ -127,7 +127,7 @@ const useForm = <T extends FieldValues = FieldValues>({
   const setFieldValue = useCallback<SetFieldValue<T>>(
     (name, value) => {
       const val = isFunction(value)
-        ? (value as ValueFn<T>)(stateRef.current.values[name])
+        ? (value as ValueFnArg<T>)(stateRef.current.values[name])
         : value;
 
       dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value: val });
