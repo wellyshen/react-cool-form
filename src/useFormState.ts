@@ -24,13 +24,13 @@ const reducer = <T>(
 
 export default <T>(
   initialState: FormState<T>,
-  onValuesChange: OnStateChange<T>
+  onStateChange: OnStateChange<T>
 ): ReturnType<typeof useReducer> => {
   const [state, dispatch] = useReducer<FormReducer<T>>(reducer, initialState);
 
   useEffect(() => {
-    onValuesChange(state);
-  }, [onValuesChange, state]);
+    onStateChange(state);
+  }, [onStateChange, state]);
 
   return [state, dispatch];
 };
