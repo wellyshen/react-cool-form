@@ -112,7 +112,7 @@ const useForm = <T extends FieldValues = FieldValues>({
     }
   }, []);
 
-  const setDomDefaultValues = useCallback(
+  const applyValuesToDom = useCallback(
     (
       fields: Fields = getFields(formRef.current),
       values: Values<T> = defaultValues
@@ -164,8 +164,8 @@ const useForm = <T extends FieldValues = FieldValues>({
     }
 
     fieldsRef.current = getFields(formRef.current);
-    setDomDefaultValues(fieldsRef.current);
-  }, [formRef, setDomDefaultValues]);
+    applyValuesToDom(fieldsRef.current);
+  }, [formRef, applyValuesToDom]);
 
   useEffect(() => {
     if (!formRef.current) return () => null;
