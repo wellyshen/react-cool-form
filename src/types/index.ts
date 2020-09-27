@@ -42,11 +42,11 @@ export type Fields = Record<
 >;
 
 export interface ValueFnArg<T> {
-  <K extends keyof T>(value?: T[K]): T[K];
+  (value?: T): T;
 }
 
 export interface SetFieldValue<T> {
-  <K extends keyof T>(name: K, value: T[K] | ValueFnArg<T>): void;
+  <K extends keyof T>(name: K, value: T[K] | ValueFnArg<T[K]>): void;
 }
 
 export interface Config<T> {
