@@ -39,12 +39,16 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
-export interface Options<T> {
-  defaultValues?: Values<T>;
+export interface ValueFn<T> {
+  <K extends keyof T>(value?: T[K]): T[K];
 }
 
 export interface SetFieldValue<T> {
-  <K extends keyof T>(name: K, value: T[K] | ((value?: T[K]) => T[K])): void;
+  <K extends keyof T>(name: K, value: T[K] | ValueFn<T>): void;
+}
+
+export interface Config<T> {
+  defaultValues: Values<T>;
 }
 
 export interface Return<T> extends Readonly<FormState<T>> {

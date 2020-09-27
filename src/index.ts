@@ -1,7 +1,7 @@
 import { useRef, useCallback, useEffect } from "react";
 
 import {
-  Options,
+  Config,
   Return,
   FormState,
   FormActionType,
@@ -9,6 +9,7 @@ import {
   FieldValues,
   FieldElement,
   Values,
+  ValueFn,
   SetFieldValue,
 } from "./types";
 import useFormState from "./useFormState";
@@ -57,7 +58,7 @@ const getFields = (form: HTMLFormElement | null) =>
 
 const useForm = <T extends FieldValues = FieldValues>({
   defaultValues = {},
-}: Options<T> = {}): Return<T> => {
+}: Config<T>): Return<T> => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const fieldsRef = useRef<Fields>({});
   const { current: initialState } = useRef<FormState<T>>({
@@ -121,7 +122,7 @@ const useForm = <T extends FieldValues = FieldValues>({
   const setFieldValue = useCallback<SetFieldValue<T>>(
     (name, value) => {
       const val = isFunction(value)
-        ? value(stateRef.current.values[name])
+        ? (value as ValueFn<T>)(stateRef.current.values[name])
         : value;
 
       dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value: val });
