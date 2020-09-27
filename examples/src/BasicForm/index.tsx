@@ -47,10 +47,11 @@ const TextArea = memo(
   }
 );
 
-interface FormProps {
+interface FormValues {
   text: string;
+  hiddenText: string;
   password: string;
-  number: string;
+  number: number;
   checkbox: boolean;
   checkboxGroup: string[];
   radio: string;
@@ -62,6 +63,7 @@ interface FormProps {
 
 const defaultValues = {
   text: "test",
+  hiddenText: "",
   password: "test",
   number: 123,
   checkbox: true,
@@ -74,7 +76,7 @@ const defaultValues = {
 
 export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
-  const { formRef, values, setFieldValue, touched } = useForm<FormProps>({
+  const { formRef, values, setFieldValue, touched } = useForm<FormValues>({
     defaultValues,
   });
 
@@ -82,7 +84,7 @@ export default (): JSX.Element => {
   console.log("LOG ==> touched: ", touched);
 
   const handleSetValueClick = (): void => {
-    setFieldValue("text", (value: string) => `new ${value}`);
+    setFieldValue("text", (value?: string) => `new ${value}`);
     setFieldValue("hiddenText", "new test");
     setFieldValue("password", "");
     setFieldValue("number", 456);
