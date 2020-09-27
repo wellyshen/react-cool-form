@@ -134,11 +134,6 @@ const useForm = <T extends FieldValues = FieldValues>({
     [dispatch, refreshFieldsIfNeeded, setDomValue]
   );
 
-  const setStateValue = useCallback(
-    (name: string, value: any) => setFieldValue(name, value),
-    [setFieldValue]
-  );
-
   const setFieldTouched = useCallback(
     (name: string, isTouched = true) => {
       refreshFieldsIfNeeded(name);
@@ -184,9 +179,10 @@ const useForm = <T extends FieldValues = FieldValues>({
         val = parseFloat(value) || "";
       } else if (isCheckboxField(field)) {
         const checkbox = field as HTMLInputElement;
+        let checkValues: any = stateRef.current.values[name];
 
-        if (checkbox.hasAttribute("value")) {
-          const checkValues = new Set(stateRef.current.values[name]);
+        if (checkbox.hasAttribute("value") && isArray(checkValues)) {
+          checkValues = new Set(stateRef.current.values[name]);
 
           if (checkbox.checked) {
             checkValues.add(value);
@@ -206,7 +202,7 @@ const useForm = <T extends FieldValues = FieldValues>({
         val = (field as HTMLInputElement).files;
       }
 
-      setStateValue(name, val);
+      dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value: val });
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -226,7 +222,7 @@ const useForm = <T extends FieldValues = FieldValues>({
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
     };
-  }, [setStateValue, setFieldTouched]);
+  }, [dispatch, setFieldTouched]);
 
   return {
     formRef,
