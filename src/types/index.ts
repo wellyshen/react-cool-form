@@ -1,13 +1,13 @@
 import { RefObject, Reducer } from "react";
 
 // Reducer
-export interface FormState<T> {
-  values: T;
-  touched: Partial<Record<keyof T, boolean>>;
+export interface FormState<V> {
+  values: V;
+  touched: Partial<Record<keyof V, boolean>>;
 }
 
-export interface OnStateChange<T> {
-  (state: FormState<T>): void;
+export interface OnStateChange<V> {
+  (state: FormState<V>): void;
 }
 
 export enum FormActionType {
@@ -22,7 +22,7 @@ export type FormAction =
       payload: Record<string, boolean>;
     };
 
-export type FormReducer<T> = Reducer<FormState<T>, FormAction>;
+export type FormReducer<V> = Reducer<FormState<V>, FormAction>;
 
 // Hook
 export type FormRef = RefObject<HTMLFormElement>;
@@ -39,16 +39,16 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
-export interface SetFieldValue<T> {
-  <K extends keyof T>(name: K, value: T[K] | ((value: T[K]) => T[K])): void;
+export interface SetFieldValue<V> {
+  <K extends keyof V>(name: K, value: V[K] | ((value: V[K]) => V[K])): void;
 }
 
-export interface Config<T> {
-  defaultValues: T;
+export interface Config<V> {
+  defaultValues: V;
   formRef?: FormRef;
 }
 
-export interface Return<T> extends Readonly<FormState<T>> {
+export interface Return<V> extends Readonly<FormState<V>> {
   formRef: FormRef;
-  setFieldValue: SetFieldValue<T>;
+  setFieldValue: SetFieldValue<V>;
 }

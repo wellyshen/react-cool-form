@@ -54,17 +54,17 @@ const getFields = (form: HTMLFormElement | null) =>
         }, {} as Record<string, any>)
     : {};
 
-const useForm = <T extends FormValues = FormValues>({
-  defaultValues = {} as T,
+const useForm = <V extends FormValues = FormValues>({
+  defaultValues = {} as V,
   formRef: configFormRef,
-}: Config<T>): Return<T> => {
+}: Config<V>): Return<V> => {
   const fieldsRef = useRef<Fields>({});
-  const { current: initialState } = useRef<FormState<T>>({
+  const { current: initialState } = useRef<FormState<V>>({
     values: defaultValues,
     touched: {},
   });
-  const stateRef = useRef<FormState<T>>(initialState);
-  const [state, dispatch] = useFormReducer<T>(initialState, (s) => {
+  const stateRef = useRef<FormState<V>>(initialState);
+  const [state, dispatch] = useFormReducer<V>(initialState, (s) => {
     stateRef.current = s;
   });
   const varFormRef = useRef<HTMLFormElement>(null);
@@ -111,7 +111,7 @@ const useForm = <T extends FormValues = FormValues>({
   }, []);
 
   const applyValuesToDom = useCallback(
-    (fields: Fields = getFields(formRef.current), values: T = defaultValues) =>
+    (fields: Fields = getFields(formRef.current), values: V = defaultValues) =>
       Object.keys(fields).forEach((key) => {
         const { name } = fields[key].field;
         setDomValue(name, values[name]);
@@ -119,7 +119,7 @@ const useForm = <T extends FormValues = FormValues>({
     [formRef, setDomValue, defaultValues]
   );
 
-  const setFieldValue = useCallback<SetFieldValue<T>>(
+  const setFieldValue = useCallback<SetFieldValue<V>>(
     (name, value) => {
       const val = isFunction(value)
         ? value(stateRef.current.values[name])

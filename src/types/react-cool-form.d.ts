@@ -5,25 +5,25 @@ declare module "react-cool-form" {
 
   export type FormValues = Record<string, any>;
 
-  export interface SetFieldValue<T> {
-    <K extends keyof T>(name: K, value: T[K] | ((value: T[K]) => T[K])): void;
+  export interface SetFieldValue<V> {
+    <K extends keyof V>(name: K, value: V[K] | ((value: V[K]) => V[K])): void;
   }
 
-  export interface Config<T> {
-    defaultValues: T;
+  export interface Config<V> {
+    defaultValues: V;
     formRef?: FormRef;
   }
 
-  export interface Return<T> {
+  export interface Return<V> {
     formRef: FormRef;
-    readonly values: T;
-    readonly touched: Partial<Record<keyof T, boolean>>;
-    setFieldValue: SetFieldValue<T>;
+    readonly values: V;
+    readonly touched: Partial<Record<keyof V, boolean>>;
+    setFieldValue: SetFieldValue<V>;
   }
 
-  const useForm: <T extends FormValues = FormValues>(
-    config: Config<T>
-  ) => Return<T>;
+  const useForm: <V extends FormValues = FormValues>(
+    config: Config<V>
+  ) => Return<V>;
 
   export default useForm;
 }

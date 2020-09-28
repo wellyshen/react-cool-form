@@ -8,10 +8,10 @@ import {
   OnStateChange,
 } from "./types";
 
-const reducer = <T>(
-  state: FormState<T>,
+const reducer = <V>(
+  state: FormState<V>,
   { type, payload }: FormAction
-): FormState<T> => {
+): FormState<V> => {
   switch (type) {
     case FormActionType.SET_FIELD_VALUE:
       return { ...state, values: { ...state.values, ...payload } };
@@ -22,11 +22,11 @@ const reducer = <T>(
   }
 };
 
-export default <T>(
-  initialState: FormState<T>,
-  onStateChange: OnStateChange<T>
+export default <V>(
+  initialState: FormState<V>,
+  onStateChange: OnStateChange<V>
 ): ReturnType<typeof useReducer> => {
-  const [state, dispatch] = useReducer<FormReducer<T>>(reducer, initialState);
+  const [state, dispatch] = useReducer<FormReducer<V>>(reducer, initialState);
 
   useEffect(() => {
     onStateChange(state);
