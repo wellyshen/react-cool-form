@@ -3,7 +3,7 @@ import { RefObject, Reducer } from "react";
 // Reducer
 export interface FormState<T> {
   values: T;
-  touched: Record<string, boolean>;
+  touched: Partial<Record<keyof T, boolean>>;
 }
 
 export interface OnStateChange<T> {

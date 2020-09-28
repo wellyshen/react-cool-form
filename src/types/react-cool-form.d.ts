@@ -17,7 +17,7 @@ declare module "react-cool-form" {
   export interface Return<T> {
     formRef: FormRef;
     readonly values: T;
-    readonly touched: Record<string, boolean>;
+    readonly touched: Partial<Record<keyof T, boolean>>;
     setFieldValue: SetFieldValue<T>;
   }
 
