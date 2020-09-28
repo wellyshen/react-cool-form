@@ -57,15 +57,17 @@ const getFields = (form: HTMLFormElement | null) =>
 const useForm = <V extends FormValues = FormValues>({
   defaultValues = {} as V,
   formRef: configFormRef,
+  validate,
 }: Config<V>): Return<V> => {
   const fieldsRef = useRef<Fields>({});
   const { current: initialState } = useRef<FormState<V>>({
     values: defaultValues,
     touched: {},
+    errors: {},
   });
-  const stateRef = useRef<FormState<V>>(initialState);
-  const [state, dispatch] = useFormReducer<V>(initialState, (s) => {
-    stateRef.current = s;
+  const formStateRef = useRef<FormState<V>>(initialState);
+  const [formState, dispatch] = useFormReducer<V>(initialState, (state) => {
+    formStateRef.current = state;
   });
   const varFormRef = useRef<HTMLFormElement>(null);
   const formRef = configFormRef || varFormRef;
@@ -77,6 +79,11 @@ const useForm = <V extends FormValues = FormValues>({
     },
     [formRef]
   );
+
+  const validateForm = useCallback(() => {
+    if (!validate) return;
+    console.log("LOG ===> ValidateForm!");
+  }, [validate]);
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name]) return;
@@ -110,65 +117,8 @@ const useForm = <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const applyValuesToDom = useCallback(
-    (fields: Fields = getFields(formRef.current), values: V = defaultValues) =>
-      Object.keys(fields).forEach((key) => {
-        const { name } = fields[key].field;
-        setDomValue(name, values[name]);
-      }),
-    [formRef, setDomValue, defaultValues]
-  );
-
-  const setFieldValue = useCallback<SetFieldValue<V>>(
-    (name, value) => {
-      const val = isFunction(value)
-        ? value(stateRef.current.values[name])
-        : value;
-
-      dispatch({
-        type: FormActionType.SET_FIELD_VALUE,
-        payload: { [name]: val },
-      });
-
-      refreshFieldsIfNeeded(name as string);
-      setDomValue(name as string, val);
-
-      // TODO: validation
-    },
-    [dispatch, refreshFieldsIfNeeded, setDomValue]
-  );
-
-  const setFieldTouched = useCallback(
-    (name: string, isTouched = true) => {
-      refreshFieldsIfNeeded(name);
-      dispatch({
-        type: FormActionType.SET_FIELD_TOUCHED,
-        payload: { [name]: isTouched },
-      });
-
-      // TODO: validation
-    },
-    [refreshFieldsIfNeeded, dispatch]
-  );
-
-  useEffect(() => {
-    if (!formRef.current) {
-      if (__DEV__)
-        console.warn(
-          '💡react-cool-form: Don\'t forget to register your form with the "formRef"'
-        );
-      return;
-    }
-
-    fieldsRef.current = getFields(formRef.current);
-    applyValuesToDom(fieldsRef.current);
-  }, [formRef, applyValuesToDom]);
-
-  useEffect(() => {
-    if (!formRef.current) return () => null;
-
-    const handleChange = (e: Event) => {
-      const field = e.target as FieldElement;
+  const setStateValue = useCallback(
+    (field: FieldElement) => {
       const { name, value } = field;
 
       if (!name) {
@@ -181,10 +131,10 @@ const useForm = <V extends FormValues = FormValues>({
       if (isNumberField(field) || isRangeField(field)) {
         val = parseFloat(value) || "";
       } else if (isCheckboxField(field)) {
-        let checkValues: any = stateRef.current.values[name];
+        let checkValues: any = formStateRef.current.values[name];
 
         if (field.hasAttribute("value") && isArray(checkValues)) {
-          checkValues = new Set(stateRef.current.values[name]);
+          checkValues = new Set(formStateRef.current.values[name]);
 
           if (field.checked) {
             checkValues.add(value);
@@ -208,7 +158,70 @@ const useForm = <V extends FormValues = FormValues>({
         type: FormActionType.SET_FIELD_VALUE,
         payload: { [name]: val },
       });
-    };
+
+      validateForm();
+    },
+    [dispatch, validateForm]
+  );
+
+  const setFieldValue = useCallback<SetFieldValue<V>>(
+    (name, value) => {
+      const val = isFunction(value)
+        ? value(formStateRef.current.values[name])
+        : value;
+
+      dispatch({
+        type: FormActionType.SET_FIELD_VALUE,
+        payload: { [name]: val },
+      });
+
+      refreshFieldsIfNeeded(name as string);
+      setDomValue(name as string, val);
+
+      validateForm();
+    },
+    [refreshFieldsIfNeeded, dispatch, setDomValue, validateForm]
+  );
+
+  const setFieldTouched = useCallback(
+    (name: string, isTouched = true) => {
+      refreshFieldsIfNeeded(name);
+      dispatch({
+        type: FormActionType.SET_FIELD_TOUCHED,
+        payload: { [name]: isTouched },
+      });
+
+      validateForm();
+    },
+    [refreshFieldsIfNeeded, dispatch, validateForm]
+  );
+
+  const applyValuesToDom = useCallback(
+    (fields: Fields = getFields(formRef.current), values: V = defaultValues) =>
+      Object.keys(fields).forEach((key) => {
+        const { name } = fields[key].field;
+        setDomValue(name, values[name]);
+      }),
+    [formRef, setDomValue, defaultValues]
+  );
+
+  useEffect(() => {
+    if (!formRef.current) {
+      if (__DEV__)
+        console.warn(
+          '💡react-cool-form: Don\'t forget to register your form with the "formRef"'
+        );
+      return;
+    }
+
+    fieldsRef.current = getFields(formRef.current);
+    applyValuesToDom(fieldsRef.current);
+  }, [formRef, applyValuesToDom]);
+
+  useEffect(() => {
+    if (!formRef.current) return () => null;
+
+    const handleChange = (e: Event) => setStateValue(e.target as FieldElement);
 
     const handleBlur = ({ target }: Event) => {
       if (
@@ -227,9 +240,9 @@ const useForm = <V extends FormValues = FormValues>({
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
     };
-  }, [formRef, dispatch, setFieldTouched]);
+  }, [formRef, setStateValue, setFieldTouched]);
 
-  return { ...state, formRef, setFieldValue };
+  return { formRef, formState, setFieldValue };
 };
 
 export default useForm;
