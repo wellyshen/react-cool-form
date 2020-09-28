@@ -16,8 +16,11 @@ export enum FormActionType {
 }
 
 export type FormAction =
-  | { type: FormActionType.SET_FIELD_VALUE; name: string; value: any }
-  | { type: FormActionType.SET_FIELD_TOUCHED; name: string; value: boolean };
+  | { type: FormActionType.SET_FIELD_VALUE; payload: Record<string, any> }
+  | {
+      type: FormActionType.SET_FIELD_TOUCHED;
+      payload: Record<string, boolean>;
+    };
 
 export type FormReducer<T> = Reducer<FormState<T>, FormAction>;
 

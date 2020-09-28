@@ -125,7 +125,10 @@ const useForm = <T extends FormValues = FormValues>({
         ? value(stateRef.current.values[name])
         : value;
 
-      dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value: val });
+      dispatch({
+        type: FormActionType.SET_FIELD_VALUE,
+        payload: { [name]: val },
+      });
 
       refreshFieldsIfNeeded(name as string);
       setDomValue(name as string, val);
@@ -140,8 +143,7 @@ const useForm = <T extends FormValues = FormValues>({
       refreshFieldsIfNeeded(name);
       dispatch({
         type: FormActionType.SET_FIELD_TOUCHED,
-        name,
-        value: isTouched,
+        payload: { [name]: isTouched },
       });
 
       // TODO: validation
@@ -202,7 +204,10 @@ const useForm = <T extends FormValues = FormValues>({
         val = field.files;
       }
 
-      dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value: val });
+      dispatch({
+        type: FormActionType.SET_FIELD_VALUE,
+        payload: { [name]: val },
+      });
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -224,12 +229,7 @@ const useForm = <T extends FormValues = FormValues>({
     };
   }, [formRef, dispatch, setFieldTouched]);
 
-  return {
-    formRef,
-    values: state.values,
-    touched: state.touched,
-    setFieldValue,
-  };
+  return { ...state, formRef, setFieldValue };
 };
 
 export default useForm;

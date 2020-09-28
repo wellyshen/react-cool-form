@@ -10,13 +10,13 @@ import {
 
 const reducer = <T>(
   state: FormState<T>,
-  { type, name, value }: FormAction
+  { type, payload }: FormAction
 ): FormState<T> => {
   switch (type) {
     case FormActionType.SET_FIELD_VALUE:
-      return { ...state, values: { ...state.values, [name]: value } };
+      return { ...state, values: { ...state.values, ...payload } };
     case FormActionType.SET_FIELD_TOUCHED:
-      return { ...state, touched: { ...state.touched, [name]: value } };
+      return { ...state, touched: { ...state.touched, ...payload } };
     default:
       throw new Error(`Unknown action: ${type}`);
   }

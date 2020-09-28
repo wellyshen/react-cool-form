@@ -83,7 +83,7 @@ export default (): JSX.Element => {
     // formRef,
   });
 
-  console.log("LOG ==> values: ", values);
+  // console.log("LOG ==> values: ", values);
   // console.log("LOG ==> touched: ", touched);
 
   const handleSetValueClick = (): void => {
