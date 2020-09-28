@@ -8,7 +8,6 @@ import {
   Fields,
   FormValues,
   FieldElement,
-  Values,
   ValueFnArg,
   SetFieldValue,
 } from "./types";
@@ -57,8 +56,8 @@ const getFields = (form: HTMLFormElement | null) =>
     : {};
 
 const useForm = <T extends FormValues = FormValues>({
+  defaultValues = {} as T,
   formRef: configFormRef,
-  defaultValues = {},
 }: Config<T>): Return<T> => {
   const fieldsRef = useRef<Fields>({});
   const { current: initialState } = useRef<FormState<T>>({
@@ -113,10 +112,7 @@ const useForm = <T extends FormValues = FormValues>({
   }, []);
 
   const applyValuesToDom = useCallback(
-    (
-      fields: Fields = getFields(formRef.current),
-      values: Values<T> = defaultValues
-    ) =>
+    (fields: Fields = getFields(formRef.current), values: T = defaultValues) =>
       Object.keys(fields).forEach((key) => {
         const { name } = fields[key].field;
         setDomValue(name, values[name]);

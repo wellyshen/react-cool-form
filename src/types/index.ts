@@ -1,14 +1,9 @@
 import { RefObject, Reducer } from "react";
 
-// Common
-export type Values<T> = Partial<T>;
-
-export type Touched = Record<string, boolean>;
-
 // Reducer
 export interface FormState<T> {
-  values: Values<T>;
-  touched: Touched;
+  values: T;
+  touched: Record<string, boolean>;
 }
 
 export interface OnStateChange<T> {
@@ -42,7 +37,7 @@ export type Fields = Record<
 >;
 
 export interface ValueFnArg<T> {
-  (value?: T): T;
+  (value: T): T;
 }
 
 export interface SetFieldValue<T> {
@@ -50,7 +45,7 @@ export interface SetFieldValue<T> {
 }
 
 export interface Config<T> {
-  defaultValues: Values<T>;
+  defaultValues: T;
   formRef?: FormRef;
 }
 
