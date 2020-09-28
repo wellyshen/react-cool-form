@@ -8,7 +8,6 @@ import {
   Fields,
   FormValues,
   FieldElement,
-  ValueFnArg,
   SetFieldValue,
 } from "./types";
 import useFormReducer from "./useFormReducer";
@@ -101,11 +100,11 @@ const useForm = <T extends FormValues = FormValues>({
         radio.checked = radio.value === value;
       });
     } else if (isMultipleSelectField(field) && isArray(value)) {
-      [...(field as HTMLSelectElement).options].forEach((option) => {
+      [...field.options].forEach((option) => {
         option.selected = !!value.includes(option.value);
       });
     } else if (isFileField(field)) {
-      if (isObject(value)) (field as HTMLInputElement).files = value;
+      if (isObject(value)) field.files = value;
     } else {
       field.value = value;
     }
@@ -123,7 +122,7 @@ const useForm = <T extends FormValues = FormValues>({
   const setFieldValue = useCallback<SetFieldValue<T>>(
     (name, value) => {
       const val = isFunction(value)
-        ? (value as ValueFnArg<T>)(stateRef.current.values[name])
+        ? value(stateRef.current.values[name])
         : value;
 
       dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value: val });
@@ -180,13 +179,12 @@ const useForm = <T extends FormValues = FormValues>({
       if (isNumberField(field) || isRangeField(field)) {
         val = parseFloat(value) || "";
       } else if (isCheckboxField(field)) {
-        const checkbox = field as HTMLInputElement;
         let checkValues: any = stateRef.current.values[name];
 
-        if (checkbox.hasAttribute("value") && isArray(checkValues)) {
+        if (field.hasAttribute("value") && isArray(checkValues)) {
           checkValues = new Set(stateRef.current.values[name]);
 
-          if (checkbox.checked) {
+          if (field.checked) {
             checkValues.add(value);
           } else {
             checkValues.delete(value);
@@ -194,7 +192,7 @@ const useForm = <T extends FormValues = FormValues>({
 
           val = [...checkValues];
         } else {
-          val = checkbox.checked;
+          val = field.checked;
         }
       } else if (isMultipleSelectField(field)) {
         val = [...(field as HTMLSelectElement).options]

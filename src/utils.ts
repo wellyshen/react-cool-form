@@ -1,26 +1,31 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 import { FieldElement } from "./types";
 
-export const isNumberField = ({ type }: FieldElement): boolean =>
-  type === "number";
+export const isNumberField = (field: FieldElement): field is HTMLInputElement =>
+  field.type === "number";
 
-export const isRangeField = ({ type }: FieldElement): boolean =>
-  type === "range";
+export const isRangeField = (field: FieldElement): field is HTMLInputElement =>
+  field.type === "range";
 
-export const isCheckboxField = ({ type }: FieldElement): boolean =>
-  type === "checkbox";
+export const isCheckboxField = (
+  field: FieldElement
+): field is HTMLInputElement => field.type === "checkbox";
 
-export const isRadioField = ({ type }: FieldElement): boolean =>
-  type === "radio";
+export const isRadioField = (field: FieldElement): field is HTMLInputElement =>
+  field.type === "radio";
 
-export const isMultipleSelectField = ({ type }: FieldElement): boolean =>
-  type === "select-multiple";
+export const isFileField = (field: FieldElement): field is HTMLInputElement =>
+  field.type === "file";
 
-export const isFileField = ({ type }: FieldElement): boolean => type === "file";
+export const isMultipleSelectField = (
+  field: FieldElement
+): field is HTMLSelectElement => field.type === "select-multiple";
 
-export const isFunction = (value: unknown): boolean =>
+export const isFunction = (value: unknown): value is Function =>
   typeof value === "function";
 
-export const isArray = (value: unknown): boolean => Array.isArray(value);
+export const isArray = (value: unknown): value is any[] => Array.isArray(value);
 
-export const isObject = (value: unknown): boolean =>
-  value !== null && !isArray(value) && typeof value === "object";
+export const isObject = (value: unknown): value is Object =>
+  !isArray(value) && value !== null && typeof value === "object";

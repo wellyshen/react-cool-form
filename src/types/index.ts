@@ -36,12 +36,8 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
-export interface ValueFnArg<T> {
-  (value: T): T;
-}
-
 export interface SetFieldValue<T> {
-  <K extends keyof T>(name: K, value: T[K] | ValueFnArg<T[K]>): void;
+  <K extends keyof T>(name: K, value: T[K] | ((value: T[K]) => T[K])): void;
 }
 
 export interface Config<T> {
