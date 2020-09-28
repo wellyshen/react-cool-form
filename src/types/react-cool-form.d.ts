@@ -7,7 +7,7 @@ declare module "react-cool-form" {
 
   export type FormRef = RefObject<HTMLFormElement>;
 
-  export type FieldValues = Record<string, any>;
+  export type FormValues = Record<string, any>;
 
   export interface SetFieldValue<T> {
     <K extends keyof T>(name: K, value: T[K] | ((value?: T[K]) => T[K])): void;
@@ -25,7 +25,7 @@ declare module "react-cool-form" {
     setFieldValue: SetFieldValue<T>;
   }
 
-  const useForm: <T extends FieldValues = FieldValues>(
+  const useForm: <T extends FormValues = FormValues>(
     config: Config<T>
   ) => Return<T>;
 

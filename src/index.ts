@@ -6,7 +6,7 @@ import {
   FormState,
   FormActionType,
   Fields,
-  FieldValues,
+  FormValues,
   FieldElement,
   Values,
   ValueFnArg,
@@ -56,7 +56,7 @@ const getFields = (form: HTMLFormElement | null) =>
         }, {} as Record<string, any>)
     : {};
 
-const useForm = <T extends FieldValues = FieldValues>({
+const useForm = <T extends FormValues = FormValues>({
   formRef: configFormRef,
   defaultValues = {},
 }: Config<T>): Return<T> => {
