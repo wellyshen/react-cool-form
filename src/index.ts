@@ -195,11 +195,11 @@ const useForm = <T extends FormValues = FormValues>({
           val = field.checked;
         }
       } else if (isMultipleSelectField(field)) {
-        val = [...(field as HTMLSelectElement).options]
+        val = [...field.options]
           .filter((option) => option.selected)
           .map((option) => option.value);
       } else if (isFileField(field)) {
-        val = (field as HTMLInputElement).files;
+        val = field.files;
       }
 
       dispatch({ type: FormActionType.SET_FIELD_VALUE, name, value: val });
