@@ -78,13 +78,12 @@ const defaultValues = {
 export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
   // const formRef = useRef(null);
-  const { formRef, touched, values, setFieldValue } = useForm<FormValues>({
+  const { formRef, formState, setFieldValue } = useForm<FormValues>({
     defaultValues,
     // formRef,
   });
 
-  // console.log("LOG ==> values: ", values);
-  // console.log("LOG ==> touched: ", touched);
+  console.log("LOG ===> formState: ", formState);
 
   const handleSetValueClick = (): void => {
     setFieldValue("text", (value) => `new ${value}`);
