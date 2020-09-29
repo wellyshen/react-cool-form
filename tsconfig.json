@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "strict": true,
     "module": "commonjs",
-    "target": "esnext",
+    "target": "es2019",
     "jsx": "react"
   },
   "exclude": [
