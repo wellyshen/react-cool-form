@@ -9,6 +9,7 @@ declare module "react-cool-form" {
     readonly values: V;
     readonly touched: Partial<Record<keyof V, boolean>>;
     readonly errors: Partial<Record<keyof V, any>>;
+    readonly isValidating: boolean;
   }
 
   export interface SetFieldValue<V> {
