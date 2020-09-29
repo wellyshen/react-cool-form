@@ -61,6 +61,7 @@
       "welly"
     ],
     "rules": {
+      "no-shadow": "off",
       "no-console": [
         "warn",
         {
@@ -71,7 +72,8 @@
         }
       ],
       "no-param-reassign": "off",
-      "no-underscore-dangle": "off"
+      "no-underscore-dangle": "off",
+      "@typescript-eslint/no-shadow": "error"
     }
   },
   "eslintIgnore": [
