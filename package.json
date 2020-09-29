@@ -100,7 +100,7 @@
     "@testing-library/react-hooks": "^3.4.2",
     "@types/react": "^16.9.49",
     "cpy-cli": "^3.1.1",
-    "eslint": "^7.2.0",
+    "eslint": "^7.10.0",
     "eslint-config-welly": "^1.4.10",
     "husky": "^4.3.0",
     "jest": "^26.4.2",
