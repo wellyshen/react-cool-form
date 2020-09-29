@@ -7,6 +7,7 @@ type Errors<V> = Partial<Record<keyof V, any>>;
 export interface FormState<V> {
   values: V;
   touched: Partial<Record<keyof V, boolean>>;
+  isValidating: boolean;
   errors: Errors<V>;
 }
 
@@ -17,6 +18,7 @@ export interface OnStateChange<V> {
 export enum FormActionType {
   SET_FIELD_VALUE = "SET_FIELD_VALUE",
   SET_FIELD_TOUCHED = "SET_FIELD_TOUCHED",
+  SET_ISVALIDATING = "SET_ISVALIDATING",
   SET_ERRORS = "SET_ERRORS",
 }
 
@@ -26,6 +28,7 @@ export type FormAction<V> =
       type: FormActionType.SET_FIELD_TOUCHED;
       payload: Record<keyof V, boolean>;
     }
+  | { type: FormActionType.SET_ISVALIDATING; payload: boolean }
   | {
       type: FormActionType.SET_ERRORS;
       payload: Errors<V>;

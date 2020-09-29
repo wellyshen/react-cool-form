@@ -63,6 +63,7 @@ const useForm = <V extends FormValues = FormValues>({
   const { current: initialState } = useRef<FormState<V>>({
     values: defaultValues,
     touched: {},
+    isValidating: false,
     errors: {},
   });
   const formStateRef = useRef<FormState<V>>(initialState);
@@ -80,10 +81,17 @@ const useForm = <V extends FormValues = FormValues>({
     [formRef]
   );
 
-  const validateForm = useCallback(() => {
-    if (!validate) return;
-    console.log("LOG ===> ValidateForm!");
-  }, [validate]);
+  const validateForm = useCallback(async () => {
+    if (!validate || !formRef.current) return;
+
+    try {
+      await validate(formRef.current.values);
+    } catch (error) {
+      // ...
+    } finally {
+      // ...
+    }
+  }, [validate, formRef]);
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name]) return;
