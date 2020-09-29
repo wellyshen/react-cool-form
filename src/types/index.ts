@@ -7,8 +7,8 @@ type Errors<V> = Partial<Record<keyof V, any>>;
 export interface FormState<V> {
   values: V;
   touched: Partial<Record<keyof V, boolean>>;
-  isValidating: boolean;
   errors: Errors<V>;
+  isValidating: boolean;
 }
 
 export interface OnStateChange<V> {
@@ -28,11 +28,11 @@ export type FormAction<V> =
       type: FormActionType.SET_FIELD_TOUCHED;
       payload: Record<keyof V, boolean>;
     }
-  | { type: FormActionType.SET_ISVALIDATING; payload: boolean }
   | {
       type: FormActionType.SET_ERRORS;
       payload: Errors<V>;
-    };
+    }
+  | { type: FormActionType.SET_ISVALIDATING; payload: boolean };
 
 export type FormReducer<V> = Reducer<FormState<V>, FormAction<V>>;
 

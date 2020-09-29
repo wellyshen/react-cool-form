@@ -63,8 +63,8 @@ const useForm = <V extends FormValues = FormValues>({
   const { current: initialState } = useRef<FormState<V>>({
     values: defaultValues,
     touched: {},
-    isValidating: false,
     errors: {},
+    isValidating: false,
   });
   const formStateRef = useRef<FormState<V>>(initialState);
   const [formState, dispatch] = useFormReducer<V>(initialState, (state) => {
