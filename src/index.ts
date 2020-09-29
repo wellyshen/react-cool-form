@@ -10,6 +10,7 @@ import {
   FieldElement,
   SetFieldValue,
 } from "./types";
+import useLatest from "./useLatest";
 import useFormReducer from "./useFormReducer";
 import {
   isNumberField,
@@ -59,6 +60,7 @@ const useForm = <V extends FormValues = FormValues>({
   formRef: configFormRef,
   validate,
 }: Config<V>): Return<V> => {
+  const validateRef = useLatest(validate);
   const fieldsRef = useRef<Fields>({});
   const { current: initialState } = useRef<FormState<V>>({
     values: defaultValues,
@@ -82,16 +84,18 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const validateForm = useCallback(async () => {
-    if (!validate || !formRef.current) return;
+    if (!formRef.current || !validateRef.current) return;
 
     try {
-      await validate(formRef.current.values);
+      dispatch({ type: FormActionType.SET_ISVALIDATING, payload: true });
+
+      const errors = await validateRef.current(formRef.current.values);
     } catch (error) {
       // ...
     } finally {
-      // ...
+      dispatch({ type: FormActionType.SET_ISVALIDATING, payload: false });
     }
-  }, [validate, formRef]);
+  }, [formRef, validateRef, dispatch]);
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name]) return;
