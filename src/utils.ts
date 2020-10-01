@@ -2,8 +2,8 @@
 
 import { FieldElement } from "./types";
 
-export const warn = (message: string): void => {
-  if (__DEV__) console.warn(message);
+export const warn = (...args: any[]): void => {
+  if (__DEV__) console.warn(args);
 };
 
 export const isNumberField = (field: FieldElement): field is HTMLInputElement =>
