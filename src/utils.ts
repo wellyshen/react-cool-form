@@ -2,6 +2,10 @@
 
 import { FieldElement } from "./types";
 
+export const warn = (message: string): void => {
+  if (__DEV__) console.warn(message);
+};
+
 export const isNumberField = (field: FieldElement): field is HTMLInputElement =>
   field.type === "number";
 

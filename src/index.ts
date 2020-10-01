@@ -14,6 +14,7 @@ import {
 import useLatest from "./useLatest";
 import useFormReducer from "./useFormReducer";
 import {
+  warn,
   isNumberField,
   isRangeField,
   isCheckboxField,
@@ -24,11 +25,6 @@ import {
   isObject,
   isArray,
 } from "./utils";
-
-const warnNoFieldName = () => {
-  if (__DEV__)
-    console.warn('💡react-cool-form: Field is missing "name" attribute');
-};
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
@@ -41,7 +37,8 @@ const getFields = (form: HTMLFormElement | null) =>
     ? [...form.querySelectorAll("input,textarea,select")]
         .filter((element) => {
           const field = element as FieldElement;
-          if (!field.name) warnNoFieldName();
+          if (!field.name)
+            warn('💡react-cool-form: Field is missing "name" attribute');
           return field.name && hasChangeEvent(field as HTMLInputElement);
         })
         .reduce((fields, field) => {
@@ -97,7 +94,7 @@ const useForm = <V extends FormValues = FormValues>({
         dispatch({ type: FormActionType.SET_ERRORS, payload: errors });
       dispatch({ type: FormActionType.SET_ISVALIDATING, payload: false });
     } catch (error) {
-      if (__DEV__) console.warn(`💡react-cool-form > validate form: `, error);
+      warn(`💡react-cool-form > validate form: `, error);
     }
   }, [formRef, validateRef, dispatch]);
 
@@ -186,10 +183,9 @@ const useForm = <V extends FormValues = FormValues>({
 
   useEffect(() => {
     if (!formRef.current) {
-      if (__DEV__)
-        console.warn(
-          '💡react-cool-form: Don\'t forget to register your form via the "formRef"'
-        );
+      warn(
+        '💡react-cool-form: Don\'t forget to register your form via the "formRef"'
+      );
       return;
     }
 
@@ -205,7 +201,7 @@ const useForm = <V extends FormValues = FormValues>({
       const { name, value } = field;
 
       if (!name) {
-        warnNoFieldName();
+        warn('💡react-cool-form: Field is missing "name" attribute');
         return;
       }
 
