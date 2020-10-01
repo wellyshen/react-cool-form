@@ -62,7 +62,7 @@ interface FormValues {
 }
 
 const defaultValues = {
-  text: "test",
+  text: "",
   hiddenText: "",
   password: "test",
   number: 123,
@@ -82,8 +82,10 @@ export default (): JSX.Element => {
     // formRef,
     defaultValues,
     validate: async (values) => {
-      // throw new Error("Some errors");
-      return { text: "OOPS!" };
+      const errors = {};
+      // @ts-expect-error
+      if (!values.text) errors.text = "Required";
+      return errors;
     },
   });
 
