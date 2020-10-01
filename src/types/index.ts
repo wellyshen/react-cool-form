@@ -52,7 +52,7 @@ export type Fields = Record<
 >;
 
 interface Validate<V> {
-  (value: V): Errors<V> | Promise<Errors<V>>;
+  (values: V): Errors<V> | Promise<Errors<V>>;
 }
 
 export interface SetFieldValue<V> {

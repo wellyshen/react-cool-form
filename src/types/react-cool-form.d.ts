@@ -5,6 +5,12 @@ declare module "react-cool-form" {
 
   export type FormRef = RefObject<HTMLFormElement>;
 
+  type Errors<V> = Partial<Record<keyof V, any>>;
+
+  export interface Validate<V> {
+    (values: V): Errors<V> | Promise<Errors<V>>;
+  }
+
   export interface FormState<V> {
     readonly values: V;
     readonly touched: Partial<Record<keyof V, boolean>>;
@@ -19,6 +25,7 @@ declare module "react-cool-form" {
   export interface Config<V> {
     defaultValues: V;
     formRef?: FormRef;
+    validate?: Validate<V>;
   }
 
   export interface Return<V> {
