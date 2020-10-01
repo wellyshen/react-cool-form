@@ -1,4 +1,5 @@
 import { useRef, useCallback, useEffect } from "react";
+import isEqual from "fast-deep-equal";
 
 import {
   Config,
@@ -86,13 +87,16 @@ const useForm = <V extends FormValues = FormValues>({
   const validateForm = useCallback(async () => {
     if (!formRef.current || !validateRef.current) return;
 
+    dispatch({ type: FormActionType.SET_ISVALIDATING, payload: true });
+
     try {
-      dispatch({ type: FormActionType.SET_ISVALIDATING, payload: true });
       const errors = await validateRef.current(formRef.current.values);
-    } catch (error) {
-      // ...
-    } finally {
+
+      if (!isEqual(errors, formStateRef.current.errors))
+        dispatch({ type: FormActionType.SET_ERRORS, payload: errors });
       dispatch({ type: FormActionType.SET_ISVALIDATING, payload: false });
+    } catch (error) {
+      if (__DEV__) console.warn(`💡react-cool-form > validate form: `, error);
     }
   }, [formRef, validateRef, dispatch]);
 
@@ -173,7 +177,7 @@ const useForm = <V extends FormValues = FormValues>({
     if (!formRef.current) {
       if (__DEV__)
         console.warn(
-          '💡react-cool-form: Don\'t forget to register your form with the "formRef"'
+          '💡react-cool-form: Don\'t forget to register your form via the "formRef"'
         );
       return;
     }
