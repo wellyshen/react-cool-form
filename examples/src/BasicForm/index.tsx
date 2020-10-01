@@ -79,8 +79,12 @@ export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
   // const formRef = useRef(null);
   const { formRef, formState, setFieldValue } = useForm<FormValues>({
-    defaultValues,
     // formRef,
+    defaultValues,
+    validate: async (values) => {
+      // throw new Error("Some errors");
+      return { text: "OOPS!" };
+    },
   });
 
   console.log("LOG ===> formState: ", formState);
