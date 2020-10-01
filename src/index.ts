@@ -88,7 +88,6 @@ const useForm = <V extends FormValues = FormValues>({
 
     try {
       dispatch({ type: FormActionType.SET_ISVALIDATING, payload: true });
-
       const errors = await validateRef.current(formRef.current.values);
     } catch (error) {
       // ...
@@ -128,53 +127,6 @@ const useForm = <V extends FormValues = FormValues>({
       field.value = value;
     }
   }, []);
-
-  const setStateValue = useCallback(
-    (field: FieldElement) => {
-      const { name, value } = field;
-
-      if (!name) {
-        warnNoFieldName();
-        return;
-      }
-
-      let val: any = value;
-
-      if (isNumberField(field) || isRangeField(field)) {
-        val = parseFloat(value) || "";
-      } else if (isCheckboxField(field)) {
-        let checkValues: any = formStateRef.current.values[name];
-
-        if (field.hasAttribute("value") && isArray(checkValues)) {
-          checkValues = new Set(formStateRef.current.values[name]);
-
-          if (field.checked) {
-            checkValues.add(value);
-          } else {
-            checkValues.delete(value);
-          }
-
-          val = [...checkValues];
-        } else {
-          val = field.checked;
-        }
-      } else if (isMultipleSelectField(field)) {
-        val = [...field.options]
-          .filter((option) => option.selected)
-          .map((option) => option.value);
-      } else if (isFileField(field)) {
-        val = field.files;
-      }
-
-      dispatch({
-        type: FormActionType.SET_FIELD_VALUE,
-        payload: { [name]: val },
-      });
-
-      validateForm();
-    },
-    [dispatch, validateForm]
-  );
 
   const setFieldValue = useCallback<SetFieldValue<V>>(
     (name, value) => {
@@ -233,7 +185,50 @@ const useForm = <V extends FormValues = FormValues>({
   useEffect(() => {
     if (!formRef.current) return () => null;
 
-    const handleChange = (e: Event) => setStateValue(e.target as FieldElement);
+    const handleChange = (e: Event) => {
+      const field = e.target as FieldElement;
+      const { name, value } = field;
+
+      if (!name) {
+        warnNoFieldName();
+        return;
+      }
+
+      let val: any = value;
+
+      if (isNumberField(field) || isRangeField(field)) {
+        val = parseFloat(value) || "";
+      } else if (isCheckboxField(field)) {
+        let checkValues: any = formStateRef.current.values[name];
+
+        if (field.hasAttribute("value") && isArray(checkValues)) {
+          checkValues = new Set(formStateRef.current.values[name]);
+
+          if (field.checked) {
+            checkValues.add(value);
+          } else {
+            checkValues.delete(value);
+          }
+
+          val = [...checkValues];
+        } else {
+          val = field.checked;
+        }
+      } else if (isMultipleSelectField(field)) {
+        val = [...field.options]
+          .filter((option) => option.selected)
+          .map((option) => option.value);
+      } else if (isFileField(field)) {
+        val = field.files;
+      }
+
+      dispatch({
+        type: FormActionType.SET_FIELD_VALUE,
+        payload: { [name]: val },
+      });
+
+      validateForm();
+    };
 
     const handleBlur = ({ target }: Event) => {
       if (
@@ -252,7 +247,7 @@ const useForm = <V extends FormValues = FormValues>({
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
     };
-  }, [formRef, setStateValue, setFieldTouched]);
+  }, [formRef, dispatch, validateForm, setFieldTouched]);
 
   return { formRef, formState, setFieldValue };
 };
