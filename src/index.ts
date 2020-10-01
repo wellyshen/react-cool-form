@@ -136,10 +136,12 @@ const useForm = <V extends FormValues = FormValues>({
   const setFieldTouched = useCallback(
     (name: string, isTouched = true) => {
       refreshFieldsIfNeeded(name);
-      dispatch({
-        type: FormActionType.SET_FIELD_TOUCHED,
-        payload: { [name]: isTouched },
-      });
+
+      if (!formStateRef.current.touched[name])
+        dispatch({
+          type: FormActionType.SET_FIELD_TOUCHED,
+          payload: { [name]: isTouched },
+        });
 
       if (name !== changedFieldRef.current) validateForm();
     },
