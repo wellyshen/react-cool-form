@@ -59,7 +59,7 @@ export interface SetFieldValue<V> {
   <K extends keyof V>(
     name: K,
     value: V[K] | ((value: V[K]) => V[K]),
-    options?: { shouldValidate?: boolean }
+    shouldValidate?: boolean
   ): void;
 }
 

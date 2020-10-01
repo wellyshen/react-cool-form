@@ -146,30 +146,23 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const setFieldValue = useCallback<SetFieldValue<V>>(
-    (name, value, { shouldValidate = true } = {}) => {
-      const key = name as string;
+    (name, value, shouldValidate = true) => {
       const val = isFunction(value)
-        ? value(formStateRef.current.values[key])
+        ? value(formStateRef.current.values[name])
         : value;
 
       dispatch({
         type: FormActionType.SET_FIELD_VALUE,
-        payload: { [key]: val },
+        payload: { [name]: val },
       });
 
-      refreshFieldsIfNeeded(key);
-      setDomValue(key, val);
-      setFieldTouched(key);
+      refreshFieldsIfNeeded(name as string);
+      setDomValue(name as string, val);
+      // TODO: set touched if needed
 
       if (shouldValidate) validateForm();
     },
-    [
-      refreshFieldsIfNeeded,
-      dispatch,
-      setDomValue,
-      setFieldTouched,
-      validateForm,
-    ]
+    [refreshFieldsIfNeeded, dispatch, setDomValue, validateForm]
   );
 
   const applyValuesToDom = useCallback(
