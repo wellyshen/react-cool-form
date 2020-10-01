@@ -133,25 +133,6 @@ const useForm = <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const setFieldValue = useCallback<SetFieldValue<V>>(
-    (name, value) => {
-      const val = isFunction(value)
-        ? value(formStateRef.current.values[name])
-        : value;
-
-      dispatch({
-        type: FormActionType.SET_FIELD_VALUE,
-        payload: { [name]: val },
-      });
-
-      refreshFieldsIfNeeded(name as string);
-      setDomValue(name as string, val);
-
-      validateForm();
-    },
-    [refreshFieldsIfNeeded, dispatch, setDomValue, validateForm]
-  );
-
   const setFieldTouched = useCallback(
     (name: string, isTouched = true) => {
       refreshFieldsIfNeeded(name);
@@ -163,6 +144,33 @@ const useForm = <V extends FormValues = FormValues>({
       if (name !== changedFieldRef.current) validateForm();
     },
     [refreshFieldsIfNeeded, dispatch, validateForm]
+  );
+
+  const setFieldValue = useCallback<SetFieldValue<V>>(
+    (name, value, { shouldValidate = true } = {}) => {
+      const key = name as string;
+      const val = isFunction(value)
+        ? value(formStateRef.current.values[key])
+        : value;
+
+      dispatch({
+        type: FormActionType.SET_FIELD_VALUE,
+        payload: { [key]: val },
+      });
+
+      refreshFieldsIfNeeded(key);
+      setDomValue(key, val);
+      setFieldTouched(key);
+
+      if (shouldValidate) validateForm();
+    },
+    [
+      refreshFieldsIfNeeded,
+      dispatch,
+      setDomValue,
+      setFieldTouched,
+      validateForm,
+    ]
   );
 
   const applyValuesToDom = useCallback(

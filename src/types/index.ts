@@ -56,7 +56,11 @@ interface Validate<V> {
 }
 
 export interface SetFieldValue<V> {
-  <K extends keyof V>(name: K, value: V[K] | ((value: V[K]) => V[K])): void;
+  <K extends keyof V>(
+    name: K,
+    value: V[K] | ((value: V[K]) => V[K]),
+    options?: { shouldValidate?: boolean }
+  ): void;
 }
 
 export interface Config<V> {
