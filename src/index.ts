@@ -63,6 +63,7 @@ const useForm = <V extends FormValues = FormValues>({
 }: Config<V>): Return<V> => {
   const validateRef = useLatest(validate);
   const fieldsRef = useRef<Fields>({});
+  const changedFieldRef = useRef("");
   const { current: initialState } = useRef<FormState<V>>({
     values: defaultValues,
     touched: {},
@@ -90,7 +91,7 @@ const useForm = <V extends FormValues = FormValues>({
     dispatch({ type: FormActionType.SET_ISVALIDATING, payload: true });
 
     try {
-      const errors = await validateRef.current(formRef.current.values);
+      const errors = await validateRef.current(formStateRef.current.values);
 
       if (!isEqual(errors, formStateRef.current.errors))
         dispatch({ type: FormActionType.SET_ERRORS, payload: errors });
@@ -159,7 +160,7 @@ const useForm = <V extends FormValues = FormValues>({
         payload: { [name]: isTouched },
       });
 
-      validateForm();
+      if (name !== changedFieldRef.current) validateForm();
     },
     [refreshFieldsIfNeeded, dispatch, validateForm]
   );
@@ -232,14 +233,17 @@ const useForm = <V extends FormValues = FormValues>({
       });
 
       validateForm();
+      changedFieldRef.current = name;
     };
 
     const handleBlur = ({ target }: Event) => {
       if (
         isFieldElement(target as HTMLElement) &&
         hasChangeEvent(target as HTMLInputElement)
-      )
+      ) {
         setFieldTouched((target as FieldElement).name);
+        changedFieldRef.current = "";
+      }
     };
 
     const form = formRef.current;
