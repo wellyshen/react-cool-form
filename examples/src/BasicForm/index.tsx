@@ -81,10 +81,11 @@ export default (): JSX.Element => {
   const { formRef, formState, setFieldValue } = useForm<FormValues>({
     // formRef,
     defaultValues,
+    // validateOnChange: false,
+    // validateOnBlur: false,
     validate: async (values) => {
-      const errors = {};
-      // @ts-expect-error
-      if (!values.text) errors.text = "Required";
+      const errors = { text: "Required" };
+      // if (!values.text) errors.text = "Required";
       return errors;
     },
   });
@@ -92,7 +93,8 @@ export default (): JSX.Element => {
   console.log("LOG ===> formState: ", formState);
 
   const handleSetValueClick = (): void => {
-    setFieldValue("text", (value) => `new ${value}`);
+    // setFieldValue("text", (value) => `new ${value}`);
+    setFieldValue("text", "new test");
     setFieldValue("hiddenText", "new test");
     setFieldValue("password", "");
     setFieldValue("number", 456);

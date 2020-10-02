@@ -67,6 +67,8 @@ export interface Config<V> {
   defaultValues: V;
   formRef?: FormRef;
   validate?: Validate<V>;
+  validateOnChange?: boolean;
+  validateOnBlur?: boolean;
 }
 
 export interface Return<V> {

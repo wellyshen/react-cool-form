@@ -30,6 +30,8 @@ declare module "react-cool-form" {
     defaultValues: V;
     formRef?: FormRef;
     validate?: Validate<V>;
+    validateOnChange?: boolean;
+    validateOnBlur?: boolean;
   }
 
   export interface Return<V> {

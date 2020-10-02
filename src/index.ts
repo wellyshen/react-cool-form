@@ -57,6 +57,8 @@ const useForm = <V extends FormValues = FormValues>({
   defaultValues = {} as V,
   formRef: configFormRef,
   validate,
+  validateOnChange = true,
+  validateOnBlur = true,
 }: Config<V>): Return<V> => {
   const validateRef = useLatest(validate);
   const fieldsRef = useRef<Fields>({});
@@ -140,13 +142,13 @@ const useForm = <V extends FormValues = FormValues>({
           payload: { [name]: isTouched },
         });
 
-      if (name !== changedFieldRef.current) validateForm();
+      if (name !== changedFieldRef.current && validateOnBlur) validateForm();
     },
-    [refreshFieldsIfNeeded, dispatch, validateForm]
+    [refreshFieldsIfNeeded, dispatch, validateOnBlur, validateForm]
   );
 
   const setFieldValue = useCallback<SetFieldValue<V>>(
-    (name, value, shouldValidate = true) => {
+    (name, value, shouldValidate = validateOnChange) => {
       const key = name as string;
       const val = isFunction(value)
         ? value(formStateRef.current.values[key])
@@ -164,6 +166,7 @@ const useForm = <V extends FormValues = FormValues>({
       if (shouldValidate) validateForm();
     },
     [
+      validateOnChange,
       refreshFieldsIfNeeded,
       dispatch,
       setDomValue,
@@ -238,7 +241,7 @@ const useForm = <V extends FormValues = FormValues>({
         payload: { [name]: val },
       });
 
-      validateForm();
+      if (validateOnChange) validateForm();
       changedFieldRef.current = name;
     };
 
@@ -261,7 +264,7 @@ const useForm = <V extends FormValues = FormValues>({
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
     };
-  }, [formRef, dispatch, validateForm, setFieldTouched]);
+  }, [formRef, dispatch, validateOnChange, validateForm, setFieldTouched]);
 
   return { formRef, formState, setFieldValue };
 };
