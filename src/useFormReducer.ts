@@ -34,7 +34,8 @@ export default <V>(
 
   useEffect(() => {
     onStateChange(state);
-  }, [onStateChange, state]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   return [state, dispatch];
 };
