@@ -1,6 +1,6 @@
-import { RefObject, useRef, useEffect } from "react";
+import { MutableRefObject, useRef, useEffect } from "react";
 
-export default <T>(val: T): RefObject<T> => {
+export default <T>(val: T): MutableRefObject<T> => {
   const ref = useRef(val);
 
   useEffect(() => {
