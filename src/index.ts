@@ -54,17 +54,18 @@ const getFields = (form: HTMLFormElement | null) =>
     : {};
 
 const useForm = <V extends FormValues = FormValues>({
-  defaultValues = {} as V,
+  defaultValues,
   formRef: configFormRef,
   validate,
   validateOnChange = true,
   validateOnBlur = true,
 }: Config<V>): Return<V> => {
+  const defaultValuesRef = useLatest(defaultValues || {});
   const validateRef = useLatest(validate);
   const fieldsRef = useRef<Fields>({});
   const changedFieldRef = useRef("");
   const { current: initialState } = useRef<FormState<V>>({
-    values: defaultValues,
+    values: defaultValuesRef.current,
     touched: {},
     errors: {},
     isValidating: false,
@@ -176,12 +177,15 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const applyValuesToDom = useCallback(
-    (fields: Fields = getFields(formRef.current), values: V = defaultValues) =>
+    (
+      fields: Fields = getFields(formRef.current),
+      values: V = defaultValuesRef.current
+    ) =>
       Object.keys(fields).forEach((key) => {
         const { name } = fields[key].field;
         setDomValue(name, values[name]);
       }),
-    [formRef, setDomValue, defaultValues]
+    [formRef, defaultValuesRef, setDomValue]
   );
 
   useEffect(() => {
