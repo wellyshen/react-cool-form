@@ -1,9 +1,8 @@
-import { RefObject, Reducer } from "react";
+import { MutableRefObject, RefObject } from "react";
 
-// Common
+// State
 type Errors<V> = Partial<Record<keyof V, any>>;
 
-// Reducer
 export interface FormState<V> {
   values: V;
   touched: Partial<Record<keyof V, boolean>>;
@@ -11,30 +10,13 @@ export interface FormState<V> {
   isValidating: boolean;
 }
 
-export interface OnStateChange<V> {
-  (state: FormState<V>): void;
+export type StateRef<V> = MutableRefObject<FormState<V>>;
+
+export interface SetStateRef<V, S = FormState<V>> {
+  (target: keyof S, payload: Record<string, any> | boolean): void;
 }
 
-export enum FormActionType {
-  SET_FIELD_VALUE = "SET_FIELD_VALUE",
-  SET_FIELD_TOUCHED = "SET_FIELD_TOUCHED",
-  SET_ISVALIDATING = "SET_ISVALIDATING",
-  SET_ERRORS = "SET_ERRORS",
-}
-
-export type FormAction<V> =
-  | { type: FormActionType.SET_FIELD_VALUE; payload: Record<keyof V, any> }
-  | {
-      type: FormActionType.SET_FIELD_TOUCHED;
-      payload: Record<keyof V, boolean>;
-    }
-  | {
-      type: FormActionType.SET_ERRORS;
-      payload: Errors<V>;
-    }
-  | { type: FormActionType.SET_ISVALIDATING; payload: boolean };
-
-export type FormReducer<V> = Reducer<FormState<V>, FormAction<V>>;
+export type UsedStateRef<V> = Partial<Record<keyof FormState<V>, boolean>>;
 
 // Hook
 export type FormRef = RefObject<HTMLFormElement>;
