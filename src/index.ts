@@ -1,18 +1,15 @@
 import { useRef, useCallback, useEffect } from "react";
-import isEqual from "fast-deep-equal/es6/react";
 
 import {
   Config,
   Return,
-  FormState,
-  FormActionType,
-  Fields,
   FormValues,
+  Fields,
   FieldElement,
   SetFieldValue,
 } from "./types";
 import useLatest from "./useLatest";
-import useFormReducer from "./useFormReducer";
+import useFormState from "./useFormState";
 import {
   warn,
   isNumberField,
@@ -64,16 +61,9 @@ const useForm = <V extends FormValues = FormValues>({
   const validateRef = useLatest(validate);
   const fieldsRef = useRef<Fields>({});
   const changedFieldRef = useRef("");
-  const { current: initialState } = useRef<FormState<V>>({
-    values: defaultValuesRef.current,
-    touched: {},
-    errors: {},
-    isValidating: false,
-  });
-  const formStateRef = useRef<FormState<V>>(initialState);
-  const [formState, dispatch] = useFormReducer<V>(initialState, (state) => {
-    formStateRef.current = state;
-  });
+  const [formState, stateRef, setStateRef] = useFormState<V>(
+    defaultValuesRef.current
+  );
   const varFormRef = useRef<HTMLFormElement>(null);
   const formRef = configFormRef || varFormRef;
 
@@ -88,18 +78,17 @@ const useForm = <V extends FormValues = FormValues>({
   const validateForm = useCallback(async () => {
     if (!formRef.current || !validateRef.current) return;
 
-    dispatch({ type: FormActionType.SET_ISVALIDATING, payload: true });
+    setStateRef("isValidating", true);
 
     try {
-      const errors = await validateRef.current(formStateRef.current.values);
+      const errors = await validateRef.current(stateRef.current.values);
 
-      if (!isEqual(errors, formStateRef.current.errors))
-        dispatch({ type: FormActionType.SET_ERRORS, payload: errors });
-      dispatch({ type: FormActionType.SET_ISVALIDATING, payload: false });
+      setStateRef("errors", errors);
+      setStateRef("isValidating", false);
     } catch (error) {
       warn(`💡react-cool-form > validate form: `, error);
     }
-  }, [formRef, validateRef, dispatch]);
+  }, [formRef, validateRef, stateRef, setStateRef]);
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name]) return;
@@ -134,42 +123,34 @@ const useForm = <V extends FormValues = FormValues>({
   }, []);
 
   const setFieldTouched = useCallback(
-    (name: string, isTouched = true) => {
+    (name: string, isTouched = true, shouldValidate = validateOnBlur) => {
       refreshFieldsIfNeeded(name);
 
-      if (!formStateRef.current.touched[name])
-        dispatch({
-          type: FormActionType.SET_FIELD_TOUCHED,
-          payload: { [name]: isTouched },
-        });
-
-      if (name !== changedFieldRef.current && validateOnBlur) validateForm();
+      setStateRef("touched", { [name]: isTouched });
+      if (shouldValidate && name !== changedFieldRef.current) validateForm();
     },
-    [refreshFieldsIfNeeded, dispatch, validateOnBlur, validateForm]
+    [refreshFieldsIfNeeded, setStateRef, validateOnBlur, validateForm]
   );
 
   const setFieldValue = useCallback<SetFieldValue<V>>(
     (name, value, shouldValidate = validateOnChange) => {
       const key = name as string;
       const val = isFunction(value)
-        ? value(formStateRef.current.values[key])
+        ? value(stateRef.current.values[key])
         : value;
 
-      dispatch({
-        type: FormActionType.SET_FIELD_VALUE,
-        payload: { [key]: val },
-      });
-
+      setStateRef("values", { [key]: val });
       refreshFieldsIfNeeded(key);
       setDomValue(key, val);
-      setFieldTouched(key);
+      setFieldTouched(key, true, false);
 
       if (shouldValidate) validateForm();
     },
     [
       validateOnChange,
       refreshFieldsIfNeeded,
-      dispatch,
+      stateRef,
+      setStateRef,
       setDomValue,
       setFieldTouched,
       validateForm,
@@ -217,10 +198,10 @@ const useForm = <V extends FormValues = FormValues>({
       if (isNumberField(field) || isRangeField(field)) {
         val = parseFloat(value) || "";
       } else if (isCheckboxField(field)) {
-        let checkValues: any = formStateRef.current.values[name];
+        let checkValues: any = stateRef.current.values[name];
 
         if (field.hasAttribute("value") && isArray(checkValues)) {
-          checkValues = new Set(formStateRef.current.values[name]);
+          checkValues = new Set(stateRef.current.values[name]);
 
           if (field.checked) {
             checkValues.add(value);
@@ -240,10 +221,7 @@ const useForm = <V extends FormValues = FormValues>({
         val = field.files;
       }
 
-      dispatch({
-        type: FormActionType.SET_FIELD_VALUE,
-        payload: { [name]: val },
-      });
+      setStateRef("values", { [name]: val });
 
       if (validateOnChange) validateForm();
       changedFieldRef.current = name;
@@ -268,7 +246,14 @@ const useForm = <V extends FormValues = FormValues>({
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
     };
-  }, [formRef, dispatch, validateOnChange, validateForm, setFieldTouched]);
+  }, [
+    formRef,
+    stateRef,
+    setStateRef,
+    validateOnChange,
+    validateForm,
+    setFieldTouched,
+  ]);
 
   return { formRef, formState, setFieldValue };
 };
