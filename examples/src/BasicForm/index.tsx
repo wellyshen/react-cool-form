@@ -90,7 +90,7 @@ export default (): JSX.Element => {
     },
   });
 
-  console.log("LOG ===> formState: ", formState);
+  console.log("LOG ===> formState: ", formState.values);
 
   const handleSetValueClick = (): void => {
     // setFieldValue("text", (value) => `new ${value}`);
