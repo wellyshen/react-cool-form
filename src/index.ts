@@ -123,10 +123,10 @@ const useForm = <V extends FormValues = FormValues>({
   }, []);
 
   const setFieldTouched = useCallback(
-    (name: string, isTouched = true, shouldValidate = validateOnBlur) => {
+    (name: string, shouldValidate = validateOnBlur) => {
       refreshFieldsIfNeeded(name);
 
-      setStateRef("touched", { [name]: isTouched });
+      setStateRef(`touched.${name}`, true);
       if (shouldValidate && name !== changedFieldRef.current) validateForm();
     },
     [refreshFieldsIfNeeded, setStateRef, validateOnBlur, validateForm]
@@ -139,10 +139,10 @@ const useForm = <V extends FormValues = FormValues>({
         ? value(stateRef.current.values[key])
         : value;
 
-      setStateRef("values", { [key]: val });
+      setStateRef(`values.${key}`, val);
       refreshFieldsIfNeeded(key);
       setDomValue(key, val);
-      setFieldTouched(key, true, false);
+      setFieldTouched(key, false);
 
       if (shouldValidate) validateForm();
     },
@@ -221,7 +221,7 @@ const useForm = <V extends FormValues = FormValues>({
         val = field.files;
       }
 
-      setStateRef("values", { [name]: val });
+      setStateRef(`values.${name}`, val);
 
       if (validateOnChange) validateForm();
       changedFieldRef.current = name;

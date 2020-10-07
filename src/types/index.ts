@@ -12,8 +12,8 @@ export interface FormState<V> {
 
 export type StateRef<V> = MutableRefObject<FormState<V>>;
 
-export interface SetStateRef<V, S = FormState<V>> {
-  (target: keyof S, payload: Record<string, any> | boolean): void;
+export interface SetStateRef {
+  (path: string, value: any): void;
 }
 
 export type UsedStateRef<V> = Partial<Record<keyof FormState<V>, boolean>>;
