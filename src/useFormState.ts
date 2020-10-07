@@ -2,9 +2,9 @@ import { useReducer, useRef, useCallback } from "react";
 import isEqual from "fast-deep-equal/es6/react";
 
 import { FormState, StateRef, SetStateRef, UsedStateRef } from "./types";
-import { isObject } from "./utils";
+import { isUndefined, isObject } from "./utils";
 
-const hasProxy = typeof Proxy !== "undefined";
+const hasProxy = !isUndefined(typeof Proxy);
 
 export default <V>(
   defaultValues: V

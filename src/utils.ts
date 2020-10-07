@@ -33,3 +33,6 @@ export const isArray = (value: unknown): value is any[] => Array.isArray(value);
 
 export const isObject = (value: unknown): value is Object =>
   !isArray(value) && value !== null && typeof value === "object";
+
+export const isUndefined = (value: unknown): value is undefined =>
+  value === undefined;
