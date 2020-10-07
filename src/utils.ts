@@ -36,3 +36,35 @@ export const isObject = (value: unknown): value is Object =>
 
 export const isUndefined = (value: unknown): value is undefined =>
   value === undefined;
+
+export const get = (
+  object: Record<string, any>,
+  path: string,
+  defaultValue?: unknown
+): any => {
+  const value = path
+    .split(/[,[\].]+?/)
+    .filter(Boolean)
+    .reduce((obj, key) => (obj || {})[key], object);
+
+  return isUndefined(value) ? defaultValue : value;
+};
+
+export const set = (
+  object: Record<string, any>,
+  path: string,
+  value: unknown
+): typeof object => {
+  if (!isObject(object)) return object;
+
+  const temp = path.toString().match(/[^.[\]]+/g) || [];
+  temp
+    .slice(0, -1)
+    .reduce(
+      (obj: Record<string, any>, key: string) =>
+        isObject(obj[key]) ? obj[key] : {},
+      object
+    )[temp[temp.length - 1]] = value;
+
+  return object;
+};
