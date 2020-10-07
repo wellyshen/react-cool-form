@@ -39,7 +39,7 @@ export default <V>(
     hasProxy
       ? new Proxy(stateRef.current, {
           get: (target, key: keyof FormState<V>) => {
-            useStateRef.current[key] = true;
+            if (target[key]) useStateRef.current[key] = true;
             return target[key];
           },
         })
