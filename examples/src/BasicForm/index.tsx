@@ -84,14 +84,14 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     validate: async (values) => {
-      const errors = { text: "" };
+      const errors = { text: "Required" };
 
       // eslint-disable-next-line
       await new Promise((resolve) => {
         setTimeout(() => resolve(), 5000);
       });
 
-      errors.text = "Required";
+      return errors;
     },
   });
 
