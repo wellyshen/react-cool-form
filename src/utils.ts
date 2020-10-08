@@ -37,6 +37,9 @@ export const isObject = (value: unknown): value is Object =>
 export const isUndefined = (value: unknown): value is undefined =>
   value === undefined;
 
+export const isNullOrUndefined = (value: unknown): value is null | undefined =>
+  value === undefined;
+
 export const get = (
   object: Record<string, any>,
   path: string,

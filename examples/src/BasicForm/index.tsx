@@ -57,13 +57,13 @@ interface FormValues {
   radio: string;
   image: any;
   select: string;
-  multiSelect: string[];
+  multiSelect: Record<string, string[]>;
   textarea: string;
 }
 
 const defaultValues = {
-  text: "",
-  hiddenText: "",
+  text: "test",
+  hiddenText: "test",
   password: "test",
   number: 123,
   checkbox: true,
@@ -71,7 +71,7 @@ const defaultValues = {
   radio: "value-1",
   image: "",
   select: "value-2",
-  multiSelect: ["value-1", "value-2"],
+  multiSelect: { nest: ["value-1", "value-2"] },
   textarea: "test",
 };
 
@@ -84,13 +84,18 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     validate: async (values) => {
-      const errors = { text: "Required" };
-      // if (!values.text) errors.text = "Required";
-      return errors;
+      const errors = { text: "" };
+
+      // eslint-disable-next-line
+      await new Promise((resolve) => {
+        setTimeout(() => resolve(), 5000);
+      });
+
+      errors.text = "Required";
     },
   });
 
-  console.log("LOG ===> formState: ", formState);
+  console.log("LOG ===> formState: ", formState.errors);
 
   const handleSetValueClick = (): void => {
     // setFieldValue("text", (value) => `new ${value}`);
@@ -101,7 +106,7 @@ export default (): JSX.Element => {
     setFieldValue("checkbox", false);
     setFieldValue("checkboxGroup", ["value-2"]);
     setFieldValue("radio", "value-2");
-    setFieldValue("multiSelect", ["value-2"]);
+    setFieldValue("multiSelect.nest", ["value-2"]);
   };
 
   const handleToggleInputClick = (): void => setShowInput(!showInput);
@@ -156,7 +161,7 @@ export default (): JSX.Element => {
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
         </Select>
-        <Select label="Multi-select:" name="multiSelect" multiple>
+        <Select label="Multi-select:" name="multiSelect.nest" multiple>
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
         </Select>

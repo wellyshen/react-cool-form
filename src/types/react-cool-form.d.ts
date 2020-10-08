@@ -5,7 +5,7 @@ declare module "react-cool-form" {
 
   export type FormRef = RefObject<HTMLFormElement>;
 
-  type Errors<V> = Partial<Record<keyof V, any>>;
+  export type Errors<V> = Partial<Record<keyof V, any>> | void;
 
   export interface Validate<V> {
     (values: V): Errors<V> | Promise<Errors<V>>;

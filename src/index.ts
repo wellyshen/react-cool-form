@@ -22,6 +22,7 @@ import {
   isFunction,
   isObject,
   isArray,
+  isNullOrUndefined,
 } from "./utils";
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
@@ -84,7 +85,7 @@ const useForm = <V extends FormValues = FormValues>({
     try {
       const errors = await validateRef.current(stateRef.current.values);
 
-      setStateRef("errors", errors);
+      if (!isNullOrUndefined(errors)) setStateRef("errors", errors);
       setStateRef("isValidating", false);
     } catch (error) {
       warn(`💡react-cool-form > validate form: `, error);
