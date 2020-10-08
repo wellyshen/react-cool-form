@@ -1,20 +1,20 @@
 declare module "react-cool-form" {
   import { RefObject } from "react";
 
-  export type FormValues = Record<string, any>;
-
   export type FormRef = RefObject<HTMLFormElement>;
 
-  export type Errors<V> = Partial<Record<keyof V, any>> | void;
+  export type FormValues = Record<string, any>;
+
+  export type Errors<V> = Partial<Record<keyof V, any>>;
 
   export interface Validate<V> {
-    (values: V): Errors<V> | Promise<Errors<V>>;
+    (values: V): Errors<V> | void | Promise<Errors<V> | void>;
   }
 
   export interface FormState<V> {
     readonly values: V;
     readonly touched: Partial<Record<keyof V, boolean>>;
-    readonly errors: Partial<Record<keyof V, any>>;
+    readonly errors: Errors<V>;
     readonly isValidating: boolean;
   }
 
