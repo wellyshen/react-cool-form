@@ -12,6 +12,7 @@ import useLatest from "./useLatest";
 import useFormState from "./useFormState";
 import {
   warn,
+  get,
   isNumberField,
   isRangeField,
   isCheckboxField,
@@ -132,17 +133,16 @@ const useForm = <V extends FormValues = FormValues>({
     [refreshFieldsIfNeeded, setStateRef, validateOnBlur, validateForm]
   );
 
-  const setFieldValue = useCallback<SetFieldValue<V>>(
+  const setFieldValue = useCallback<SetFieldValue>(
     (name, value, shouldValidate = validateOnChange) => {
-      const key = name as string;
       const val = isFunction(value)
-        ? value(stateRef.current.values[key])
+        ? value(get(stateRef.current.values, name))
         : value;
 
-      setStateRef(`values.${key}`, val);
-      refreshFieldsIfNeeded(key);
-      setDomValue(key, val);
-      setFieldTouched(key, false);
+      setStateRef(`values.${name}`, val);
+      refreshFieldsIfNeeded(name);
+      setDomValue(name, val);
+      setFieldTouched(name, false);
 
       if (shouldValidate) validateForm();
     },
@@ -164,7 +164,7 @@ const useForm = <V extends FormValues = FormValues>({
     ) =>
       Object.keys(fields).forEach((key) => {
         const { name } = fields[key].field;
-        setDomValue(name, values[name]);
+        setDomValue(name, get(values, name));
       }),
     [formRef, defaultValuesRef, setDomValue]
   );
@@ -198,10 +198,10 @@ const useForm = <V extends FormValues = FormValues>({
       if (isNumberField(field) || isRangeField(field)) {
         val = parseFloat(value) || "";
       } else if (isCheckboxField(field)) {
-        let checkValues: any = stateRef.current.values[name];
+        let checkValues: any = get(stateRef.current.values, name);
 
         if (field.hasAttribute("value") && isArray(checkValues)) {
-          checkValues = new Set(stateRef.current.values[name]);
+          checkValues = new Set(checkValues);
 
           if (field.checked) {
             checkValues.add(value);
