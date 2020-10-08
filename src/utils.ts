@@ -85,7 +85,7 @@ export const set = (
   const tempPath = isKey(path) ? [path] : stringToPath(path);
 
   tempPath.slice(0, -1).reduce((obj: Record<string, any>, key, idx) => {
-    if (obj[key] && (isObject(obj[key]) || isArray(obj[key]))) return obj[key];
+    if (isObject(obj[key]) || isArray(obj[key])) return obj[key];
     const next = tempPath[idx + 1];
     obj[key] =
       String(Math.floor(Number(next))) === next && Number(next) >= 0 ? [] : {};
