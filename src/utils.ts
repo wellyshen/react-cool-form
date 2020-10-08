@@ -3,7 +3,7 @@
 import { FieldElement } from "./types";
 
 export const warn = (...args: any[]): void => {
-  if (__DEV__) console.warn(args);
+  if (__DEV__) console.warn(...args);
 };
 
 export const isNumberField = (field: FieldElement): field is HTMLInputElement =>
@@ -35,9 +35,6 @@ export const isObject = (value: unknown): value is Object =>
   !isArray(value) && value !== null && typeof value === "object";
 
 export const isUndefined = (value: unknown): value is undefined =>
-  value === undefined;
-
-export const isNullOrUndefined = (value: unknown): value is null | undefined =>
   value === undefined;
 
 export const get = (
