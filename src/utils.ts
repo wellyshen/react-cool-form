@@ -50,6 +50,31 @@ export const get = (
   return isUndefined(value) ? defaultValue : value;
 };
 
+const isKey = (value: string) =>
+  !isArray(value) &&
+  (/^\w*$/.test(value) ||
+    !/\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/.test(value));
+
+const stringToPath = (string: string) => {
+  const result: string[] = [];
+
+  string.replace(
+    /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
+    (
+      match: string,
+      expression: string,
+      quote: string,
+      subString: string
+    ): any => {
+      result.push(
+        quote ? subString.replace(/\\(\\)?/g, "$1") : expression || match
+      );
+    }
+  );
+
+  return result;
+};
+
 export const set = (
   object: Record<string, any>,
   path: string,
@@ -57,14 +82,15 @@ export const set = (
 ): typeof object => {
   if (!isObject(object)) return object;
 
-  const temp = path.toString().match(/[^.[\]]+/g) || [];
-  temp
-    .slice(0, -1)
-    .reduce(
-      (obj: Record<string, any>, key: string) =>
-        isObject(obj[key]) ? obj[key] : {},
-      object
-    )[temp[temp.length - 1]] = value;
+  const tempPath = isKey(path) ? [path] : stringToPath(path);
+
+  tempPath.slice(0, -1).reduce((obj: Record<string, any>, key, idx) => {
+    if (obj[key] && (isObject(obj[key]) || isArray(obj[key]))) return obj[key];
+    const next = tempPath[idx + 1];
+    obj[key] =
+      String(Math.floor(Number(next))) === next && Number(next) >= 0 ? [] : {};
+    return obj[key];
+  }, object)[tempPath[tempPath.length - 1]] = value;
 
   return object;
 };
