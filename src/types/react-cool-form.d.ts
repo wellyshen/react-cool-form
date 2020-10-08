@@ -18,10 +18,10 @@ declare module "react-cool-form" {
     readonly isValidating: boolean;
   }
 
-  export interface SetFieldValue<V> {
-    <K extends keyof V>(
-      name: K,
-      value: V[K] | ((value: V[K]) => V[K]),
+  export interface SetFieldValue {
+    (
+      name: string,
+      value: any | ((value: any) => any),
       shouldValidate?: boolean
     ): void;
   }
@@ -37,7 +37,7 @@ declare module "react-cool-form" {
   export interface Return<V> {
     formRef: FormRef;
     formState: FormState<V>;
-    setFieldValue: SetFieldValue<V>;
+    setFieldValue: SetFieldValue;
   }
 
   const useForm: <V extends FormValues = FormValues>(

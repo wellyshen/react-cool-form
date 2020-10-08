@@ -37,10 +37,10 @@ interface Validate<V> {
   (values: V): Errors<V> | Promise<Errors<V>>;
 }
 
-export interface SetFieldValue<V> {
-  <K extends keyof V>(
-    name: K,
-    value: V[K] | ((value: V[K]) => V[K]),
+export interface SetFieldValue {
+  (
+    name: string,
+    value: any | ((value: any) => any),
     shouldValidate?: boolean
   ): void;
 }
@@ -56,5 +56,5 @@ export interface Config<V> {
 export interface Return<V> {
   formRef: FormRef;
   formState: Readonly<FormState<V>>;
-  setFieldValue: SetFieldValue<V>;
+  setFieldValue: SetFieldValue;
 }
