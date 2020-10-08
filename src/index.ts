@@ -22,7 +22,7 @@ import {
   isFunction,
   isObject,
   isArray,
-  isNullOrUndefined,
+  isUndefined,
 } from "./utils";
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
@@ -37,7 +37,7 @@ const getFields = (form: HTMLFormElement | null) =>
         .filter((element) => {
           const field = element as FieldElement;
           if (!field.name)
-            warn('💡react-cool-form: Field is missing "name" attribute');
+            warn('💡react-cool-form: Field is missing "name" attribute.');
           return field.name && hasChangeEvent(field as HTMLInputElement);
         })
         .reduce((fields, field) => {
@@ -85,7 +85,16 @@ const useForm = <V extends FormValues = FormValues>({
     try {
       const errors = await validateRef.current(stateRef.current.values);
 
-      if (!isNullOrUndefined(errors)) setStateRef("errors", errors);
+      if (!isUndefined(errors)) {
+        if (!isObject(errors)) {
+          warn(
+            "💡react-cool-form > validate form: Should return an errors object."
+          );
+        } else {
+          setStateRef("errors", errors);
+        }
+      }
+
       setStateRef("isValidating", false);
     } catch (error) {
       warn(`💡react-cool-form > validate form: `, error);
@@ -173,7 +182,7 @@ const useForm = <V extends FormValues = FormValues>({
   useEffect(() => {
     if (!formRef.current) {
       warn(
-        '💡react-cool-form: Don\'t forget to register your form via the "formRef"'
+        '💡react-cool-form: Don\'t forget to register your form via the "formRef".'
       );
       return;
     }
@@ -190,7 +199,7 @@ const useForm = <V extends FormValues = FormValues>({
       const { name, value } = field;
 
       if (!name) {
-        warn('💡react-cool-form: Field is missing "name" attribute');
+        warn('💡react-cool-form: Field is missing "name" attribute.');
         return;
       }
 
