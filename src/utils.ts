@@ -83,12 +83,10 @@ export const set = (
   if (!isObject(object)) return object;
 
   const tempPath = isKey(path) ? [path] : stringToPath(path);
-
   tempPath.slice(0, -1).reduce((obj: Record<string, any>, key, idx) => {
     if (isObject(obj[key]) || isArray(obj[key])) return obj[key];
-    const next = tempPath[idx + 1];
-    obj[key] =
-      String(Math.floor(Number(next))) === next && Number(next) >= 0 ? [] : {};
+    const next = Number(tempPath[idx + 1]);
+    obj[key] = Number.isInteger(next) && next >= 0 ? [] : {};
     return obj[key];
   }, object)[tempPath[tempPath.length - 1]] = value;
 
