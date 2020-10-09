@@ -55,10 +55,10 @@ const isKey = (value: string) =>
   (/^\w*$/.test(value) ||
     !/\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/.test(value));
 
-const stringToPath = (string: string) => {
+const stringToPath = (value: string) => {
   const result: string[] = [];
 
-  string.replace(
+  value.replace(
     /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
     (
       match: string,
