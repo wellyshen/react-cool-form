@@ -99,7 +99,7 @@ export default (): JSX.Element => {
 
       // setError("text.nest", "Required");
 
-      return errors;
+      return false;
     },
   });
 

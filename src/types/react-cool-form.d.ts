@@ -7,11 +7,12 @@ declare module "react-cool-form" {
 
   export type Errors<V = FormValues> = Partial<Record<keyof V, string>>;
 
+  type PossibleError<V> = Errors<V> | boolean | void;
+
   export interface Validate<V = FormValues> {
     (values: V, setFieldError: SetFieldError):
-      | Errors<V>
-      | void
-      | Promise<Errors<V> | void>;
+      | PossibleError<V>
+      | Promise<PossibleError<V>>;
   }
 
   export interface FormState<V = FormValues> {

@@ -33,11 +33,12 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
+type PossibleError<V> = Errors<V> | boolean | void;
+
 interface Validate<V> {
   (values: V, setFieldError: SetFieldError):
-    | Errors<V>
-    | void
-    | Promise<Errors<V> | void>;
+    | PossibleError<V>
+    | Promise<PossibleError<V>>;
 }
 
 export interface SetFieldValue {

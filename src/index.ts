@@ -23,7 +23,6 @@ import {
   isFunction,
   isObject,
   isArray,
-  isUndefined,
 } from "./utils";
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
@@ -100,16 +99,7 @@ const useForm = <V extends FormValues = FormValues>({
         setFieldError
       );
 
-      if (!isUndefined(errors)) {
-        if (!isObject(errors)) {
-          warn(
-            "💡react-cool-form > validate form: Should return an errors object."
-          );
-        } else {
-          setStateRef("errors", errors);
-        }
-      }
-
+      if (isObject(errors)) setStateRef("errors", errors);
       setStateRef("isValidating", false);
     } catch (error) {
       warn(`💡react-cool-form > validate form: `, error);
