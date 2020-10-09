@@ -5,16 +5,16 @@ declare module "react-cool-form" {
 
   export type FormValues = Record<string, any>;
 
-  export type Errors<V> = Partial<Record<keyof V, string>>;
+  export type Errors<V = FormValues> = Partial<Record<keyof V, string>>;
 
-  export interface Validate<V> {
+  export interface Validate<V = FormValues> {
     (values: V, setFieldError: SetFieldError):
       | Errors<V>
       | void
       | Promise<Errors<V> | void>;
   }
 
-  export interface FormState<V> {
+  export interface FormState<V = FormValues> {
     readonly values: V;
     readonly touched: Partial<Record<keyof V, boolean>>;
     readonly errors: Errors<V>;
@@ -33,7 +33,7 @@ declare module "react-cool-form" {
     (name: string, error: string | ((previousError?: string) => string)): void;
   }
 
-  export interface Config<V> {
+  export interface Config<V = FormValues> {
     defaultValues: V;
     formRef?: FormRef;
     validate?: Validate<V>;
@@ -41,7 +41,7 @@ declare module "react-cool-form" {
     validateOnBlur?: boolean;
   }
 
-  export interface Return<V> {
+  export interface Return<V = FormValues> {
     formRef: FormRef;
     formState: FormState<V>;
     setFieldValue: SetFieldValue;

@@ -2,7 +2,7 @@
 
 import { jsx } from "@emotion/core";
 import React, { memo, useState, useRef } from "react";
-import useForm from "react-cool-form";
+import useForm, { Errors } from "react-cool-form";
 
 import { container, form, label as labelStyle, wrapper } from "./styles";
 
@@ -86,7 +86,7 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     validate: async (values, setError) => {
-      // const errors = { text: "Required" };
+      const errors: Errors = {};
 
       // eslint-disable-next-line
       await new Promise((resolve) => {
