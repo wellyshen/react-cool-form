@@ -58,6 +58,7 @@ export interface Config<V> {
   validate?: Validate<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
+  showErrorAfterTouched?: boolean;
 }
 
 export interface Return<V> {

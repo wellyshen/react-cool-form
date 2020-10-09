@@ -59,11 +59,11 @@ const useForm = <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
+  showErrorAfterTouched = true,
 }: Config<V>): Return<V> => {
   const defaultValuesRef = useLatest(defaultValues || {});
   const validateRef = useLatest(validate);
   const fieldsRef = useRef<Fields>({});
-  const changedFieldRef = useRef("");
   const [formState, stateRef, setStateRef] = useFormState<V>(
     defaultValuesRef.current
   );
@@ -153,7 +153,7 @@ const useForm = <V extends FormValues = FormValues>({
       refreshFieldsIfNeeded(name);
 
       setStateRef(`touched.${name}`, true);
-      if (shouldValidate && name !== changedFieldRef.current) validateForm();
+      if (shouldValidate) validateForm();
     },
     [refreshFieldsIfNeeded, setStateRef, validateOnBlur, validateForm]
   );
@@ -219,11 +219,14 @@ const useForm = <V extends FormValues = FormValues>({
       }
 
       let val: any = value;
+      const {
+        current: { values, touched },
+      } = stateRef;
 
       if (isNumberField(field) || isRangeField(field)) {
         val = parseFloat(value) || "";
       } else if (isCheckboxField(field)) {
-        let checkValues: any = get(stateRef.current.values, name);
+        let checkValues: any = get(values, name);
 
         if (field.hasAttribute("value") && isArray(checkValues)) {
           checkValues = new Set(checkValues);
@@ -248,8 +251,8 @@ const useForm = <V extends FormValues = FormValues>({
 
       setStateRef(`values.${name}`, val);
 
+      if (showErrorAfterTouched && !get(touched, name)) return;
       if (validateOnChange) validateForm();
-      changedFieldRef.current = name;
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -258,7 +261,6 @@ const useForm = <V extends FormValues = FormValues>({
         hasChangeEvent(target as HTMLInputElement)
       ) {
         setFieldTouched((target as FieldElement).name);
-        changedFieldRef.current = "";
       }
     };
 
@@ -275,6 +277,7 @@ const useForm = <V extends FormValues = FormValues>({
     formRef,
     stateRef,
     setStateRef,
+    showErrorAfterTouched,
     validateOnChange,
     validateForm,
     setFieldTouched,
