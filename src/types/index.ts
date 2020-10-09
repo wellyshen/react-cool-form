@@ -1,7 +1,7 @@
 import { MutableRefObject, RefObject } from "react";
 
 // State
-type Errors<V> = Partial<Record<keyof V, any>>;
+type Errors<V> = Partial<Record<keyof V, string>>;
 
 export interface FormState<V> {
   values: V;
@@ -49,7 +49,7 @@ export interface SetFieldValue {
 }
 
 export interface SetFieldError {
-  (name: string, error: any | ((previousError: any) => any)): void;
+  (name: string, error: string | ((previousError?: string) => string)): void;
 }
 
 export interface Config<V> {

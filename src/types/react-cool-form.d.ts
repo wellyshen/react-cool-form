@@ -5,7 +5,7 @@ declare module "react-cool-form" {
 
   export type FormValues = Record<string, any>;
 
-  export type Errors<V> = Partial<Record<keyof V, any>>;
+  export type Errors<V> = Partial<Record<keyof V, string>>;
 
   export interface Validate<V> {
     (values: V, setFieldError: SetFieldError):
@@ -30,7 +30,7 @@ declare module "react-cool-form" {
   }
 
   export interface SetFieldError {
-    (name: string, error: any | ((previousError: any) => any)): void;
+    (name: string, error: string | ((previousError?: string) => string)): void;
   }
 
   export interface Config<V> {

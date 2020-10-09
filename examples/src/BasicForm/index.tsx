@@ -78,12 +78,14 @@ const defaultValues = {
 export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
   // const formRef = useRef(null);
-  const { formRef, formState, setFieldValue } = useForm<FormValues>({
+  const { formRef, formState, setFieldValue, setFieldError } = useForm<
+    FormValues
+  >({
     // formRef,
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    validate: async (values, setFieldError) => {
+    validate: async (values, setError) => {
       // const errors = { text: "Required" };
 
       // eslint-disable-next-line
@@ -91,7 +93,7 @@ export default (): JSX.Element => {
         setTimeout(resolve, 5000);
       });
 
-      setFieldError("text.nest", "Required");
+      setError("text.nest", "Required");
 
       // return errors;
     },
@@ -100,8 +102,8 @@ export default (): JSX.Element => {
   console.log("LOG ===> formState: ", formState.errors);
 
   const handleSetValueClick = (): void => {
-    // setFieldValue("text", (value) => `new ${value}`);
-    setFieldValue("text", "new test");
+    setFieldValue("text", (prevValue: string) => `new ${prevValue}`);
+    // setFieldValue("text", "new test");
     setFieldValue("hiddenText", "new test");
     setFieldValue("password", "");
     setFieldValue("number", 456);
@@ -109,6 +111,11 @@ export default (): JSX.Element => {
     setFieldValue("checkboxGroup", ["value-2"]);
     setFieldValue("radio", "value-2");
     setFieldValue("multiSelect.nest", ["value-2"]);
+  };
+
+  const handleSetErrorsClick = (): void => {
+    setFieldError("text", "Required");
+    setFieldError("hiddenText", (prevError) => `new ${prevError}`);
   };
 
   const handleToggleInputClick = (): void => setShowInput(!showInput);
@@ -170,6 +177,9 @@ export default (): JSX.Element => {
         <TextArea label="Text Area:" name="textarea" />
         <button type="button" onClick={handleSetValueClick}>
           Set Values
+        </button>
+        <button type="button" onClick={handleSetErrorsClick}>
+          Set Errors
         </button>
         <button type="button" onClick={handleToggleInputClick}>
           Toggle Input
