@@ -34,15 +34,22 @@ export type Fields = Record<
 >;
 
 interface Validate<V> {
-  (values: V): Errors<V> | void | Promise<Errors<V> | void>;
+  (values: V, setFieldError: SetFieldError):
+    | Errors<V>
+    | void
+    | Promise<Errors<V> | void>;
 }
 
 export interface SetFieldValue {
   (
     name: string,
-    value: any | ((value: any) => any),
+    value: any | ((previousValue: any) => any),
     shouldValidate?: boolean
   ): void;
+}
+
+export interface SetFieldError {
+  (name: string, error: any | ((previousError: any) => any)): void;
 }
 
 export interface Config<V> {
@@ -57,4 +64,5 @@ export interface Return<V> {
   formRef: FormRef;
   formState: Readonly<FormState<V>>;
   setFieldValue: SetFieldValue;
+  setFieldError: SetFieldError;
 }

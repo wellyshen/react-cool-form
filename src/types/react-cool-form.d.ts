@@ -8,7 +8,10 @@ declare module "react-cool-form" {
   export type Errors<V> = Partial<Record<keyof V, any>>;
 
   export interface Validate<V> {
-    (values: V): Errors<V> | void | Promise<Errors<V> | void>;
+    (values: V, setFieldError: SetFieldError):
+      | Errors<V>
+      | void
+      | Promise<Errors<V> | void>;
   }
 
   export interface FormState<V> {
@@ -21,9 +24,13 @@ declare module "react-cool-form" {
   export interface SetFieldValue {
     (
       name: string,
-      value: any | ((value: any) => any),
+      value: any | ((previousValue: any) => any),
       shouldValidate?: boolean
     ): void;
+  }
+
+  export interface SetFieldError {
+    (name: string, error: any | ((previousError: any) => any)): void;
   }
 
   export interface Config<V> {
@@ -38,6 +45,7 @@ declare module "react-cool-form" {
     formRef: FormRef;
     formState: FormState<V>;
     setFieldValue: SetFieldValue;
+    setFieldError: SetFieldError;
   }
 
   const useForm: <V extends FormValues = FormValues>(

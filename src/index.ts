@@ -7,6 +7,7 @@ import {
   Fields,
   FieldElement,
   SetFieldValue,
+  SetFieldError,
 } from "./types";
 import useLatest from "./useLatest";
 import useFormState from "./useFormState";
@@ -77,13 +78,27 @@ const useForm = <V extends FormValues = FormValues>({
     [formRef]
   );
 
+  const setFieldError = useCallback<SetFieldError>(
+    (name, error) => {
+      const err = isFunction(error)
+        ? error(get(stateRef.current.errors, name))
+        : error;
+
+      setStateRef(`errors.${name}`, err);
+    },
+    [stateRef, setStateRef]
+  );
+
   const validateForm = useCallback(async () => {
     if (!formRef.current || !validateRef.current) return;
 
     setStateRef("isValidating", true);
 
     try {
-      const errors = await validateRef.current(stateRef.current.values);
+      const errors = await validateRef.current(
+        stateRef.current.values,
+        setFieldError
+      );
 
       if (!isUndefined(errors)) {
         if (!isObject(errors)) {
@@ -99,7 +114,7 @@ const useForm = <V extends FormValues = FormValues>({
     } catch (error) {
       warn(`💡react-cool-form > validate form: `, error);
     }
-  }, [formRef, validateRef, stateRef, setStateRef]);
+  }, [formRef, validateRef, stateRef, setStateRef, setFieldError]);
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name]) return;
@@ -265,7 +280,7 @@ const useForm = <V extends FormValues = FormValues>({
     setFieldTouched,
   ]);
 
-  return { formRef, formState, setFieldValue };
+  return { formRef, formState, setFieldValue, setFieldError };
 };
 
 export default useForm;

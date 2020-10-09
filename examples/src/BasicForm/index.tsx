@@ -83,15 +83,17 @@ export default (): JSX.Element => {
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    validate: async (values) => {
-      const errors = { text: "Required" };
+    validate: async (values, setFieldError) => {
+      // const errors = { text: "Required" };
 
       // eslint-disable-next-line
       await new Promise((resolve) => {
-        setTimeout(() => resolve(), 5000);
+        setTimeout(resolve, 5000);
       });
 
-      return errors;
+      setFieldError("text.nest", "Required");
+
+      // return errors;
     },
   });
 
