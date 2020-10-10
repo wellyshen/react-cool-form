@@ -1,5 +1,5 @@
 import { useReducer, useRef, useCallback } from "react";
-import isEqual from "fast-deep-equal/es6/react";
+import isEqual from "fast-deep-equal";
 
 import { FormState, StateRef, SetStateRef, UsedStateRef } from "./types";
 import { get, set } from "./utils";
