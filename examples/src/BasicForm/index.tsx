@@ -48,7 +48,7 @@ const TextArea = memo(
 );
 
 interface FormValues {
-  text: string;
+  text: Record<string, string>;
   hiddenText: string;
   password: string;
   number: number;
@@ -62,7 +62,7 @@ interface FormValues {
 }
 
 const defaultValues = {
-  text: "",
+  text: { nest: "" },
   hiddenText: "",
   password: "test",
   number: 123,
@@ -90,19 +90,19 @@ export default (): JSX.Element => {
       { text, hiddenText },
       { touched, setFieldError: setError }
     ) => {
-      // const errors: Errors = {};
+      const errors = { text: { nest: "" }, hiddenText: "" };
 
-      if (touched.text && !text) setError("text", "Required");
-      if (touched.hiddenText && !hiddenText) setError("hiddenText", "Required");
-      // if (text.length <= 3) errors.text = "Too short";
-      // if (hiddenText.length <= 3) errors.hiddenText = "Too short";
+      // if (touched.text && !text) setError("text", "Required");
+      // if (touched.hiddenText && !hiddenText) setError("hiddenText", "Required");
+      if (text.nest.length <= 3) errors.text.nest = "Too short";
+      if (hiddenText.length <= 3) errors.hiddenText = "Too short";
 
       // eslint-disable-next-line
       /* await new Promise((resolve) => {
         setTimeout(resolve, 5000);
       }); */
 
-      // return errors;
+      return errors;
     },
   });
 
@@ -121,8 +121,12 @@ export default (): JSX.Element => {
   };
 
   const handleSetErrorsClick = (): void => {
-    setFieldError("text", "Required");
-    setFieldError("hiddenText", (prevError) => `new ${prevError}`);
+    setFieldError("text.nest", "Required");
+    setFieldError("hiddenText", (prevMsg) => `new ${prevMsg}`);
+  };
+
+  const handleClearErrorsClick = (): void => {
+    setFieldError("text.nest");
   };
 
   const handleToggleInputClick = (): void => setShowInput(!showInput);
@@ -135,7 +139,7 @@ export default (): JSX.Element => {
         noValidate
         ref={formRef}
       >
-        <Input label="Text:" name="text" />
+        <Input label="Text:" name="text.nest" />
         {showInput && <Input label="Hidden Text:" name="hiddenText" />}
         <Input label="Password:" type="password" name="password" />
         <Input label="Number:" type="number" name="number" />
@@ -182,14 +186,17 @@ export default (): JSX.Element => {
           <option value="value-2">Value 2</option>
         </Select>
         <TextArea label="Text Area:" name="textarea" />
+        <button type="button" onClick={handleToggleInputClick}>
+          Toggle Input
+        </button>
         <button type="button" onClick={handleSetValueClick}>
           Set Values
         </button>
         <button type="button" onClick={handleSetErrorsClick}>
           Set Errors
         </button>
-        <button type="button" onClick={handleToggleInputClick}>
-          Toggle Input
+        <button type="button" onClick={handleClearErrorsClick}>
+          Clear Errors
         </button>
         <button type="submit">Submit</button>
       </form>

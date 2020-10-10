@@ -1,17 +1,13 @@
 import { MutableRefObject, RefObject } from "react";
 
 // State
-type Touched<V> = Partial<
-  {
-    [K in keyof V]: V[K] extends boolean ? boolean : Touched<V[K]>;
-  }
->;
+type Touched<V> = {
+  [K in keyof V]?: V[K] extends boolean ? boolean : Touched<V[K]>;
+};
 
-type Errors<V> = Partial<
-  {
-    [K in keyof V]: V[K] extends string ? string : Errors<V[K]>;
-  }
->;
+type Errors<V> = {
+  [K in keyof V]?: V[K] extends string ? string : Errors<V[K]>;
+};
 
 export interface FormState<V> {
   values: V;
@@ -23,7 +19,7 @@ export interface FormState<V> {
 export type StateRef<V> = MutableRefObject<FormState<V>>;
 
 export interface SetStateRef {
-  (path: string, value: any): void;
+  (path: string, value?: any): void;
 }
 
 export type UsedStateRef<V> = Partial<Record<keyof FormState<V>, boolean>>;
@@ -59,8 +55,13 @@ export interface SetFieldValue {
   ): void;
 }
 
+type Message = string | boolean;
+
 export interface SetFieldError {
-  (name: string, error: string | ((previousError?: string) => string)): void;
+  (
+    name: string,
+    message?: Message | ((previousMessage?: Message) => Message)
+  ): void;
 }
 
 export interface Config<V> {

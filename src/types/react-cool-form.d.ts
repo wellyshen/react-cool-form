@@ -5,19 +5,15 @@ declare module "react-cool-form" {
 
   export type FormValues = Record<string, any>;
 
-  export type Touched<V = FormValues> = Partial<
-    {
-      [K in keyof V]: V[K] extends boolean ? boolean : Touched<V[K]>;
-    }
-  >;
+  export type Touched<V = FormValues> = {
+    [K in keyof V]?: V[K] extends boolean ? boolean : Touched<V[K]>;
+  };
 
-  export type Errors<V = FormValues> = Partial<
-    {
-      [K in keyof V]: V[K] extends string ? string : Errors<V[K]>;
-    }
-  >;
+  export type Errors<V = FormValues> = {
+    [K in keyof V]?: V[K] extends string ? string : Errors<V[K]>;
+  };
 
-  type PossibleError<V> = Errors<V> | boolean | void;
+  type PossibleError<V> = Partial<Errors<V>> | boolean | void;
 
   export interface Validate<V = FormValues> {
     (
@@ -41,8 +37,13 @@ declare module "react-cool-form" {
     ): void;
   }
 
+  type Message = string | boolean;
+
   export interface SetFieldError {
-    (name: string, error: string | ((previousError?: string) => string)): void;
+    (
+      name: string,
+      message?: Message | ((previousMessage?: Message) => Message)
+    ): void;
   }
 
   export interface Config<V = FormValues> {
