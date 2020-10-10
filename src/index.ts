@@ -25,10 +25,10 @@ import {
   isArray,
 } from "./utils";
 
-const isFieldElement = ({ tagName }: HTMLElement) =>
-  /INPUT|TEXTAREA|SELECT/.test(tagName);
+const isFieldElement = (nodeName: string) =>
+  /INPUT|TEXTAREA|SELECT/.test(nodeName);
 
-const hasChangeEvent = ({ type }: HTMLInputElement) =>
+const hasChangeEvent = (type: string) =>
   !/hidden|image|submit|reset/.test(type);
 
 const getFields = (form: HTMLFormElement | null) =>
@@ -38,7 +38,7 @@ const getFields = (form: HTMLFormElement | null) =>
           const field = element as FieldElement;
           if (!field.name)
             warn('💡react-cool-form: Field is missing "name" attribute.');
-          return field.name && hasChangeEvent(field as HTMLInputElement);
+          return field.name && hasChangeEvent(field.type);
         })
         .reduce((fields, field) => {
           const { type, name } = field as FieldElement;
@@ -251,8 +251,8 @@ const useForm = <V extends FormValues = FormValues>({
 
     const handleBlur = ({ target }: Event) => {
       if (
-        isFieldElement(target as HTMLElement) &&
-        hasChangeEvent(target as HTMLInputElement)
+        isFieldElement((target as HTMLElement).nodeName) &&
+        hasChangeEvent((target as HTMLInputElement).type)
       ) {
         setFieldTouched((target as FieldElement).name);
       }
