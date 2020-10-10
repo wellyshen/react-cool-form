@@ -41,7 +41,7 @@ const getFields = (form: HTMLFormElement | null) =>
           return field.name && hasChangeEvent(field.type);
         })
         .reduce((fields, field) => {
-          const { type, name } = field as FieldElement;
+          const { name, type } = field as FieldElement;
           fields[name] = { ...fields[name], field };
           if (/checkbox|radio/.test(type)) {
             fields[name].options = fields[name].options
