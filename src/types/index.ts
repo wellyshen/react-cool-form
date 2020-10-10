@@ -1,7 +1,11 @@
 import { MutableRefObject, RefObject } from "react";
 
 // State
-type Errors<V> = Partial<Record<keyof V, string>>;
+type Errors<V> = Partial<
+  {
+    [K in keyof V]: V[K] extends string ? string : Errors<V[K]>;
+  }
+>;
 
 export interface FormState<V> {
   values: V;

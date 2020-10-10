@@ -5,7 +5,11 @@ declare module "react-cool-form" {
 
   export type FormValues = Record<string, any>;
 
-  export type Errors<V = FormValues> = Partial<Record<keyof V, string>>;
+  export type Errors<V = FormValues> = Partial<
+    {
+      [K in keyof V]: V[K] extends string ? string : Errors<V[K]>;
+    }
+  >;
 
   type PossibleError<V> = Errors<V> | boolean | void;
 
