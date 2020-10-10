@@ -62,8 +62,8 @@ interface FormValues {
 }
 
 const defaultValues = {
-  text: "test",
-  hiddenText: "test",
+  text: "",
+  hiddenText: "",
   password: "test",
   number: 123,
   checkbox: true,
@@ -86,11 +86,14 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     // showErrorAfterTouched: false,
-    validate: async ({ text, hiddenText }, setError) => {
-      const errors: Errors = {};
+    validate: async (
+      { text, hiddenText },
+      { touched, setFieldError: setError }
+    ) => {
+      // const errors: Errors = {};
 
-      setError("text", "Too short");
-      setError("hiddenText", "Too short");
+      if (touched.text && !text) setError("text", "Required");
+      if (touched.hiddenText && !hiddenText) setError("hiddenText", "Required");
       // if (text.length <= 3) errors.text = "Too short";
       // if (hiddenText.length <= 3) errors.hiddenText = "Too short";
 
@@ -98,8 +101,6 @@ export default (): JSX.Element => {
       /* await new Promise((resolve) => {
         setTimeout(resolve, 5000);
       }); */
-
-      // setError("text.nest", "Required");
 
       // return errors;
     },

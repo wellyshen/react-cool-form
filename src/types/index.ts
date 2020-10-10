@@ -1,6 +1,12 @@
 import { MutableRefObject, RefObject } from "react";
 
 // State
+type Touched<V> = Partial<
+  {
+    [K in keyof V]: V[K] extends boolean ? boolean : Touched<V[K]>;
+  }
+>;
+
 type Errors<V> = Partial<
   {
     [K in keyof V]: V[K] extends string ? string : Errors<V[K]>;
@@ -9,7 +15,7 @@ type Errors<V> = Partial<
 
 export interface FormState<V> {
   values: V;
-  touched: Partial<Record<keyof V, boolean>>;
+  touched: Touched<V>;
   errors: Errors<V>;
   isValidating: boolean;
 }
@@ -40,7 +46,7 @@ export type Fields = Record<
 type PossibleError<V> = Errors<V> | boolean | void;
 
 interface Validate<V> {
-  (values: V, setFieldError: SetFieldError):
+  (values: V, options: { touched: Touched<V>; setFieldError: SetFieldError }):
     | PossibleError<V>
     | Promise<PossibleError<V>>;
 }

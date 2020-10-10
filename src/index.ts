@@ -88,23 +88,29 @@ const useForm = <V extends FormValues = FormValues>({
     [stateRef, setStateRef]
   );
 
-  const validateForm = useCallback(async () => {
-    if (!formRef.current || !validateRef.current) return;
+  const validateForm = useCallback(
+    async (name: string) => {
+      if (!formRef.current || !validateRef.current) return;
 
-    setStateRef("isValidating", true);
+      setStateRef("isValidating", true);
 
-    try {
-      const errors = await validateRef.current(
-        stateRef.current.values,
-        setFieldError
-      );
+      try {
+        const { values, touched } = stateRef.current;
+        const errors = await validateRef.current(values, {
+          touched,
+          setFieldError,
+        });
 
-      if (isObject(errors)) setStateRef("errors", errors);
-      setStateRef("isValidating", false);
-    } catch (error) {
-      warn(`💡react-cool-form > validate form: `, error);
-    }
-  }, [formRef, validateRef, stateRef, setStateRef, setFieldError]);
+        const error = get(errors, name);
+        if (error) setStateRef(`errors.${name}`, error);
+
+        setStateRef("isValidating", false);
+      } catch (error) {
+        warn(`💡react-cool-form > validate form: `, error);
+      }
+    },
+    [formRef, validateRef, stateRef, setStateRef, setFieldError]
+  );
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name]) return;
@@ -143,7 +149,7 @@ const useForm = <V extends FormValues = FormValues>({
       refreshFieldsIfNeeded(name);
 
       setStateRef(`touched.${name}`, true);
-      if (shouldValidate) validateForm();
+      if (shouldValidate) validateForm(name);
     },
     [refreshFieldsIfNeeded, setStateRef, validateOnBlur, validateForm]
   );
@@ -159,7 +165,7 @@ const useForm = <V extends FormValues = FormValues>({
       setDomValue(name, val);
       setFieldTouched(name, false);
 
-      if (shouldValidate) validateForm();
+      if (shouldValidate) validateForm(name);
     },
     [
       validateOnChange,
@@ -209,9 +215,7 @@ const useForm = <V extends FormValues = FormValues>({
       }
 
       let val: any = value;
-      const {
-        current: { values, touched },
-      } = stateRef;
+      const { values, touched } = stateRef.current;
 
       if (isNumberField(field) || isRangeField(field)) {
         val = parseFloat(value) || "";
@@ -242,7 +246,7 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, val);
 
       if (showErrorAfterTouched && !get(touched, name)) return;
-      if (validateOnChange) validateForm();
+      if (validateOnChange) validateForm(name);
     };
 
     const handleBlur = ({ target }: Event) => {
