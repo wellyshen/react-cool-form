@@ -62,7 +62,7 @@ interface FormValues {
 }
 
 const defaultValues = {
-  text: "",
+  text: "test",
   hiddenText: "test",
   password: "test",
   number: 123,
@@ -86,11 +86,13 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     // showErrorAfterTouched: false,
-    validate: async ({ text, password }, setError) => {
+    validate: async ({ text, hiddenText }, setError) => {
       const errors: Errors = {};
 
-      if (text.length <= 3) errors.text = "Text error";
-      if (password.length <= 3) errors.password = "Password error";
+      setError("text", "Too short");
+      setError("hiddenText", "Too short");
+      // if (text.length <= 3) errors.text = "Too short";
+      // if (hiddenText.length <= 3) errors.hiddenText = "Too short";
 
       // eslint-disable-next-line
       /* await new Promise((resolve) => {
@@ -99,7 +101,7 @@ export default (): JSX.Element => {
 
       // setError("text.nest", "Required");
 
-      return false;
+      // return errors;
     },
   });
 
@@ -134,7 +136,7 @@ export default (): JSX.Element => {
       >
         <Input label="Text:" name="text" />
         {showInput && <Input label="Hidden Text:" name="hiddenText" />}
-        {/* <Input label="Password:" type="password" name="password" /> */}
+        <Input label="Password:" type="password" name="password" />
         <Input label="Number:" type="number" name="number" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />
         <div css={wrapper}>
