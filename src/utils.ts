@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/explicit-module-boundary-types */
 
 import { FieldElement } from "./types";
 
@@ -37,11 +37,9 @@ export const isObject = (value: unknown): value is Object =>
 export const isUndefined = (value: unknown): value is undefined =>
   value === undefined;
 
-export const get = (
-  object: Record<string, any>,
-  path: string,
-  defaultValue?: unknown
-): any => {
+export const get = (object: any, path: string, defaultValue?: unknown): any => {
+  if (!isObject(object)) return defaultValue;
+
   const value = path
     .split(/[,[\].]+?/)
     .filter(Boolean)
@@ -76,7 +74,7 @@ const stringToPath = (value: string) => {
 };
 
 export const set = (
-  object: Record<string, any>,
+  object: any,
   path: string,
   value: unknown
 ): typeof object => {
