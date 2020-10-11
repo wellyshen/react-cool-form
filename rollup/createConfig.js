@@ -9,11 +9,11 @@ import pkg from "../package.json";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default ({ name, format, env, size }) => {
-  const extensions = [".ts"];
   const shouldMinify = env === "production";
   const fileName = [name, format, env, shouldMinify ? "min" : "", "js"]
     .filter(Boolean)
     .join(".");
+  const extensions = [".ts"];
 
   return {
     input: "src",
