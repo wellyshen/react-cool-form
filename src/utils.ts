@@ -40,6 +40,11 @@ export const isEmptyObject = (value: unknown): value is Record<string, never> =>
 export const isUndefined = (value: unknown): value is undefined =>
   value === undefined;
 
+// const isKey = (value: string) =>
+//   !isArray(value) &&
+//   (/^\w*$/.test(value) ||
+//     !/\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/.test(value));
+
 export const get = (object: any, path: string, defaultValue?: unknown): any => {
   if (!isObject(object)) return defaultValue;
 
@@ -51,31 +56,6 @@ export const get = (object: any, path: string, defaultValue?: unknown): any => {
   return isUndefined(value) ? defaultValue : value;
 };
 
-const isKey = (value: string) =>
-  !isArray(value) &&
-  (/^\w*$/.test(value) ||
-    !/\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/.test(value));
-
-const stringToPath = (value: string) => {
-  const result: string[] = [];
-
-  value.replace(
-    /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
-    (
-      match: string,
-      expression: string,
-      quote: string,
-      subString: string
-    ): any => {
-      result.push(
-        quote ? subString.replace(/\\(\\)?/g, "$1") : expression || match
-      );
-    }
-  );
-
-  return result;
-};
-
 export const set = (
   object: any,
   path: string,
@@ -83,7 +63,22 @@ export const set = (
 ): typeof object => {
   if (!isObject(object)) return object;
 
-  const tempPath = isKey(path) ? [path] : stringToPath(path);
+  const tempPath: string[] = [];
+
+  path.replace(
+    /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
+    (
+      match: string,
+      expression: string,
+      quote: string,
+      subString: string
+    ): any => {
+      tempPath.push(
+        quote ? subString.replace(/\\(\\)?/g, "$1") : expression || match
+      );
+    }
+  );
+
   tempPath.slice(0, -1).reduce((obj: Record<string, any>, key, idx) => {
     if (isObject(obj[key]) || isArray(obj[key])) return obj[key];
     const next = Number(tempPath[idx + 1]);
