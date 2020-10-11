@@ -28,7 +28,11 @@ export default ({ name, format, env, size }) => {
     plugins: [
       resolve({ extensions }),
       commonjs(),
-      babel({ exclude: "node_modules/**", extensions }),
+      babel({
+        exclude: "node_modules/**",
+        babelHelpers: "runtime",
+        extensions,
+      }),
       replace({
         __DEV__: 'process.env.NODE_ENV !== "production"',
         ...(env ? { "process.env.NODE_ENV": JSON.stringify(env) } : {}),
@@ -40,6 +44,6 @@ export default ({ name, format, env, size }) => {
           compress: { drop_console: true },
         }),
     ].filter(Boolean),
-    external: Object.keys(pkg.peerDependencies),
+    external: [...Object.keys(pkg.peerDependencies), /@babel\/runtime/],
   };
 };
