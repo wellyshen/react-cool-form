@@ -22,6 +22,7 @@ import {
   isFileField,
   isFunction,
   isObject,
+  isEmptyObject,
   isArray,
 } from "./utils";
 
@@ -31,24 +32,27 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 const hasChangeEvent = ({ type }: FieldElement) =>
   !/hidden|image|submit|reset/.test(type);
 
-const getFields = (form: HTMLFormElement | null) =>
+const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
   form
     ? [...form.querySelectorAll("input,textarea,select")]
         .filter((element) => {
           const field = element as FieldElement;
-          if (!field.name)
+          if (!field.name) {
             warn('💡react-cool-form: Field is missing "name" attribute.');
-          return field.name && hasChangeEvent(field);
-        })
-        .reduce((fields, field) => {
-          const { name, type } = field as FieldElement;
-          fields[name] = { ...fields[name], field };
-          if (/checkbox|radio/.test(type)) {
-            fields[name].options = fields[name].options
-              ? [...fields[name].options, field]
-              : [field];
+            return false;
           }
-          return fields;
+          if (fields[field.name]) return false;
+          return hasChangeEvent(field);
+        })
+        .reduce((acc, cur) => {
+          const { name, type } = cur as FieldElement;
+          acc[name] = { ...acc[name], field: cur };
+          if (/checkbox|radio/.test(type)) {
+            acc[name].options = acc[name].options
+              ? [...acc[name].options, cur]
+              : [cur];
+          }
+          return acc;
         }, {} as Record<string, any>)
     : {};
 
@@ -68,14 +72,6 @@ const useForm = <V extends FormValues = FormValues>({
   );
   const varFormRef = useRef<HTMLFormElement>(null);
   const formRef = configFormRef || varFormRef;
-
-  const refreshFieldsIfNeeded = useCallback(
-    (name: string) => {
-      if (formRef.current && !fieldsRef.current[name])
-        fieldsRef.current = getFields(formRef.current);
-    },
-    [formRef]
-  );
 
   const setFieldError = useCallback<SetFieldError>(
     (name, error) => {
@@ -113,9 +109,11 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const setDomValue = useCallback((name: string, value: any) => {
-    if (!fieldsRef.current[name]) return;
+    const target = fieldsRef.current[name];
 
-    const { field, options } = fieldsRef.current[name];
+    if (!target || !document.body.contains(target.field)) return;
+
+    const { field, options } = target;
 
     if (isCheckboxField(field)) {
       const checkboxs = options as HTMLInputElement[];
@@ -144,14 +142,24 @@ const useForm = <V extends FormValues = FormValues>({
     }
   }, []);
 
+  const setValuesToDom = useCallback(
+    (
+      fields: Fields = fieldsRef.current,
+      values: V = defaultValuesRef.current
+    ) =>
+      Object.keys(fields).forEach((key) => {
+        const { name } = fields[key].field;
+        setDomValue(name, get(values, name));
+      }),
+    [defaultValuesRef, setDomValue]
+  );
+
   const setFieldTouched = useCallback(
     (name: string, shouldValidate = validateOnBlur) => {
-      refreshFieldsIfNeeded(name);
-
       setStateRef(`touched.${name}`, true);
       if (shouldValidate) validateForm(name);
     },
-    [refreshFieldsIfNeeded, setStateRef, validateOnBlur, validateForm]
+    [setStateRef, validateOnBlur, validateForm]
   );
 
   const setFieldValue = useCallback<SetFieldValue>(
@@ -161,7 +169,6 @@ const useForm = <V extends FormValues = FormValues>({
         : value;
 
       setStateRef(`values.${name}`, val);
-      refreshFieldsIfNeeded(name);
       setDomValue(name, val);
       setFieldTouched(name, false);
 
@@ -169,25 +176,12 @@ const useForm = <V extends FormValues = FormValues>({
     },
     [
       validateOnChange,
-      refreshFieldsIfNeeded,
       stateRef,
       setStateRef,
       setDomValue,
       setFieldTouched,
       validateForm,
     ]
-  );
-
-  const applyValuesToDom = useCallback(
-    (
-      fields: Fields = getFields(formRef.current),
-      values: V = defaultValuesRef.current
-    ) =>
-      Object.keys(fields).forEach((key) => {
-        const { name } = fields[key].field;
-        setDomValue(name, get(values, name));
-      }),
-    [formRef, defaultValuesRef, setDomValue]
   );
 
   useEffect(() => {
@@ -199,8 +193,8 @@ const useForm = <V extends FormValues = FormValues>({
     }
 
     fieldsRef.current = getFields(formRef.current);
-    applyValuesToDom(fieldsRef.current);
-  }, [formRef, applyValuesToDom]);
+    setValuesToDom();
+  }, [formRef, setValuesToDom]);
 
   useEffect(() => {
     if (!formRef.current) return () => null;
@@ -263,9 +257,27 @@ const useForm = <V extends FormValues = FormValues>({
     form.addEventListener("input", handleChange);
     form.addEventListener("focusout", handleBlur);
 
+    const observer = new MutationObserver((mutations) => {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const { type, addedNodes } of mutations) {
+        if (type === "childList" && addedNodes.length) {
+          const addedFields = getFields(form, fieldsRef.current);
+
+          if (!isEmptyObject(addedFields)) {
+            fieldsRef.current = { ...fieldsRef.current, ...addedFields };
+            setValuesToDom(addedFields);
+          }
+
+          break;
+        }
+      }
+    });
+    observer.observe(form, { childList: true, subtree: true });
+
     return () => {
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
+      observer.disconnect();
     };
   }, [
     formRef,
@@ -275,6 +287,7 @@ const useForm = <V extends FormValues = FormValues>({
     validateOnChange,
     validateForm,
     setFieldTouched,
+    setValuesToDom,
   ]);
 
   return { formRef, formState, setFieldValue, setFieldError };
