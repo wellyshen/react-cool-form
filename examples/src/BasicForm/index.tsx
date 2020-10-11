@@ -62,8 +62,8 @@ interface FormValues {
 }
 
 const defaultValues = {
-  text: { nest: "" },
-  hiddenText: "",
+  text: { nest: "test" },
+  hiddenText: "test",
   password: "test",
   number: 123,
   checkbox: true,
@@ -109,15 +109,15 @@ export default (): JSX.Element => {
   console.log("LOG ===> formState: ", formState.errors);
 
   const handleSetValueClick = (): void => {
-    setFieldValue("text", (prevValue: string) => `new ${prevValue}`);
-    // setFieldValue("text", "new test");
+    // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
+    // setFieldValue("text.nest", "new test");
     setFieldValue("hiddenText", "new test");
-    setFieldValue("password", "");
-    setFieldValue("number", 456);
-    setFieldValue("checkbox", false);
-    setFieldValue("checkboxGroup", ["value-2"]);
-    setFieldValue("radio", "value-2");
-    setFieldValue("multiSelect.nest", ["value-2"]);
+    // setFieldValue("password", "");
+    // setFieldValue("number", 456);
+    // setFieldValue("checkbox", false);
+    // setFieldValue("checkboxGroup", ["value-2"]);
+    // setFieldValue("radio", "value-2");
+    // setFieldValue("multiSelect.nest", ["value-2"]);
   };
 
   const handleSetErrorsClick = (): void => {
@@ -140,7 +140,11 @@ export default (): JSX.Element => {
         ref={formRef}
       >
         <Input label="Text:" name="text.nest" />
-        {showInput && <Input label="Hidden Text:" name="hiddenText" />}
+        {showInput && (
+          <div>
+            <Input label="Hidden Text:" name="hiddenText" />
+          </div>
+        )}
         <Input label="Password:" type="password" name="password" />
         <Input label="Number:" type="number" name="number" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />
