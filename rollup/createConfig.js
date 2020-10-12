@@ -7,6 +7,11 @@ import { terser } from "rollup-plugin-terser";
 
 import pkg from "../package.json";
 
+const createExternalResolver = (external) =>
+  !external.length
+    ? () => false
+    : (id) => new RegExp(`^(${external.join("|")})($|/)`).test(id);
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default ({ name, format, env, size }) => {
   const shouldMinify = env === "production";
@@ -44,6 +49,9 @@ export default ({ name, format, env, size }) => {
           compress: { drop_console: true },
         }),
     ].filter(Boolean),
-    external: [...Object.keys(pkg.peerDependencies), /@babel\/runtime/],
+    external: createExternalResolver([
+      ...Object.keys(pkg.peerDependencies),
+      ...Object.keys(pkg.dependencies),
+    ]),
   };
 };
