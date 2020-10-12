@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
-import React, { memo, useState, useRef } from "react";
+import React, { memo, useState } from "react";
 import useForm, { Errors } from "react-cool-form";
 
 import { container, form, label as labelStyle, wrapper } from "./styles";
@@ -77,11 +77,9 @@ const defaultValues = {
 
 export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
-  // const formRef = useRef(null);
   const { formRef, formState, setFieldValue, setFieldError } = useForm<
     FormValues
   >({
-    // formRef,
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,

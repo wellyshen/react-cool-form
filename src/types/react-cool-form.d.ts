@@ -1,8 +1,6 @@
 declare module "react-cool-form" {
   import { RefObject } from "react";
 
-  export type FormRef = RefObject<HTMLFormElement>;
-
   export type FormValues = Record<string, any>;
 
   export type Touched<V = FormValues> = {
@@ -48,7 +46,6 @@ declare module "react-cool-form" {
 
   export interface Config<V = FormValues> {
     defaultValues: V;
-    formRef?: FormRef;
     validate?: Validate<V>;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
@@ -56,7 +53,7 @@ declare module "react-cool-form" {
   }
 
   export interface Return<V = FormValues> {
-    formRef: FormRef;
+    formRef: RefObject<HTMLFormElement>;
     formState: FormState<V>;
     setFieldValue: SetFieldValue;
     setFieldError: SetFieldError;

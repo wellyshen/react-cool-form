@@ -58,20 +58,18 @@ const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
 
 const useForm = <V extends FormValues = FormValues>({
   defaultValues,
-  formRef: configFormRef,
   validate,
   validateOnChange = true,
   validateOnBlur = true,
   showErrorAfterTouched = true,
 }: Config<V>): Return<V> => {
+  const formRef = useRef<HTMLFormElement>(null);
   const defaultValuesRef = useLatest(defaultValues || {});
   const validateRef = useLatest(validate);
   const fieldsRef = useRef<Fields>({});
   const [formState, stateRef, setStateRef] = useFormState<V>(
     defaultValuesRef.current
   );
-  const varFormRef = useRef<HTMLFormElement>(null);
-  const formRef = configFormRef || varFormRef;
 
   const setFieldError = useCallback<SetFieldError>(
     (name, error) => {

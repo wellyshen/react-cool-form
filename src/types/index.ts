@@ -25,8 +25,6 @@ export interface SetStateRef {
 export type UsedStateRef<V> = Partial<Record<keyof FormState<V>, boolean>>;
 
 // Hook
-export type FormRef = RefObject<HTMLFormElement>;
-
 export type FormValues = Record<string, any>;
 
 export type FieldElement =
@@ -66,7 +64,6 @@ export interface SetFieldError {
 
 export interface Config<V> {
   defaultValues: V;
-  formRef?: FormRef;
   validate?: Validate<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
@@ -74,7 +71,7 @@ export interface Config<V> {
 }
 
 export interface Return<V> {
-  formRef: FormRef;
+  formRef: RefObject<HTMLFormElement>;
   formState: Readonly<FormState<V>>;
   setFieldValue: SetFieldValue;
   setFieldError: SetFieldError;
