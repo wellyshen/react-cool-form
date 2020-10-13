@@ -9,16 +9,6 @@ declare module "react-cool-form" {
 
   export type Message = string | boolean | undefined;
 
-  export interface ValidateCallback {
-    (value: any): Message | Promise<Message>;
-  }
-
-  export interface ValidateRef {
-    (callback: ValidateCallback): (
-      field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
-    ) => void;
-  }
-
   export type Errors<V = FormValues> = {
     [K in keyof V]?: V[K] extends Message ? Message : Errors<V[K]>;
   };
@@ -30,6 +20,16 @@ declare module "react-cool-form" {
       values: V,
       options: { touched: Touched<V>; setFieldError: SetFieldError }
     ): ReturnErrors<V> | Promise<ReturnErrors<V>>;
+  }
+
+  export interface ValidateCallback {
+    (value: any): Message | Promise<Message>;
+  }
+
+  export interface ValidateRef {
+    (callback: ValidateCallback): (
+      field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
+    ) => void;
   }
 
   export interface FormState<V = FormValues> {
