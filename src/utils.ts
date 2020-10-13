@@ -59,7 +59,7 @@ export const get = (object: any, path: string, defaultValue?: unknown): any => {
 export const set = (
   object: any,
   path: string,
-  value: unknown
+  value?: unknown
 ): typeof object => {
   if (!isObject(object)) return object;
 
