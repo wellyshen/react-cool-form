@@ -7,17 +7,19 @@ declare module "react-cool-form" {
     [K in keyof V]?: V[K] extends boolean ? boolean : Touched<V[K]>;
   };
 
+  export type Message = string | boolean | undefined;
+
   export type Errors<V = FormValues> = {
-    [K in keyof V]?: V[K] extends string ? string : Errors<V[K]>;
+    [K in keyof V]?: V[K] extends Message ? Message : Errors<V[K]>;
   };
 
-  type PossibleError<V> = Partial<Errors<V>> | boolean | void;
+  type ReturnErrors<V> = Partial<Errors<V>> | boolean | void;
 
   export interface Validate<V = FormValues> {
     (
       values: V,
       options: { touched: Touched<V>; setFieldError: SetFieldError }
-    ): PossibleError<V> | Promise<PossibleError<V>>;
+    ): ReturnErrors<V> | Promise<ReturnErrors<V>>;
   }
 
   export interface FormState<V = FormValues> {
@@ -25,6 +27,12 @@ declare module "react-cool-form" {
     readonly touched: Partial<Record<keyof V, boolean>>;
     readonly errors: Errors<V>;
     readonly isValidating: boolean;
+  }
+
+  export interface ValidateRef {
+    (validate: (value: any) => Message): (
+      field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    ) => void;
   }
 
   export interface SetFieldValue {
@@ -35,12 +43,10 @@ declare module "react-cool-form" {
     ): void;
   }
 
-  type Message = string | boolean;
-
   export interface SetFieldError {
     (
       name: string,
-      message?: Message | ((previousMessage?: Message) => Message)
+      message: Message | ((previousMessage: Message) => Message)
     ): void;
   }
 
@@ -54,6 +60,7 @@ declare module "react-cool-form" {
 
   export interface Return<V = FormValues> {
     formRef: RefObject<HTMLFormElement>;
+    validate: ValidateRef;
     formState: FormState<V>;
     setFieldValue: SetFieldValue;
     setFieldError: SetFieldError;

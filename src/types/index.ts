@@ -5,8 +5,10 @@ type Touched<V> = {
   [K in keyof V]?: V[K] extends boolean ? boolean : Touched<V[K]>;
 };
 
+type Message = string | boolean | undefined;
+
 type Errors<V> = {
-  [K in keyof V]?: V[K] extends string ? string : Errors<V[K]>;
+  [K in keyof V]?: V[K] extends Message ? Message : Errors<V[K]>;
 };
 
 export interface FormState<V> {
@@ -37,12 +39,16 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
-type PossibleError<V> = Errors<V> | boolean | void;
+type ReturnErrors<V> = Errors<V> | boolean | void;
 
 interface Validate<V> {
   (values: V, options: { touched: Touched<V>; setFieldError: SetFieldError }):
-    | PossibleError<V>
-    | Promise<PossibleError<V>>;
+    | ReturnErrors<V>
+    | Promise<ReturnErrors<V>>;
+}
+
+export interface ValidateRef {
+  (validate: (value: any) => Message): (field: FieldElement) => void;
 }
 
 export interface SetFieldValue {
@@ -53,12 +59,10 @@ export interface SetFieldValue {
   ): void;
 }
 
-type Message = string | boolean;
-
 export interface SetFieldError {
   (
     name: string,
-    message?: Message | ((previousMessage?: Message) => Message)
+    message: Message | ((previousMessage: Message) => Message)
   ): void;
 }
 
@@ -72,6 +76,7 @@ export interface Config<V> {
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
+  validate: ValidateRef;
   formState: Readonly<FormState<V>>;
   setFieldValue: SetFieldValue;
   setFieldError: SetFieldError;
