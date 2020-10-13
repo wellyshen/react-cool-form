@@ -1,50 +1,63 @@
+/* eslint-disable react/prop-types */
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
-import React, { memo, useState } from "react";
+import React, { memo, useState, forwardRef } from "react";
 import useForm, { Errors } from "react-cool-form";
 
 import { container, form, label as labelStyle, wrapper } from "./styles";
 
 const Input = memo(
-  ({ label, id, name, ...rest }: any): JSX.Element => {
-    // console.log(`LOG ==> ${name} is re-rendered`);
+  forwardRef(
+    ({ label, id, name, ...rest }: any, ref): JSX.Element => {
+      // console.log(`LOG ==> ${name} is re-rendered`);
 
-    return (
-      <React.Fragment>
-        <label css={labelStyle} htmlFor={id || name}>
-          {label}
-        </label>
-        <input id={id || name} name={name} {...rest} />
-      </React.Fragment>
-    );
-  }
+      return (
+        <React.Fragment>
+          <label css={labelStyle} htmlFor={id || name}>
+            {label}
+          </label>
+          <input id={id || name} name={name} {...rest} ref={ref} />
+        </React.Fragment>
+      );
+    }
+  )
 );
 
-const Select = ({ children, label, name, ...rest }: any): JSX.Element => (
-  <React.Fragment>
-    <label css={labelStyle} htmlFor={name}>
-      {label}
-    </label>
-    <select id={name} name={name} {...rest}>
-      {children}
-    </select>
-  </React.Fragment>
+const Select = memo(
+  forwardRef(
+    ({ children, label, name, ...rest }: any, ref): JSX.Element => {
+      // console.log(`LOG ==> ${name} is re-rendered`);
+
+      return (
+        <React.Fragment>
+          <label css={labelStyle} htmlFor={name}>
+            {label}
+          </label>
+          <select id={name} name={name} {...rest} ref={ref}>
+            {children}
+          </select>
+        </React.Fragment>
+      );
+    }
+  )
 );
 
 const TextArea = memo(
-  ({ label, name, ...rest }: any): JSX.Element => {
-    // console.log(`LOG ==> ${name} is re-rendered`);
+  forwardRef(
+    ({ label, name, ...rest }: any, ref): JSX.Element => {
+      // console.log(`LOG ==> ${name} is re-rendered`);
 
-    return (
-      <React.Fragment>
-        <label css={labelStyle} htmlFor={name}>
-          {label}
-        </label>
-        <textarea id={name} name={name} {...rest} />
-      </React.Fragment>
-    );
-  }
+      return (
+        <React.Fragment>
+          <label css={labelStyle} htmlFor={name}>
+            {label}
+          </label>
+          <textarea id={name} name={name} {...rest} ref={ref} />
+        </React.Fragment>
+      );
+    }
+  )
 );
 
 interface FormValues {
@@ -77,9 +90,13 @@ const defaultValues = {
 
 export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
-  const { formRef, formState, setFieldValue, setFieldError } = useForm<
-    FormValues
-  >({
+  const {
+    formRef,
+    validate,
+    formState,
+    setFieldValue,
+    setFieldError,
+  } = useForm<FormValues>({
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
@@ -137,7 +154,7 @@ export default (): JSX.Element => {
         noValidate
         ref={formRef}
       >
-        <Input label="Text:" name="text.nest" />
+        <Input label="Text:" name="text.nest" ref={validate(() => null)} />
         {showInput && (
           <div>
             <Input label="Hidden Text:" name="hiddenText" />
