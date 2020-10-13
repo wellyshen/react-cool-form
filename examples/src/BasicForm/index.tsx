@@ -109,8 +109,8 @@ export default (): JSX.Element => {
 
       // if (touched.text && !text) setError("text", "Required");
       // if (touched.hiddenText && !hiddenText) setError("hiddenText", "Required");
-      if (text.nest.length <= 3) errors.text.nest = "Too short";
-      if (hiddenText.length <= 3) errors.hiddenText = "Too short";
+      if (text.nest.length <= 3) errors.text.nest = "Form error: Too short";
+      // if (hiddenText.length <= 3) errors.hiddenText = "Form error: Too short";
 
       // eslint-disable-next-line
       /* await new Promise((resolve) => {
@@ -154,7 +154,16 @@ export default (): JSX.Element => {
         noValidate
         ref={formRef}
       >
-        <Input label="Text:" name="text.nest" ref={validate(() => null)} />
+        <Input
+          label="Text:"
+          name="text.nest"
+          ref={validate(async (values) => {
+            // eslint-disable-next-line
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            if (values.length <= 3) return "Field error: Too short";
+            return false;
+          })}
+        />
         {showInput && (
           <div>
             <Input label="Hidden Text:" name="hiddenText" />
