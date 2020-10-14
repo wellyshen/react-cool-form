@@ -44,7 +44,7 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --fix",
-    "*.{json,md,yml}": "prettier --write"
+    "**/*": "prettier --write --ignore-unknown"
   },
   "babel": {
     "presets": [
@@ -110,19 +110,19 @@
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@rollup/plugin-replace": "^2.3.3",
     "@testing-library/react-hooks": "^3.4.2",
-    "@types/react": "^16.9.51",
+    "@types/react": "^16.9.52",
     "cpy-cli": "^3.1.1",
     "eslint": "^7.2.0",
-    "eslint-config-welly": "^1.4.11",
+    "eslint-config-welly": "^1.4.12",
     "husky": "^4.3.0",
-    "jest": "^26.5.2",
+    "jest": "^26.5.3",
     "lint-staged": "^10.4.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.2",
     "react": "^16.13.1",
     "react-test-renderer": "^16.13.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.29.0",
+    "rollup": "^2.30.0",
     "rollup-plugin-size-snapshot": "^0.12.0",
     "rollup-plugin-terser": "^7.0.2",
     "ts-jest": "^26.4.1",
