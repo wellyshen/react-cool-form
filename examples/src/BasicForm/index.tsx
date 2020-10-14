@@ -75,7 +75,7 @@ interface FormValues {
 }
 
 const defaultValues = {
-  text: { nest: "test" },
+  text: { nest: "" },
   hiddenText: "test",
   password: "test",
   number: 123,
@@ -100,25 +100,23 @@ export default (): JSX.Element => {
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    // showErrorAfterTouched: false,
-    validate: async (
-      { text, hiddenText },
-      { touched, setFieldError: setError }
-    ) => {
-      const errors = { text: { nest: "" }, hiddenText: "" };
+    // @ts-ignore
+    // validate: async ({ text, hiddenText }, setError) => {
+    //   const errors = { text: { nest: "" }, hiddenText: "" };
 
-      // if (touched.text && !text) setError("text", "Required");
-      // if (touched.hiddenText && !hiddenText) setError("hiddenText", "Required");
-      if (text.nest.length <= 3) errors.text.nest = "Form error: Too short";
-      // if (hiddenText.length <= 3) errors.hiddenText = "Form error: Too short";
+    //   // eslint-disable-next-line
+    //   /* await new Promise((resolve) => {
+    //     setTimeout(resolve, 1000);
+    //   }); */
 
-      // eslint-disable-next-line
-      /* await new Promise((resolve) => {
-        setTimeout(resolve, 5000);
-      }); */
+    //   // if (text.nest.length <= 3) setError("text.nest", "Form error");
+    //   // if (hiddenText.length <= 3) setError("hiddenText", "Form error");
+    //   if (text.nest.length <= 3) errors.text.nest = "Form error";
+    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
-      return errors;
-    },
+    //   // return { text: "Form error" };
+    //   return errors;
+    // },
   });
 
   console.log("LOG ===> formState: ", formState.errors);
@@ -159,9 +157,8 @@ export default (): JSX.Element => {
           name="text.nest"
           ref={validate(async (values) => {
             // eslint-disable-next-line
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            if (values.length <= 3) return "Field error: Too short";
-            return false;
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
+            return values.length <= 3 ? "Field error" : false;
           })}
         />
         {showInput && (
@@ -169,7 +166,7 @@ export default (): JSX.Element => {
             <Input label="Hidden Text:" name="hiddenText" />
           </div>
         )}
-        <Input label="Password:" type="password" name="password" />
+        {/* <Input label="Password:" type="password" name="password" /> */}
         <Input label="Number:" type="number" name="number" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />
         <div css={wrapper}>
