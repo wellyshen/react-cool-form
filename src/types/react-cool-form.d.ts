@@ -16,10 +16,9 @@ declare module "react-cool-form" {
   type ReturnErrors<V> = Partial<Errors<V>> | boolean | void;
 
   export interface Validate<V = FormValues> {
-    (
-      values: V,
-      options: { touched: Touched<V>; setFieldError: SetFieldError }
-    ): ReturnErrors<V> | Promise<ReturnErrors<V>>;
+    (values: V, setFieldError: SetFieldError):
+      | ReturnErrors<V>
+      | Promise<ReturnErrors<V>>;
   }
 
   export interface ValidateCallback {
@@ -59,7 +58,6 @@ declare module "react-cool-form" {
     validate?: Validate<V>;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
-    showErrorAfterTouched?: boolean;
   }
 
   export interface Return<V = FormValues> {

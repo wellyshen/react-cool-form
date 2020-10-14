@@ -42,7 +42,7 @@ export type Fields = Record<
 type ReturnErrors<V> = Errors<V> | boolean | void;
 
 interface Validate<V> {
-  (values: V, options: { touched: Touched<V>; setFieldError: SetFieldError }):
+  (values: V, setFieldError: SetFieldError):
     | ReturnErrors<V>
     | Promise<ReturnErrors<V>>;
 }
@@ -75,7 +75,6 @@ export interface Config<V> {
   validate?: Validate<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
-  showErrorAfterTouched?: boolean;
 }
 
 export interface Return<V> {
