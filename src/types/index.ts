@@ -7,7 +7,7 @@ type Touched<V> = {
 
 type Message = string | boolean | undefined;
 
-type Errors<V> = {
+export type Errors<V> = {
   [K in keyof V]?: V[K] extends Message ? Message : Errors<V[K]>;
 };
 
@@ -47,12 +47,12 @@ interface Validate<V> {
     | Promise<ReturnErrors<V>>;
 }
 
-export interface ValidateCallback {
-  (value: any): Message | Promise<Message>;
+export interface ValidateCallback<V> {
+  (value: any, values: V): Message | Promise<Message>;
 }
 
-export interface ValidateRef {
-  (callback: ValidateCallback): (field: FieldElement | null) => void;
+export interface ValidateRef<V> {
+  (callback: ValidateCallback<V>): (field: FieldElement | null) => void;
 }
 
 export interface SetFieldValue {
@@ -79,7 +79,7 @@ export interface Config<V> {
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
-  validate: ValidateRef;
+  validate: ValidateRef<V>;
   formState: Readonly<FormState<V>>;
   setFieldValue: SetFieldValue;
   setFieldError: SetFieldError;

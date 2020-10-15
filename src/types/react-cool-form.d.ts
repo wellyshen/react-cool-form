@@ -21,12 +21,12 @@ declare module "react-cool-form" {
       | Promise<ReturnErrors<V>>;
   }
 
-  export interface ValidateCallback {
-    (value: any): Message | Promise<Message>;
+  export interface ValidateCallback<V> {
+    (value: any, values: V): Message | Promise<Message>;
   }
 
-  export interface ValidateRef {
-    (callback: ValidateCallback): (
+  export interface ValidateRef<V> {
+    (callback: ValidateCallback<V>): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
   }
@@ -62,7 +62,7 @@ declare module "react-cool-form" {
 
   export interface Return<V = FormValues> {
     formRef: RefObject<HTMLFormElement>;
-    validate: ValidateRef;
+    validate: ValidateRef<V>;
     formState: FormState<V>;
     setFieldValue: SetFieldValue;
     setFieldError: SetFieldError;
