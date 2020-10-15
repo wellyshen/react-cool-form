@@ -7,7 +7,7 @@ import { terser } from "rollup-plugin-terser";
 
 import pkg from "../package.json";
 
-const createExternalResolver = (external) =>
+const makeExternalPredicate = (external) =>
   !external.length
     ? () => false
     : (id) => new RegExp(`^(${external.join("|")})($|/)`).test(id);
@@ -49,7 +49,7 @@ export default ({ name, format, env, size }) => {
           compress: { drop_console: true },
         }),
     ].filter(Boolean),
-    external: createExternalResolver([
+    external: makeExternalPredicate([
       ...Object.keys(pkg.peerDependencies),
       ...Object.keys(pkg.dependencies),
     ]),
