@@ -86,6 +86,7 @@
   },
   "eslintIgnore": [
     "dist",
+    "examples",
     "rollup/cjsEntryFile.js"
   ],
   "jest": {
