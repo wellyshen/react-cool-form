@@ -64,7 +64,6 @@ export const set = (
   if (!isObject(object)) return object;
 
   const tempPath: string[] = [];
-
   path.replace(
     /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
     (
@@ -79,12 +78,13 @@ export const set = (
     }
   );
 
+  const cloneObject = { ...object };
   tempPath.slice(0, -1).reduce((obj: Record<string, any>, key, idx) => {
     if (isObject(obj[key]) || isArray(obj[key])) return obj[key];
     const next = Number(tempPath[idx + 1]);
     obj[key] = Number.isInteger(next) && next >= 0 ? [] : {};
     return obj[key];
-  }, object)[tempPath[tempPath.length - 1]] = value;
+  }, cloneObject)[tempPath[tempPath.length - 1]] = value;
 
-  return object;
+  return cloneObject;
 };
