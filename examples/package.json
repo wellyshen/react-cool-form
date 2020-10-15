@@ -9,9 +9,10 @@
     "build": "react-scripts build",
     "type-check": "tsc --noEmit",
     "type-check:watch": "yarn type-check --watch",
-    "lint": "run-p lint:*",
+    "lint": "run-s lint:*",
     "lint:code": "eslint --fix . --ext .js,.ts,.tsx",
     "lint:style": "stylelint --fix \"**/*.{css,ts,tsx}\"",
+    "lint:format": "prettier -w . -u --loglevel silent",
     "test": "react-scripts test --passWithNoTests",
     "test:cov": "yarn test --coverage --watchAll=false",
     "clean": "run-p clean:*",
@@ -28,7 +29,7 @@
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --fix",
     "*.{css,ts,tsx}": "stylelint --fix",
-    "**/*": "prettier --write --ignore-unknown"
+    "**/*": "prettier -w -u"
   },
   "eslintConfig": {
     "extends": [
@@ -47,16 +48,10 @@
     "build"
   ],
   "stylelint": {
-    "plugins": [
-      "stylelint-prettier"
-    ],
     "extends": [
       "stylelint-config-standard",
-      "stylelint-prettier/recommended"
+      "stylelint-config-prettier"
     ],
-    "rules": {
-      "prettier/prettier": true
-    },
     "ignoreFiles": [
       "build/**/*.css",
       "coverage/**/*.css"
@@ -77,8 +72,8 @@
   "dependencies": {
     "@emotion/core": "^10.0.35",
     "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.0.4",
-    "@testing-library/user-event": "^12.1.7",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.8",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.8",
     "@types/react": "^16.9.52",
@@ -90,7 +85,7 @@
     "typescript": "~4.0.3"
   },
   "devDependencies": {
-    "eslint-config-welly": "^1.4.12",
+    "eslint-config-welly": "^1.6.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.4.0",
     "npm-run-all": "^4.1.5",
@@ -99,7 +94,6 @@
     "serve": "^11.3.2",
     "stylelint": "^13.7.2",
     "stylelint-config-prettier": "^8.0.2",
-    "stylelint-config-standard": "^20.0.0",
-    "stylelint-prettier": "^1.1.2"
+    "stylelint-config-standard": "^20.0.0"
   }
 }
