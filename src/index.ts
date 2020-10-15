@@ -4,6 +4,7 @@ import {
   Config,
   Return,
   FormValues,
+  Errors,
   Fields,
   FieldElement,
   ValidateCallback,
@@ -16,6 +17,7 @@ import useFormState from "./useFormState";
 import {
   warn,
   get,
+  set,
   isNumberField,
   isRangeField,
   isCheckboxField,
@@ -66,17 +68,17 @@ const useForm = <V extends FormValues = FormValues>({
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
   const defaultValuesRef = useLatest(defaultValues || {});
-  const formValidateRef = useLatest(validate);
-  const fieldValidatesRef = useRef<Record<string, ValidateCallback>>({});
+  const formValidationRef = useLatest(validate);
+  const fieldValidationsRef = useRef<Record<string, ValidateCallback<V>>>({});
   const fieldsRef = useRef<Fields>({});
   const changedFieldRef = useRef("");
   const [formState, stateRef, setStateRef] = useFormState<V>(
     defaultValuesRef.current
   );
 
-  const validateRef = useCallback<ValidateRef>(
+  const validateRef = useCallback<ValidateRef<V>>(
     (callback) => (field) => {
-      if (field?.name) fieldValidatesRef.current[field.name] = callback;
+      if (field?.name) fieldValidationsRef.current[field.name] = callback;
     },
     []
   );
@@ -92,44 +94,40 @@ const useForm = <V extends FormValues = FormValues>({
     [stateRef, setStateRef]
   );
 
-  const validateForm = useCallback(async () => {
-    if (!formValidateRef.current) return;
-
-    setStateRef("isValidating", true);
+  const runFormValidation = useCallback(async (): Promise<Errors<V>> => {
+    if (!formValidationRef.current) return {};
 
     try {
-      const errors = await formValidateRef.current(
+      const errors = await formValidationRef.current(
         stateRef.current.values,
         setFieldError
       );
 
-      if (isObject(errors)) setStateRef("errors", errors);
-      setStateRef("isValidating", false);
+      return isObject(errors) ? (errors as Errors<V>) : {};
     } catch (error) {
       warn(`💡react-cool-form > validate form: `, error);
+      return error;
     }
-  }, [formValidateRef, stateRef, setStateRef, setFieldError]);
+  }, [formValidationRef, stateRef, setFieldError]);
 
-  const validateField = useCallback(
-    async (name: string) => {
-      const fieldValidate = fieldValidatesRef.current[name];
-
-      if (!fieldValidate) return;
-
-      setStateRef("isValidating", true);
+  const runFieldValidation = useCallback(
+    async (name: string): Promise<Errors<V>> => {
+      if (!fieldValidationsRef.current[name]) return {};
 
       try {
-        const error = await fieldValidate(
-          get(stateRef.current, `values.${name}`)
+        const { values, errors } = stateRef.current;
+        const error = await fieldValidationsRef.current[name](
+          get(values, name),
+          values
         );
 
-        setStateRef(`errors.${name}`, error);
-        setStateRef("isValidating", false);
+        return set(errors, name, error);
       } catch (error) {
-        warn(`💡react-cool-form > validate field: `, error);
+        warn(`💡react-cool-form > validate ${name}: `, error);
+        return error;
       }
     },
-    [stateRef, setStateRef]
+    [stateRef]
   );
 
   const setDomValue = useCallback((name: string, value: any) => {
@@ -183,11 +181,10 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef(`touched.${name}`, true);
 
       if (shouldValidate && changedFieldRef.current !== name) {
-        validateField(name);
-        validateForm();
+        // TODO: Validate
       }
     },
-    [setStateRef, validateOnBlur, validateField, validateForm]
+    [setStateRef, validateOnBlur]
   );
 
   const setFieldValue = useCallback<SetFieldValue>(
@@ -201,19 +198,10 @@ const useForm = <V extends FormValues = FormValues>({
       setFieldTouched(name, false);
 
       if (shouldValidate) {
-        validateField(name);
-        validateForm();
+        // TODO: Validate
       }
     },
-    [
-      validateOnChange,
-      stateRef,
-      setStateRef,
-      setDomValue,
-      setFieldTouched,
-      validateField,
-      validateForm,
-    ]
+    [validateOnChange, stateRef, setStateRef, setDomValue, setFieldTouched]
   );
 
   useEffect(() => {
@@ -272,8 +260,7 @@ const useForm = <V extends FormValues = FormValues>({
       changedFieldRef.current = name;
 
       if (validateOnChange) {
-        validateField(name);
-        validateForm();
+        // TODO: Validate
       }
     };
 
@@ -320,8 +307,6 @@ const useForm = <V extends FormValues = FormValues>({
     stateRef,
     setStateRef,
     validateOnChange,
-    validateField,
-    validateForm,
     setFieldTouched,
     setValuesToDom,
   ]);
