@@ -36,7 +36,7 @@ import {
   isArray,
 } from "./utils";
 
-const lowPriority = (fn: () => any) =>
+const runWithLowPriority = (fn: () => any) =>
   unstable_runWithPriority(unstable_LowPriority, () =>
     unstable_scheduleCallback(unstable_LowPriority, fn)
   );
@@ -129,7 +129,7 @@ const useForm = <V extends FormValues = FormValues>({
 
   const validateFieldAndForm = useCallback(
     (name: string) => {
-      lowPriority(() => {
+      runWithLowPriority(() => {
         setStateRef("isValidating", true);
 
         // eslint-disable-next-line compat/compat
