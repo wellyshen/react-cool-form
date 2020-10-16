@@ -16,7 +16,7 @@ export default <V>(
     errors: {},
     isValidating: false,
   });
-  const useStateRef = useRef<UsedStateRef<V>>({});
+  const usedStateRef = useRef<UsedStateRef<V>>({});
 
   const setStateRef = useCallback<SetStateRef>((path, value) => {
     const { current: state } = stateRef;
@@ -25,16 +25,16 @@ export default <V>(
 
     if (shouldUpdate) {
       stateRef.current = { ...state, ...set(state, path, value) };
-      if (!hasProxy || useStateRef.current[type]) forceUpdate();
+      if (!hasProxy || usedStateRef.current[type]) forceUpdate();
     }
   }, []);
 
   return [
     hasProxy
       ? new Proxy(stateRef.current, {
-          get: (target, key: keyof FormState<V>) => {
-            if (target[key]) useStateRef.current[key] = true;
-            return target[key];
+          get: (obj, prop: keyof FormState<V>) => {
+            if (prop in obj) usedStateRef.current[prop] = true;
+            return obj[prop];
           },
         })
       : stateRef.current,
