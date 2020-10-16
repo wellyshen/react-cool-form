@@ -3,19 +3,17 @@ declare module "react-cool-form" {
 
   export type FormValues = Record<string, any>;
 
-  export type Touched<V = FormValues> =
+  type Prop<V, T = any> =
     | {
-        [K in keyof V]: V[K] extends boolean ? boolean : Touched<V[K]>;
+        [K in keyof V]: V[K] extends T ? T : Prop<V[K]>;
       }
     | Record<string, never>;
+
+  export type Touched<V = FormValues> = Prop<V, boolean>;
 
   export type Message = string | boolean | undefined;
 
-  export type Errors<V = FormValues> =
-    | {
-        [K in keyof V]: V[K] extends Message ? Message : Errors<V[K]>;
-      }
-    | Record<string, never>;
+  export type Errors<V = FormValues> = Prop<V, Message>;
 
   export interface Validate<V = FormValues> {
     (values: V): Errors<V> | void | Promise<Errors<V> | void>;

@@ -1,23 +1,19 @@
 import { MutableRefObject, RefObject } from "react";
 
 // State
-type Touched<V> =
+type Prop<V, T = any> =
   | {
-      [K in keyof V]: V[K] extends boolean ? boolean : Touched<V[K]>;
+      [K in keyof V]: V[K] extends T ? T : Prop<V[K]>;
     }
   | Record<string, never>;
 
 type Message = string | boolean | undefined;
 
-export type Errors<V> =
-  | {
-      [K in keyof V]: V[K] extends Message ? Message : Errors<V[K]>;
-    }
-  | Record<string, never>;
+export type Errors<V> = Prop<V, Message>;
 
 export interface FormState<V> {
   values: V;
-  touched: Touched<V>;
+  touched: Prop<V, boolean>;
   errors: Errors<V>;
   isValidating: boolean;
 }
