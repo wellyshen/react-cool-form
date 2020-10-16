@@ -39,20 +39,16 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
-type ReturnErrors<V> = Errors<V> | boolean | void;
-
 interface Validate<V> {
-  (values: V, setFieldError: SetFieldError):
-    | ReturnErrors<V>
-    | Promise<ReturnErrors<V>>;
+  (values: V): Errors<V> | void | Promise<Errors<V> | void>;
 }
 
-export interface ValidateCallback<V> {
+export interface FieldValidateFn<V> {
   (value: any, values: V): Message | Promise<Message>;
 }
 
 export interface ValidateRef<V> {
-  (callback: ValidateCallback<V>): (field: FieldElement | null) => void;
+  (validateFn: FieldValidateFn<V>): (field: FieldElement | null) => void;
 }
 
 export interface SetFieldValue {

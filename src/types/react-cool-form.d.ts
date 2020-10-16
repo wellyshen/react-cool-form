@@ -13,20 +13,16 @@ declare module "react-cool-form" {
     [K in keyof V]?: V[K] extends Message ? Message : Errors<V[K]>;
   };
 
-  type ReturnErrors<V> = Partial<Errors<V>> | boolean | void;
-
   export interface Validate<V = FormValues> {
-    (values: V, setFieldError: SetFieldError):
-      | ReturnErrors<V>
-      | Promise<ReturnErrors<V>>;
+    (values: V): Errors<V> | void | Promise<Errors<V> | void>;
   }
 
-  export interface ValidateCallback<V> {
+  export interface FieldValidateFn<V> {
     (value: any, values: V): Message | Promise<Message>;
   }
 
-  export interface ValidateRef<V> {
-    (callback: ValidateCallback<V>): (
+  export interface ValidateRef<V = FormValues> {
+    (validateFn: FieldValidateFn<V>): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
   }
