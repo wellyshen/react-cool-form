@@ -68,7 +68,7 @@ const useForm = <V extends FormValues = FormValues>({
   validateOnBlur = true,
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
-  const defaultValuesRef = useLatest(defaultValues || {});
+  const defaultValuesRef = useRef(defaultValues || {});
   const formValidateFnRef = useLatest(validate);
   const fieldValidatesRef = useRef<Record<string, FieldValidateFn<V>>>({});
   const fieldsRef = useRef<Fields>({});
@@ -162,7 +162,7 @@ const useForm = <V extends FormValues = FormValues>({
     } else if (isFileField(field)) {
       if (isObject(value)) field.files = value;
     } else {
-      field.value = value;
+      field.value = value ?? "";
     }
   }, []);
 
