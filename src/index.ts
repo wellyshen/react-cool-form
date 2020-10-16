@@ -1,14 +1,14 @@
-import { useRef, useCallback, useEffect } from "react";
+import { useRef, useCallback, useLayoutEffect, useEffect } from "react";
 
 import {
   Config,
   Return,
   FormValues,
-  Errors,
   Fields,
   FieldElement,
-  ValidateCallback,
+  Errors,
   ValidateRef,
+  FieldValidateFn,
   SetFieldValue,
   SetFieldError,
 } from "./types";
@@ -18,6 +18,7 @@ import {
   warn,
   get,
   set,
+  deepMerge,
   isNumberField,
   isRangeField,
   isCheckboxField,
@@ -68,8 +69,8 @@ const useForm = <V extends FormValues = FormValues>({
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
   const defaultValuesRef = useLatest(defaultValues || {});
-  const formValidationRef = useLatest(validate);
-  const fieldValidationsRef = useRef<Record<string, ValidateCallback<V>>>({});
+  const formValidateFnRef = useLatest(validate);
+  const fieldValidatesRef = useRef<Record<string, FieldValidateFn<V>>>({});
   const fieldsRef = useRef<Fields>({});
   const changedFieldRef = useRef("");
   const [formState, stateRef, setStateRef] = useFormState<V>(
@@ -77,57 +78,58 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const validateRef = useCallback<ValidateRef<V>>(
-    (callback) => (field) => {
-      if (field?.name) fieldValidationsRef.current[field.name] = callback;
+    (validateFn) => (field) => {
+      if (field?.name) fieldValidatesRef.current[field.name] = validateFn;
     },
     []
   );
 
-  const setFieldError = useCallback<SetFieldError>(
-    (name, error) => {
-      const err = isFunction(error)
-        ? error(get(stateRef.current.errors, name))
-        : error;
-
-      setStateRef(`errors.${name}`, err);
-    },
-    [stateRef, setStateRef]
-  );
-
-  const runFormValidation = useCallback(async (): Promise<Errors<V>> => {
-    if (!formValidationRef.current) return {};
-
-    try {
-      const errors = await formValidationRef.current(
-        stateRef.current.values,
-        setFieldError
-      );
-
-      return isObject(errors) ? (errors as Errors<V>) : {};
-    } catch (error) {
-      warn(`💡react-cool-form > validate form: `, error);
-      return error;
-    }
-  }, [formValidationRef, stateRef, setFieldError]);
-
   const runFieldValidation = useCallback(
     async (name: string): Promise<Errors<V>> => {
-      if (!fieldValidationsRef.current[name]) return {};
+      if (!fieldValidatesRef.current[name]) return {};
 
       try {
         const { values, errors } = stateRef.current;
-        const error = await fieldValidationsRef.current[name](
+        const error = await fieldValidatesRef.current[name](
           get(values, name),
           values
         );
 
         return set(errors, name, error);
-      } catch (error) {
-        warn(`💡react-cool-form > validate ${name}: `, error);
-        return error;
+      } catch (exception) {
+        warn(`💡react-cool-form > validate ${name}: `, exception);
+        throw exception;
       }
     },
     [stateRef]
+  );
+
+  const runFormValidateFn = useCallback(async (): Promise<Errors<V>> => {
+    if (!formValidateFnRef.current) return {};
+
+    try {
+      const errors = await formValidateFnRef.current(stateRef.current.values);
+
+      return isObject(errors) ? (errors as Errors<V>) : {};
+    } catch (exception) {
+      warn(`💡react-cool-form > config.validate: `, exception);
+      throw exception;
+    }
+  }, [formValidateFnRef, stateRef]);
+
+  const validateFieldAndForm = useCallback(
+    (name: string) => {
+      setStateRef("isValidating", true);
+
+      // eslint-disable-next-line compat/compat
+      Promise.all([runFieldValidation(name), runFormValidateFn()]).then(
+        (errors) => {
+          setStateRef("isValidating", false);
+          setStateRef("errors", deepMerge(...errors));
+        }
+      );
+    },
+    [runFieldValidation, runFormValidateFn, setStateRef]
   );
 
   const setDomValue = useCallback((name: string, value: any) => {
@@ -180,11 +182,10 @@ const useForm = <V extends FormValues = FormValues>({
     (name: string, shouldValidate = validateOnBlur) => {
       setStateRef(`touched.${name}`, true);
 
-      if (shouldValidate && changedFieldRef.current !== name) {
-        // TODO: Validate
-      }
+      if (shouldValidate && changedFieldRef.current !== name)
+        validateFieldAndForm(name);
     },
-    [setStateRef, validateOnBlur]
+    [setStateRef, validateOnBlur, validateFieldAndForm]
   );
 
   const setFieldValue = useCallback<SetFieldValue>(
@@ -197,14 +198,30 @@ const useForm = <V extends FormValues = FormValues>({
       setDomValue(name, val);
       setFieldTouched(name, false);
 
-      if (shouldValidate) {
-        // TODO: Validate
-      }
+      if (shouldValidate) validateFieldAndForm(name);
     },
-    [validateOnChange, stateRef, setStateRef, setDomValue, setFieldTouched]
+    [
+      validateOnChange,
+      stateRef,
+      setStateRef,
+      setDomValue,
+      setFieldTouched,
+      validateFieldAndForm,
+    ]
   );
 
-  useEffect(() => {
+  const setFieldError = useCallback<SetFieldError>(
+    (name, error) => {
+      const err = isFunction(error)
+        ? error(get(stateRef.current.errors, name))
+        : error;
+
+      setStateRef(`errors.${name}`, err);
+    },
+    [stateRef, setStateRef]
+  );
+
+  useLayoutEffect(() => {
     if (!formRef.current) {
       warn(
         '💡react-cool-form: Don\'t forget to register your form via the "formRef".'
@@ -259,9 +276,7 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, val);
       changedFieldRef.current = name;
 
-      if (validateOnChange) {
-        // TODO: Validate
-      }
+      if (validateOnChange) validateFieldAndForm(name);
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -309,6 +324,7 @@ const useForm = <V extends FormValues = FormValues>({
     validateOnChange,
     setFieldTouched,
     setValuesToDom,
+    validateFieldAndForm,
   ]);
 
   return {
