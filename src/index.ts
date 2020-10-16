@@ -1,4 +1,9 @@
 import { useRef, useCallback, useLayoutEffect, useEffect } from "react";
+import {
+  unstable_LowPriority,
+  unstable_runWithPriority,
+  unstable_scheduleCallback,
+} from "scheduler";
 
 import {
   Config,
@@ -30,6 +35,11 @@ import {
   isEmptyObject,
   isArray,
 } from "./utils";
+
+const lowPriority = (fn: () => any) =>
+  unstable_runWithPriority(unstable_LowPriority, () =>
+    unstable_scheduleCallback(unstable_LowPriority, fn)
+  );
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
@@ -119,15 +129,17 @@ const useForm = <V extends FormValues = FormValues>({
 
   const validateFieldAndForm = useCallback(
     (name: string) => {
-      setStateRef("isValidating", true);
+      lowPriority(() => {
+        setStateRef("isValidating", true);
 
-      // eslint-disable-next-line compat/compat
-      Promise.all([runFieldValidation(name), runFormValidateFn()]).then(
-        (errors) => {
-          setStateRef("isValidating", false);
-          setStateRef("errors", deepMerge(...errors));
-        }
-      );
+        // eslint-disable-next-line compat/compat
+        Promise.all([runFieldValidation(name), runFormValidateFn()]).then(
+          (errors) => {
+            setStateRef("isValidating", false);
+            setStateRef("errors", deepMerge(...errors));
+          }
+        );
+      });
     },
     [runFieldValidation, runFormValidateFn, setStateRef]
   );

@@ -7,6 +7,8 @@ import useForm, { Errors } from "react-cool-form";
 
 import { container, form, label as labelStyle, wrapper } from "./styles";
 
+const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
+
 const Input = memo(
   forwardRef(
     ({ label, id, name, ...rest }: any, ref): JSX.Element => {
@@ -102,22 +104,16 @@ export default (): JSX.Element => {
     // validateOnBlur: false,
     // @ts-ignore
     validate: async ({ text, hiddenText }) => {
-      const errors = { text: { nest: "" } };
+      const errors: Errors<{ text: { nest: string } }> = { text: { nest: "" } };
+
+      fib(35);
 
       // eslint-disable-next-line
-      await new Promise((resolve) => {
+      /* await new Promise((resolve) => {
         setTimeout(resolve, 1000);
-      });
+      }); */
 
-      let count = 100000000;
-
-      // eslint-disable-next-line no-plusplus
-      while (count--) {
-        // ...
-      }
-
-      errors.text.nest = `Form ${Math.random()}`;
-      // if (text.nest.length <= 3) errors.text.nest = `Form ${Math.random()}`;
+      if (text.nest.length <= 3) errors.text.nest = "Form error";
       // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
       // throw new Error("Fake error");
@@ -127,7 +123,7 @@ export default (): JSX.Element => {
     },
   });
 
-  console.log("LOG ===> formState: ", formState.isValidating, formState.errors);
+  console.log("LOG ===> formState: ", formState.errors);
 
   const handleSetValueClick = (): void => {
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
@@ -167,7 +163,6 @@ export default (): JSX.Element => {
           ref={validate(async (values) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
-            // return `Field ${Math.random()}`;
             return values.length <= 3 ? ["Field error"] : false;
           })}
         />
