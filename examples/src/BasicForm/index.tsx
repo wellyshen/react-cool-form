@@ -101,25 +101,33 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     // @ts-ignore
-    // validate: async ({ text, hiddenText }, setError) => {
-    //   const errors = { text: { nest: "" }, hiddenText: "" };
+    validate: async ({ text, hiddenText }) => {
+      const errors = { text: { nest: "" } };
 
-    //   // eslint-disable-next-line
-    //   /* await new Promise((resolve) => {
-    //     setTimeout(resolve, 1000);
-    //   }); */
+      // eslint-disable-next-line
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
 
-    //   // if (text.nest.length <= 3) setError("text.nest", "Form error");
-    //   // if (hiddenText.length <= 3) setError("hiddenText", "Form error");
-    //   if (text.nest.length <= 3) errors.text.nest = "Form error";
-    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+      let count = 100000000;
 
-    //   // return { text: "Form error" };
-    //   return errors;
-    // },
+      // eslint-disable-next-line no-plusplus
+      while (count--) {
+        // ...
+      }
+
+      errors.text.nest = `Form ${Math.random()}`;
+      // if (text.nest.length <= 3) errors.text.nest = `Form ${Math.random()}`;
+      // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+
+      // throw new Error("Fake error");
+      // return false;
+      return { text: { nest: ["Form error"] } };
+      // return errors;
+    },
   });
 
-  console.log("LOG ===> formState: ", formState.errors);
+  console.log("LOG ===> formState: ", formState.isValidating, formState.errors);
 
   const handleSetValueClick = (): void => {
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
@@ -155,10 +163,12 @@ export default (): JSX.Element => {
         <Input
           label="Text:"
           name="text.nest"
+          // @ts-ignore
           ref={validate(async (values) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
-            return values.length <= 3 ? "Field error" : false;
+            // return `Field ${Math.random()}`;
+            return values.length <= 3 ? ["Field error"] : false;
           })}
         />
         {showInput && (
