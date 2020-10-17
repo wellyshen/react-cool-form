@@ -89,8 +89,8 @@ export const set = (
   return cloneObject;
 };
 
-export const deepMerge = (...objects: Record<string, any>[]) => {
-  return objects.reduce((prev, obj) => {
+export const deepMerge = (...objects: Record<string, any>[]) =>
+  objects.reduce((prev, obj) => {
     Object.keys(obj).forEach((key) => {
       const prevValue = prev[key];
       const currValue = obj[key];
@@ -106,4 +106,3 @@ export const deepMerge = (...objects: Record<string, any>[]) => {
 
     return prev;
   }, {});
-};
