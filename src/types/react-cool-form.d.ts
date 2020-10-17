@@ -36,8 +36,8 @@ declare module "react-cool-form" {
     readonly isValidating: boolean;
   }
 
-  export interface GetFormState<V = FormValues> {
-    (path?: string): FormState<V>;
+  export interface GetFormState<T = any> {
+    (path?: string): T;
   }
 
   export interface SetFieldValue {
@@ -66,7 +66,7 @@ declare module "react-cool-form" {
     formRef: RefObject<HTMLFormElement>;
     validate: ValidateRef<V>;
     formState: FormState<V>;
-    getFormState: GetFormState<V>;
+    getFormState: GetFormState;
     setFieldValue: SetFieldValue;
     setFieldError: SetFieldError;
   }

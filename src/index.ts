@@ -96,38 +96,43 @@ const useForm = <V extends FormValues = FormValues>({
     []
   );
 
+  const getFormState = useCallback<GetFormState>(
+    (path) =>
+      isUndefined(path) ? stateRef.current : get(stateRef.current, path),
+    [stateRef]
+  );
+
   const runFieldValidation = useCallback(
     async (name: string): Promise<Errors<V>> => {
       if (!fieldValidatesRef.current[name]) return {};
 
       try {
-        const { values, errors } = stateRef.current;
         const error = await fieldValidatesRef.current[name](
-          get(values, name),
-          values
+          getFormState(`values.${name}`),
+          getFormState("values")
         );
 
-        return set(errors, name, error);
+        return set(getFormState("errors"), name, error);
       } catch (exception) {
         warn(`💡react-cool-form > validate ${name}: `, exception);
         throw exception;
       }
     },
-    [stateRef]
+    [getFormState]
   );
 
   const runFormValidateFn = useCallback(async (): Promise<Errors<V>> => {
     if (!formValidateFnRef.current) return {};
 
     try {
-      const errors = await formValidateFnRef.current(stateRef.current.values);
+      const errors = await formValidateFnRef.current(getFormState("values"));
 
       return isObject(errors) ? (errors as Errors<V>) : {};
     } catch (exception) {
       warn(`💡react-cool-form > config.validate: `, exception);
       throw exception;
     }
-  }, [formValidateFnRef, stateRef]);
+  }, [formValidateFnRef, getFormState]);
 
   const validateFieldAndForm = useCallback(
     (name: string) => {
@@ -144,12 +149,6 @@ const useForm = <V extends FormValues = FormValues>({
       });
     },
     [runFieldValidation, runFormValidateFn, setStateRef]
-  );
-
-  const getFormState = useCallback<GetFormState<V>>(
-    (path) =>
-      isUndefined(path) ? stateRef.current : get(stateRef.current, path),
-    [stateRef]
   );
 
   const setDomValue = useCallback((name: string, value: any) => {
@@ -211,7 +210,7 @@ const useForm = <V extends FormValues = FormValues>({
   const setFieldValue = useCallback<SetFieldValue>(
     (name, value, shouldValidate = validateOnChange) => {
       const val = isFunction(value)
-        ? value(get(stateRef.current.values, name))
+        ? value(getFormState(`values.${name}`))
         : value;
 
       setStateRef(`values.${name}`, val);
@@ -222,7 +221,7 @@ const useForm = <V extends FormValues = FormValues>({
     },
     [
       validateOnChange,
-      stateRef,
+      getFormState,
       setStateRef,
       setDomValue,
       setFieldTouched,
@@ -233,12 +232,12 @@ const useForm = <V extends FormValues = FormValues>({
   const setFieldError = useCallback<SetFieldError>(
     (name, error) => {
       const err = isFunction(error)
-        ? error(get(stateRef.current.errors, name))
+        ? error(getFormState(`errors.${name}`))
         : error;
 
       setStateRef(`errors.${name}`, err);
     },
-    [stateRef, setStateRef]
+    [getFormState, setStateRef]
   );
 
   useLayoutEffect(() => {
@@ -270,7 +269,7 @@ const useForm = <V extends FormValues = FormValues>({
       if (isNumberField(field) || isRangeField(field)) {
         val = parseFloat(value) || "";
       } else if (isCheckboxField(field)) {
-        let checkValues: any = get(stateRef.current.values, name);
+        let checkValues = getFormState(`values.${name}`);
 
         if (field.hasAttribute("value") && isArray(checkValues)) {
           checkValues = new Set(checkValues);
@@ -339,7 +338,7 @@ const useForm = <V extends FormValues = FormValues>({
     };
   }, [
     formRef,
-    stateRef,
+    getFormState,
     setStateRef,
     validateOnChange,
     setFieldTouched,
