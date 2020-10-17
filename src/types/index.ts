@@ -51,6 +51,10 @@ export interface ValidateRef<V> {
   (validateFn: FieldValidateFn<V>): (field: FieldElement | null) => void;
 }
 
+export interface GetFormState<V> {
+  (path?: string): FormState<V>;
+}
+
 export interface SetFieldValue {
   (
     name: string,
@@ -77,6 +81,7 @@ export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
   validate: ValidateRef<V>;
   formState: Readonly<FormState<V>>;
+  getFormState: GetFormState<V>;
   setFieldValue: SetFieldValue;
   setFieldError: SetFieldError;
 }

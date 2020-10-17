@@ -96,6 +96,7 @@ export default (): JSX.Element => {
     formRef,
     validate,
     formState,
+    getFormState,
     setFieldValue,
     setFieldError,
   } = useForm<FormValues>({
@@ -123,7 +124,7 @@ export default (): JSX.Element => {
     },
   });
 
-  console.log("LOG ===> formState: ", formState.errors);
+  console.log("LOG ===> formState: ", getFormState("values"));
 
   const handleSetValueClick = (): void => {
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);

@@ -14,6 +14,7 @@ import {
   Errors,
   ValidateRef,
   FieldValidateFn,
+  GetFormState,
   SetFieldValue,
   SetFieldError,
 } from "./types";
@@ -31,9 +32,10 @@ import {
   isMultipleSelectField,
   isFileField,
   isFunction,
+  isArray,
   isObject,
   isEmptyObject,
-  isArray,
+  isUndefined,
 } from "./utils";
 
 const runWithLowPriority = (fn: () => any) =>
@@ -142,6 +144,12 @@ const useForm = <V extends FormValues = FormValues>({
       });
     },
     [runFieldValidation, runFormValidateFn, setStateRef]
+  );
+
+  const getFormState = useCallback<GetFormState<V>>(
+    (path) =>
+      isUndefined(path) ? stateRef.current : get(stateRef.current, path),
+    [stateRef]
   );
 
   const setDomValue = useCallback((name: string, value: any) => {
@@ -343,6 +351,7 @@ const useForm = <V extends FormValues = FormValues>({
     formRef,
     validate: validateRef,
     formState,
+    getFormState,
     setFieldValue,
     setFieldError,
   };
