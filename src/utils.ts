@@ -82,28 +82,19 @@ const stringToPath = (str: string) => {
 const cloneObject = (object: unknown) => {
   if (!isObject(object)) return object;
 
-  let copy: any;
+  if (object instanceof Date) return new Date(object.getTime());
 
-  if (object instanceof Date) {
-    copy = new Date(object.getTime());
-    return copy;
-  }
+  if (isArray(object))
+    return object.reduce((arr, val, idx) => {
+      arr[idx] = cloneObject(val);
+      return arr;
+    }, []);
 
-  if (isArray(object)) {
-    copy = [];
-    object.forEach((value, idx) => {
-      copy[idx] = cloneObject(value);
-    });
-    return copy;
-  }
-
-  if (isObject(object)) {
-    copy = {};
-    Object.keys(object).forEach((key) => {
-      copy[key] = cloneObject((object as Record<string, any>)[key]);
-    });
-    return copy;
-  }
+  if (isObject(object))
+    return Object.keys(object).reduce((obj, key) => {
+      obj[key] = cloneObject((object as Record<string, any>)[key]);
+      return obj;
+    }, {} as Record<string, any>);
 
   throw new Error("Unable to clone object.");
 };
@@ -118,7 +109,7 @@ export const set = (
   const tempPath = stringToPath(path);
   const newObject = cloneObject(object);
 
-  tempPath.slice(0, -1).reduce((obj: Record<string, any>, key, idx) => {
+  tempPath.slice(0, -1).reduce((obj, key, idx) => {
     if (isObject(obj[key])) return obj[key];
     const next = Number(tempPath[idx + 1]);
     obj[key] = Number.isInteger(next) && next >= 0 ? [] : {};

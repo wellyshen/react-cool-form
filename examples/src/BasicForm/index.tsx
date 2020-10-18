@@ -114,7 +114,7 @@ export default (): JSX.Element => {
         setTimeout(resolve, 1000);
       }); */
 
-      if (text.nest.length <= 3) errors.text.nest = "Form error";
+      if (text.nest.length <= 3) errors.text.nest = ["Form error"];
       // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
       // throw new Error("Fake error");
@@ -164,7 +164,7 @@ export default (): JSX.Element => {
           ref={validate(async (values) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
-            return values.length <= 3 ? "Field error" : false;
+            return values.length <= 3 ? ["Field error"] : false;
           })}
         />
         {showInput && (
