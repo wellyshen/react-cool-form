@@ -33,7 +33,7 @@ import {
   isFileField,
   isFunction,
   isArray,
-  isObject,
+  isPlainObject,
   isEmptyObject,
   isUndefined,
 } from "./utils";
@@ -107,12 +107,12 @@ const useForm = <V extends FormValues = FormValues>({
       if (!fieldValidatesRef.current[name]) return {};
 
       try {
-        const error = await fieldValidatesRef.current[name](
+        const message = await fieldValidatesRef.current[name](
           getFormState(`values.${name}`),
           getFormState("values")
         );
 
-        return set(getFormState("errors"), name, error);
+        return set(getFormState("errors"), name, message);
       } catch (exception) {
         warn(`💡react-cool-form > validate ${name}: `, exception);
         throw exception;
@@ -121,35 +121,44 @@ const useForm = <V extends FormValues = FormValues>({
     [getFormState]
   );
 
+  const runAllFieldsValidation = useCallback((): Promise<Errors<V>> => {
+    const promises = Object.keys(fieldValidatesRef.current).map((name) =>
+      runFieldValidation(name)
+    );
+
+    // eslint-disable-next-line compat/compat
+    return Promise.all(promises).then((errors) =>
+      errors.reduce((acc, cur) => {
+        acc = { ...acc, ...cur };
+        return acc;
+      }, {})
+    );
+  }, [runFieldValidation]);
+
   const runFormValidateFn = useCallback(async (): Promise<Errors<V>> => {
     if (!formValidateFnRef.current) return {};
 
     try {
       const errors = await formValidateFnRef.current(getFormState("values"));
 
-      return isObject(errors) ? (errors as Errors<V>) : {};
+      return isPlainObject(errors) ? (errors as Errors<V>) : {};
     } catch (exception) {
       warn(`💡react-cool-form > config.validate: `, exception);
       throw exception;
     }
   }, [formValidateFnRef, getFormState]);
 
-  const validateFieldAndForm = useCallback(
-    (name: string) => {
-      runWithLowPriority(() => {
-        setStateRef("isValidating", true);
+  const validateForm = useCallback(() => {
+    setStateRef("isValidating", true);
 
-        // eslint-disable-next-line compat/compat
-        Promise.all([runFieldValidation(name), runFormValidateFn()]).then(
-          (errors) => {
-            setStateRef("isValidating", false);
-            setStateRef("errors", deepMerge(...errors));
-          }
-        );
-      });
-    },
-    [runFieldValidation, runFormValidateFn, setStateRef]
-  );
+    // eslint-disable-next-line compat/compat
+    Promise.all([runAllFieldsValidation(), runFormValidateFn()]).then(
+      (errors) => {
+        setStateRef("isValidating", false);
+        setStateRef("errors", deepMerge(...errors));
+      }
+    );
+  }, [runAllFieldsValidation, runFormValidateFn, setStateRef]);
 
   const setDomValue = useCallback((name: string, value: any) => {
     const target = fieldsRef.current[name];
@@ -179,7 +188,7 @@ const useForm = <V extends FormValues = FormValues>({
         option.selected = !!value.includes(option.value);
       });
     } else if (isFileField(field)) {
-      if (isObject(value)) field.files = value;
+      if (isPlainObject(value)) field.files = value;
     } else {
       field.value = value ?? "";
     }
@@ -202,9 +211,9 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef(`touched.${name}`, true);
 
       if (shouldValidate && changedFieldRef.current !== name)
-        validateFieldAndForm(name);
+        runWithLowPriority(validateForm);
     },
-    [setStateRef, validateOnBlur, validateFieldAndForm]
+    [setStateRef, validateOnBlur, validateForm]
   );
 
   const setFieldValue = useCallback<SetFieldValue>(
@@ -217,7 +226,7 @@ const useForm = <V extends FormValues = FormValues>({
       setDomValue(name, val);
       setFieldTouched(name, false);
 
-      if (shouldValidate) validateFieldAndForm(name);
+      if (shouldValidate) runWithLowPriority(validateForm);
     },
     [
       validateOnChange,
@@ -225,7 +234,7 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef,
       setDomValue,
       setFieldTouched,
-      validateFieldAndForm,
+      validateForm,
     ]
   );
 
@@ -295,7 +304,7 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, val);
       changedFieldRef.current = name;
 
-      if (validateOnChange) validateFieldAndForm(name);
+      if (validateOnChange) runWithLowPriority(validateForm);
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -343,7 +352,7 @@ const useForm = <V extends FormValues = FormValues>({
     validateOnChange,
     setFieldTouched,
     setValuesToDom,
-    validateFieldAndForm,
+    validateForm,
   ]);
 
   return {

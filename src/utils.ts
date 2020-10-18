@@ -32,21 +32,19 @@ export const isFunction = (value: unknown): value is Function =>
 export const isArray = (value: unknown): value is any[] => Array.isArray(value);
 
 export const isObject = (value: unknown): value is Object =>
-  !isArray(value) && value !== null && typeof value === "object";
+  value !== null && typeof value === "object";
+
+export const isPlainObject = (value: unknown): value is Object =>
+  !isArray(value) && isObject(value);
 
 export const isEmptyObject = (value: unknown): value is Record<string, never> =>
-  isObject(value) && !Object.keys(value).length;
+  isPlainObject(value) && !Object.keys(value).length;
 
 export const isUndefined = (value: unknown): value is undefined =>
   value === undefined;
 
-// const isKey = (value: string) =>
-//   !isArray(value) &&
-//   (/^\w*$/.test(value) ||
-//     !/\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/.test(value));
-
 export const get = (object: any, path: string, defaultValue?: unknown): any => {
-  if (!isObject(object)) return defaultValue;
+  if (!isPlainObject(object)) return defaultValue;
 
   const value = path
     .split(/[,[\].]+?/)
@@ -56,15 +54,15 @@ export const get = (object: any, path: string, defaultValue?: unknown): any => {
   return isUndefined(value) ? defaultValue : value;
 };
 
-export const set = (
-  object: any,
-  path: string,
-  value?: unknown
-): typeof object => {
-  if (!isObject(object)) return object;
+/* const isKey = (value: string) =>
+  !isArray(value) &&
+  (/^\w*$/.test(value) ||
+    !/\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/.test(value)); */
 
-  const tempPath: string[] = [];
-  path.replace(
+const stringToPath = (str: string) => {
+  const path: string[] = [];
+
+  str.replace(
     /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
     (
       match: string,
@@ -72,21 +70,62 @@ export const set = (
       quote: string,
       subString: string
     ): any => {
-      tempPath.push(
+      path.push(
         quote ? subString.replace(/\\(\\)?/g, "$1") : expression || match
       );
     }
   );
 
-  const cloneObject = { ...object };
+  return path;
+};
+
+const cloneObject = (object: unknown) => {
+  if (!isObject(object)) return object;
+
+  let copy: any;
+
+  if (object instanceof Date) {
+    copy = new Date(object.getTime());
+    return copy;
+  }
+
+  if (isArray(object)) {
+    copy = [];
+    object.forEach((value, idx) => {
+      copy[idx] = cloneObject(value);
+    });
+    return copy;
+  }
+
+  if (isObject(object)) {
+    copy = {};
+    Object.keys(object).forEach((key) => {
+      copy[key] = cloneObject((object as Record<string, any>)[key]);
+    });
+    return copy;
+  }
+
+  throw new Error("Unable to clone object.");
+};
+
+export const set = (
+  object: any,
+  path: string,
+  value?: unknown
+): typeof object => {
+  if (!isPlainObject(object)) return object;
+
+  const tempPath = stringToPath(path);
+  const newObject = cloneObject(object);
+
   tempPath.slice(0, -1).reduce((obj: Record<string, any>, key, idx) => {
-    if (isObject(obj[key]) || isArray(obj[key])) return obj[key];
+    if (isObject(obj[key])) return obj[key];
     const next = Number(tempPath[idx + 1]);
     obj[key] = Number.isInteger(next) && next >= 0 ? [] : {};
     return obj[key];
-  }, cloneObject)[tempPath[tempPath.length - 1]] = value;
+  }, newObject)[tempPath[tempPath.length - 1]] = value;
 
-  return cloneObject;
+  return newObject;
 };
 
 export const deepMerge = (...objects: Record<string, any>[]) =>

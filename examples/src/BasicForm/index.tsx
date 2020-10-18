@@ -119,12 +119,12 @@ export default (): JSX.Element => {
 
       // throw new Error("Fake error");
       // return false;
-      return { text: { nest: ["Form error"] } };
-      // return errors;
+      // return { text: { nest: ["Form error"] } };
+      return errors;
     },
   });
 
-  console.log("LOG ===> formState: ", getFormState("values"));
+  console.log("LOG ===> formState: ", formState.errors);
 
   const handleSetValueClick = (): void => {
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
@@ -139,8 +139,8 @@ export default (): JSX.Element => {
   };
 
   const handleSetErrorsClick = (): void => {
-    setFieldError("text.nest", "Required");
-    setFieldError("hiddenText", (prevMsg) => `new ${prevMsg}`);
+    // setFieldError("text.nest", "Required");
+    // setFieldError("hiddenText", (prevMsg) => `new ${prevMsg}`);
   };
 
   const handleClearErrorsClick = (): void => {
@@ -164,7 +164,7 @@ export default (): JSX.Element => {
           ref={validate(async (values) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
-            return values.length <= 3 ? ["Field error"] : false;
+            return values.length <= 3 ? "Field error" : false;
           })}
         />
         {showInput && (
