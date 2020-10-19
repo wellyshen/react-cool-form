@@ -164,6 +164,11 @@ const useForm = <V extends FormValues = FormValues>({
     );
   }, [runAllFieldsValidation, runFormValidateFn, setStateRef]);
 
+  const validateFormWithLowPriority = useCallback(
+    () => runWithLowPriority(validateForm),
+    [validateForm]
+  );
+
   const setDomValue = useCallback((name: string, value: any) => {
     const target = fieldsRef.current[name];
 
@@ -215,9 +220,9 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef(`touched.${name}`, true);
 
       if (shouldValidate && changedFieldRef.current !== name)
-        runWithLowPriority(validateForm);
+        validateFormWithLowPriority();
     },
-    [setStateRef, validateOnBlur, validateForm]
+    [setStateRef, validateOnBlur, validateFormWithLowPriority]
   );
 
   const setFieldValue = useCallback<SetFieldValue>(
@@ -230,7 +235,7 @@ const useForm = <V extends FormValues = FormValues>({
       setDomValue(name, val);
       setFieldTouched(name, false);
 
-      if (shouldValidate) runWithLowPriority(validateForm);
+      if (shouldValidate) validateFormWithLowPriority();
     },
     [
       validateOnChange,
@@ -238,7 +243,7 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef,
       setDomValue,
       setFieldTouched,
-      validateForm,
+      validateFormWithLowPriority,
     ]
   );
 
@@ -308,7 +313,7 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, val);
       changedFieldRef.current = name;
 
-      if (validateOnChange) runWithLowPriority(validateForm);
+      if (validateOnChange) validateFormWithLowPriority();
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -356,7 +361,7 @@ const useForm = <V extends FormValues = FormValues>({
     validateOnChange,
     setFieldTouched,
     setValuesToDom,
-    validateForm,
+    validateFormWithLowPriority,
   ]);
 
   return {
