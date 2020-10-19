@@ -2,7 +2,7 @@ import { useReducer, useRef, useCallback } from "react";
 import isEqual from "fast-deep-equal";
 
 import { FormState, StateRef, SetStateRef, UsedStateRef } from "./types";
-import { get, set } from "./utils";
+import { get, set, isEmptyObject } from "./utils";
 
 const hasProxy = "Proxy" in window;
 
@@ -14,6 +14,7 @@ export default <V>(
     values: defaultValues,
     touched: {},
     errors: {},
+    isValid: true,
     isValidating: false,
   });
   const usedStateRef = useRef<UsedStateRef<V>>({});
@@ -25,6 +26,7 @@ export default <V>(
 
     if (shouldUpdate) {
       stateRef.current = { ...state, ...set(state, path, value) };
+      stateRef.current.isValid = isEmptyObject(stateRef.current.errors);
       if (!hasProxy || usedStateRef.current[type]) forceUpdate();
     }
   }, []);

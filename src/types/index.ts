@@ -15,6 +15,7 @@ export interface FormState<V> {
   values: V;
   touched: Prop<V, boolean>;
   errors: Errors<V>;
+  isValid: boolean;
   isValidating: boolean;
 }
 
