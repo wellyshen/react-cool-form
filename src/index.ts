@@ -371,6 +371,7 @@ const useForm = <V extends FormValues = FormValues>({
     getFormState,
     setFieldValue,
     setFieldError,
+    validateForm,
   };
 };
 

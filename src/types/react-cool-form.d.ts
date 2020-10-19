@@ -74,6 +74,7 @@ declare module "react-cool-form" {
     getFormState: GetFormState;
     setFieldValue: SetFieldValue;
     setFieldError: SetFieldError;
+    validateForm: () => void;
   }
 
   const useForm: <V extends FormValues = FormValues>(

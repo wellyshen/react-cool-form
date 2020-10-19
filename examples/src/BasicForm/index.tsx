@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
-import React, { memo, useState, forwardRef } from "react";
+import React, { memo, forwardRef, useState, useEffect } from "react";
 import useForm, { Errors } from "react-cool-form";
 
 import { container, form, label as labelStyle, wrapper } from "./styles";
@@ -99,6 +99,7 @@ export default (): JSX.Element => {
     getFormState,
     setFieldValue,
     setFieldError,
+    validateForm,
   } = useForm<FormValues>({
     defaultValues,
     // validateOnChange: false,
@@ -125,6 +126,10 @@ export default (): JSX.Element => {
   });
 
   console.log("LOG ===> formState: ", formState.errors, formState.isValid);
+
+  useEffect(() => {
+    validateForm();
+  }, [validateForm]);
 
   const handleSetValueClick = (): void => {
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
