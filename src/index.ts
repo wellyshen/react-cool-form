@@ -91,7 +91,7 @@ const useForm = <V extends FormValues = FormValues>({
 
   const validateRef = useCallback<ValidateRef<V>>(
     (validateFn) => (field) => {
-      if (field?.name && isFunction(validateFn))
+      if (isFunction(validateFn) && field?.name)
         fieldValidatesRef.current[field.name] = validateFn;
     },
     []
@@ -113,7 +113,7 @@ const useForm = <V extends FormValues = FormValues>({
           getFormState("values")
         );
 
-        return set(getFormState("errors"), name, message);
+        return message ? set(getFormState("errors"), name, message) : {};
       } catch (exception) {
         warn(`💡react-cool-form > validate ${name}: `, exception);
         throw exception;
