@@ -25,8 +25,8 @@ export default <V>(
     const shouldUpdate = type === "values" || !isEqual(get(state, path), value);
 
     if (shouldUpdate) {
-      stateRef.current = { ...state, ...set(state, path, value) };
-      stateRef.current.isValid = isEmptyObject(stateRef.current.errors);
+      set(state, path, value);
+      set(state, "isValid", isEmptyObject(stateRef.current.errors));
       if (!hasProxy || usedStateRef.current[type]) forceUpdate();
     }
   }, []);

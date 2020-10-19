@@ -102,12 +102,13 @@ const cloneObject = (object: unknown) => {
 export const set = (
   object: any,
   path: string,
-  value?: unknown
+  value?: unknown,
+  immutable = false
 ): typeof object => {
   if (!isPlainObject(object)) return object;
 
   const tempPath = stringToPath(path);
-  const newObject = cloneObject(object);
+  const newObject = immutable ? cloneObject(object) : object;
 
   tempPath.slice(0, -1).reduce((obj, key, idx) => {
     if (isObject(obj[key])) return obj[key];

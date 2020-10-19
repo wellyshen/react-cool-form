@@ -113,7 +113,7 @@ const useForm = <V extends FormValues = FormValues>({
           getFormState("values")
         );
 
-        return message ? set(getFormState("errors"), name, message) : {};
+        return message ? set(getFormState("errors"), name, message, true) : {};
       } catch (exception) {
         warn(`💡react-cool-form > validate ${name}: `, exception);
         throw exception;
