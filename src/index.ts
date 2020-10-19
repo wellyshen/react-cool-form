@@ -91,8 +91,7 @@ const useForm = <V extends FormValues = FormValues>({
 
   const validateRef = useCallback<ValidateRef<V>>(
     (validateFn) => (field) => {
-      if (isFunction(validateFn) && field?.name)
-        fieldValidatesRef.current[field.name] = validateFn;
+      if (field?.name) fieldValidatesRef.current[field.name] = validateFn;
     },
     []
   );
