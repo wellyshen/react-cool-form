@@ -40,8 +40,12 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
+export interface Set {
+  (object: any, path: string, value?: unknown, immutable?: boolean): any;
+}
+
 interface Validate<V> {
-  (values: V): Errors<V> | void | Promise<Errors<V> | void>;
+  (values: V, set: Set): Errors<V> | void | Promise<Errors<V> | void>;
 }
 
 export interface FieldValidateFn<V> {

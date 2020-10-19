@@ -15,8 +15,12 @@ declare module "react-cool-form" {
 
   export type Errors<V = FormValues> = Prop<V, Message>;
 
+  interface Set {
+    (object: any, path: string, value?: unknown, immutable?: boolean): any;
+  }
+
   export interface Validate<V = FormValues> {
-    (values: V): Errors<V> | void | Promise<Errors<V> | void>;
+    (values: V, set: Set): Errors<V> | void | Promise<Errors<V> | void>;
   }
 
   export interface FieldValidateFn<V> {

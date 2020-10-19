@@ -61,7 +61,7 @@ const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
           if (fields[field.name]) return false;
           return hasChangeEvent(field);
         })
-        .reduce((acc, cur) => {
+        .reduce((acc: Record<string, any>, cur) => {
           const { name, type } = cur as FieldElement;
           acc[name] = { ...acc[name], field: cur };
           if (/checkbox|radio/.test(type)) {
@@ -70,7 +70,7 @@ const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
               : [cur];
           }
           return acc;
-        }, {} as Record<string, any>)
+        }, {})
     : {};
 
 const useForm = <V extends FormValues = FormValues>({
@@ -140,7 +140,10 @@ const useForm = <V extends FormValues = FormValues>({
     if (!formValidateFnRef.current) return {};
 
     try {
-      const errors = await formValidateFnRef.current(getFormState("values"));
+      const errors = await formValidateFnRef.current(
+        getFormState("values"),
+        set
+      );
 
       return isPlainObject(errors) ? (errors as Errors<V>) : {};
     } catch (exception) {

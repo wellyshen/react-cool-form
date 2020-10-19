@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/explicit-module-boundary-types */
 
-import { FieldElement } from "./types";
+import { FieldElement, Set } from "./types";
 
 export const warn = (...args: any[]): void => {
   if (__DEV__) console.warn(...args);
@@ -43,7 +43,7 @@ export const isEmptyObject = (value: unknown): value is Record<string, never> =>
 export const isUndefined = (value: unknown): value is undefined =>
   value === undefined;
 
-export const get = (object: any, path: string, defaultValue?: unknown): any => {
+export const get = (object: any, path: string, defaultValue?: unknown) => {
   if (!isPlainObject(object)) return defaultValue;
 
   const value = path
@@ -91,20 +91,15 @@ const cloneObject = (object: unknown) => {
     }, []);
 
   if (isObject(object))
-    return Object.keys(object).reduce((obj, key) => {
+    return Object.keys(object).reduce((obj: Record<string, any>, key) => {
       obj[key] = cloneObject((object as Record<string, any>)[key]);
       return obj;
-    }, {} as Record<string, any>);
+    }, {});
 
   throw new Error("Unable to clone object.");
 };
 
-export const set = (
-  object: any,
-  path: string,
-  value?: unknown,
-  immutable = false
-): typeof object => {
+export const set: Set = (object, path, value, immutable = false) => {
   if (!isPlainObject(object)) return object;
 
   const tempPath = stringToPath(path);

@@ -104,8 +104,8 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     // @ts-ignore
-    validate: async ({ text, hiddenText }) => {
-      const errors: Errors<{ text: { nest: string } }> = { text: { nest: "" } };
+    validate: async ({ text, hiddenText }, set) => {
+      const errors: Errors<{ text: { test: string } }> = { text: { test: "" } };
 
       fib(35);
 
@@ -114,7 +114,7 @@ export default (): JSX.Element => {
         setTimeout(resolve, 1000);
       }); */
 
-      if (text.nest.length <= 3) errors.text.nest = "Form error";
+      if (text.nest.length <= 3) set(errors, "text.test", "Form error");
       // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
       // throw new Error("Fake error");
