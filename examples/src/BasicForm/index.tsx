@@ -67,6 +67,7 @@ interface FormValues {
   hiddenText: string;
   password: string;
   number: number;
+  range: number;
   checkbox: boolean;
   checkboxGroup: string[];
   radio: string;
@@ -81,6 +82,7 @@ const defaultValues = {
   hiddenText: "test",
   password: "test",
   number: 123,
+  range: 0,
   checkbox: true,
   checkboxGroup: ["value-1"],
   radio: "value-1",
@@ -125,7 +127,7 @@ export default (): JSX.Element => {
     // },
   });
 
-  console.log("LOG ===> formState: ", formState.errors, formState.isValid);
+  // console.log("LOG ===> formState: ", formState.values);
 
   useEffect(() => {
     validateForm();
@@ -179,6 +181,7 @@ export default (): JSX.Element => {
         )}
         {/* <Input label="Password:" type="password" name="password" /> */}
         <Input label="Number:" type="number" name="number" />
+        <Input label="Range:" type="range" name="range" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />
         <div css={wrapper}>
           <Input
