@@ -21,22 +21,27 @@ export default <V>(
 
   const setStateRef = useCallback<SetStateRef>((path, value) => {
     const { current: state } = stateRef;
-    const type = path.split(".")[0] as keyof FormState<V>;
-    const shouldUpdate = type === "values" || !isEqual(get(state, path), value);
+    const key = path.split(".")[0] as keyof FormState<V>;
+    const shouldUpdate = key === "values" || !isEqual(get(state, path), value);
 
     if (shouldUpdate) {
-      set(state, path, value);
-      set(state, "isValid", isEmptyObject(stateRef.current.errors));
-      if (!hasProxy || usedStateRef.current[type]) forceUpdate();
+      const nextState = set(state, path, value, true);
+      const { errors, isValid } = nextState;
+
+      stateRef.current = {
+        ...nextState,
+        isValid: key === "errors" ? isEmptyObject(errors) : isValid,
+      };
+      if (!hasProxy || usedStateRef.current[key]) forceUpdate();
     }
   }, []);
 
   return [
     hasProxy
       ? new Proxy(stateRef.current, {
-          get: (obj, prop: keyof FormState<V>) => {
-            if (prop in obj) usedStateRef.current[prop] = true;
-            return obj[prop];
+          get: (obj, key: keyof FormState<V>) => {
+            if (key in obj) usedStateRef.current[key] = true;
+            return obj[key];
           },
         })
       : stateRef.current,

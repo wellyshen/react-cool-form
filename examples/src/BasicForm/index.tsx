@@ -104,24 +104,24 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     // @ts-ignore
-    validate: async ({ text, hiddenText }, set) => {
-      const errors: Errors<{ text: { test: string } }> = { text: { test: "" } };
+    // validate: async ({ text, hiddenText }, set) => {
+    //   const errors: Errors<{ text: { test: string } }> = { text: { test: "" } };
 
-      fib(35);
+    //   fib(35);
 
-      // eslint-disable-next-line
-      /* await new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-      }); */
+    //   // eslint-disable-next-line
+    //   /* await new Promise((resolve) => {
+    //     setTimeout(resolve, 1000);
+    //   }); */
 
-      if (text.nest.length <= 3) set(errors, "text.test", "Form error");
-      // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+    //   if (text.nest.length <= 3) set(errors, "text.test", "Form error");
+    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
-      // throw new Error("Fake error");
-      // return false;
-      // return { text: { nest: ["Form error"] } };
-      return errors;
-    },
+    //   // throw new Error("Fake error");
+    //   // return false;
+    //   // return { text: { nest: ["Form error"] } };
+    //   return errors;
+    // },
   });
 
   console.log("LOG ===> formState: ", formState.errors, formState.isValid);
