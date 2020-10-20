@@ -157,8 +157,8 @@ const useForm = <V extends FormValues = FormValues>({
     // eslint-disable-next-line compat/compat
     Promise.all([runAllFieldsValidation(), runFormValidateFn()]).then(
       (errors) => {
-        setStateRef("isValidating", false);
         setStateRef("errors", deepMerge(...errors));
+        setStateRef("isValidating", false);
       }
     );
   }, [runAllFieldsValidation, runFormValidateFn, setStateRef]);
