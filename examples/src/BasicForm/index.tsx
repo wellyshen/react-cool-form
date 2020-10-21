@@ -104,7 +104,7 @@ export default (): JSX.Element => {
     validateForm,
   } = useForm<FormValues>({
     defaultValues,
-    // validateOnChange: false,
+    validateOnChange: false,
     // validateOnBlur: false,
     // @ts-ignore
     // validate: async ({ text, hiddenText }, set) => {
@@ -127,10 +127,10 @@ export default (): JSX.Element => {
     // },
   });
 
-  // console.log("LOG ===> formState: ", formState.values);
+  console.log("LOG ===> formState: ", formState.errors);
 
   useEffect(() => {
-    validateForm();
+    // validateForm();
   }, [validateForm]);
 
   const handleSetValueClick = (): void => {

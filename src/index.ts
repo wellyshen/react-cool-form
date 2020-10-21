@@ -84,7 +84,7 @@ const useForm = <V extends FormValues = FormValues>({
   const formValidateFnRef = useLatest(validate);
   const fieldValidatesRef = useRef<Record<string, FieldValidateFn<V>>>({});
   const fieldsRef = useRef<Fields>({});
-  const changedFieldRef = useRef("");
+  const changedFieldRef = useRef<string>();
   const [formState, stateRef, setStateRef] = useFormState<V>(
     defaultValuesRef.current
   );
@@ -310,9 +310,11 @@ const useForm = <V extends FormValues = FormValues>({
       }
 
       setStateRef(`values.${name}`, val);
-      changedFieldRef.current = name;
 
-      if (validateOnChange) validateFormWithLowPriority();
+      if (validateOnChange) {
+        validateFormWithLowPriority();
+        changedFieldRef.current = name;
+      }
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -323,7 +325,7 @@ const useForm = <V extends FormValues = FormValues>({
         return;
 
       setFieldTouched((target as FieldElement).name);
-      changedFieldRef.current = "";
+      changedFieldRef.current = undefined;
     };
 
     const form = formRef.current;
