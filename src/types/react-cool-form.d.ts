@@ -13,20 +13,6 @@ declare module "react-cool-form" {
     (object: any, path: string, value?: unknown, immutable?: boolean): any;
   }
 
-  export interface Validate<V = FormValues> {
-    (values: V, set: Set): Errors<V> | void | Promise<Errors<V> | void>;
-  }
-
-  export interface FieldValidateFn<V> {
-    (value: any, values: V): any | Promise<any>;
-  }
-
-  export interface ValidateRef<V = FormValues> {
-    (validateFn: FieldValidateFn<V>): (
-      field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
-    ) => void;
-  }
-
   export interface FormState<V = FormValues> {
     readonly values: V;
     readonly touched: Touched<V>;
@@ -37,6 +23,23 @@ declare module "react-cool-form" {
 
   export interface GetFormState<T = any> {
     (path?: string): T;
+  }
+
+  export interface Validate<V = FormValues> {
+    (values: V, options: { formState: FormState<V>; set: Set }):
+      | Errors<V>
+      | void
+      | Promise<Errors<V> | void>;
+  }
+
+  export interface FieldValidateFn<V> {
+    (value: any, formState: FormState<V>): any | Promise<any>;
+  }
+
+  export interface ValidateRef<V = FormValues> {
+    (validateFn: FieldValidateFn<V>): (
+      field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
+    ) => void;
   }
 
   export interface SetFieldValue {

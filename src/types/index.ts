@@ -39,11 +39,14 @@ export interface Set {
 }
 
 interface Validate<V> {
-  (values: V, set: Set): Errors<V> | void | Promise<Errors<V> | void>;
+  (values: V, options: { formState: FormState<V>; set: Set }):
+    | Errors<V>
+    | void
+    | Promise<Errors<V> | void>;
 }
 
 export interface FieldValidateFn<V> {
-  (value: any, values: V): any | Promise<any>;
+  (value: any, formState: FormState<V>): any | Promise<any>;
 }
 
 export interface ValidateRef<V> {

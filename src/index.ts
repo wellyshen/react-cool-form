@@ -109,7 +109,7 @@ const useForm = <V extends FormValues = FormValues>({
       try {
         const error = await fieldValidatesRef.current[name](
           getFormState(`values.${name}`),
-          getFormState("values")
+          getFormState()
         );
 
         return error ? set(getFormState("errors"), name, error, true) : {};
@@ -139,10 +139,10 @@ const useForm = <V extends FormValues = FormValues>({
     if (!formValidateFnRef.current) return {};
 
     try {
-      const errors = await formValidateFnRef.current(
-        getFormState("values"),
-        set
-      );
+      const errors = await formValidateFnRef.current(getFormState("values"), {
+        formState: getFormState(),
+        set,
+      });
 
       return isPlainObject(errors) ? errors : {};
     } catch (exception) {
