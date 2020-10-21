@@ -57,6 +57,10 @@ export interface GetFormState {
   (path?: string): any;
 }
 
+export interface SetValues<V> {
+  (values: V | ((previousValues: V) => V), shouldValidate?: boolean): void;
+}
+
 export interface SetFieldValue {
   (
     name: string,
@@ -82,6 +86,7 @@ export interface Return<V> {
   formState: Readonly<FormState<V>>;
   getFormState: GetFormState;
   setFieldValue: SetFieldValue;
+  setValues: SetValues<V>;
   setFieldError: SetFieldError;
   validateField: (name: string) => void;
   validateForm: () => void;

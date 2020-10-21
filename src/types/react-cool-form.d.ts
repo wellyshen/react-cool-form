@@ -38,6 +38,10 @@ declare module "react-cool-form" {
     ) => void;
   }
 
+  interface SetValues<V> {
+    (values: V | ((previousValues: V) => V), shouldValidate?: boolean): void;
+  }
+
   interface SetFieldValue {
     (
       name: string,
@@ -63,6 +67,7 @@ declare module "react-cool-form" {
     formState: FormState<V>;
     getFormState: (path?: string) => any;
     setFieldValue: SetFieldValue;
+    setValues: SetValues<V>;
     setFieldError: SetFieldError;
     validateField: (name: string) => void;
     validateForm: () => void;

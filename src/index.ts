@@ -15,6 +15,7 @@ import {
   ValidateRef,
   FieldValidateFn,
   GetFormState,
+  SetValues,
   SetFieldValue,
   SetFieldError,
 } from "./types";
@@ -224,7 +225,7 @@ const useForm = <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const setValuesToDom = useCallback(
+  const setAllDomsValue = useCallback(
     (
       fields: Fields = fieldsRef.current,
       values: V = defaultValuesRef.current
@@ -244,6 +245,24 @@ const useForm = <V extends FormValues = FormValues>({
         validateFormWithLowPriority();
     },
     [setStateRef, validateOnBlur, validateFormWithLowPriority]
+  );
+
+  const setValues = useCallback<SetValues<V>>(
+    (values, shouldValidate = validateOnChange) => {
+      const vals = isFunction(values) ? values(getFormState("values")) : values;
+
+      setStateRef("values", vals);
+      setAllDomsValue(undefined, vals);
+
+      if (shouldValidate) validateFormWithLowPriority();
+    },
+    [
+      validateOnChange,
+      getFormState,
+      setStateRef,
+      setAllDomsValue,
+      validateFormWithLowPriority,
+    ]
   );
 
   const setFieldValue = useCallback<SetFieldValue>(
@@ -288,8 +307,8 @@ const useForm = <V extends FormValues = FormValues>({
     }
 
     fieldsRef.current = getFields(formRef.current);
-    setValuesToDom();
-  }, [formRef, setValuesToDom]);
+    setAllDomsValue();
+  }, [formRef, setAllDomsValue]);
 
   useEffect(() => {
     if (!formRef.current) return () => null;
@@ -363,7 +382,7 @@ const useForm = <V extends FormValues = FormValues>({
 
           if (!isEmptyObject(addedFields)) {
             fieldsRef.current = { ...fieldsRef.current, ...addedFields };
-            setValuesToDom(addedFields);
+            setAllDomsValue(addedFields);
           }
 
           break;
@@ -383,7 +402,7 @@ const useForm = <V extends FormValues = FormValues>({
     setStateRef,
     validateOnChange,
     setFieldTouched,
-    setValuesToDom,
+    setAllDomsValue,
     validateFormWithLowPriority,
   ]);
 
@@ -392,6 +411,7 @@ const useForm = <V extends FormValues = FormValues>({
     validate: validateRef,
     formState,
     getFormState,
+    setValues,
     setFieldValue,
     setFieldError,
     validateField,

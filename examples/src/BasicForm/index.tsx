@@ -109,6 +109,7 @@ export default (): JSX.Element => {
     validate,
     formState,
     getFormState,
+    setValues,
     setFieldValue,
     setFieldError,
     validateField,
@@ -148,12 +149,13 @@ export default (): JSX.Element => {
     },
   });
 
-  console.log("LOG ===> formState: ", formState.errors);
+  console.log("LOG ===> formState: ", formState.values);
 
   useEffect(() => {
-    validateField("text.nest");
+    setValues((prevValues) => ({ ...prevValues, number: 123 }));
+    // validateField("text.nest");
     // validateForm();
-  }, [validateField, validateForm]);
+  }, [setValues, validateField, validateForm]);
 
   const handleSetValueClick = (): void => {
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
