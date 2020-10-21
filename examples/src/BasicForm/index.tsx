@@ -4,6 +4,7 @@
 import { jsx } from "@emotion/core";
 import React, { memo, forwardRef, useState, useEffect } from "react";
 import useForm from "react-cool-form";
+import * as Yup from "yup";
 
 import { container, form, label as labelStyle, wrapper } from "./styles";
 
@@ -81,7 +82,7 @@ const defaultValues = {
   text: { nest: "" },
   hiddenText: "test",
   password: "test",
-  number: 123,
+  number: 10,
   range: 0,
   checkbox: true,
   checkboxGroup: ["value-1"],
@@ -91,6 +92,15 @@ const defaultValues = {
   multiSelect: { nest: ["value-1", "value-2"] },
   textarea: "test",
 };
+
+const schema = Yup.object().shape({
+  text: Yup.object()
+    .shape({
+      nest: Yup.string().required(),
+    })
+    .required(),
+  number: Yup.number().min(100).required(),
+});
 
 export default (): JSX.Element => {
   const [showInput, setShowInput] = useState(false);
@@ -106,23 +116,34 @@ export default (): JSX.Element => {
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    validate: async ({ text, hiddenText }, set) => {
-      const errors = { text: { nest: "" } };
+    validate: async (values, { set }) => {
+      // const errors = {};
 
-      fib(35);
+      // fib(35);
 
       // eslint-disable-next-line
       /* await new Promise((resolve) => {
         setTimeout(resolve, 1000);
       }); */
 
-      if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
+      // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
       // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
       // throw new Error("Fake error");
       // return false;
       // return { text: { nest: ["Form error"] } };
-      return errors;
+
+      try {
+        await schema.validate(values, { abortEarly: false });
+      } catch (error) {
+        const formErrors = {};
+
+        error.inner.forEach(({ path, message }: any) =>
+          set(formErrors, path, message)
+        );
+
+        return formErrors;
+      }
     },
   });
 
@@ -167,11 +188,11 @@ export default (): JSX.Element => {
           label="Text:"
           name="text.nest"
           // @ts-ignore
-          ref={validate(async (values) => {
-            // eslint-disable-next-line
-            // await new Promise((resolve) => setTimeout(resolve, 1000));
-            return values.length <= 3 ? "Field error" : "";
-          })}
+          // ref={validate(async (values) => {
+          //   // eslint-disable-next-line
+          //   // await new Promise((resolve) => setTimeout(resolve, 1000));
+          //   return values.length <= 3 ? "Field error" : "";
+          // })}
         />
         {showInput && (
           <div>
