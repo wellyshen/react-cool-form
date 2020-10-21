@@ -144,7 +144,7 @@ const useForm = <V extends FormValues = FormValues>({
         set
       );
 
-      return isPlainObject(errors) ? (errors as Errors<V>) : {};
+      return isPlainObject(errors) ? errors : {};
     } catch (exception) {
       warn(`💡react-cool-form > config.validate: `, exception);
       throw exception;
