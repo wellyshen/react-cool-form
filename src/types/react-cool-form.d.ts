@@ -21,10 +21,6 @@ declare module "react-cool-form" {
     readonly isValidating: boolean;
   }
 
-  export interface GetFormState<T = any> {
-    (path?: string): T;
-  }
-
   export interface Validate<V = FormValues> {
     (values: V, options: { formState: FormState<V>; set: Set }):
       | Errors<V>
@@ -36,13 +32,13 @@ declare module "react-cool-form" {
     (value: any, formState: FormState<V>): any | Promise<any>;
   }
 
-  export interface ValidateRef<V = FormValues> {
+  interface ValidateRef<V = FormValues> {
     (validateFn: FieldValidateFn<V>): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
   }
 
-  export interface SetFieldValue {
+  interface SetFieldValue {
     (
       name: string,
       value: any | ((previousValue: any) => any),
@@ -50,7 +46,7 @@ declare module "react-cool-form" {
     ): void;
   }
 
-  export interface SetFieldError {
+  interface SetFieldError {
     (name: string, error?: any | ((previousError?: any) => any)): void;
   }
 
@@ -65,7 +61,7 @@ declare module "react-cool-form" {
     formRef: RefObject<HTMLFormElement>;
     validate: ValidateRef<V>;
     formState: FormState<V>;
-    getFormState: GetFormState;
+    getFormState: (path?: string) => any;
     setFieldValue: SetFieldValue;
     setFieldError: SetFieldError;
     validateField: (name: string) => void;

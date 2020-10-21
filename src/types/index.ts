@@ -53,8 +53,8 @@ export interface ValidateRef<V> {
   (validateFn: FieldValidateFn<V>): (field: FieldElement | null) => void;
 }
 
-export interface GetFormState<T = any> {
-  (path?: string): T;
+export interface GetFormState {
+  (path?: string): any;
 }
 
 export interface SetFieldValue {
