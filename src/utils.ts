@@ -44,7 +44,7 @@ export const isUndefined = (value: unknown): value is undefined =>
   value === undefined;
 
 export const get = (object: any, path: string, defaultValue?: unknown) => {
-  if (!isPlainObject(object)) return defaultValue;
+  if (!isPlainObject(object) || !path) return defaultValue;
 
   const value = path
     .split(/[,[\].]+?/)
@@ -100,7 +100,7 @@ const cloneObject = (object: unknown) => {
 };
 
 export const set: Set = (object, path, value, immutable = false) => {
-  if (!isPlainObject(object)) return object;
+  if (!isPlainObject(object) || !path) return object;
 
   const tempPath = stringToPath(path);
   const newObject = immutable ? cloneObject(object) : object;

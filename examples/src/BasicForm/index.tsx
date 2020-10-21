@@ -111,13 +111,14 @@ export default (): JSX.Element => {
     getFormState,
     setFieldValue,
     setFieldError,
+    validateField,
     validateForm,
   } = useForm<FormValues>({
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
     validate: async (values, { set }) => {
-      // const errors = {};
+      const errors = { text: { nest: "" } };
 
       // fib(35);
 
@@ -127,13 +128,13 @@ export default (): JSX.Element => {
       }); */
 
       // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
+      if (values.text.nest.length <= 3) errors.text.nest = "Form error";
       // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
       // throw new Error("Fake error");
-      // return false;
-      // return { text: { nest: ["Form error"] } };
+      return errors;
 
-      try {
+      /* try {
         await schema.validate(values, { abortEarly: false });
       } catch (error) {
         const formErrors = {};
@@ -143,15 +144,16 @@ export default (): JSX.Element => {
         );
 
         return formErrors;
-      }
+      } */
     },
   });
 
   console.log("LOG ===> formState: ", formState.errors);
 
   useEffect(() => {
+    validateField("text.nest");
     // validateForm();
-  }, [validateForm]);
+  }, [validateField, validateForm]);
 
   const handleSetValueClick = (): void => {
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
@@ -188,11 +190,11 @@ export default (): JSX.Element => {
           label="Text:"
           name="text.nest"
           // @ts-ignore
-          // ref={validate(async (values) => {
-          //   // eslint-disable-next-line
-          //   // await new Promise((resolve) => setTimeout(resolve, 1000));
-          //   return values.length <= 3 ? "Field error" : "";
-          // })}
+          ref={validate(async (values) => {
+            // eslint-disable-next-line
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
+            return values.length <= 3 ? "Field error" : "";
+          })}
         />
         {showInput && (
           <div>

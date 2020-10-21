@@ -135,21 +135,43 @@ const useForm = <V extends FormValues = FormValues>({
     );
   }, [runFieldValidation]);
 
-  const runFormValidateFn = useCallback(async (): Promise<Errors<V>> => {
-    if (!formValidateFnRef.current) return {};
+  const runFormValidateFn = useCallback(
+    async (name?: string): Promise<Errors<V>> => {
+      if (!formValidateFnRef.current) return {};
 
-    try {
-      const errors = await formValidateFnRef.current(getFormState("values"), {
-        formState: getFormState(),
-        set,
-      });
+      try {
+        const errors = await formValidateFnRef.current(getFormState("values"), {
+          formState: getFormState(),
+          set,
+        });
 
-      return isPlainObject(errors) ? errors : {};
-    } catch (exception) {
-      warn(`💡react-cool-form > config.validate: `, exception);
-      throw exception;
-    }
-  }, [formValidateFnRef, getFormState]);
+        if (!isPlainObject(errors)) return {};
+        if (!name) return errors;
+
+        const error = get(errors, name);
+        return error ? set({}, name, error) : {};
+      } catch (exception) {
+        warn(`💡react-cool-form > config.validate: `, exception);
+        throw exception;
+      }
+    },
+    [formValidateFnRef, getFormState]
+  );
+
+  const validateField = useCallback(
+    (name: string) => {
+      setStateRef("isValidating", true);
+
+      // eslint-disable-next-line compat/compat
+      Promise.all([runFieldValidation(name), runFormValidateFn(name)]).then(
+        (errors) => {
+          setStateRef("errors", deepMerge(...errors));
+          setStateRef("isValidating", false);
+        }
+      );
+    },
+    [setStateRef, runFieldValidation, runFormValidateFn]
+  );
 
   const validateForm = useCallback(() => {
     setStateRef("isValidating", true);
@@ -161,7 +183,7 @@ const useForm = <V extends FormValues = FormValues>({
         setStateRef("isValidating", false);
       }
     );
-  }, [runAllFieldsValidation, runFormValidateFn, setStateRef]);
+  }, [setStateRef, runAllFieldsValidation, runFormValidateFn]);
 
   const validateFormWithLowPriority = useCallback(
     () => runWithLowPriority(validateForm),
@@ -372,6 +394,7 @@ const useForm = <V extends FormValues = FormValues>({
     getFormState,
     setFieldValue,
     setFieldError,
+    validateField,
     validateForm,
   };
 };

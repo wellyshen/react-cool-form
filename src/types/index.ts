@@ -83,5 +83,6 @@ export interface Return<V> {
   getFormState: GetFormState;
   setFieldValue: SetFieldValue;
   setFieldError: SetFieldError;
+  validateField: (name: string) => void;
   validateForm: () => void;
 }
