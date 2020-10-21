@@ -28,11 +28,11 @@ declare module "react-cool-form" {
       | Promise<Errors<V> | void>;
   }
 
-  export interface FieldValidateFn<V> {
+  export interface FieldValidateFn<V = FormValues> {
     (value: any, formState: FormState<V>): any | Promise<any>;
   }
 
-  interface ValidateRef<V = FormValues> {
+  interface ValidateRef<V> {
     (validateFn: FieldValidateFn<V>): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
