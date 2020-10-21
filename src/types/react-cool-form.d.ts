@@ -3,17 +3,11 @@ declare module "react-cool-form" {
 
   export type FormValues = Record<string, any>;
 
-  type Prop<V, T = any> =
-    | {
-        [K in keyof V]: V[K] extends T ? T : Prop<V[K]>;
-      }
-    | Record<string, never>;
+  type Prop<V, T = any> = { [K in keyof V]?: V[K] extends T ? T : Prop<V[K]> };
 
-  export type Touched<V = FormValues> = Prop<V, boolean>;
+  type Touched<V> = Prop<V, boolean>;
 
-  export type Message = string | boolean | undefined;
-
-  export type Errors<V = FormValues> = Prop<V, Message>;
+  type Errors<V> = Prop<V>;
 
   interface Set {
     (object: any, path: string, value?: unknown, immutable?: boolean): any;
@@ -24,7 +18,7 @@ declare module "react-cool-form" {
   }
 
   export interface FieldValidateFn<V> {
-    (value: any, values: V): Message | Promise<Message>;
+    (value: any, values: V): any | Promise<any>;
   }
 
   export interface ValidateRef<V = FormValues> {
@@ -54,10 +48,7 @@ declare module "react-cool-form" {
   }
 
   export interface SetFieldError {
-    (
-      name: string,
-      message?: Message | ((previousMessage?: Message) => Message)
-    ): void;
+    (name: string, error?: any | ((previousError?: any) => any)): void;
   }
 
   export interface Config<V = FormValues> {

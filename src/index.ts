@@ -107,12 +107,12 @@ const useForm = <V extends FormValues = FormValues>({
       if (!fieldValidatesRef.current[name]) return {};
 
       try {
-        const message = await fieldValidatesRef.current[name](
+        const error = await fieldValidatesRef.current[name](
           getFormState(`values.${name}`),
           getFormState("values")
         );
 
-        return message ? set(getFormState("errors"), name, message, true) : {};
+        return error ? set(getFormState("errors"), name, error, true) : {};
       } catch (exception) {
         warn(`💡react-cool-form > validate ${name}: `, exception);
         throw exception;

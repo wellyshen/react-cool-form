@@ -1,15 +1,9 @@
 import { MutableRefObject, RefObject } from "react";
 
 // State
-type Prop<V, T = any> =
-  | {
-      [K in keyof V]: V[K] extends T ? T : Prop<V[K]>;
-    }
-  | Record<string, never>;
+type Prop<V, T = any> = { [K in keyof V]?: V[K] extends T ? T : Prop<V[K]> };
 
-type Message = string | boolean | undefined;
-
-export type Errors<V> = Prop<V, Message>;
+export type Errors<V> = Prop<V>;
 
 export interface FormState<V> {
   values: V;
@@ -49,7 +43,7 @@ interface Validate<V> {
 }
 
 export interface FieldValidateFn<V> {
-  (value: any, values: V): Message | Promise<Message>;
+  (value: any, values: V): any | Promise<any>;
 }
 
 export interface ValidateRef<V> {
@@ -69,10 +63,7 @@ export interface SetFieldValue {
 }
 
 export interface SetFieldError {
-  (
-    name: string,
-    message?: Message | ((previousMessage?: Message) => Message)
-  ): void;
+  (name: string, error?: any | ((previousError?: any) => any)): void;
 }
 
 export interface Config<V> {
