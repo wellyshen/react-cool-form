@@ -58,14 +58,17 @@ export interface GetFormState {
 }
 
 export interface SetValues<V> {
-  (values: V | ((previousValues: V) => V), shouldValidate?: boolean): void;
+  (
+    values: V | ((previousValues: V) => V),
+    options?: { shouldValidate?: boolean; touchedFields?: string[] }
+  ): void;
 }
 
 export interface SetFieldValue {
   (
     name: string,
     value: any | ((previousValue: any) => any),
-    shouldValidate?: boolean
+    options?: { shouldValidate?: boolean; shouldTouched?: boolean }
   ): void;
 }
 

@@ -149,10 +149,12 @@ export default (): JSX.Element => {
     },
   });
 
-  console.log("LOG ===> formState: ", formState.values);
+  console.log("LOG ===> formState: ", formState.touched);
 
   useEffect(() => {
-    setValues((prevValues) => ({ ...prevValues, number: 123 }));
+    setValues((prevValues) => ({ ...prevValues, number: 123 }), {
+      touchedFields: ["text.nest"],
+    });
     // validateField("text.nest");
     // validateForm();
   }, [setValues, validateField, validateForm]);
