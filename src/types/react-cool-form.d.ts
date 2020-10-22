@@ -53,6 +53,12 @@ declare module "react-cool-form" {
     ): void;
   }
 
+  interface SetErrors<V> {
+    (
+      errors?: Errors<V> | ((previousErrors: Errors<V>) => Errors<V> | void)
+    ): void;
+  }
+
   interface SetFieldError {
     (name: string, error?: any | ((previousError?: any) => any)): void;
   }
@@ -69,8 +75,9 @@ declare module "react-cool-form" {
     validate: ValidateRef<V>;
     formState: FormState<V>;
     getFormState: (path?: string) => any;
-    setFieldValue: SetFieldValue;
     setValues: SetValues<V>;
+    setFieldValue: SetFieldValue;
+    setErrors: SetErrors<V>;
     setFieldError: SetFieldError;
     validateField: (name: string) => void;
     validateForm: () => void;

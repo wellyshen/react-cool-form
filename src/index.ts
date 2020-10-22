@@ -17,6 +17,7 @@ import {
   GetFormState,
   SetValues,
   SetFieldValue,
+  SetErrors,
   SetFieldError,
 } from "./types";
 import useLatest from "./useLatest";
@@ -296,6 +297,15 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
+  const setErrors = useCallback<SetErrors<V>>(
+    (errors) => {
+      const errs = isFunction(errors) ? errors(getFormState("errors")) : errors;
+
+      setStateRef("errors", errs || {});
+    },
+    [setStateRef, getFormState]
+  );
+
   const setFieldError = useCallback<SetFieldError>(
     (name, error) => {
       const err = isFunction(error)
@@ -422,6 +432,7 @@ const useForm = <V extends FormValues = FormValues>({
     getFormState,
     setValues,
     setFieldValue,
+    setErrors,
     setFieldError,
     validateField,
     validateForm,

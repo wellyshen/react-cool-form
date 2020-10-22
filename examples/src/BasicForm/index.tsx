@@ -111,6 +111,7 @@ export default (): JSX.Element => {
     getFormState,
     setValues,
     setFieldValue,
+    setErrors,
     setFieldError,
     validateField,
     validateForm,
@@ -149,12 +150,12 @@ export default (): JSX.Element => {
     },
   });
 
-  console.log("LOG ===> formState: ", formState.touched);
+  console.log("LOG ===> formState: ", formState.errors);
 
   useEffect(() => {
-    setValues((prevValues) => ({ ...prevValues, number: 123 }), {
-      touchedFields: ["text.nest"],
-    });
+    // setValues((prevValues) => ({ ...prevValues, number: 123 }), {
+    //   touchedFields: ["text.nest"],
+    // });
     // validateField("text.nest");
     // validateForm();
   }, [setValues, validateField, validateForm]);
@@ -172,6 +173,7 @@ export default (): JSX.Element => {
   };
 
   const handleSetErrorsClick = (): void => {
+    setErrors((prevErrors) => undefined);
     // setFieldError("text.nest", "Required");
     // setFieldError("hiddenText", (prevMsg) => `new ${prevMsg}`);
   };
@@ -194,11 +196,11 @@ export default (): JSX.Element => {
           label="Text:"
           name="text.nest"
           // @ts-ignore
-          ref={validate(async (values) => {
-            // eslint-disable-next-line
-            // await new Promise((resolve) => setTimeout(resolve, 1000));
-            return values.length <= 3 ? "Field error" : "";
-          })}
+          // ref={validate(async (values) => {
+          //   // eslint-disable-next-line
+          //   // await new Promise((resolve) => setTimeout(resolve, 1000));
+          //   return values.length <= 3 ? "Field error" : "";
+          // })}
         />
         {showInput && (
           <div>

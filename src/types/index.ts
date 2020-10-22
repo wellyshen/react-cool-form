@@ -72,6 +72,12 @@ export interface SetFieldValue {
   ): void;
 }
 
+export interface SetErrors<V> {
+  (
+    errors?: Errors<V> | ((previousErrors: Errors<V>) => Errors<V> | void)
+  ): void;
+}
+
 export interface SetFieldError {
   (name: string, error?: any | ((previousError?: any) => any)): void;
 }
@@ -88,8 +94,9 @@ export interface Return<V> {
   validate: ValidateRef<V>;
   formState: Readonly<FormState<V>>;
   getFormState: GetFormState;
-  setFieldValue: SetFieldValue;
   setValues: SetValues<V>;
+  setFieldValue: SetFieldValue;
+  setErrors: SetErrors<V>;
   setFieldError: SetFieldError;
   validateField: (name: string) => void;
   validateForm: () => void;
