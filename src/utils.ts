@@ -115,7 +115,7 @@ export const set: Set = (object, path, value, immutable = false) => {
   return newObject;
 };
 
-export const deepMerge = (...objects: Record<string, any>[]) =>
+export const deepMerge = (...objects: any[]) =>
   objects.reduce((prev, obj) => {
     Object.keys(obj).forEach((key) => {
       const prevValue = prev[key];
