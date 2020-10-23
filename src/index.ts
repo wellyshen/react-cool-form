@@ -128,7 +128,6 @@ const useForm = <V extends FormValues = FormValues>({
       runFieldValidation(name)
     );
 
-    // eslint-disable-next-line compat/compat
     return Promise.all(promises).then((errors) =>
       errors.reduce((acc, cur) => {
         acc = { ...acc, ...cur };
@@ -164,7 +163,6 @@ const useForm = <V extends FormValues = FormValues>({
     (name: string) => {
       setStateRef("isValidating", true);
 
-      // eslint-disable-next-line compat/compat
       Promise.all([runFieldValidation(name), runFormValidateFn(name)]).then(
         (errors) => {
           setStateRef("errors", deepMerge(...errors));
@@ -178,7 +176,6 @@ const useForm = <V extends FormValues = FormValues>({
   const validateForm = useCallback(() => {
     setStateRef("isValidating", true);
 
-    // eslint-disable-next-line compat/compat
     Promise.all([runAllFieldsValidation(), runFormValidateFn()]).then(
       (errors) => {
         setStateRef("errors", deepMerge(...errors));
