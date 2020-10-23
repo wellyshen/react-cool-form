@@ -119,38 +119,38 @@ export default (): JSX.Element => {
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    validate: async (values, { set }) => {
-      const errors = { text: { nest: "" } };
+    // validate: async (values, { set }) => {
+    //   const errors = { text: { nest: "" } };
 
-      // fib(35);
+    //   // fib(35);
 
-      // eslint-disable-next-line
-      /* await new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-      }); */
+    //   // eslint-disable-next-line
+    //   /* await new Promise((resolve) => {
+    //     setTimeout(resolve, 1000);
+    //   }); */
 
-      // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
-      if (values.text.nest.length <= 3) errors.text.nest = "Form error";
-      // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+    //   // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
+    //   if (values.text.nest.length <= 3) errors.text.nest = "Form error";
+    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
-      // throw new Error("Fake error");
-      return errors;
+    //   // throw new Error("Fake error");
+    //   return errors;
 
-      /* try {
-        await schema.validate(values, { abortEarly: false });
-      } catch (error) {
-        const formErrors = {};
+    //   /* try {
+    //     await schema.validate(values, { abortEarly: false });
+    //   } catch (error) {
+    //     const formErrors = {};
 
-        error.inner.forEach(({ path, message }: any) =>
-          set(formErrors, path, message)
-        );
+    //     error.inner.forEach(({ path, message }: any) =>
+    //       set(formErrors, path, message)
+    //     );
 
-        return formErrors;
-      } */
-    },
+    //     return formErrors;
+    //   } */
+    // },
   });
 
-  console.log("LOG ===> formState: ", formState.errors, formState.isValid);
+  console.log("LOG ===> formState: ", formState.isDirty);
 
   useEffect(() => {
     // setValues((prevValues) => ({ ...prevValues, number: 123 }), {
@@ -212,9 +212,9 @@ export default (): JSX.Element => {
           label="Number:"
           type="number"
           name="number"
-          ref={validate((values) => {
-            return values <= 5 ? "Field error" : "";
-          })}
+          // ref={validate((values) => {
+          //   return values <= 5 ? "Field error" : "";
+          // })}
         />
         <Input label="Range:" type="range" name="range" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />

@@ -17,6 +17,7 @@ declare module "react-cool-form" {
     readonly values: V;
     readonly touched: Touched<V>;
     readonly errors: Errors<V>;
+    readonly isDirty: boolean;
     readonly isValid: boolean;
     readonly isValidating: boolean;
   }

@@ -14,27 +14,46 @@ export default <V>(
     values: defaultValues,
     touched: {},
     errors: {},
+    isDirty: false,
     isValid: true,
     isValidating: false,
   });
   const usedStateRef = useRef<UsedStateRef<V>>({});
 
-  const setStateRef = useCallback<SetStateRef>((path, value) => {
-    const { current: state } = stateRef;
-    const key = path.split(".")[0] as keyof FormState<V>;
-    const shouldUpdate = key === "values" || !isEqual(get(state, path), value);
+  const setStateRef = useCallback<SetStateRef>(
+    (path, value) => {
+      const { current: state } = stateRef;
+      const key = path.split(".")[0] as keyof FormState<V>;
+      const shouldUpdate =
+        key === "values" || !isEqual(get(state, path), value);
 
-    if (shouldUpdate) {
-      const nextState = set(state, path, value, true);
-      const { errors, isValid } = nextState;
+      if (shouldUpdate) {
+        const nextState = set(state, path, value, true);
+        const {
+          values,
+          errors,
+          isDirty: prevIsDirty,
+          isValid: prevIsValid,
+        } = nextState;
+        const isDirty =
+          key === "values" ? !isEqual(values, defaultValues) : prevIsDirty;
+        const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
 
-      stateRef.current = {
-        ...nextState,
-        isValid: key === "errors" ? isEmptyObject(errors) : isValid,
-      };
-      if (!hasProxy || usedStateRef.current[key]) forceUpdate();
-    }
-  }, []);
+        stateRef.current = { ...nextState, isDirty, isValid };
+
+        const { current: usedStated } = usedStateRef;
+
+        if (
+          !hasProxy ||
+          usedStated[key] ||
+          (usedStated.isDirty && isDirty !== prevIsDirty) ||
+          (usedStated.isValid && isValid !== prevIsValid)
+        )
+          forceUpdate();
+      }
+    },
+    [defaultValues]
+  );
 
   return [
     hasProxy
