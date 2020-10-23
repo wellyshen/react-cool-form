@@ -5,8 +5,6 @@ declare module "react-cool-form" {
 
   type Prop<V, T = any> = { [K in keyof V]?: V[K] extends T ? T : Prop<V[K]> };
 
-  type Touched<V> = Prop<V, boolean>;
-
   type Errors<V> = Prop<V>;
 
   interface Set {
@@ -15,7 +13,7 @@ declare module "react-cool-form" {
 
   export interface FormState<V = FormValues> {
     readonly values: V;
-    readonly touched: Touched<V>;
+    readonly touched: Prop<V, boolean>;
     readonly errors: Errors<V>;
     readonly isDirty: boolean;
     readonly isValid: boolean;
