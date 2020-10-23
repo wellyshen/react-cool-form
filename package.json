@@ -23,7 +23,7 @@
     "dev": "yarn clean:build && yarn copy:type && rollup -c rollup/config.js -w",
     "build": "yarn clean:build && yarn clean:size && yarn copy && rollup -c rollup/config.js --environment BUILD:production",
     "lint": "eslint --fix . --ext .js,.ts,.tsx",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc",
     "type-check:watch": "yarn type-check --watch",
     "test": "jest",
     "test:watch": "yarn test --watch",
