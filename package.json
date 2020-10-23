@@ -87,8 +87,8 @@
   },
   "eslintIgnore": [
     "dist",
-    "examples",
-    "rollup/cjsEntryFile.js"
+    "rollup",
+    "examples"
   ],
   "jest": {
     "preset": "ts-jest",

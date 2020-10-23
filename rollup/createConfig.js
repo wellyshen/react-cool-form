@@ -12,7 +12,6 @@ const makeExternalPredicate = (external) =>
     ? () => false
     : (id) => new RegExp(`^(${external.join("|")})($|/)`).test(id);
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default ({ name, format, env, size }) => {
   const shouldMinify = env === "production";
   const fileName = [name, format, env, shouldMinify ? "min" : "", "js"]
