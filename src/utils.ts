@@ -79,16 +79,12 @@ const stringToPath = (str: string) => {
   return path;
 };
 
-const cloneObject = (object: unknown) => {
+const cloneObject = (object: unknown): any => {
   if (!isObject(object)) return object;
 
   if (object instanceof Date) return new Date(object.getTime());
 
-  if (isArray(object))
-    return object.reduce((arr, val, idx) => {
-      arr[idx] = cloneObject(val);
-      return arr;
-    }, []);
+  if (isArray(object)) return object.map((val) => cloneObject(val));
 
   if (isObject(object))
     return Object.keys(object).reduce((obj: Record<string, any>, key) => {
