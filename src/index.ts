@@ -272,7 +272,7 @@ const useForm = <V extends FormValues = FormValues>({
     (
       name,
       value,
-      { shouldValidate = validateOnChange, shouldTouched = true } = {}
+      { shouldValidate = validateOnChange, isTouched = true } = {}
     ) => {
       const val = isFunction(value)
         ? value(getFormState(`values.${name}`))
@@ -281,7 +281,7 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, val);
       setDomValue(name, val);
 
-      if (shouldTouched) setFieldTouched(name, false);
+      if (isTouched) setFieldTouched(name, false);
       if (shouldValidate) validateFormWithLowPriority();
     },
     [

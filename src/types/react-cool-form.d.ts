@@ -48,7 +48,7 @@ declare module "react-cool-form" {
     (
       name: string,
       value: any | ((previousValue: any) => any),
-      options?: { shouldValidate?: boolean; shouldTouched?: boolean }
+      options?: { shouldValidate?: boolean; isTouched?: boolean }
     ): void;
   }
 
