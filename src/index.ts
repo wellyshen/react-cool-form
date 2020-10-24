@@ -245,17 +245,32 @@ const useForm = <V extends FormValues = FormValues>({
     [setStateRef, validateOnBlur, validateFormWithLowPriority]
   );
 
+  const setFieldDirty = useCallback(
+    (name: string) => {
+      setStateRef(
+        `dirtyFields.${name}`,
+        get(getFormState("values"), name) !== get(defaultValues, name)
+      );
+    },
+    [setStateRef, getFormState, defaultValues]
+  );
+
   const setValues = useCallback<SetValues<V>>(
     (
       values,
-      { shouldValidate = validateOnChange, touchedFields = [] } = {}
+      {
+        shouldValidate = validateOnChange,
+        touchedFields = [],
+        dirtyFields = [],
+      } = {}
     ) => {
-      const vals = isFunction(values) ? values(getFormState("values")) : values;
+      values = isFunction(values) ? values(getFormState("values")) : values;
 
-      setStateRef("values", vals);
-      setAllDomsValue(undefined, vals);
+      setStateRef("values", values);
+      setAllDomsValue(fieldsRef.current, values);
 
       touchedFields.forEach((name) => setFieldTouched(name, false));
+      dirtyFields.forEach((name) => setFieldDirty(name));
       if (shouldValidate) validateFormWithLowPriority();
     },
     [
@@ -264,6 +279,7 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef,
       setAllDomsValue,
       setFieldTouched,
+      setFieldDirty,
       validateFormWithLowPriority,
     ]
   );
@@ -272,16 +288,19 @@ const useForm = <V extends FormValues = FormValues>({
     (
       name,
       value,
-      { shouldValidate = validateOnChange, isTouched = true } = {}
+      {
+        shouldValidate = validateOnChange,
+        isTouched = true,
+        isDirty = true,
+      } = {}
     ) => {
-      const val = isFunction(value)
-        ? value(getFormState(`values.${name}`))
-        : value;
+      value = isFunction(value) ? value(getFormState(`values.${name}`)) : value;
 
-      setStateRef(`values.${name}`, val);
-      setDomValue(name, val);
+      setStateRef(`values.${name}`, value);
+      setDomValue(name, value);
 
       if (isTouched) setFieldTouched(name, false);
+      if (isDirty) setFieldDirty(name);
       if (shouldValidate) validateFormWithLowPriority();
     },
     [
@@ -290,26 +309,27 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef,
       setDomValue,
       setFieldTouched,
+      setFieldDirty,
       validateFormWithLowPriority,
     ]
   );
 
   const setErrors = useCallback<SetErrors<V>>(
     (errors) => {
-      const errs = isFunction(errors) ? errors(getFormState("errors")) : errors;
-
-      setStateRef("errors", errs || {});
+      setStateRef(
+        "errors",
+        (isFunction(errors) ? errors(getFormState("errors")) : errors) || {}
+      );
     },
     [setStateRef, getFormState]
   );
 
   const setFieldError = useCallback<SetFieldError>(
     (name, error) => {
-      const err = isFunction(error)
-        ? error(getFormState(`errors.${name}`))
-        : error;
-
-      setStateRef(`errors.${name}`, err);
+      setStateRef(
+        `errors.${name}`,
+        isFunction(error) ? error(getFormState(`errors.${name}`)) : error
+      );
     },
     [getFormState, setStateRef]
   );
@@ -367,6 +387,7 @@ const useForm = <V extends FormValues = FormValues>({
       }
 
       setStateRef(`values.${name}`, val);
+      setFieldDirty(name);
 
       if (validateOnChange) {
         validateFormWithLowPriority();
@@ -418,6 +439,7 @@ const useForm = <V extends FormValues = FormValues>({
     setStateRef,
     validateOnChange,
     setFieldTouched,
+    setFieldDirty,
     setAllDomsValue,
     validateFormWithLowPriority,
   ]);

@@ -16,6 +16,7 @@ declare module "react-cool-form" {
     readonly touched: Prop<V, boolean>;
     readonly errors: Errors<V>;
     readonly isDirty: boolean;
+    readonly dirtyFields: Prop<V, boolean>;
     readonly isValid: boolean;
     readonly isValidating: boolean;
   }
@@ -40,7 +41,11 @@ declare module "react-cool-form" {
   interface SetValues<V> {
     (
       values: V | ((previousValues: V) => V),
-      options?: { shouldValidate?: boolean; touchedFields?: string[] }
+      options?: {
+        shouldValidate?: boolean;
+        touchedFields?: string[];
+        dirtyFields?: string[];
+      }
     ): void;
   }
 
@@ -48,13 +53,19 @@ declare module "react-cool-form" {
     (
       name: string,
       value: any | ((previousValue: any) => any),
-      options?: { shouldValidate?: boolean; isTouched?: boolean }
+      options?: {
+        shouldValidate?: boolean;
+        isTouched?: boolean;
+        isDirty?: boolean;
+      }
     ): void;
   }
 
   interface SetErrors<V> {
     (
-      errors?: Errors<V> | ((previousErrors: Errors<V>) => Errors<V> | void)
+      errors?:
+        | Errors<V>
+        | ((previousErrors: Errors<V>) => Errors<V> | undefined)
     ): void;
   }
 

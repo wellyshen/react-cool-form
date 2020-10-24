@@ -10,6 +10,7 @@ export interface FormState<V> {
   touched: Prop<V, boolean>;
   errors: Errors<V>;
   isDirty: boolean;
+  dirtyFields: Prop<V, boolean>;
   isValid: boolean;
   isValidating: boolean;
 }
@@ -61,7 +62,11 @@ export interface GetFormState {
 export interface SetValues<V> {
   (
     values: V | ((previousValues: V) => V),
-    options?: { shouldValidate?: boolean; touchedFields?: string[] }
+    options?: {
+      shouldValidate?: boolean;
+      touchedFields?: string[];
+      dirtyFields?: string[];
+    }
   ): void;
 }
 
@@ -69,13 +74,17 @@ export interface SetFieldValue {
   (
     name: string,
     value: any | ((previousValue: any) => any),
-    options?: { shouldValidate?: boolean; isTouched?: boolean }
+    options?: {
+      shouldValidate?: boolean;
+      isTouched?: boolean;
+      isDirty?: boolean;
+    }
   ): void;
 }
 
 export interface SetErrors<V> {
   (
-    errors?: Errors<V> | ((previousErrors: Errors<V>) => Errors<V> | void)
+    errors?: Errors<V> | ((previousErrors: Errors<V>) => Errors<V> | undefined)
   ): void;
 }
 

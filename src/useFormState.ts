@@ -15,6 +15,7 @@ export default <V>(
     touched: {},
     errors: {},
     isDirty: false,
+    dirtyFields: {},
     isValid: true,
     isValidating: false,
   });

@@ -150,12 +150,16 @@ export default (): JSX.Element => {
     // },
   });
 
-  console.log("LOG ===> formState: ", formState.isDirty);
+  console.log("LOG ===> formState: ", formState.errors);
 
   useEffect(() => {
-    // setValues((prevValues) => ({ ...prevValues, number: 123 }), {
-    //   touchedFields: ["text.nest"],
-    // });
+    /* setValues(
+      (prevValues) => ({ ...prevValues, text: { nest: "" }, number: 123 }),
+      {
+        touchedFields: ["text.nest"],
+        dirtyFields: ["text.nest"],
+      }
+    ); */
     // validateField("text.nest");
     // validateForm();
   }, [setValues, validateField, validateForm]);
@@ -163,7 +167,7 @@ export default (): JSX.Element => {
   const handleSetValueClick = (): void => {
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
     // setFieldValue("text.nest", "new test");
-    setFieldValue("hiddenText", "new test");
+    // setFieldValue("hiddenText", "new test");
     // setFieldValue("password", "");
     // setFieldValue("number", 456);
     // setFieldValue("checkbox", false);
@@ -173,7 +177,7 @@ export default (): JSX.Element => {
   };
 
   const handleSetErrorsClick = (): void => {
-    setErrors((prevErrors) => undefined);
+    setErrors({});
     // setFieldError("text.nest", "Required");
     // setFieldError("hiddenText", (prevMsg) => `new ${prevMsg}`);
   };
