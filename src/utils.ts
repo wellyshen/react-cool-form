@@ -54,31 +54,6 @@ export const get = (object: any, path: string, defaultValue?: unknown) => {
   return isUndefined(value) ? defaultValue : value;
 };
 
-/* const isKey = (value: string) =>
-  !isArray(value) &&
-  (/^\w*$/.test(value) ||
-    !/\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/.test(value)); */
-
-const stringToPath = (str: string) => {
-  const path: string[] = [];
-
-  str.replace(
-    /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
-    (
-      match: string,
-      expression: string,
-      quote: string,
-      subString: string
-    ): any => {
-      path.push(
-        quote ? subString.replace(/\\(\\)?/g, "$1") : expression || match
-      );
-    }
-  );
-
-  return path;
-};
-
 const cloneObject = (object: unknown): any => {
   if (!isObject(object)) return object;
 
@@ -98,7 +73,7 @@ const cloneObject = (object: unknown): any => {
 export const set: Set = (object, path, value, immutable = false) => {
   if (!isPlainObject(object) || !path) return object;
 
-  const tempPath = stringToPath(path);
+  const tempPath = path.split(/[.[\]]+/).filter(Boolean);
   const newObject = immutable ? cloneObject(object) : object;
 
   tempPath.slice(0, -1).reduce((obj, key, idx) => {
