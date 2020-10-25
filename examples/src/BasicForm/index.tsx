@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+/** @jsxRuntime classic */
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
