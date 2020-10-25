@@ -81,8 +81,7 @@
         }
       ],
       "no-param-reassign": "off",
-      "no-underscore-dangle": "off",
-      "@typescript-eslint/no-shadow": "error"
+      "no-underscore-dangle": "off"
     },
     "settings": {
       "polyfills": [
