@@ -59,17 +59,6 @@ export interface GetFormState {
   (path?: string): any;
 }
 
-export interface SetValues<V> {
-  (
-    values: V | ((previousValues: V) => V),
-    options?: {
-      shouldValidate?: boolean;
-      touchedFields?: string[];
-      dirtyFields?: string[];
-    }
-  ): void;
-}
-
 export interface SetFieldValue {
   (
     name: string,
@@ -82,14 +71,25 @@ export interface SetFieldValue {
   ): void;
 }
 
-export interface SetErrors<V> {
+export interface SetValues<V> {
   (
-    errors?: Errors<V> | ((previousErrors: Errors<V>) => Errors<V> | undefined)
+    values: V | ((previousValues: V) => V),
+    options?: {
+      shouldValidate?: boolean;
+      touchedFields?: string[];
+      dirtyFields?: string[];
+    }
   ): void;
 }
 
 export interface SetFieldError {
   (name: string, error?: any | ((previousError?: any) => any)): void;
+}
+
+export interface SetErrors<V> {
+  (
+    errors?: Errors<V> | ((previousErrors: Errors<V>) => Errors<V> | undefined)
+  ): void;
 }
 
 export interface Config<V> {
@@ -104,10 +104,10 @@ export interface Return<V> {
   validate: ValidateRef<V>;
   formState: Readonly<FormState<V>>;
   getFormState: GetFormState;
-  setValues: SetValues<V>;
   setFieldValue: SetFieldValue;
-  setErrors: SetErrors<V>;
+  setValues: SetValues<V>;
   setFieldError: SetFieldError;
+  setErrors: SetErrors<V>;
   validateField: (name: string) => void;
   validateForm: () => void;
 }

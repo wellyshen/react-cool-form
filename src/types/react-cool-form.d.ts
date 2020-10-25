@@ -38,17 +38,6 @@ declare module "react-cool-form" {
     ) => void;
   }
 
-  interface SetValues<V> {
-    (
-      values: V | ((previousValues: V) => V),
-      options?: {
-        shouldValidate?: boolean;
-        touchedFields?: string[];
-        dirtyFields?: string[];
-      }
-    ): void;
-  }
-
   interface SetFieldValue {
     (
       name: string,
@@ -61,16 +50,27 @@ declare module "react-cool-form" {
     ): void;
   }
 
+  interface SetValues<V> {
+    (
+      values: V | ((previousValues: V) => V),
+      options?: {
+        shouldValidate?: boolean;
+        touchedFields?: string[];
+        dirtyFields?: string[];
+      }
+    ): void;
+  }
+
+  interface SetFieldError {
+    (name: string, error?: any | ((previousError?: any) => any)): void;
+  }
+
   interface SetErrors<V> {
     (
       errors?:
         | Errors<V>
         | ((previousErrors: Errors<V>) => Errors<V> | undefined)
     ): void;
-  }
-
-  interface SetFieldError {
-    (name: string, error?: any | ((previousError?: any) => any)): void;
   }
 
   export interface Config<V = FormValues> {
@@ -85,10 +85,10 @@ declare module "react-cool-form" {
     validate: ValidateRef<V>;
     formState: FormState<V>;
     getFormState: (path?: string) => any;
-    setValues: SetValues<V>;
     setFieldValue: SetFieldValue;
-    setErrors: SetErrors<V>;
+    setValues: SetValues<V>;
     setFieldError: SetFieldError;
+    setErrors: SetErrors<V>;
     validateField: (name: string) => void;
     validateForm: () => void;
   }
