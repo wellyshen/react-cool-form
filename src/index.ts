@@ -447,13 +447,13 @@ const useForm = <V extends FormValues = FormValues>({
 
   return {
     formRef,
-    validate: validateRef,
     formState,
     getFormState,
     setErrors,
     setFieldError,
     setValues,
     setFieldValue,
+    validate: validateRef,
     validateField,
     validateForm,
   };

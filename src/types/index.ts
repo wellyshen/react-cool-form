@@ -47,14 +47,6 @@ interface Validate<V> {
     | Promise<Errors<V> | void>;
 }
 
-export interface FieldValidateFn<V> {
-  (value: any, formState: FormState<V>): any | Promise<any>;
-}
-
-export interface ValidateRef<V> {
-  (validateFn: FieldValidateFn<V>): (field: FieldElement | null) => void;
-}
-
 export interface GetFormState {
   (path?: string): any;
 }
@@ -92,6 +84,14 @@ export interface SetFieldValue {
   ): void;
 }
 
+export interface FieldValidateFn<V> {
+  (value: any, formState: FormState<V>): any | Promise<any>;
+}
+
+export interface ValidateRef<V> {
+  (validateFn: FieldValidateFn<V>): (field: FieldElement | null) => void;
+}
+
 export interface Config<V> {
   defaultValues: V;
   validate?: Validate<V>;
@@ -101,13 +101,13 @@ export interface Config<V> {
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
-  validate: ValidateRef<V>;
   formState: Readonly<FormState<V>>;
   getFormState: GetFormState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;
   setValues: SetValues<V>;
   setFieldValue: SetFieldValue;
+  validate: ValidateRef<V>;
   validateField: (name: string) => void;
   validateForm: () => void;
 }
