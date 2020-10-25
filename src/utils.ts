@@ -43,6 +43,11 @@ export const isEmptyObject = (value: unknown): value is Record<string, never> =>
 export const isUndefined = (value: unknown): value is undefined =>
   value === undefined;
 
+export const isKey = (value: string) =>
+  !isArray(value) &&
+  (/^\w*$/.test(value) ||
+    !/\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/.test(value));
+
 export const get = (object: any, path: string, defaultValue?: unknown) => {
   if (!isPlainObject(object) || !path) return defaultValue;
 

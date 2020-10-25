@@ -177,7 +177,7 @@ export default (): JSX.Element => {
   };
 
   const handleSetErrorsClick = (): void => {
-    setErrors({});
+    setFieldError("text", false);
     // setFieldError("text.nest", "Required");
     // setFieldError("hiddenText", (prevMsg) => `new ${prevMsg}`);
   };
