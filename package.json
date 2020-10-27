@@ -52,7 +52,6 @@
         "@babel/env",
         {
           "loose": true,
-          "modules": false,
           "exclude": [
             "@babel/plugin-transform-async-to-generator",
             "@babel/plugin-transform-regenerator"
