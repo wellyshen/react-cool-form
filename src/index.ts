@@ -275,7 +275,7 @@ const useForm = <V extends FormValues = FormValues>({
     (name: string) => {
       setStateRef(
         `dirtyFields.${name}`,
-        get(getFormState("values"), name) !== get(defaultValues, name)
+        getFormState(`values.${name}`) !== get(defaultValues, name)
       );
     },
     [defaultValues, getFormState, setStateRef]
