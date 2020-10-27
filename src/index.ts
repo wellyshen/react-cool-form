@@ -108,15 +108,17 @@ const useForm = <V extends FormValues = FormValues>({
     (errors) => {
       setStateRef(
         "errors",
-        (isFunction(errors) ? errors(getFormState("errors")) : errors) || {}
+        (isFunction(errors) ? errors(stateRef.current.errors) : errors) || {}
       );
     },
-    [getFormState, setStateRef]
+    [setStateRef, stateRef]
   );
 
   const setFieldError = useCallback<SetFieldError>(
     (name, error) => {
-      error = isFunction(error) ? error(getFormState(`errors.${name}`)) : error;
+      error = isFunction(error)
+        ? error(get(stateRef.current.errors, name))
+        : error;
 
       if (isKey(name) && !error) {
         setErrors((prevErrors) => {
@@ -128,7 +130,7 @@ const useForm = <V extends FormValues = FormValues>({
         setStateRef(`errors.${name}`, error || undefined);
       }
     },
-    [getFormState, setErrors, setStateRef]
+    [setErrors, setStateRef, stateRef]
   );
 
   const runFieldValidation = useCallback(
@@ -137,8 +139,8 @@ const useForm = <V extends FormValues = FormValues>({
 
       try {
         const error = await fieldValidatesRef.current[name](
-          getFormState(`values.${name}`),
-          getFormState()
+          get(stateRef.current.values, name),
+          stateRef.current
         );
 
         return error ? set({}, name, error) : {};
@@ -147,7 +149,7 @@ const useForm = <V extends FormValues = FormValues>({
         throw exception;
       }
     },
-    [getFormState]
+    [stateRef]
   );
 
   const runAllFieldsValidation = useCallback((): Promise<Errors<V>> => {
@@ -168,10 +170,13 @@ const useForm = <V extends FormValues = FormValues>({
       if (!formValidateFnRef.current) return {};
 
       try {
-        const errors = await formValidateFnRef.current(getFormState("values"), {
-          formState: getFormState(),
-          set,
-        });
+        const errors = await formValidateFnRef.current(
+          stateRef.current.values,
+          {
+            formState: stateRef.current,
+            set,
+          }
+        );
 
         if (!isPlainObject(errors)) return {};
         if (!name) return errors;
@@ -183,7 +188,7 @@ const useForm = <V extends FormValues = FormValues>({
         throw exception;
       }
     },
-    [formValidateFnRef, getFormState]
+    [formValidateFnRef, stateRef]
   );
 
   const validateField = useCallback(
@@ -275,10 +280,10 @@ const useForm = <V extends FormValues = FormValues>({
     (name: string) => {
       setStateRef(
         `dirtyFields.${name}`,
-        get(getFormState("values"), name) !== get(defaultValues, name)
+        get(stateRef.current.values, name) !== get(defaultValues, name)
       );
     },
-    [defaultValues, getFormState, setStateRef]
+    [defaultValues, setStateRef, stateRef]
   );
 
   const setValues = useCallback<SetValues<V>>(
@@ -290,7 +295,7 @@ const useForm = <V extends FormValues = FormValues>({
         dirtyFields = [],
       } = {}
     ) => {
-      values = isFunction(values) ? values(getFormState("values")) : values;
+      values = isFunction(values) ? values(stateRef.current.values) : values;
 
       setStateRef("values", values);
       setAllDomsValue(fieldsRef.current, values);
@@ -300,11 +305,11 @@ const useForm = <V extends FormValues = FormValues>({
       if (shouldValidate) validateFormWithLowPriority();
     },
     [
-      getFormState,
       setAllDomsValue,
       setFieldDirty,
       setFieldTouched,
       setStateRef,
+      stateRef,
       validateFormWithLowPriority,
       validateOnChange,
     ]
@@ -320,7 +325,9 @@ const useForm = <V extends FormValues = FormValues>({
         isDirty = true,
       } = {}
     ) => {
-      value = isFunction(value) ? value(getFormState(`values.${name}`)) : value;
+      value = isFunction(value)
+        ? value(get(stateRef.current.values, name))
+        : value;
 
       setStateRef(`values.${name}`, value);
       setDomValue(name, value);
@@ -330,11 +337,11 @@ const useForm = <V extends FormValues = FormValues>({
       if (shouldValidate) validateFormWithLowPriority();
     },
     [
-      getFormState,
       setDomValue,
       setFieldDirty,
       setFieldTouched,
       setStateRef,
+      stateRef,
       validateFormWithLowPriority,
       validateOnChange,
     ]
@@ -369,7 +376,7 @@ const useForm = <V extends FormValues = FormValues>({
       if (isNumberField(field) || isRangeField(field)) {
         val = parseFloat(value) || "";
       } else if (isCheckboxField(field)) {
-        let checkValues = getFormState(`values.${name}`);
+        let checkValues = get(stateRef.current.values, name);
 
         if (field.hasAttribute("value") && isArray(checkValues)) {
           checkValues = new Set(checkValues);
@@ -436,11 +443,11 @@ const useForm = <V extends FormValues = FormValues>({
       observer.disconnect();
     };
   }, [
-    getFormState,
     setAllDomsValue,
     setFieldDirty,
     setFieldTouched,
     setStateRef,
+    stateRef,
     validateFormWithLowPriority,
     validateOnChange,
   ]);
