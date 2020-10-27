@@ -21,7 +21,11 @@ export interface SetStateRef {
   (path: string, value?: any): void;
 }
 
-export type UsedStateRef<V> = Partial<Record<keyof FormState<V>, boolean>>;
+export type UsedStateRef = Record<string, boolean>;
+
+export interface SetUsedStateRef {
+  (path: string): void;
+}
 
 // Hook
 export type FormValues = Record<string, any>;
@@ -48,7 +52,7 @@ interface Validate<V> {
 }
 
 export interface GetFormState {
-  (path?: string): any;
+  (path: string, shouldUpdate?: boolean): any;
 }
 
 export interface SetErrors<V> {
@@ -101,7 +105,6 @@ export interface Config<V> {
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
-  formState: Readonly<FormState<V>>;
   getFormState: GetFormState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;

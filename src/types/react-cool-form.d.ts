@@ -82,8 +82,7 @@ declare module "react-cool-form" {
 
   export interface Return<V = FormValues> {
     formRef: RefObject<HTMLFormElement>;
-    formState: FormState<V>;
-    getFormState: (path?: string) => any;
+    getFormState: (path: string, shouldUpdate?: boolean) => any;
     setErrors: SetErrors<V>;
     setFieldError: SetFieldError;
     setValues: SetValues<V>;

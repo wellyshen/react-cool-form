@@ -82,7 +82,7 @@ const defaultValues = {
   text: { nest: "" },
   hiddenText: "test",
   password: "test",
-  number: 10,
+  number: 5,
   range: 0,
   checkbox: true,
   checkboxGroup: ["value-1"],
@@ -107,7 +107,6 @@ export default (): JSX.Element => {
   const {
     formRef,
     validate,
-    formState,
     getFormState,
     setValues,
     setFieldValue,
@@ -150,7 +149,7 @@ export default (): JSX.Element => {
     // },
   });
 
-  console.log("LOG ===> formState: ", formState.errors);
+  console.log("LOG ===> formState: ", getFormState("errors"));
 
   useEffect(() => {
     /* setValues(
@@ -216,9 +215,9 @@ export default (): JSX.Element => {
           label="Number:"
           type="number"
           name="number"
-          // ref={validate((values) => {
-          //   return values <= 5 ? "Field error" : "";
-          // })}
+          ref={validate((values) => {
+            return values <= 10 ? "Field error" : "";
+          })}
         />
         <Input label="Range:" type="range" name="range" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />

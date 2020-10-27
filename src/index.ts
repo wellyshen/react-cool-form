@@ -87,7 +87,7 @@ const useForm = <V extends FormValues = FormValues>({
   const formValidateFnRef = useLatest(validate);
   const fieldValidatesRef = useRef<Record<string, FieldValidateFn<V>>>({});
   const fieldsRef = useRef<Fields>({});
-  const [formState, stateRef, setStateRef] = useFormState<V>(
+  const [stateRef, setStateRef, setUsedStateRef] = useFormState<V>(
     defaultValuesRef.current
   );
 
@@ -99,9 +99,11 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const getFormState = useCallback<GetFormState>(
-    (path) =>
-      isUndefined(path) ? stateRef.current : get(stateRef.current, path),
-    [stateRef]
+    (path, shouldUpdate = true) => {
+      if (shouldUpdate) setUsedStateRef(path);
+      return isUndefined(path) ? stateRef.current : get(stateRef.current, path);
+    },
+    [setUsedStateRef, stateRef]
   );
 
   const setErrors = useCallback<SetErrors<V>>(
@@ -454,7 +456,6 @@ const useForm = <V extends FormValues = FormValues>({
 
   return {
     formRef,
-    formState,
     getFormState,
     setErrors,
     setFieldError,

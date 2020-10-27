@@ -1,14 +1,18 @@
 import { useReducer, useRef, useCallback } from "react";
 import isEqual from "fast-deep-equal";
 
-import { FormState, StateRef, SetStateRef, UsedStateRef } from "./types";
+import {
+  FormState,
+  StateRef,
+  SetStateRef,
+  UsedStateRef,
+  SetUsedStateRef,
+} from "./types";
 import { get, set, isEmptyObject } from "./utils";
-
-const hasProxy = "Proxy" in window;
 
 export default <V>(
   defaultValues: V
-): [FormState<V>, StateRef<V>, SetStateRef] => {
+): [StateRef<V>, SetStateRef, SetUsedStateRef] => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const stateRef = useRef<FormState<V>>({
     values: defaultValues,
@@ -19,7 +23,7 @@ export default <V>(
     isValid: true,
     isValidating: false,
   });
-  const usedStateRef = useRef<UsedStateRef<V>>({});
+  const usedStateRef = useRef<UsedStateRef>({});
 
   const setStateRef = useCallback<SetStateRef>(
     (path, value) => {
@@ -45,8 +49,7 @@ export default <V>(
         const { current: usedStated } = usedStateRef;
 
         if (
-          !hasProxy ||
-          usedStated[key] ||
+          Object.keys(usedStated).every((key) => path.startsWith(key)) ||
           (usedStated.isDirty && isDirty !== prevIsDirty) ||
           (usedStated.isValid && isValid !== prevIsValid)
         )
@@ -56,16 +59,9 @@ export default <V>(
     [defaultValues]
   );
 
-  return [
-    hasProxy
-      ? new Proxy(stateRef.current, {
-          get: (obj, key: keyof FormState<V>) => {
-            if (key in obj) usedStateRef.current[key] = true;
-            return obj[key];
-          },
-        })
-      : stateRef.current,
-    stateRef,
-    setStateRef,
-  ];
+  const setUsedStateRef = useCallback((path: string) => {
+    usedStateRef.current[path] = true;
+  }, []);
+
+  return [stateRef, setStateRef, setUsedStateRef];
 };
