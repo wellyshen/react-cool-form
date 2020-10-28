@@ -355,8 +355,8 @@ const useForm = <V extends FormValues = FormValues>({
   useEffect(() => {
     if (!formRef.current) return () => null;
 
-    const handleChange = (e: Event) => {
-      const field = e.target as FieldElement;
+    const handleChange = ({ target }: Event) => {
+      const field = target as FieldElement;
       const { name, value } = field;
 
       if (!name) {
