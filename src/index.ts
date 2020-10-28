@@ -54,7 +54,7 @@ const hasChangeEvent = ({ type }: FieldElement) =>
 
 const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
   form
-    ? [...form.querySelectorAll("input,textarea,select")]
+    ? Array.from(form.querySelectorAll("input,textarea,select"))
         .filter((element) => {
           const field = element as FieldElement;
           if (!field.name) {
@@ -240,7 +240,7 @@ const useForm = <V extends FormValues = FormValues>({
         radio.checked = radio.value === value;
       });
     } else if (isMultipleSelectField(field) && isArray(value)) {
-      [...field.options].forEach((option) => {
+      Array.from(field.options).forEach((option) => {
         option.selected = !!value.includes(option.value);
       });
     } else if (isFileField(field)) {
@@ -380,12 +380,12 @@ const useForm = <V extends FormValues = FormValues>({
             checkValues.delete(value);
           }
 
-          val = [...checkValues];
+          val = Array.from(checkValues);
         } else {
           val = field.checked;
         }
       } else if (isMultipleSelectField(field)) {
-        val = [...field.options]
+        val = Array.from(field.options)
           .filter((option) => option.selected)
           .map((option) => option.value);
       } else if (isFileField(field)) {
