@@ -52,7 +52,10 @@ interface Validate<V> {
 }
 
 export interface GetFormState {
-  (path: string, shouldUpdate?: boolean): any;
+  (
+    path: string | string[] | Record<string, string>,
+    options?: { observe?: boolean; errorWithTouched?: boolean }
+  ): any;
 }
 
 export interface SetErrors<V> {

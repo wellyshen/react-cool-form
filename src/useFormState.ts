@@ -48,6 +48,8 @@ export default <V>(
 
         const { current: usedStated } = usedStateRef;
 
+        console.log("LOG ===> ", usedStated, path);
+
         if (
           Object.keys(usedStated).some((key) => path.startsWith(key)) ||
           (usedStated.isDirty && isDirty !== prevIsDirty) ||

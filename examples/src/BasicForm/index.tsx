@@ -149,10 +149,8 @@ export default (): JSX.Element => {
     // },
   });
 
-  console.log("LOG ===> Re-render");
+  console.log("LOG ===> Re-render: ", getFormState("errors.text.nest"));
   // console.log("LOG ===> formState: ", getFormState("values"));
-  const textVal = getFormState("values");
-  // const numberVal = getFormState("values.number");
 
   useEffect(() => {
     /* setValues(
@@ -202,11 +200,11 @@ export default (): JSX.Element => {
           label="Text:"
           name="text.nest"
           // @ts-ignore
-          // ref={validate(async (values) => {
-          //   // eslint-disable-next-line
-          //   // await new Promise((resolve) => setTimeout(resolve, 1000));
-          //   return values.length <= 3 ? "Field error" : "";
-          // })}
+          ref={validate(async (values) => {
+            // eslint-disable-next-line
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
+            return values.length <= 3 ? "Field error" : "";
+          })}
         />
         {showInput && (
           <div>
@@ -218,9 +216,9 @@ export default (): JSX.Element => {
           label="Number:"
           type="number"
           name="number"
-          // ref={validate((values) => {
-          //   return values <= 10 ? "Field error" : "";
-          // })}
+          ref={validate((values) => {
+            return values <= 10 ? "Field error" : "";
+          })}
         />
         <Input label="Range:" type="range" name="range" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />

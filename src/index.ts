@@ -38,7 +38,6 @@ import {
   isArray,
   isPlainObject,
   isEmptyObject,
-  isUndefined,
 } from "./utils";
 
 const runWithLowPriority = (fn: () => any) =>
@@ -98,12 +97,54 @@ const useForm = <V extends FormValues = FormValues>({
     []
   );
 
-  const getFormState = useCallback<GetFormState>(
-    (path, shouldUpdate = true) => {
-      if (shouldUpdate) setUsedStateRef(path);
-      return isUndefined(path) ? stateRef.current : get(stateRef.current, path);
+  const getState = useCallback(
+    (path: string, errorWithTouched: boolean) => {
+      const { current: s } = stateRef;
+
+      if (!errorWithTouched) return get(s, path);
+
+      let state;
+
+      if (path === "errors") {
+        state = Object.keys(fieldsRef.current).reduce((acc, key) => {
+          const error = get(s.errors, key);
+          if (get(s.touched, key) && error)
+            acc = { ...acc, ...set({}, key, error) };
+          return acc;
+        }, {});
+      } else if (path.startsWith("errors") && get(s.touched, path)) {
+        state = get(s.errors, path);
+      }
+
+      return state;
     },
-    [setUsedStateRef, stateRef]
+    [stateRef]
+  );
+
+  const getFormState = useCallback<GetFormState>(
+    (path, { observe = true, errorWithTouched = true } = {}) => {
+      let state;
+
+      if (isArray(path)) {
+        if (observe) path.forEach((p) => setUsedStateRef(p));
+        state = path.map((p) => getState(p, errorWithTouched));
+      } else if (isPlainObject(path)) {
+        const pathObj = path as Record<string, string>;
+        const keys = Object.keys(pathObj);
+
+        if (observe) keys.forEach((key) => setUsedStateRef(pathObj[key]));
+        state = keys.reduce((state: Record<string, any>, key) => {
+          state[key] = getState(pathObj[key], errorWithTouched);
+          return state;
+        }, {});
+      } else {
+        if (observe) setUsedStateRef(path);
+        state = getState(path, errorWithTouched);
+      }
+
+      return state;
+    },
+    [getState, setUsedStateRef]
   );
 
   const setErrors = useCallback<SetErrors<V>>(

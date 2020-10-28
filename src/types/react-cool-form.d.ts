@@ -28,6 +28,13 @@ declare module "react-cool-form" {
       | Promise<Errors<V> | void>;
   }
 
+  interface GetFormState {
+    (
+      path: string | string[] | Record<string, string>,
+      options?: { observe?: boolean; errorWithTouched?: boolean }
+    ): any;
+  }
+
   interface SetErrors<V> {
     (
       errors?:
@@ -82,7 +89,7 @@ declare module "react-cool-form" {
 
   export interface Return<V = FormValues> {
     formRef: RefObject<HTMLFormElement>;
-    getFormState: (path: string, shouldUpdate?: boolean) => any;
+    getFormState: GetFormState;
     setErrors: SetErrors<V>;
     setFieldError: SetFieldError;
     setValues: SetValues<V>;
