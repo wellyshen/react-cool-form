@@ -49,7 +49,7 @@ export default <V>(
         const { current: usedStated } = usedStateRef;
 
         if (
-          Object.keys(usedStated).every((key) => path.startsWith(key)) ||
+          Object.keys(usedStated).some((key) => path.startsWith(key)) ||
           (usedStated.isDirty && isDirty !== prevIsDirty) ||
           (usedStated.isValid && isValid !== prevIsValid)
         )
