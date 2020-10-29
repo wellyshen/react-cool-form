@@ -149,8 +149,14 @@ export default (): JSX.Element => {
     // },
   });
 
-  console.log("LOG ===> Re-render: ", getFormState("errors.text.nest"));
+  console.log("LOG ===> Re-render");
   // console.log("LOG ===> formState: ", getFormState("values"));
+
+  const someValues = getFormState([
+    "values.text",
+    "values.number",
+    "touched.text",
+  ]);
 
   useEffect(() => {
     /* setValues(
