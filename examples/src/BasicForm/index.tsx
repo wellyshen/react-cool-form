@@ -149,28 +149,30 @@ export default (): JSX.Element => {
     // },
   });
 
-  console.log("LOG ===> Re-render");
+  console.log(
+    "LOG ===> Re-render: ",
+    getFormState(["values.text.nest", "touched.text.nest"])
+  );
   // console.log("LOG ===> formState: ", getFormState("values"));
 
-  const someValues = getFormState([
-    "values.text",
-    "values.number",
-    "touched.text",
-  ]);
-
   useEffect(() => {
-    /* setValues(
-      (prevValues) => ({ ...prevValues, text: { nest: "" }, number: 123 }),
+    // validateField("text.nest");
+    // validateForm();
+  }, []);
+
+  const handleSetValueClick = (): void => {
+    setValues(
+      (prevValues) => ({
+        ...prevValues,
+        text: { nest: "new test" },
+        number: 123,
+      }),
       {
         touchedFields: ["text.nest"],
         dirtyFields: ["text.nest"],
       }
-    ); */
-    // validateField("text.nest");
-    // validateForm();
-  }, [setValues, validateField, validateForm]);
+    );
 
-  const handleSetValueClick = (): void => {
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
     // setFieldValue("text.nest", "new test");
     // setFieldValue("hiddenText", "new test");
