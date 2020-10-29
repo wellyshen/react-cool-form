@@ -78,7 +78,7 @@ interface FormValues {
   textarea: string;
 }
 
-const defaultValues = {
+const initialValues = {
   text: { nest: "" },
   hiddenText: "test",
   password: "test",
@@ -116,7 +116,7 @@ export default (): JSX.Element => {
     validateField,
     validateForm,
   } = useForm<FormValues>({
-    defaultValues,
+    initialValues,
     // validateOnChange: false,
     // validateOnBlur: false,
     // validate: async (values, { set }) => {
