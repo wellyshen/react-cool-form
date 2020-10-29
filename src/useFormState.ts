@@ -11,11 +11,11 @@ import {
 import { get, set, isEmptyObject } from "./utils";
 
 export default <V>(
-  defaultValues: V
+  initialValues: V
 ): [StateRef<V>, SetStateRef, SetUsedStateRef] => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const stateRef = useRef<FormState<V>>({
-    values: defaultValues,
+    values: initialValues,
     touched: {},
     errors: {},
     isDirty: false,
@@ -41,7 +41,7 @@ export default <V>(
           isValid: prevIsValid,
         } = nextState;
         const isDirty =
-          key === "values" ? !isEqual(values, defaultValues) : prevIsDirty;
+          key === "values" ? !isEqual(values, initialValues) : prevIsDirty;
         const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
 
         stateRef.current = { ...nextState, isDirty, isValid };
@@ -58,7 +58,7 @@ export default <V>(
           forceUpdate();
       }
     },
-    [defaultValues]
+    [initialValues]
   );
 
   const setUsedStateRef = useCallback((path: string) => {

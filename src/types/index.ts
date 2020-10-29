@@ -100,7 +100,7 @@ export interface ValidateRef<V> {
 }
 
 export interface Config<V> {
-  defaultValues: V;
+  initialValues: V;
   validate?: Validate<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;

@@ -76,13 +76,13 @@ const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
     : {};
 
 const useForm = <V extends FormValues = FormValues>({
-  defaultValues,
+  initialValues,
   validate,
   validateOnChange = true,
   validateOnBlur = true,
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
-  const defaultValuesRef = useRef(defaultValues || {});
+  const defaultValuesRef = useRef(initialValues || {});
   const formValidateFnRef = useLatest(validate);
   const fieldValidatesRef = useRef<Record<string, FieldValidateFn<V>>>({});
   const fieldsRef = useRef<Fields>({});
@@ -323,10 +323,10 @@ const useForm = <V extends FormValues = FormValues>({
     (name: string) => {
       setStateRef(
         `dirtyFields.${name}`,
-        get(stateRef.current.values, name) !== get(defaultValues, name)
+        get(stateRef.current.values, name) !== get(initialValues, name)
       );
     },
-    [defaultValues, setStateRef, stateRef]
+    [initialValues, setStateRef, stateRef]
   );
 
   const setValues = useCallback<SetValues<V>>(
