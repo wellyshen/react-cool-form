@@ -29,10 +29,7 @@ declare module "react-cool-form" {
   }
 
   interface GetFormState {
-    (
-      path: string | string[] | Record<string, string>,
-      options?: { observe?: boolean; errorWithTouched?: boolean }
-    ): any;
+    (path: string | string[] | Record<string, string>, observe?: boolean): any;
   }
 
   interface SetErrors<V> {
