@@ -9,11 +9,13 @@ import {
   Config,
   Return,
   FormValues,
+  UsedRef,
   Fields,
   FieldElement,
   Errors,
   ValidateRef,
   FieldValidateFn,
+  Controller,
   GetFormState,
   SetErrors,
   SetFieldError,
@@ -86,13 +88,63 @@ const useForm = <V extends FormValues = FormValues>({
   const formValidateFnRef = useLatest(validate);
   const fieldValidatesRef = useRef<Record<string, FieldValidateFn<V>>>({});
   const fieldsRef = useRef<Fields>({});
+  const controllersRef = useRef<UsedRef>({});
   const [stateRef, setStateRef, setUsedStateRef] = useFormState<V>(
     defaultValuesRef.current
   );
 
+  const setDomValue = useCallback((name: string, value: any) => {
+    if (controllersRef.current[name]) return;
+
+    const target = fieldsRef.current[name];
+
+    if (!target || !document.body.contains(target.field)) return;
+
+    const { field, options } = target;
+
+    if (isCheckboxField(field)) {
+      const checkboxs = options as HTMLInputElement[];
+
+      if (checkboxs.length > 1) {
+        checkboxs.forEach((checkbox) => {
+          checkbox.checked = isArray(value)
+            ? value.includes(checkbox.value)
+            : !!value;
+        });
+      } else {
+        checkboxs[0].checked = !!value;
+      }
+    } else if (isRadioField(field)) {
+      (options as HTMLInputElement[]).forEach((radio) => {
+        radio.checked = radio.value === value;
+      });
+    } else if (isMultipleSelectField(field) && isArray(value)) {
+      Array.from(field.options).forEach((option) => {
+        option.selected = !!value.includes(option.value);
+      });
+    } else if (isFileField(field)) {
+      if (isPlainObject(value)) field.files = value;
+    } else {
+      field.value = value ?? "";
+    }
+  }, []);
+
+  const setAllDomsValue = useCallback(
+    (
+      fields: Fields = fieldsRef.current,
+      values: V = defaultValuesRef.current
+    ) =>
+      Object.keys(fields).forEach((key) => {
+        const { name } = fields[key].field;
+        setDomValue(name, get(values, name));
+      }),
+    [setDomValue]
+  );
+
   const validateRef = useCallback<ValidateRef<V>>(
     (validateFn) => (field) => {
-      if (field?.name) fieldValidatesRef.current[field.name] = validateFn;
+      if (field?.name && !controllersRef.current[field.name])
+        fieldValidatesRef.current[field.name] = validateFn;
     },
     []
   );
@@ -240,52 +292,6 @@ const useForm = <V extends FormValues = FormValues>({
     [validateForm]
   );
 
-  const setDomValue = useCallback((name: string, value: any) => {
-    const target = fieldsRef.current[name];
-
-    if (!target || !document.body.contains(target.field)) return;
-
-    const { field, options } = target;
-
-    if (isCheckboxField(field)) {
-      const checkboxs = options as HTMLInputElement[];
-
-      if (checkboxs.length > 1) {
-        checkboxs.forEach((checkbox) => {
-          checkbox.checked = isArray(value)
-            ? value.includes(checkbox.value)
-            : !!value;
-        });
-      } else {
-        checkboxs[0].checked = !!value;
-      }
-    } else if (isRadioField(field)) {
-      (options as HTMLInputElement[]).forEach((radio) => {
-        radio.checked = radio.value === value;
-      });
-    } else if (isMultipleSelectField(field) && isArray(value)) {
-      Array.from(field.options).forEach((option) => {
-        option.selected = !!value.includes(option.value);
-      });
-    } else if (isFileField(field)) {
-      if (isPlainObject(value)) field.files = value;
-    } else {
-      field.value = value ?? "";
-    }
-  }, []);
-
-  const setAllDomsValue = useCallback(
-    (
-      fields: Fields = fieldsRef.current,
-      values: V = defaultValuesRef.current
-    ) =>
-      Object.keys(fields).forEach((key) => {
-        const { name } = fields[key].field;
-        setDomValue(name, get(values, name));
-      }),
-    [setDomValue]
-  );
-
   const setFieldTouched = useCallback(
     (name: string, shouldValidate = validateOnBlur) => {
       setStateRef(`touched.${name}`, true);
@@ -366,30 +372,9 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
-  useLayoutEffect(() => {
-    if (!formRef.current) {
-      warn(
-        '💡react-cool-form: Don\'t forget to register your form via the "formRef".'
-      );
-      return;
-    }
-
-    fieldsRef.current = getFields(formRef.current);
-    setAllDomsValue();
-  }, [setAllDomsValue]);
-
-  useEffect(() => {
-    if (!formRef.current) return () => null;
-
-    const handleChange = ({ target }: Event) => {
-      const field = target as FieldElement;
+  const handleFieldChange = useCallback(
+    (field: FieldElement) => {
       const { name, value } = field;
-
-      if (!name) {
-        warn('💡react-cool-form: Field is missing "name" attribute.');
-        return;
-      }
-
       let val: any = value;
 
       if (isNumberField(field) || isRangeField(field)) {
@@ -422,6 +407,90 @@ const useForm = <V extends FormValues = FormValues>({
       setFieldDirty(name);
 
       if (validateOnChange) validateFormWithLowPriority();
+    },
+    [
+      setFieldDirty,
+      setStateRef,
+      stateRef,
+      validateFormWithLowPriority,
+      validateOnChange,
+    ]
+  );
+
+  const controller = useCallback<Controller<V>>(
+    (name, { validate, onChange, onBlur } = {}) => {
+      if (!name) {
+        warn('💡react-cool-form > controller: Missing the "name" parameter.');
+        return {};
+      }
+
+      controllersRef.current[name] = true;
+      setUsedStateRef(`values.${name}`);
+      if (validate) fieldValidatesRef.current[name] = validate;
+
+      return {
+        name,
+        value: get(stateRef.current.values, name),
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        onChange: useCallback(
+          (e) => {
+            if (
+              e.nativeEvent instanceof Event &&
+              isFieldElement(e.target as HTMLElement)
+            ) {
+              handleFieldChange(e.target as FieldElement);
+            } else {
+              setFieldValue(name, e);
+            }
+
+            if (onChange) onChange(e);
+          },
+          [name, onChange]
+        ),
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        onBlur: useCallback(
+          (e) => {
+            setFieldTouched(name);
+
+            if (onBlur) onBlur(e);
+          },
+          [name, onBlur]
+        ),
+      };
+    },
+    [
+      handleFieldChange,
+      setFieldTouched,
+      setFieldValue,
+      setUsedStateRef,
+      stateRef,
+    ]
+  );
+
+  useLayoutEffect(() => {
+    if (!formRef.current) {
+      warn(
+        '💡react-cool-form: Don\'t forget to register your form via the "formRef".'
+      );
+      return;
+    }
+
+    fieldsRef.current = getFields(formRef.current);
+    setAllDomsValue();
+  }, [setAllDomsValue]);
+
+  useEffect(() => {
+    if (!formRef.current) return () => null;
+
+    const handleChange = ({ target }: Event) => {
+      const field = target as FieldElement;
+
+      if (!field.name) {
+        warn('💡react-cool-form: Field is missing "name" attribute.');
+        return;
+      }
+
+      if (!controllersRef.current[field.name]) handleFieldChange(field);
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -431,7 +500,9 @@ const useForm = <V extends FormValues = FormValues>({
       )
         return;
 
-      setFieldTouched((target as FieldElement).name);
+      const { name } = target as FieldElement;
+
+      if (!controllersRef.current[name]) setFieldTouched(name);
     };
 
     const form = formRef.current;
@@ -461,18 +532,11 @@ const useForm = <V extends FormValues = FormValues>({
       form.removeEventListener("focusout", handleBlur);
       observer.disconnect();
     };
-  }, [
-    setAllDomsValue,
-    setFieldDirty,
-    setFieldTouched,
-    setStateRef,
-    stateRef,
-    validateFormWithLowPriority,
-    validateOnChange,
-  ]);
+  }, [handleFieldChange, setAllDomsValue, setFieldTouched]);
 
   return {
     formRef,
+    controller,
     getFormState,
     setErrors,
     setFieldError,

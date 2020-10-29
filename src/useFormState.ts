@@ -5,7 +5,7 @@ import {
   FormState,
   StateRef,
   SetStateRef,
-  UsedStateRef,
+  UsedRef,
   SetUsedStateRef,
 } from "./types";
 import { get, set, isEmptyObject } from "./utils";
@@ -23,7 +23,7 @@ export default <V>(
     isValid: true,
     isValidating: false,
   });
-  const usedStateRef = useRef<UsedStateRef>({});
+  const usedStateRef = useRef<UsedRef>({});
 
   const setStateRef = useCallback<SetStateRef>(
     (path, value) => {

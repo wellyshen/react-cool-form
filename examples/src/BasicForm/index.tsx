@@ -114,6 +114,7 @@ export default (): JSX.Element => {
     setFieldError,
     validateField,
     validateForm,
+    controller,
   } = useForm<FormValues>({
     initialValues,
     // validateOnChange: false,
@@ -151,7 +152,7 @@ export default (): JSX.Element => {
 
   console.log(
     "LOG ===> Re-render: ",
-    getFormState(["values.text.nest", "touched.text.nest"])
+    getFormState(["values.text.nest", "errors.text.nest"])
   );
   // console.log("LOG ===> formState: ", getFormState("values"));
 
@@ -206,13 +207,25 @@ export default (): JSX.Element => {
       >
         <Input
           label="Text:"
-          name="text.nest"
-          // @ts-ignore
-          ref={validate(async (values) => {
-            // eslint-disable-next-line
-            // await new Promise((resolve) => setTimeout(resolve, 1000));
-            return values.length <= 3 ? "Field error" : "";
+          {...controller("text.nest", {
+            validate: async (values, formState) => {
+              // console.log("LOG ===> validate: ", values, formState);
+              // eslint-disable-next-line
+              // await new Promise((resolve) => setTimeout(resolve, 1000));
+              return values.length <= 3 ? "Field error" : "";
+            },
+            onChange: (e) => {
+              // console.log("LOG ===> onChange: ", e);
+            },
+            onBlur: (e) => {
+              // console.log("LOG ===> onBlur: ", e);
+            },
           })}
+          // ref={validate(async (values) => {
+          //   // eslint-disable-next-line
+          //   // await new Promise((resolve) => setTimeout(resolve, 1000));
+          //   return values.length <= 3 ? "Field error" : "";
+          // })}
         />
         {showInput && (
           <div>

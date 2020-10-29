@@ -28,6 +28,24 @@ declare module "react-cool-form" {
       | Promise<Errors<V> | void>;
   }
 
+  interface Controller<V> {
+    (
+      name: string,
+      options?: {
+        validate?: FieldValidateFn<V>;
+        onChange?: (event: any) => void;
+        onBlur?: (event: any) => void;
+      }
+    ):
+      | {
+          name: string;
+          value: any;
+          onChange: (event: any) => void;
+          onBlur: (event: any) => void;
+        }
+      | Record<string, unknown>;
+  }
+
   interface GetFormState {
     (path: string | string[] | Record<string, string>, observe?: boolean): any;
   }
@@ -86,6 +104,7 @@ declare module "react-cool-form" {
 
   export interface Return<V = FormValues> {
     formRef: RefObject<HTMLFormElement>;
+    controller: Controller<V>;
     getFormState: GetFormState;
     setErrors: SetErrors<V>;
     setFieldError: SetFieldError;
