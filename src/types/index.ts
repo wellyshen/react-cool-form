@@ -103,7 +103,7 @@ export interface Controller<E, V> {
     options?: {
       validate?: FieldValidateFn<V>;
       value?: any;
-      eventParser?: (event: E) => any;
+      parser?: (event: E) => any;
       onChange?: (event: E, value?: any) => void;
       onBlur?: (event: E) => void;
     }

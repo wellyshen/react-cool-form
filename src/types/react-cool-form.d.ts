@@ -95,7 +95,7 @@ declare module "react-cool-form" {
       options?: {
         validate?: FieldValidateFn<V>;
         value?: any;
-        eventParser?: EventParser<E>;
+        parser?: EventParser<E>;
         onChange?: OnChange<E>;
         onBlur?: OnBlur<E>;
       }

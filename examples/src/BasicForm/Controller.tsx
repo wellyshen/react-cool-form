@@ -14,7 +14,7 @@ const Controller = ({ label, name, type, controller }: Props) => {
   // console.log(`LOG ==> ${name} is re-rendered`);
 
   const [value, setValue] = useState("");
-  const eventParser: EventParser<ChangeEvent<HTMLInputElement>> = (e) =>
+  const parser: EventParser<ChangeEvent<HTMLInputElement>> = (e) =>
     e.target.value.length % 2 ? "case 1" : "case 2";
 
   return (
@@ -29,7 +29,7 @@ const Controller = ({ label, name, type, controller }: Props) => {
           return values.length <= 3 ? "Field error" : "";
         },
         value,
-        // eventParser,
+        // parser,
         onChange: (e, val) => {
           setValue(val);
           console.log("LOG ===> onChange: ", val);
