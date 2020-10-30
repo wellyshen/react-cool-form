@@ -61,7 +61,7 @@ declare module "react-cool-form" {
   }
 
   interface GetFormState {
-    (path: string | string[] | Record<string, string>, observe?: boolean): any;
+    (path: string | string[] | Record<string, string>, watch?: boolean): any;
   }
 
   interface SetErrors<V> {

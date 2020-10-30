@@ -153,23 +153,23 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const getFormState = useCallback<GetFormState>(
-    (path, observe = true) => {
+    (path, watch = true) => {
       let state;
 
       if (isArray(path)) {
-        if (observe) path.forEach((p) => setUsedStateRef(p));
+        if (watch) path.forEach((p) => setUsedStateRef(p));
         state = path.map((p) => get(stateRef.current, p));
       } else if (isPlainObject(path)) {
         const pathObj = path as Record<string, string>;
         const keys = Object.keys(pathObj);
 
-        if (observe) keys.forEach((key) => setUsedStateRef(pathObj[key]));
+        if (watch) keys.forEach((key) => setUsedStateRef(pathObj[key]));
         state = keys.reduce((state: Record<string, any>, key) => {
           state[key] = get(stateRef.current, pathObj[key]);
           return state;
         }, {});
       } else {
-        if (observe) setUsedStateRef(path);
+        if (watch) setUsedStateRef(path);
         state = get(stateRef.current, path);
       }
 
