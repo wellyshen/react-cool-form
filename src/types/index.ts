@@ -52,26 +52,6 @@ interface Validate<V> {
     | Promise<Errors<V> | void>;
 }
 
-export interface Controller<E, V> {
-  (
-    name: string,
-    options?: {
-      validate?: FieldValidateFn<V>;
-      value?: any;
-      eventParser?: (event: E) => any;
-      onChange?: (event: E, value?: any) => void;
-      onBlur?: (event: E) => void;
-    }
-  ):
-    | {
-        name: string;
-        value: any;
-        onChange: (event: E) => void;
-        onBlur: (event: E) => void;
-      }
-    | Record<string, unknown>;
-}
-
 export interface GetFormState {
   (path: string | string[] | Record<string, string>, watch?: boolean): any;
 }
@@ -117,6 +97,26 @@ export interface ValidateRef<V> {
   (validateFn: FieldValidateFn<V>): (field: FieldElement | null) => void;
 }
 
+export interface Controller<E, V> {
+  (
+    name: string,
+    options?: {
+      validate?: FieldValidateFn<V>;
+      value?: any;
+      eventParser?: (event: E) => any;
+      onChange?: (event: E, value?: any) => void;
+      onBlur?: (event: E) => void;
+    }
+  ):
+    | {
+        name: string;
+        value: any;
+        onChange: (event: E) => void;
+        onBlur: (event: E) => void;
+      }
+    | Record<string, unknown>;
+}
+
 export interface Config<V> {
   initialValues: V;
   validate?: Validate<V>;
@@ -126,7 +126,6 @@ export interface Config<V> {
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
-  controller: Controller<any, V>;
   getFormState: GetFormState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;
@@ -135,4 +134,5 @@ export interface Return<V> {
   validate: ValidateRef<V>;
   validateField: (name: string) => void;
   validateForm: () => void;
+  controller: Controller<any, V>;
 }

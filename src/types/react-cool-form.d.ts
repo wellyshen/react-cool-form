@@ -40,26 +40,6 @@ declare module "react-cool-form" {
     (event: E): void;
   }
 
-  export interface Controller<E = any, V = FormValues> {
-    (
-      name: string,
-      options?: {
-        validate?: FieldValidateFn<V>;
-        value?: any;
-        eventParser?: EventParser<E>;
-        onChange?: OnChange<E>;
-        onBlur?: OnBlur<E>;
-      }
-    ):
-      | {
-          name: string;
-          value: any;
-          onChange: (event: E) => void;
-          onBlur: (event: E) => void;
-        }
-      | Record<string, unknown>;
-  }
-
   interface GetFormState {
     (path: string | string[] | Record<string, string>, watch?: boolean): any;
   }
@@ -109,6 +89,26 @@ declare module "react-cool-form" {
     ) => void;
   }
 
+  export interface Controller<E = any, V = FormValues> {
+    (
+      name: string,
+      options?: {
+        validate?: FieldValidateFn<V>;
+        value?: any;
+        eventParser?: EventParser<E>;
+        onChange?: OnChange<E>;
+        onBlur?: OnBlur<E>;
+      }
+    ):
+      | {
+          name: string;
+          value: any;
+          onChange: (event: E) => void;
+          onBlur: (event: E) => void;
+        }
+      | Record<string, unknown>;
+  }
+
   export interface Config<V = FormValues> {
     initialValues: V;
     validate?: Validate<V>;
@@ -118,7 +118,6 @@ declare module "react-cool-form" {
 
   export interface Return<V = FormValues> {
     formRef: RefObject<HTMLFormElement>;
-    controller: Controller<any, V>;
     getFormState: GetFormState;
     setErrors: SetErrors<V>;
     setFieldError: SetFieldError;
@@ -127,6 +126,7 @@ declare module "react-cool-form" {
     validate: ValidateRef<V>;
     validateField: (name: string) => void;
     validateForm: () => void;
+    controller: Controller<any, V>;
   }
 
   const useForm: <V extends FormValues = FormValues>(
