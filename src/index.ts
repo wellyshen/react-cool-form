@@ -1,4 +1,4 @@
-import { useRef, useCallback, useLayoutEffect, useEffect } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import {
   unstable_LowPriority,
   unstable_runWithPriority,
@@ -7,39 +7,40 @@ import {
 
 import {
   Config,
-  Return,
-  FormValues,
-  UsedRef,
-  Fields,
-  FieldElement,
-  Errors,
-  ValidateRef,
-  FieldValidateFn,
   Controller,
+  Errors,
+  FieldElement,
+  Fields,
+  FieldValidateFn,
+  FormValues,
   GetFormState,
+  Return,
   SetErrors,
   SetFieldError,
-  SetValues,
   SetFieldValue,
+  SetValues,
+  UsedRef,
+  ValidateRef,
 } from "./types";
 import useLatest from "./useLatest";
 import useFormState from "./useFormState";
 import {
-  warn,
-  get,
-  set,
   deepMerge,
-  isKey,
-  isNumberField,
-  isRangeField,
+  get,
+  isArray,
   isCheckboxField,
-  isRadioField,
-  isMultipleSelectField,
+  isEmptyObject,
   isFileField,
   isFunction,
-  isArray,
+  isKey,
+  isMultipleSelectField,
+  isNumberField,
   isPlainObject,
-  isEmptyObject,
+  isRadioField,
+  isRangeField,
+  isUndefined,
+  set,
+  warn,
 } from "./utils";
 
 const runWithLowPriority = (fn: () => any) =>
@@ -372,7 +373,7 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
-  const handleFieldChange = useCallback(
+  const getChangeEventValue = useCallback(
     (field: FieldElement) => {
       const { name, value } = field;
       let val: any = value;
@@ -403,55 +404,70 @@ const useForm = <V extends FormValues = FormValues>({
         val = field.files;
       }
 
-      setStateRef(`values.${name}`, val);
-      setFieldDirty(name);
+      return val;
+    },
+    [stateRef]
+  );
+
+  const handleFieldChange = useCallback(
+    (field: FieldElement) => {
+      setStateRef(`values.${field.name}`, getChangeEventValue(field));
+      setFieldDirty(field.name);
 
       if (validateOnChange) validateFormWithLowPriority();
     },
     [
+      getChangeEventValue,
       setFieldDirty,
       setStateRef,
-      stateRef,
       validateFormWithLowPriority,
       validateOnChange,
     ]
   );
 
-  const controller = useCallback<Controller<V>>(
-    (name, { validate, onChange, onBlur } = {}) => {
+  const controller = useCallback<Controller<any, V>>(
+    (name, { validate, value, eventParser, onChange, onBlur } = {}) => {
       if (!name) {
         warn('💡react-cool-form > controller: Missing the "name" parameter.');
         return {};
       }
 
       controllersRef.current[name] = true;
-      setUsedStateRef(`values.${name}`);
       if (validate) fieldValidatesRef.current[name] = validate;
+
+      let val = get(stateRef.current.values, name);
+
+      if (!isUndefined(value)) {
+        val = value;
+      } else {
+        setUsedStateRef(`values.${name}`);
+      }
 
       return {
         name,
-        value: get(stateRef.current.values, name),
+        value: val,
         // eslint-disable-next-line react-hooks/rules-of-hooks
         onChange: useCallback(
           (e) => {
-            if (
-              e.nativeEvent instanceof Event &&
-              isFieldElement(e.target as HTMLElement)
-            ) {
-              handleFieldChange(e.target as FieldElement);
-            } else {
-              setFieldValue(name, e);
-            }
+            const parsedEvt = eventParser ? eventParser(e) : e;
 
-            if (onChange) onChange(e);
+            if (
+              parsedEvt.nativeEvent instanceof Event &&
+              isFieldElement(parsedEvt.target)
+            ) {
+              handleFieldChange(parsedEvt.target);
+              if (onChange) onChange(e, getChangeEventValue(parsedEvt.target));
+            } else {
+              setFieldValue(name, parsedEvt);
+              if (onChange) onChange(e);
+            }
           },
-          [name, onChange]
+          [eventParser, name, onChange]
         ),
         // eslint-disable-next-line react-hooks/rules-of-hooks
         onBlur: useCallback(
           (e) => {
             setFieldTouched(name);
-
             if (onBlur) onBlur(e);
           },
           [name, onBlur]
@@ -459,6 +475,7 @@ const useForm = <V extends FormValues = FormValues>({
       };
     },
     [
+      getChangeEventValue,
       handleFieldChange,
       setFieldTouched,
       setFieldValue,

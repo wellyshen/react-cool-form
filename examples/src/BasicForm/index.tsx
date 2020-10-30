@@ -166,6 +166,11 @@ export default (): JSX.Element => {
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return values.length <= 3 ? "Field error" : "";
           })}
+          // ref={validate(async (values) => {
+          //   // eslint-disable-next-line
+          //   // await new Promise((resolve) => setTimeout(resolve, 1000));
+          //   return values.length <= 3 ? "Field error" : "";
+          // })}
         />
         <Controller
           label="Controller:"

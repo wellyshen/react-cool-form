@@ -52,20 +52,22 @@ interface Validate<V> {
     | Promise<Errors<V> | void>;
 }
 
-export interface Controller<V> {
+export interface Controller<E, V> {
   (
     name: string,
     options?: {
       validate?: FieldValidateFn<V>;
-      onChange?: (event: any) => void;
-      onBlur?: (event: any) => void;
+      value?: any;
+      eventParser?: (event: E) => any;
+      onChange?: (event: E, value?: any) => void;
+      onBlur?: (event: E) => void;
     }
   ):
     | {
         name: string;
         value: any;
-        onChange: (event: any) => void;
-        onBlur: (event: any) => void;
+        onChange: (event: E) => void;
+        onBlur: (event: E) => void;
       }
     | Record<string, unknown>;
 }
@@ -124,7 +126,7 @@ export interface Config<V> {
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
-  controller: Controller<V>;
+  controller: Controller<any, V>;
   getFormState: GetFormState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;
