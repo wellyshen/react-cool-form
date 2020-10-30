@@ -29,7 +29,7 @@ const Controller = ({ label, name, type, controller }: Props) => {
           return values.length <= 3 ? "Field error" : "";
         },
         value,
-        eventParser,
+        // eventParser,
         onChange: (e, val) => {
           setValue(val);
           console.log("LOG ===> onChange: ", val);

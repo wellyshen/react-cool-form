@@ -59,21 +59,27 @@ const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
     ? Array.from(form.querySelectorAll("input,textarea,select"))
         .filter((element) => {
           const field = element as FieldElement;
-          if (!field.name) {
+          const { name, dataset } = field;
+
+          if (!name) {
             warn('💡react-cool-form: Field is missing "name" attribute.');
             return false;
           }
-          if (fields[field.name]) return false;
+
+          if (dataset.rcfIgnore || fields[name]) return false;
+
           return hasChangeEvent(field);
         })
         .reduce((acc: Record<string, any>, cur) => {
           const { name, type } = cur as FieldElement;
           acc[name] = { ...acc[name], field: cur };
+
           if (/checkbox|radio/.test(type)) {
             acc[name].options = acc[name].options
               ? [...acc[name].options, cur]
               : [cur];
           }
+
           return acc;
         }, {})
     : {};
@@ -95,13 +101,9 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const setDomValue = useCallback((name: string, value: any) => {
-    if (controllersRef.current[name]) return;
+    if (controllersRef.current[name] || !fieldsRef.current[name]) return;
 
-    const target = fieldsRef.current[name];
-
-    if (!target || !document.body.contains(target.field)) return;
-
-    const { field, options } = target;
+    const { field, options } = fieldsRef.current[name];
 
     if (isCheckboxField(field)) {
       const checkboxs = options as HTMLInputElement[];
@@ -501,13 +503,15 @@ const useForm = <V extends FormValues = FormValues>({
 
     const handleChange = ({ target }: Event) => {
       const field = target as FieldElement;
+      const { name } = field;
 
-      if (!field.name) {
+      if (!name) {
         warn('💡react-cool-form: Field is missing "name" attribute.');
         return;
       }
 
-      if (!controllersRef.current[field.name]) handleFieldChange(field);
+      if (fieldsRef.current[name] && !controllersRef.current[name])
+        handleFieldChange(field);
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -519,7 +523,8 @@ const useForm = <V extends FormValues = FormValues>({
 
       const { name } = target as FieldElement;
 
-      if (!controllersRef.current[name]) setFieldTouched(name);
+      if (fieldsRef.current[name] && !controllersRef.current[name])
+        setFieldTouched(name);
     };
 
     const form = formRef.current;
