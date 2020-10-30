@@ -2,69 +2,21 @@
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
-import React, { memo, forwardRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import useForm from "react-cool-form";
 import * as Yup from "yup";
 
-import { container, form, label as labelStyle, wrapper } from "./styles";
+import Input from "./Input";
+import Controller from "./Controller";
+import Select from "./Select";
+import TextArea from "./TextArea";
+import { container, form, wrapper } from "./styles";
 
 const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
-const Input = memo(
-  forwardRef(
-    ({ label, id, name, ...rest }: any, ref): JSX.Element => {
-      // console.log(`LOG ==> ${name} is re-rendered`);
-
-      return (
-        <React.Fragment>
-          <label css={labelStyle} htmlFor={id || name}>
-            {label}
-          </label>
-          <input id={id || name} name={name} {...rest} ref={ref} />
-        </React.Fragment>
-      );
-    }
-  )
-);
-
-const Select = memo(
-  forwardRef(
-    ({ children, label, name, ...rest }: any, ref): JSX.Element => {
-      // console.log(`LOG ==> ${name} is re-rendered`);
-
-      return (
-        <React.Fragment>
-          <label css={labelStyle} htmlFor={name}>
-            {label}
-          </label>
-          <select id={name} name={name} {...rest} ref={ref}>
-            {children}
-          </select>
-        </React.Fragment>
-      );
-    }
-  )
-);
-
-const TextArea = memo(
-  forwardRef(
-    ({ label, name, ...rest }: any, ref): JSX.Element => {
-      // console.log(`LOG ==> ${name} is re-rendered`);
-
-      return (
-        <React.Fragment>
-          <label css={labelStyle} htmlFor={name}>
-            {label}
-          </label>
-          <textarea id={name} name={name} {...rest} ref={ref} />
-        </React.Fragment>
-      );
-    }
-  )
-);
-
 interface FormValues {
   text: Record<string, string>;
+  controller: any;
   hiddenText: string;
   password: string;
   number: number;
@@ -80,6 +32,7 @@ interface FormValues {
 
 const initialValues = {
   text: { nest: "test" },
+  controller: "",
   hiddenText: "test",
   password: "test",
   number: 5,
@@ -114,6 +67,7 @@ export default (): JSX.Element => {
     setFieldError,
     validateField,
     validateForm,
+    controller,
   } = useForm<FormValues>({
     initialValues,
     // validateOnChange: false,
@@ -149,11 +103,11 @@ export default (): JSX.Element => {
     // },
   });
 
+  // console.log("LOG ===> Re-render");
   console.log(
-    "LOG ===> Re-render: ",
-    getFormState(["values.text.nest", "touched.text.nest"])
+    "LOG ===> formState: ",
+    getFormState(["values.controller", "errors.controller"])
   );
-  // console.log("LOG ===> formState: ", getFormState("values"));
 
   useEffect(() => {
     // validateField("text.nest");
@@ -207,12 +161,16 @@ export default (): JSX.Element => {
         <Input
           label="Text:"
           name="text.nest"
-          // @ts-ignore
           ref={validate(async (values) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return values.length <= 3 ? "Field error" : "";
           })}
+        />
+        <Controller
+          label="Controller:"
+          name="controller"
+          controller={controller}
         />
         {showInput && (
           <div>

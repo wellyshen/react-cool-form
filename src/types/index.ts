@@ -1,5 +1,8 @@
 import { MutableRefObject, RefObject } from "react";
 
+// Common
+export type UsedRef = Record<string, boolean>;
+
 // State
 type Prop<V, T = any> = { [K in keyof V]?: V[K] extends T ? T : Prop<V[K]> };
 
@@ -20,8 +23,6 @@ export type StateRef<V> = MutableRefObject<FormState<V>>;
 export interface SetStateRef {
   (path: string, value?: any): void;
 }
-
-export type UsedStateRef = Record<string, boolean>;
 
 export interface SetUsedStateRef {
   (path: string): void;
@@ -49,6 +50,24 @@ interface Validate<V> {
     | Errors<V>
     | void
     | Promise<Errors<V> | void>;
+}
+
+export interface Controller<V> {
+  (
+    name: string,
+    options?: {
+      validate?: FieldValidateFn<V>;
+      onChange?: (event: any) => void;
+      onBlur?: (event: any) => void;
+    }
+  ):
+    | {
+        name: string;
+        value: any;
+        onChange: (event: any) => void;
+        onBlur: (event: any) => void;
+      }
+    | Record<string, unknown>;
 }
 
 export interface GetFormState {
@@ -105,6 +124,7 @@ export interface Config<V> {
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
+  controller: Controller<V>;
   getFormState: GetFormState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;
