@@ -1,5 +1,5 @@
 import React, { ChangeEvent, memo, useState } from "react";
-import { Controller as ControllerType, EventParser } from "react-cool-form";
+import { Controller as ControllerType, Parser } from "react-cool-form";
 
 import Input from "./Input";
 
@@ -14,7 +14,7 @@ const Controller = ({ label, name, type, controller }: Props) => {
   // console.log(`LOG ==> ${name} is re-rendered`);
 
   const [value, setValue] = useState("");
-  const parser: EventParser<ChangeEvent<HTMLInputElement>> = (e) =>
+  const parser: Parser<ChangeEvent<HTMLInputElement>> = (e) =>
     e.target.value.length % 2 ? "case 1" : "case 2";
 
   return (
@@ -28,11 +28,11 @@ const Controller = ({ label, name, type, controller }: Props) => {
           // await new Promise((resolve) => setTimeout(resolve, 1000));
           return values.length <= 3 ? "Field error" : "";
         },
-        value,
+        // value,
         // parser,
         onChange: (e, val) => {
-          setValue(val);
-          console.log("LOG ===> onChange: ", val);
+          // setValue(val);
+          // console.log("LOG ===> onChange: ", val);
         },
         onBlur: (e) => {
           // console.log("LOG ===> onBlur: ", e);

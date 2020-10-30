@@ -103,11 +103,11 @@ export default (): JSX.Element => {
     // },
   });
 
-  // console.log("LOG ===> Re-render");
-  console.log(
+  console.log("LOG ===> Re-render");
+  /* console.log(
     "LOG ===> formState: ",
     getFormState(["values.controller", "errors.controller"])
-  );
+  ); */
 
   useEffect(() => {
     // validateField("text.nest");
@@ -160,13 +160,14 @@ export default (): JSX.Element => {
       >
         <Input
           label="Text:"
-          name="text.nest"
+          // name="text.nest"
+          {...controller("text.nest")}
           ref={validate(async (values) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return values.length <= 3 ? "Field error" : "";
           })}
-          data-rcf-ignore
+          // data-rcf-ignore
         />
         <Controller
           label="Controller:"

@@ -437,17 +437,9 @@ const useForm = <V extends FormValues = FormValues>({
       controllersRef.current[name] = true;
       if (validate) fieldValidatesRef.current[name] = validate;
 
-      let val = get(stateRef.current.values, name);
-
-      if (!isUndefined(value)) {
-        val = value;
-      } else {
-        setUsedStateRef(`values.${name}`);
-      }
-
       return {
         name,
-        value: val,
+        value: !isUndefined(value) ? value : getFormState(`values.${name}`),
         // eslint-disable-next-line react-hooks/rules-of-hooks
         onChange: useCallback(
           (e) => {
@@ -478,11 +470,10 @@ const useForm = <V extends FormValues = FormValues>({
     },
     [
       getChangeEventValue,
+      getFormState,
       handleFieldChange,
       setFieldTouched,
       setFieldValue,
-      setUsedStateRef,
-      stateRef,
     ]
   );
 
