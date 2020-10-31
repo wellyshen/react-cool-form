@@ -76,9 +76,11 @@ const cloneObject = (object: unknown): any => {
 };
 
 export const set: Set = (object, path, value, immutable = false) => {
-  if (!isPlainObject(object) || !path) return object;
+  if (!isPlainObject(object)) return object;
 
-  const tempPath = path.split(/[.[\]]+/).filter(Boolean);
+  const tempPath = String(path)
+    .split(/[.[\]]+/)
+    .filter(Boolean);
   const newObject = immutable ? cloneObject(object) : object;
 
   tempPath.slice(0, -1).reduce((obj, key, idx) => {
@@ -86,7 +88,7 @@ export const set: Set = (object, path, value, immutable = false) => {
     const next = Number(tempPath[idx + 1]);
     obj[key] = Number.isInteger(next) && next >= 0 ? [] : {};
     return obj[key];
-  }, newObject)[tempPath[tempPath.length - 1]] = value;
+  }, newObject)[tempPath[tempPath.length - 1] || ""] = value;
 
   return newObject;
 };
