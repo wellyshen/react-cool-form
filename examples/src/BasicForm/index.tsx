@@ -167,7 +167,14 @@ export default (): JSX.Element => {
     <div css={container}>
       <form
         css={form}
-        onSubmit={(e): void => e.preventDefault()}
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log("LOG ===> Reset: ", e);
+        }}
+        onReset={(e) => {
+          // e.preventDefault();
+          console.log("LOG ===> Reset: ", e);
+        }}
         noValidate
         ref={formRef}
       >
@@ -260,7 +267,16 @@ export default (): JSX.Element => {
         <button type="button" onClick={handleResetClick}>
           Reset
         </button>
-        <button type="submit">Submit</button>
+        <input type="submit" />
+        {/* eslint-disable-next-line react/button-has-type */}
+        <button
+          type="reset"
+          onClick={(e) => {
+            // e.preventDefault();
+          }}
+        >
+          Reset
+        </button>
       </form>
     </div>
   );
