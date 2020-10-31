@@ -3,18 +3,16 @@ import isEqual from "fast-deep-equal";
 
 import {
   FormState,
-  StateRef,
+  FormStateReturn,
+  ResetStateRef,
   SetStateRef,
   UsedRef,
-  SetUsedStateRef,
 } from "./types";
 import { get, set, isEmptyObject } from "./utils";
 
-export default <V>(
-  initialValues: V
-): [StateRef<V>, SetStateRef, SetUsedStateRef] => {
+export default <V>(initialValues: V): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
-  const stateRef = useRef<FormState<V>>({
+  const initialState = useRef<FormState<V>>({
     values: initialValues,
     touched: {},
     errors: {},
@@ -23,47 +21,69 @@ export default <V>(
     isValid: true,
     isValidating: false,
   });
+  const stateRef = useRef(initialState.current);
   const usedStateRef = useRef<UsedRef>({});
 
-  const setStateRef = useCallback<SetStateRef>(
-    (path, value) => {
-      const { current: state } = stateRef;
-      const key = path.split(".")[0] as keyof FormState<V>;
-      const shouldUpdate =
-        key === "values" || !isEqual(get(state, path), value);
+  const setStateRef = useCallback<SetStateRef>((path, value) => {
+    const { current: state } = stateRef;
+    const key = path.split(".")[0];
+    const shouldUpdate = key === "values" || !isEqual(get(state, path), value);
 
-      if (shouldUpdate) {
-        const nextState = set(state, path, value, true);
-        const {
-          values,
-          errors,
-          isDirty: prevIsDirty,
-          isValid: prevIsValid,
-        } = nextState;
-        const isDirty =
-          key === "values" ? !isEqual(values, initialValues) : prevIsDirty;
-        const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
+    if (shouldUpdate) {
+      const nextState = set(state, path, value, true);
+      const {
+        values,
+        errors,
+        isDirty: prevIsDirty,
+        isValid: prevIsValid,
+      } = nextState;
+      const isDirty =
+        key === "values"
+          ? !isEqual(values, initialState.current.values)
+          : prevIsDirty;
+      const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
 
-        stateRef.current = { ...nextState, isDirty, isValid };
+      stateRef.current = { ...nextState, isDirty, isValid };
 
-        const { current: usedStated } = usedStateRef;
+      const { current: usedStated } = usedStateRef;
 
-        if (
-          Object.keys(usedStated).some(
-            (key) => path.startsWith(key) || key.startsWith(path)
-          ) ||
-          (usedStated.isDirty && isDirty !== prevIsDirty) ||
-          (usedStated.isValid && isValid !== prevIsValid)
-        )
-          forceUpdate();
-      }
+      if (
+        Object.keys(usedStated).some(
+          (key) => path.startsWith(key) || key.startsWith(path)
+        ) ||
+        (usedStated.isDirty && isDirty !== prevIsDirty) ||
+        (usedStated.isValid && isValid !== prevIsValid)
+      )
+        forceUpdate();
+    }
+  }, []);
+
+  const resetStateRef = useCallback<ResetStateRef<V>>(
+    (values, exclude, callback) => {
+      Object.keys(stateRef.current).forEach((key) => {
+        const k = key as keyof FormState<V>;
+
+        if (exclude.length && exclude.includes(k)) return;
+
+        if (k === "values") {
+          const nextValues = values || initialState.current.values;
+          
+          stateRef.current[k] = nextValues;
+          callback(nextValues);
+        } else {
+          // @ts-expect-error
+          stateRef.current[k] = initialState.current[k];
+        }
+      });
+
+      forceUpdate();
     },
-    [initialValues]
+    []
   );
 
   const setUsedStateRef = useCallback((path: string) => {
     usedStateRef.current[path] = true;
   }, []);
 
-  return [stateRef, setStateRef, setUsedStateRef];
+  return { stateRef, setStateRef, resetStateRef, setUsedStateRef };
 };

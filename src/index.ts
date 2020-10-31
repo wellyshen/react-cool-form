@@ -14,6 +14,7 @@ import {
   FieldValidateFn,
   FormValues,
   GetFormState,
+  Reset,
   Return,
   SetErrors,
   SetFieldError,
@@ -91,14 +92,17 @@ const useForm = <V extends FormValues = FormValues>({
   validateOnBlur = true,
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
-  const defaultValuesRef = useRef(initialValues || {});
+  const initialValuesRef = useRef(initialValues || {});
   const formValidateFnRef = useLatest(validate);
   const fieldValidatesRef = useRef<Record<string, FieldValidateFn<V>>>({});
   const fieldsRef = useRef<Fields>({});
   const controllersRef = useRef<UsedRef>({});
-  const [stateRef, setStateRef, setUsedStateRef] = useFormState<V>(
-    defaultValuesRef.current
-  );
+  const {
+    stateRef,
+    setStateRef,
+    resetStateRef,
+    setUsedStateRef,
+  } = useFormState<V>(initialValuesRef.current);
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (controllersRef.current[name] || !fieldsRef.current[name]) return;
@@ -127,6 +131,7 @@ const useForm = <V extends FormValues = FormValues>({
       });
     } else if (isFileField(field)) {
       if (isPlainObject(value)) field.files = value;
+      if (!value) field.value = "";
     } else {
       field.value = value ?? "";
     }
@@ -135,7 +140,7 @@ const useForm = <V extends FormValues = FormValues>({
   const setAllDomsValue = useCallback(
     (
       fields: Fields = fieldsRef.current,
-      values: V = defaultValuesRef.current
+      values: V = initialValuesRef.current
     ) =>
       Object.keys(fields).forEach((key) => {
         const { name } = fields[key].field;
@@ -477,6 +482,14 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
+  const reset = useCallback<Reset<V>>(
+    (values, exclude = []) =>
+      resetStateRef(values, exclude, (nextValues) => {
+        setAllDomsValue(fieldsRef.current, nextValues);
+      }),
+    [resetStateRef, setAllDomsValue]
+  );
+
   useLayoutEffect(() => {
     if (!formRef.current) {
       warn(
@@ -558,6 +571,7 @@ const useForm = <V extends FormValues = FormValues>({
     validate: validateRef,
     validateField,
     validateForm,
+    reset,
   };
 };
 

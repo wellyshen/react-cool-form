@@ -109,6 +109,10 @@ declare module "react-cool-form" {
       | Record<string, unknown>;
   }
 
+  interface Reset<V> {
+    (values?: V, exclude?: (keyof FormState<V>)[]): void;
+  }
+
   export interface Config<V = FormValues> {
     initialValues: V;
     validate?: Validate<V>;
@@ -127,6 +131,7 @@ declare module "react-cool-form" {
     validateField: (name: string) => void;
     validateForm: () => void;
     controller: Controller<any, V>;
+    reset: Reset<V>;
   }
 
   const useForm: <V extends FormValues = FormValues>(

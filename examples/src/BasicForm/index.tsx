@@ -32,7 +32,7 @@ interface FormValues {
 
 const initialValues = {
   text: { nest: "test" },
-  controller: "",
+  controller: "test",
   hiddenText: "test",
   password: "test",
   number: 5,
@@ -68,6 +68,7 @@ export default (): JSX.Element => {
     validateField,
     validateForm,
     controller,
+    reset,
   } = useForm<FormValues>({
     initialValues,
     // validateOnChange: false,
@@ -103,16 +104,26 @@ export default (): JSX.Element => {
     // },
   });
 
-  console.log("LOG ===> Re-render");
-  /* console.log(
+  // console.log("LOG ===> Re-render");
+  console.log(
     "LOG ===> formState: ",
-    getFormState(["values.controller", "errors.controller"])
-  ); */
+    getFormState({
+      values: "values",
+      touched: "touched",
+      errors: "errors",
+      isValid: "isValid",
+      isValidating: "isValidating",
+      isDirty: "isDirty",
+      dirtyFields: "dirtyFields",
+    })
+  );
 
   useEffect(() => {
     // validateField("text.nest");
     // validateForm();
   }, []);
+
+  const handleToggleInputClick = (): void => setShowInput(!showInput);
 
   const handleSetValueClick = (): void => {
     setValues(
@@ -148,7 +159,9 @@ export default (): JSX.Element => {
     setFieldError("text.nest");
   };
 
-  const handleToggleInputClick = (): void => setShowInput(!showInput);
+  const handleResetClick = (): void => {
+    reset({ ...initialValues, text: { nest: "new test" } }, []);
+  };
 
   return (
     <div css={container}>
@@ -243,6 +256,9 @@ export default (): JSX.Element => {
         </button>
         <button type="button" onClick={handleClearErrorsClick}>
           Clear Errors
+        </button>
+        <button type="button" onClick={handleResetClick}>
+          Reset
         </button>
         <button type="submit">Submit</button>
       </form>

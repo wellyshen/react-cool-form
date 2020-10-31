@@ -24,8 +24,23 @@ export interface SetStateRef {
   (path: string, value?: any): void;
 }
 
+export interface ResetStateRef<V> {
+  (
+    values: V | undefined,
+    exclude: (keyof FormState<V>)[],
+    callback: (nextValues: V) => void
+  ): void;
+}
+
 export interface SetUsedStateRef {
   (path: string): void;
+}
+
+export interface FormStateReturn<V> {
+  stateRef: StateRef<V>;
+  setStateRef: SetStateRef;
+  resetStateRef: ResetStateRef<V>;
+  setUsedStateRef: SetUsedStateRef;
 }
 
 // Hook
@@ -117,6 +132,10 @@ export interface Controller<E, V> {
     | Record<string, unknown>;
 }
 
+export interface Reset<V> {
+  (values?: V, exclude?: (keyof FormState<V>)[]): void;
+}
+
 export interface Config<V> {
   initialValues: V;
   validate?: Validate<V>;
@@ -135,4 +154,5 @@ export interface Return<V> {
   validateField: (name: string) => void;
   validateForm: () => void;
   controller: Controller<any, V>;
+  reset: Reset<V>;
 }
