@@ -67,7 +67,6 @@ export default <V>(initialValues: V): FormStateReturn<V> => {
 
         if (k === "values") {
           const nextValues = values || initialState.current.values;
-          
           stateRef.current[k] = nextValues;
           callback(nextValues);
         } else {
