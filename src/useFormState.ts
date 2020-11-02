@@ -59,21 +59,22 @@ export default <V>(initialValues: V): FormStateReturn<V> => {
   }, []);
 
   const resetStateRef = useCallback<ResetStateRef<V>>(
-    (values, exclude, callback) => {
-      Object.keys(stateRef.current).forEach((key) => {
-        const k = key as keyof FormState<V>;
+    (values = initialState.current.values, exclude, callback) => {
+      Object.keys(stateRef.current)
+        .filter((key) => key !== "isValidating")
+        .forEach((key) => {
+          const k = key as keyof FormState<V>;
 
-        if (exclude.length && exclude.includes(k)) return;
+          if (exclude.length && exclude.includes(k)) return;
 
-        if (k === "values") {
-          const nextValues = values || initialState.current.values;
-          stateRef.current[k] = nextValues;
-          callback(nextValues);
-        } else {
-          // @ts-expect-error
-          stateRef.current[k] = initialState.current[k];
-        }
-      });
+          if (k === "values") {
+            stateRef.current[k] = values;
+            callback(values);
+          } else {
+            // @ts-expect-error
+            stateRef.current[k] = initialState.current[k];
+          }
+        });
 
       forceUpdate();
     },
