@@ -109,12 +109,12 @@ export interface ValidateRef<V> {
   (validateFn: FieldValidateFn<V>): (field: FieldElement | null) => void;
 }
 
-export interface ValidateField {
-  (name: string): void;
+export interface ValidateField<V> {
+  (name: string): Promise<Errors<V>>;
 }
 
-export interface ValidateForm {
-  (): void;
+export interface ValidateForm<V> {
+  (): Promise<Errors<V>>;
 }
 
 export interface Controller<E, V> {
@@ -156,8 +156,8 @@ export interface Return<V> {
   setValues: SetValues<V>;
   setFieldValue: SetFieldValue;
   validate: ValidateRef<V>;
-  validateField: ValidateField;
-  validateForm: ValidateForm;
+  validateField: ValidateField<V>;
+  validateForm: ValidateForm<V>;
   controller: Controller<any, V>;
   reset: Reset<V>;
 }

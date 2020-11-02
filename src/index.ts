@@ -269,27 +269,32 @@ const useForm = <V extends FormValues = FormValues>({
     [formValidateFnRef, stateRef]
   );
 
-  const validateField = useCallback<ValidateField>(
+  const validateField = useCallback<ValidateField<V>>(
     (name) => {
       setStateRef("isValidating", true);
 
-      Promise.all([runFieldValidation(name), runFormValidateFn(name)]).then(
-        (errors) => {
-          setErrors(deepMerge(...errors));
-          setStateRef("isValidating", false);
-        }
-      );
+      return Promise.all([
+        runFieldValidation(name),
+        runFormValidateFn(name),
+      ]).then((errors) => {
+        const errs = deepMerge(...errors);
+        setErrors(errs);
+        setStateRef("isValidating", false);
+        return errs;
+      });
     },
     [runFieldValidation, runFormValidateFn, setErrors, setStateRef]
   );
 
-  const validateForm = useCallback<ValidateForm>(() => {
+  const validateForm = useCallback<ValidateForm<V>>(() => {
     setStateRef("isValidating", true);
 
-    Promise.all([runAllFieldsValidation(), runFormValidateFn()]).then(
+    return Promise.all([runAllFieldsValidation(), runFormValidateFn()]).then(
       (errors) => {
-        setErrors(deepMerge(...errors));
+        const errs = deepMerge(...errors);
+        setErrors(errs);
         setStateRef("isValidating", false);
+        return errs;
       }
     );
   }, [runAllFieldsValidation, runFormValidateFn, setErrors, setStateRef]);

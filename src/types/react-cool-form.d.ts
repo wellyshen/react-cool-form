@@ -74,12 +74,12 @@ declare module "react-cool-form" {
     ) => void;
   }
 
-  interface ValidateField {
-    (name: string): void;
+  interface ValidateField<V> {
+    (name: string): Promise<Errors<V>>;
   }
 
-  interface ValidateForm {
-    (): void;
+  interface ValidateForm<V> {
+    (): Promise<Errors<V>>;
   }
 
   export interface Parser<E = any, R = any> {
@@ -133,8 +133,8 @@ declare module "react-cool-form" {
     setValues: SetValues<V>;
     setFieldValue: SetFieldValue;
     validate: ValidateRef<V>;
-    validateField: ValidateField;
-    validateForm: ValidateForm;
+    validateField: ValidateField<V>;
+    validateForm: ValidateForm<V>;
     controller: Controller<any, V>;
     reset: Reset<V>;
   }

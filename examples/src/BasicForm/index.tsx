@@ -71,35 +71,35 @@ export default (): JSX.Element => {
     initialValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    // validate: async (values, { set }) => {
-    //   const errors = { text: { nest: "" } };
+    validate: async (values, set) => {
+      const errors = { text: { nest: "" } };
 
-    //   // fib(35);
+      // fib(35);
 
-    //   // eslint-disable-next-line
-    //   /* await new Promise((resolve) => {
-    //     setTimeout(resolve, 1000);
-    //   }); */
+      // eslint-disable-next-line
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
 
-    //   // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
-    //   if (values.text.nest.length <= 3) errors.text.nest = "Form error";
-    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+      // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
+      if (values.text.nest.length <= 3) errors.text.nest = "Form error";
+      // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
-    //   // throw new Error("Fake error");
-    //   return errors;
+      // throw new Error("Fake error");
+      return errors;
 
-    //   /* try {
-    //     await schema.validate(values, { abortEarly: false });
-    //   } catch (error) {
-    //     const formErrors = {};
+      /* try {
+        await schema.validate(values, { abortEarly: false });
+      } catch (error) {
+        const formErrors = {};
 
-    //     error.inner.forEach(({ path, message }: any) =>
-    //       set(formErrors, path, message)
-    //     );
+        error.inner.forEach(({ path, message }: any) =>
+          set(formErrors, path, message)
+        );
 
-    //     return formErrors;
-    //   } */
-    // },
+        return formErrors;
+      } */
+    },
   });
 
   // console.log("LOG ===> Re-render");
@@ -178,8 +178,7 @@ export default (): JSX.Element => {
       >
         <Input
           label="Text:"
-          // name="text.nest"
-          {...controller("text.nest")}
+          name="text.nest"
           ref={validate(async (values) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
