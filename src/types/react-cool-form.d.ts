@@ -69,7 +69,7 @@ declare module "react-cool-form" {
   }
 
   interface ValidateRef<V> {
-    (validateFn: FieldValidateFn<V>): (
+    (validate: FieldValidateFn<V>): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
   }
