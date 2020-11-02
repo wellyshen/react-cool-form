@@ -152,9 +152,9 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const validateRef = useCallback<ValidateRef<V>>(
-    (validateFn) => (field) => {
+    (validate) => (field) => {
       if (field?.name && !controllersRef.current[field.name])
-        fieldValidatesRef.current[field.name] = validateFn;
+        fieldValidatesRef.current[field.name] = validate;
     },
     []
   );
@@ -573,8 +573,8 @@ const useForm = <V extends FormValues = FormValues>({
     setValues,
     setFieldValue,
     validate: validateRef,
-    validateField,
     validateForm,
+    validateField,
     reset,
   };
 };
