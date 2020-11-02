@@ -61,7 +61,7 @@ export default <V>(initialValues: V): FormStateReturn<V> => {
   const resetStateRef = useCallback<ResetStateRef<V>>(
     (values = initialState.current.values, exclude, callback) => {
       Object.keys(stateRef.current)
-        .filter((key) => key !== "isValidating")
+        .filter((key) => key === "isValidating")
         .forEach((key) => {
           const k = key as keyof FormState<V>;
 
