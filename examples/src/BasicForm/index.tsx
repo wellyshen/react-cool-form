@@ -1,8 +1,6 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
+/** @jsxImportSource @emotion/core */
 
-import { jsx } from "@emotion/core";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import useForm from "react-cool-form";
 import * as Yup from "yup";
 

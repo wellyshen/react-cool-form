@@ -5128,7 +5128,7 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lint-staged@^10.5.0:
+lint-staged@^10.5.1:
   version "10.5.1"
   resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-10.5.1.tgz#901e915c2360072dded0e7d752a0d9a49e079daa"
   integrity sha512-fTkTGFtwFIJJzn/PbUO3RXyEBHIhbfYBE7+rJyLcOXabViaO/h6OslgeK6zpeUtzkDrzkgyAYDTLAwx6JzDTHw==
@@ -6647,7 +6647,7 @@ rollup-plugin-terser@^7.0.2:
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
 
-rollup@^2.32.1:
+rollup@^2.33.0:
   version "2.33.0"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.33.0.tgz#dc105b312e2817f996d0b6a192b7033f607ef08d"
   integrity sha512-7jFrmKgQj1GOWlC8rExHaPcv2SQnWMv1BFUyH/xWS5w80h6132wBUWp/qTvQkAbnlqGvi13T6iP2kHo9Sb2HxA==

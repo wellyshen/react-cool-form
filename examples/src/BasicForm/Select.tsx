@@ -1,7 +1,5 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
+/** @jsxImportSource @emotion/core */
 
-import { jsx } from "@emotion/core";
 import React, { memo, forwardRef } from "react";
 
 import { label as labelStyle } from "./styles";
@@ -13,14 +11,14 @@ const Select = (
   // console.log(`LOG ==> ${name} is re-rendered`);
 
   return (
-    <React.Fragment>
+    <>
       <label css={labelStyle} htmlFor={name}>
         {label}
       </label>
       <select id={name} name={name} {...rest} ref={ref}>
         {children}
       </select>
-    </React.Fragment>
+    </>
   );
 };
 
