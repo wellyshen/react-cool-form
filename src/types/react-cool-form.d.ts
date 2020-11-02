@@ -22,10 +22,7 @@ declare module "react-cool-form" {
   }
 
   export interface Validate<V = FormValues> {
-    (values: V, options: { formState: FormState<V>; set: Set }):
-      | Errors<V>
-      | void
-      | Promise<Errors<V> | void>;
+    (values: V, set: Set): Errors<V> | void | Promise<Errors<V> | void>;
   }
 
   interface GetFormState {
@@ -68,7 +65,7 @@ declare module "react-cool-form" {
   }
 
   export interface FieldValidateFn<V = FormValues> {
-    (value: any, formState: FormState<V>): any | Promise<any>;
+    (value: any, values: V): any | Promise<any>;
   }
 
   interface ValidateRef<V> {

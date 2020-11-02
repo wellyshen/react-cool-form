@@ -219,7 +219,7 @@ const useForm = <V extends FormValues = FormValues>({
       try {
         const error = await fieldValidatesRef.current[name](
           get(stateRef.current.values, name),
-          stateRef.current
+          stateRef.current.values
         );
 
         return error ? set({}, name, error) : {};
@@ -251,10 +251,7 @@ const useForm = <V extends FormValues = FormValues>({
       try {
         const errors = await formValidateFnRef.current(
           stateRef.current.values,
-          {
-            formState: stateRef.current,
-            set,
-          }
+          set
         );
 
         if (!isPlainObject(errors)) return {};
