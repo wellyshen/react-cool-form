@@ -22,6 +22,8 @@ import {
   SetValues,
   UsedRef,
   ValidateRef,
+  ValidateField,
+  ValidateForm,
 } from "./types";
 import useLatest from "./useLatest";
 import useFormState from "./useFormState";
@@ -267,8 +269,8 @@ const useForm = <V extends FormValues = FormValues>({
     [formValidateFnRef, stateRef]
   );
 
-  const validateField = useCallback(
-    (name: string) => {
+  const validateField = useCallback<ValidateField>(
+    (name) => {
       setStateRef("isValidating", true);
 
       Promise.all([runFieldValidation(name), runFormValidateFn(name)]).then(
@@ -281,7 +283,7 @@ const useForm = <V extends FormValues = FormValues>({
     [runFieldValidation, runFormValidateFn, setErrors, setStateRef]
   );
 
-  const validateForm = useCallback(() => {
+  const validateForm = useCallback<ValidateForm>(() => {
     setStateRef("isValidating", true);
 
     Promise.all([runAllFieldsValidation(), runFormValidateFn()]).then(
