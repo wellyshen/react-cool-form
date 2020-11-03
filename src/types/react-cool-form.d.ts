@@ -7,10 +7,6 @@ declare module "react-cool-form" {
 
   type Errors<V> = Prop<V>;
 
-  interface Set {
-    (object: any, path: string, value?: unknown, immutable?: boolean): any;
-  }
-
   export interface FormState<V = FormValues> {
     readonly values: V;
     readonly touched: Prop<V, boolean>;
@@ -19,6 +15,10 @@ declare module "react-cool-form" {
     readonly dirtyFields: Prop<V, boolean>;
     readonly isValid: boolean;
     readonly isValidating: boolean;
+  }
+
+  interface Set {
+    (object: any, path: string, value?: unknown, immutable?: boolean): any;
   }
 
   export interface FormValidateFn<V = FormValues> {
