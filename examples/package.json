@@ -67,7 +67,7 @@
     ]
   },
   "dependencies": {
-    "@emotion/core": "^10.1.0",
+    "@emotion/core": "^10.1.1",
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
