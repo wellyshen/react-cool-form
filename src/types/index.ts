@@ -117,6 +117,10 @@ export interface ValidateField<V> {
   (name: string): Promise<Errors<V>>;
 }
 
+export interface Reset<V> {
+  (values?: V, exclude?: (keyof FormState<V>)[]): void;
+}
+
 export interface Controller<E, V> {
   (
     name: string,
@@ -137,10 +141,6 @@ export interface Controller<E, V> {
     | Record<string, unknown>;
 }
 
-export interface Reset<V> {
-  (values?: V, exclude?: (keyof FormState<V>)[]): void;
-}
-
 export interface Config<V> {
   initialValues: V;
   validate?: FormValidator<V>;
@@ -158,6 +158,6 @@ export interface Return<V> {
   setFieldValue: SetFieldValue;
   validateForm: ValidateForm<V>;
   validateField: ValidateField<V>;
-  controller: Controller<any, V>;
   reset: Reset<V>;
+  controller: Controller<any, V>;
 }

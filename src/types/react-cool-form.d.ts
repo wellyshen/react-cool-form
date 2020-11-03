@@ -82,6 +82,10 @@ declare module "react-cool-form" {
     (name: string): Promise<Errors<V>>;
   }
 
+  interface Reset<V> {
+    (values?: V, exclude?: (keyof FormState<V>)[]): void;
+  }
+
   export interface Parser<E = any, R = any> {
     (event: E): R;
   }
@@ -114,10 +118,6 @@ declare module "react-cool-form" {
       | Record<string, unknown>;
   }
 
-  interface Reset<V> {
-    (values?: V, exclude?: (keyof FormState<V>)[]): void;
-  }
-
   export interface Config<V = FormValues> {
     initialValues: V;
     validate?: FormValidator<V>;
@@ -135,8 +135,8 @@ declare module "react-cool-form" {
     setFieldValue: SetFieldValue;
     validateForm: ValidateForm<V>;
     validateField: ValidateField<V>;
-    controller: Controller<any, V>;
     reset: Reset<V>;
+    controller: Controller<any, V>;
   }
 
   const useForm: <V extends FormValues = FormValues>(

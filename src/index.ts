@@ -382,6 +382,14 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
+  const reset = useCallback<Reset<V>>(
+    (values, exclude = []) =>
+      resetStateRef(values, exclude, (nextValues) =>
+        setAllDomsValue(fieldsRef.current, nextValues)
+      ),
+    [resetStateRef, setAllDomsValue]
+  );
+
   const getChangeEventValue = useCallback(
     (field: FieldElement) => {
       const { name, value } = field;
@@ -484,14 +492,6 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
-  const reset = useCallback<Reset<V>>(
-    (values, exclude = []) =>
-      resetStateRef(values, exclude, (nextValues) =>
-        setAllDomsValue(fieldsRef.current, nextValues)
-      ),
-    [resetStateRef, setAllDomsValue]
-  );
-
   useLayoutEffect(() => {
     if (!formRef.current) {
       warn(
@@ -572,8 +572,8 @@ const useForm = <V extends FormValues = FormValues>({
     setFieldValue,
     validateForm,
     validateField,
-    controller,
     reset,
+    controller,
   };
 };
 
