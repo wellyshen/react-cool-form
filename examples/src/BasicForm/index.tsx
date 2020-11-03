@@ -77,9 +77,9 @@ export default (): JSX.Element => {
       // fib(35);
 
       // eslint-disable-next-line
-      await new Promise((resolve) => {
+      /* await new Promise((resolve) => {
         setTimeout(resolve, 1000);
-      });
+      }); */
 
       // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
       if (values.text.nest.length <= 3) errors.text.nest = "Form error";
