@@ -57,7 +57,7 @@ export type Fields = Record<
 >;
 
 export interface Set {
-  (object: any, path: string, value?: unknown, immutable?: boolean): any;
+  (object: any, path: string, value: unknown, immutable?: boolean): any;
 }
 
 interface FormValidator<V> {
