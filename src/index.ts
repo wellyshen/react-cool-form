@@ -11,7 +11,7 @@ import {
   Errors,
   FieldElement,
   Fields,
-  FieldValidateFn,
+  FieldValidator,
   FormValues,
   GetFormState,
   Reset,
@@ -90,8 +90,8 @@ const useForm = <V extends FormValues = FormValues>({
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
-  const formValidateFnRef = useLatest(validate);
-  const fieldValidateFnsRef = useRef<Record<string, FieldValidateFn<V>>>({});
+  const formValidatorRef = useLatest(validate);
+  const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
   const controllersRef = useRef<UsedRef>({});
   const initialValuesRef = useRef(initialValues || {});
   const {
@@ -149,7 +149,7 @@ const useForm = <V extends FormValues = FormValues>({
   const validateRef = useCallback<ValidateRef<V>>(
     (validate) => (field) => {
       if (field?.name && !controllersRef.current[field.name])
-        fieldValidateFnsRef.current[field.name] = validate;
+        fieldValidatorsRef.current[field.name] = validate;
     },
     []
   );
@@ -211,10 +211,10 @@ const useForm = <V extends FormValues = FormValues>({
 
   const runFieldValidation = useCallback(
     async (name: string): Promise<Errors<V>> => {
-      if (!fieldValidateFnsRef.current[name]) return {};
+      if (!fieldValidatorsRef.current[name]) return {};
 
       try {
-        const error = await fieldValidateFnsRef.current[name](
+        const error = await fieldValidatorsRef.current[name](
           get(stateRef.current.values, name),
           stateRef.current.values
         );
@@ -229,7 +229,7 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const runAllFieldsValidation = useCallback((): Promise<Errors<V>> => {
-    const promises = Object.keys(fieldValidateFnsRef.current).map((name) =>
+    const promises = Object.keys(fieldValidatorsRef.current).map((name) =>
       runFieldValidation(name)
     );
 
@@ -243,10 +243,10 @@ const useForm = <V extends FormValues = FormValues>({
 
   const runFormValidation = useCallback(
     async (name?: string): Promise<Errors<V>> => {
-      if (!formValidateFnRef.current) return {};
+      if (!formValidatorRef.current) return {};
 
       try {
-        const errors = await formValidateFnRef.current(
+        const errors = await formValidatorRef.current(
           stateRef.current.values,
           set
         );
@@ -261,7 +261,7 @@ const useForm = <V extends FormValues = FormValues>({
         throw exception;
       }
     },
-    [formValidateFnRef, stateRef]
+    [formValidatorRef, stateRef]
   );
 
   const validateField = useCallback<ValidateField<V>>(
@@ -442,7 +442,7 @@ const useForm = <V extends FormValues = FormValues>({
       }
 
       controllersRef.current[name] = true;
-      if (validate) fieldValidateFnsRef.current[name] = validate;
+      if (validate) fieldValidatorsRef.current[name] = validate;
 
       return {
         name,

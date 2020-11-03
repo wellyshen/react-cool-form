@@ -21,16 +21,16 @@ declare module "react-cool-form" {
     (object: any, path: string, value?: unknown, immutable?: boolean): any;
   }
 
-  export interface FormValidateFn<V = FormValues> {
+  export interface FormValidator<V = FormValues> {
     (values: V, set: Set): Errors<V> | void | Promise<Errors<V> | void>;
   }
 
-  export interface FieldValidateFn<V = FormValues> {
+  export interface FieldValidator<V = FormValues> {
     (value: any, values: V): any | Promise<any>;
   }
 
   interface ValidateRef<V> {
-    (validate: FieldValidateFn<V>): (
+    (validate: FieldValidator<V>): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
   }
@@ -98,7 +98,7 @@ declare module "react-cool-form" {
     (
       name: string,
       options?: {
-        validate?: FieldValidateFn<V>;
+        validate?: FieldValidator<V>;
         value?: any;
         parser?: Parser<E>;
         onChange?: OnChange<E>;
@@ -120,7 +120,7 @@ declare module "react-cool-form" {
 
   export interface Config<V = FormValues> {
     initialValues: V;
-    validate?: FormValidateFn<V>;
+    validate?: FormValidator<V>;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
   }

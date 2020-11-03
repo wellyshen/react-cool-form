@@ -60,16 +60,16 @@ export interface Set {
   (object: any, path: string, value?: unknown, immutable?: boolean): any;
 }
 
-interface FormValidateFn<V> {
+interface FormValidator<V> {
   (values: V, set: Set): Errors<V> | void | Promise<Errors<V> | void>;
 }
 
-export interface FieldValidateFn<V> {
+export interface FieldValidator<V> {
   (value: any, values: V): any | Promise<any>;
 }
 
 export interface ValidateRef<V> {
-  (validate: FieldValidateFn<V>): (field: FieldElement | null) => void;
+  (validate: FieldValidator<V>): (field: FieldElement | null) => void;
 }
 
 export interface GetFormState {
@@ -121,7 +121,7 @@ export interface Controller<E, V> {
   (
     name: string,
     options?: {
-      validate?: FieldValidateFn<V>;
+      validate?: FieldValidator<V>;
       value?: any;
       parser?: (event: E) => any;
       onChange?: (event: E, value?: any) => void;
@@ -143,7 +143,7 @@ export interface Reset<V> {
 
 export interface Config<V> {
   initialValues: V;
-  validate?: FormValidateFn<V>;
+  validate?: FormValidator<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
 }
