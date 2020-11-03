@@ -46,11 +46,6 @@ import {
   warn,
 } from "./utils";
 
-const runWithLowPriority = (fn: () => any) =>
-  unstable_runWithPriority(unstable_LowPriority, () =>
-    unstable_scheduleCallback(unstable_LowPriority, fn)
-  );
-
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
 
@@ -94,11 +89,11 @@ const useForm = <V extends FormValues = FormValues>({
   validateOnBlur = true,
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
-  const initialValuesRef = useRef(initialValues || {});
-  const formValidateFnRef = useLatest(validate);
-  const fieldValidatesRef = useRef<Record<string, FieldValidateFn<V>>>({});
   const fieldsRef = useRef<Fields>({});
+  const formValidateFnRef = useLatest(validate);
+  const fieldValidateFnsRef = useRef<Record<string, FieldValidateFn<V>>>({});
   const controllersRef = useRef<UsedRef>({});
+  const initialValuesRef = useRef(initialValues || {});
   const {
     stateRef,
     setStateRef,
@@ -154,7 +149,7 @@ const useForm = <V extends FormValues = FormValues>({
   const validateRef = useCallback<ValidateRef<V>>(
     (validate) => (field) => {
       if (field?.name && !controllersRef.current[field.name])
-        fieldValidatesRef.current[field.name] = validate;
+        fieldValidateFnsRef.current[field.name] = validate;
     },
     []
   );
@@ -216,10 +211,10 @@ const useForm = <V extends FormValues = FormValues>({
 
   const runFieldValidation = useCallback(
     async (name: string): Promise<Errors<V>> => {
-      if (!fieldValidatesRef.current[name]) return {};
+      if (!fieldValidateFnsRef.current[name]) return {};
 
       try {
-        const error = await fieldValidatesRef.current[name](
+        const error = await fieldValidateFnsRef.current[name](
           get(stateRef.current.values, name),
           stateRef.current.values
         );
@@ -234,7 +229,7 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const runAllFieldsValidation = useCallback((): Promise<Errors<V>> => {
-    const promises = Object.keys(fieldValidatesRef.current).map((name) =>
+    const promises = Object.keys(fieldValidateFnsRef.current).map((name) =>
       runFieldValidation(name)
     );
 
@@ -246,7 +241,7 @@ const useForm = <V extends FormValues = FormValues>({
     );
   }, [runFieldValidation]);
 
-  const runFormValidateFn = useCallback(
+  const runFormValidation = useCallback(
     async (name?: string): Promise<Errors<V>> => {
       if (!formValidateFnRef.current) return {};
 
@@ -275,7 +270,7 @@ const useForm = <V extends FormValues = FormValues>({
 
       return Promise.all([
         runFieldValidation(name),
-        runFormValidateFn(name),
+        runFormValidation(name),
       ]).then((errors) => {
         const errs = deepMerge(...errors);
         setErrors(errs);
@@ -283,13 +278,13 @@ const useForm = <V extends FormValues = FormValues>({
         return errs;
       });
     },
-    [runFieldValidation, runFormValidateFn, setErrors, setStateRef]
+    [runFieldValidation, runFormValidation, setErrors, setStateRef]
   );
 
   const validateForm = useCallback<ValidateForm<V>>(() => {
     setStateRef("isValidating", true);
 
-    return Promise.all([runAllFieldsValidation(), runFormValidateFn()]).then(
+    return Promise.all([runAllFieldsValidation(), runFormValidation()]).then(
       (errors) => {
         const errs = deepMerge(...errors);
         setErrors(errs);
@@ -297,10 +292,13 @@ const useForm = <V extends FormValues = FormValues>({
         return errs;
       }
     );
-  }, [runAllFieldsValidation, runFormValidateFn, setErrors, setStateRef]);
+  }, [runAllFieldsValidation, runFormValidation, setErrors, setStateRef]);
 
   const validateFormWithLowPriority = useCallback(
-    () => runWithLowPriority(validateForm),
+    () =>
+      unstable_runWithPriority(unstable_LowPriority, () =>
+        unstable_scheduleCallback(unstable_LowPriority, validateForm as any)
+      ),
     [validateForm]
   );
 
@@ -444,7 +442,7 @@ const useForm = <V extends FormValues = FormValues>({
       }
 
       controllersRef.current[name] = true;
-      if (validate) fieldValidatesRef.current[name] = validate;
+      if (validate) fieldValidateFnsRef.current[name] = validate;
 
       return {
         name,
@@ -566,15 +564,15 @@ const useForm = <V extends FormValues = FormValues>({
 
   return {
     formRef,
-    controller,
+    validate: validateRef,
     getFormState,
     setErrors,
     setFieldError,
     setValues,
     setFieldValue,
-    validate: validateRef,
     validateForm,
     validateField,
+    controller,
     reset,
   };
 };

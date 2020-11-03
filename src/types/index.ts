@@ -60,8 +60,16 @@ export interface Set {
   (object: any, path: string, value?: unknown, immutable?: boolean): any;
 }
 
-interface Validate<V> {
+interface FormValidateFn<V> {
   (values: V, set: Set): Errors<V> | void | Promise<Errors<V> | void>;
+}
+
+export interface FieldValidateFn<V> {
+  (value: any, values: V): any | Promise<any>;
+}
+
+export interface ValidateRef<V> {
+  (validate: FieldValidateFn<V>): (field: FieldElement | null) => void;
 }
 
 export interface GetFormState {
@@ -101,14 +109,6 @@ export interface SetFieldValue {
   ): void;
 }
 
-export interface FieldValidateFn<V> {
-  (value: any, values: V): any | Promise<any>;
-}
-
-export interface ValidateRef<V> {
-  (validate: FieldValidateFn<V>): (field: FieldElement | null) => void;
-}
-
 export interface ValidateForm<V> {
   (): Promise<Errors<V>>;
 }
@@ -143,19 +143,19 @@ export interface Reset<V> {
 
 export interface Config<V> {
   initialValues: V;
-  validate?: Validate<V>;
+  validate?: FormValidateFn<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
 }
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
+  validate: ValidateRef<V>;
   getFormState: GetFormState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;
   setValues: SetValues<V>;
   setFieldValue: SetFieldValue;
-  validate: ValidateRef<V>;
   validateForm: ValidateForm<V>;
   validateField: ValidateField<V>;
   controller: Controller<any, V>;
