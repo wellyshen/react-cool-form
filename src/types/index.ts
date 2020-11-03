@@ -1,4 +1,4 @@
-import { MutableRefObject, RefObject } from "react";
+import { FormEvent, MutableRefObject, RefObject, SyntheticEvent } from "react";
 
 // Common
 export type UsedRef = Record<string, boolean>;
@@ -55,6 +55,10 @@ export type Fields = Record<
   string,
   { field: FieldElement; options?: FieldElement[] }
 >;
+
+interface OnSubmit<V> {
+  (values: V, options: { formState: FormState<V> }): void | Promise<void>;
+}
 
 export interface Set {
   (object: any, path: string, value: unknown, immutable?: boolean): any;
@@ -117,6 +121,14 @@ export interface ValidateField<V> {
   (name: string): Promise<Errors<V>>;
 }
 
+export interface Reset<V> {
+  (values?: V, exclude?: (keyof FormState<V>)[]): void;
+}
+
+export interface HandleSubmit {
+  (event?: FormEvent<HTMLFormElement> | SyntheticEvent<any>): void;
+}
+
 export interface Controller<E, V> {
   (
     name: string,
@@ -137,15 +149,12 @@ export interface Controller<E, V> {
     | Record<string, unknown>;
 }
 
-export interface Reset<V> {
-  (values?: V, exclude?: (keyof FormState<V>)[]): void;
-}
-
 export interface Config<V> {
   initialValues: V;
   validate?: FormValidator<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
+  onSubmit?: OnSubmit<V>;
 }
 
 export interface Return<V> {
@@ -158,6 +167,7 @@ export interface Return<V> {
   setFieldValue: SetFieldValue;
   validateForm: ValidateForm<V>;
   validateField: ValidateField<V>;
-  controller: Controller<any, V>;
   reset: Reset<V>;
+  handleSubmit: HandleSubmit;
+  controller: Controller<any, V>;
 }

@@ -87,11 +87,13 @@ const useForm = <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
+  onSubmit,
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
+  const onSubmitRef = useLatest(onSubmit);
   const controllersRef = useRef<UsedRef>({});
   const initialValuesRef = useRef(initialValues || {});
   const {
@@ -382,6 +384,18 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
+  const reset = useCallback<Reset<V>>(
+    (values, exclude = []) =>
+      resetStateRef(values, exclude, (nextValues) =>
+        setAllDomsValue(fieldsRef.current, nextValues)
+      ),
+    [resetStateRef, setAllDomsValue]
+  );
+
+  const handleSubmit = useCallback(() => {
+    // ...
+  }, []);
+
   const getChangeEventValue = useCallback(
     (field: FieldElement) => {
       const { name, value } = field;
@@ -484,14 +498,6 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
-  const reset = useCallback<Reset<V>>(
-    (values, exclude = []) =>
-      resetStateRef(values, exclude, (nextValues) =>
-        setAllDomsValue(fieldsRef.current, nextValues)
-      ),
-    [resetStateRef, setAllDomsValue]
-  );
-
   useLayoutEffect(() => {
     if (!formRef.current) {
       warn(
@@ -572,8 +578,9 @@ const useForm = <V extends FormValues = FormValues>({
     setFieldValue,
     validateForm,
     validateField,
-    controller,
     reset,
+    handleSubmit,
+    controller,
   };
 };
 

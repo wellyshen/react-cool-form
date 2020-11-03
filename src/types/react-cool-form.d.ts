@@ -1,5 +1,5 @@
 declare module "react-cool-form" {
-  import { RefObject } from "react";
+  import { FormEvent, RefObject, SyntheticEvent } from "react";
 
   export type FormValues = Record<string, any>;
 
@@ -15,6 +15,10 @@ declare module "react-cool-form" {
     readonly dirtyFields: Prop<V, boolean>;
     readonly isValid: boolean;
     readonly isValidating: boolean;
+  }
+
+  export interface OnSubmit<V = FormValues> {
+    (values: V, options: { formState: FormState<V> }): void | Promise<void>;
   }
 
   interface Set {
@@ -82,6 +86,14 @@ declare module "react-cool-form" {
     (name: string): Promise<Errors<V>>;
   }
 
+  interface Reset<V> {
+    (values?: V, exclude?: (keyof FormState<V>)[]): void;
+  }
+
+  interface HandleSubmit {
+    (event?: FormEvent<HTMLFormElement> | SyntheticEvent<any>): void;
+  }
+
   export interface Parser<E = any, R = any> {
     (event: E): R;
   }
@@ -114,15 +126,12 @@ declare module "react-cool-form" {
       | Record<string, unknown>;
   }
 
-  interface Reset<V> {
-    (values?: V, exclude?: (keyof FormState<V>)[]): void;
-  }
-
   export interface Config<V = FormValues> {
     initialValues: V;
     validate?: FormValidator<V>;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
+    onSubmit?: OnSubmit<V>;
   }
 
   export interface Return<V = FormValues> {
@@ -135,8 +144,9 @@ declare module "react-cool-form" {
     setFieldValue: SetFieldValue;
     validateForm: ValidateForm<V>;
     validateField: ValidateField<V>;
-    controller: Controller<any, V>;
     reset: Reset<V>;
+    handleSubmit: HandleSubmit;
+    controller: Controller<any, V>;
   }
 
   const useForm: <V extends FormValues = FormValues>(
