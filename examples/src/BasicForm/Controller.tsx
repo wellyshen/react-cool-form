@@ -22,17 +22,17 @@ const Controller = ({ label, name, type, controller }: Props) => {
       label={label}
       type={type}
       {...controller(name, {
-        validate: async (values, formState) => {
-          // console.log("LOG ===> validate: ", values, formState);
+        validate: async (value, values) => {
+          // console.log("LOG ===> validate: ", value, formState);
           // eslint-disable-next-line
           // await new Promise((resolve) => setTimeout(resolve, 1000));
-          return values.length <= 3 ? "Field error" : "";
+          return value.length <= 3 ? "Field error" : "";
         },
         // value,
         // parser,
-        onChange: (e, val) => {
-          // setValue(val);
-          // console.log("LOG ===> onChange: ", val);
+        onChange: (e, value) => {
+          // setValue(value);
+          // console.log("LOG ===> onChange: ", value);
         },
         onBlur: (e) => {
           // console.log("LOG ===> onBlur: ", e);
