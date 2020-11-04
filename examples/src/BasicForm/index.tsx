@@ -67,38 +67,50 @@ export default (): JSX.Element => {
     validateForm,
     controller,
     reset,
+    handleSubmit,
   } = useForm<FormValues>({
     initialValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    validate: async (values, set) => {
-      const errors = { text: { nest: "" } };
+    // validate: async (values, set) => {
+    //   const errors = { text: { nest: "" } };
 
-      // fib(35);
+    //   // fib(35);
 
+    //   // eslint-disable-next-line
+    //   /* await new Promise((resolve) => {
+    //     setTimeout(resolve, 1000);
+    //   }); */
+
+    //   // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
+    //   if (values.text.nest.length <= 3) errors.text.nest = "Form error";
+    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+
+    //   // throw new Error("Fake error");
+    //   return errors;
+
+    //   /* try {
+    //     await schema.validate(values, { abortEarly: false });
+    //   } catch (error) {
+    //     const formErrors = {};
+
+    //     error.inner.forEach(({ path, message }: any) =>
+    //       set(formErrors, path, message)
+    //     );
+
+    //     return formErrors;
+    //   } */
+    // },
+    onSubmit: async (values, options, e) => {
       // eslint-disable-next-line
-      /* await new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-      }); */
+      await new Promise((resolve) => {
+        setTimeout(resolve, 3000);
+      });
 
-      // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
-      if (values.text.nest.length <= 3) errors.text.nest = "Form error";
-      // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
-
-      // throw new Error("Fake error");
-      return errors;
-
-      /* try {
-        await schema.validate(values, { abortEarly: false });
-      } catch (error) {
-        const formErrors = {};
-
-        error.inner.forEach(({ path, message }: any) =>
-          set(formErrors, path, message)
-        );
-
-        return formErrors;
-      } */
+      console.log("LOG ===> onSubmit: ", values);
+    },
+    onError: (errors, options, e) => {
+      console.log("LOG ===> onError: ", errors);
     },
   });
 
@@ -109,10 +121,13 @@ export default (): JSX.Element => {
       values: "values",
       touched: "touched",
       errors: "errors",
-      isValid: "isValid",
-      isValidating: "isValidating",
       isDirty: "isDirty",
       dirtyFields: "dirtyFields",
+      isValidating: "isValidating",
+      isValid: "isValid",
+      isSubmitting: "isSubmitting",
+      isSubmitted: "isSubmitted",
+      submitCount: "submitCount",
     })
   );
 
@@ -158,37 +173,29 @@ export default (): JSX.Element => {
   };
 
   const handleResetClick = (): void => {
-    reset({ ...initialValues, text: { nest: "new test" } }, []);
+    reset({ ...initialValues, text: { nest: "new test" } }, [
+      "touched",
+      "submitCount",
+    ]);
   };
 
   return (
     <div css={container}>
-      <form
-        css={form}
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log("LOG ===> Reset: ", e);
-        }}
-        onReset={(e) => {
-          // e.preventDefault();
-          console.log("LOG ===> Reset: ", e);
-        }}
-        noValidate
-        ref={formRef}
-      >
+      <form css={form} onSubmit={handleSubmit} noValidate ref={formRef}>
         <Input
           label="Text:"
           name="text.nest"
           ref={validate(async (value) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
-            return value.length <= 3 ? "Field error" : "";
+            return value.length <= 5 ? "Field error" : "";
           })}
           // data-rcf-ignore
         />
         <Controller
           label="Controller:"
           name="controller"
+          defaultValue={initialValues.controller}
           controller={controller}
         />
         {showInput && (
@@ -202,7 +209,7 @@ export default (): JSX.Element => {
           type="number"
           name="number"
           ref={validate((value) => {
-            return value <= 10 ? "Field error" : "";
+            return value <= 5 ? "Field error" : "";
           })}
         />
         <Input label="Range:" type="range" name="range" />
@@ -262,7 +269,7 @@ export default (): JSX.Element => {
           Clear Errors
         </button>
         <button type="button" onClick={handleResetClick}>
-          Reset
+          Reset Method
         </button>
         <input type="submit" />
         {/* eslint-disable-next-line react/button-has-type */}

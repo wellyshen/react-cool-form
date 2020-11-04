@@ -13,14 +13,26 @@ declare module "react-cool-form" {
     readonly errors: Errors<V>;
     readonly isDirty: boolean;
     readonly dirtyFields: Prop<V, boolean>;
-    readonly isValid: boolean;
     readonly isValidating: boolean;
+    readonly isValid: boolean;
     readonly isSubmitting: boolean;
+    readonly isSubmitted: boolean;
     readonly submitCount: number;
   }
 
+  type Options<V> = Omit<
+    Return<V>,
+    "formRef" | "validate" | "handleSubmit" | "controller"
+  >;
+
+  type Event = FormEvent<HTMLFormElement> | SyntheticEvent<any>;
+
   export interface OnSubmit<V = FormValues> {
-    (values: V, options: { formState: FormState<V> }): void | Promise<void>;
+    (values: V, options: Options<V>, event: Event): void | Promise<void>;
+  }
+
+  export interface OnError<V = FormValues> {
+    (errors: Errors<V>, options: Options<V>, event: Event): void;
   }
 
   interface Set {
@@ -93,7 +105,7 @@ declare module "react-cool-form" {
   }
 
   interface HandleSubmit {
-    (event: FormEvent<HTMLFormElement> | SyntheticEvent<any>): void;
+    (event: Event): void;
   }
 
   export interface Parser<E = any, R = any> {
@@ -134,6 +146,7 @@ declare module "react-cool-form" {
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
     onSubmit?: OnSubmit<V>;
+    onError?: OnError<V>;
   }
 
   export interface Return<V = FormValues> {

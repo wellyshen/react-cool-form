@@ -12,18 +12,19 @@ import { get, set, isEmptyObject } from "./utils";
 
 export default <V>(initialValues: V): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
-  const initialState = useRef<FormState<V>>({
+  const initialStateRef = useRef<FormState<V>>({
     values: initialValues,
     touched: {},
     errors: {},
     isDirty: false,
     dirtyFields: {},
-    isValid: true,
     isValidating: false,
+    isValid: true,
     isSubmitting: false,
+    isSubmitted: false,
     submitCount: 0,
   });
-  const stateRef = useRef(initialState.current);
+  const stateRef = useRef(initialStateRef.current);
   const usedStateRef = useRef<UsedRef>({});
 
   const setStateRef = useCallback<SetStateRef>((path, value) => {
@@ -41,7 +42,7 @@ export default <V>(initialValues: V): FormStateReturn<V> => {
       } = nextState;
       const isDirty =
         key === "values"
-          ? !isEqual(values, initialState.current.values)
+          ? !isEqual(values, initialStateRef.current.values)
           : prevIsDirty;
       const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
 
@@ -61,28 +62,18 @@ export default <V>(initialValues: V): FormStateReturn<V> => {
   }, []);
 
   const resetStateRef = useCallback<ResetStateRef<V>>(
-    (values = initialState.current.values, exclude, callback) => {
-      [
-        "values",
-        "touched",
-        "errors",
-        "isDirty",
-        "dirtyFields",
-        "isValid",
-        "submitCount",
-      ].forEach((key) => {
-        const k = key as keyof FormState<V>;
-
-        if (exclude.length && exclude.includes(k)) return;
-
-        if (k === "values") {
-          stateRef.current[k] = values;
-          callback(values);
-        } else {
-          // @ts-expect-error
-          stateRef.current[k] = initialState.current[k];
-        }
-      });
+    (values = initialStateRef.current.values, exclude, callback) => {
+      Object.keys(initialStateRef.current)
+        .filter((key) => !exclude.includes(key as keyof FormState<V>))
+        .forEach((key) => {
+          if (key === "values") {
+            stateRef.current[key] = values;
+            callback(values);
+          } else {
+            // @ts-expect-error
+            stateRef.current[key] = initialStateRef.current[key];
+          }
+        });
 
       forceUpdate();
     },

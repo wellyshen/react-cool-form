@@ -20,9 +20,10 @@ export interface FormState<V> {
   errors: Errors<V>;
   isDirty: boolean;
   dirtyFields: Prop<V, boolean>;
-  isValid: boolean;
   isValidating: boolean;
+  isValid: boolean;
   isSubmitting: boolean;
+  isSubmitted: boolean;
   submitCount: number;
 }
 
@@ -64,8 +65,19 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
+type Options<V> = Omit<
+  Return<V>,
+  "formRef" | "validate" | "handleSubmit" | "controller"
+>;
+
+type Event = FormEvent<HTMLFormElement> | SyntheticEvent<any>;
+
 interface OnSubmit<V> {
-  (values: V, options: { reset: Reset<V> }): void | Promise<void>;
+  (values: V, options: Options<V>, event: Event): void | Promise<void>;
+}
+
+interface OnError<V> {
+  (errors: Errors<V>, options: Options<V>, event: Event): void;
 }
 
 export interface Set {
@@ -134,7 +146,7 @@ export interface Reset<V> {
 }
 
 export interface HandleSubmit {
-  (event: FormEvent<HTMLFormElement> | SyntheticEvent<any>): void;
+  (event: Event): void;
 }
 
 export interface Controller<V, E = any> {
@@ -163,6 +175,7 @@ export interface Config<V> {
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
   onSubmit?: OnSubmit<V>;
+  onError?: OnError<V>;
 }
 
 export interface Return<V> {

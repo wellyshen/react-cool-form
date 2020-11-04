@@ -89,12 +89,14 @@ const useForm = <V extends FormValues = FormValues>({
   validateOnChange = true,
   validateOnBlur = true,
   onSubmit,
+  onError,
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
   const onSubmitRef = useLatest(onSubmit);
+  const onErrorRef = useLatest(onError);
   const controllersRef = useRef<UsedRef>({});
   const initialValuesRef = useRef(initialValues || {});
   const {
@@ -398,16 +400,27 @@ const useForm = <V extends FormValues = FormValues>({
       if (e?.preventDefault) e.preventDefault();
       if (e?.stopPropagation) e.stopPropagation();
 
-      setStateRef("submitCount", get(stateRef, "submitCount") + 1);
+      setStateRef("submitCount", stateRef.current.submitCount + 1);
       setStateRef("isSubmitting", true);
 
       try {
         const errors = await validateForm();
+        const options = {
+          getFormState,
+          setErrors,
+          setFieldError,
+          setValues,
+          setFieldValue,
+          validateForm,
+          validateField,
+          reset,
+        };
 
-        if (isEmptyObject(errors)) {
-          // ...
-        } else {
-          // ...
+        if (onSubmitRef.current && isEmptyObject(errors)) {
+          await onSubmitRef.current(stateRef.current.values, options, e);
+          setStateRef("isSubmitted", true);
+        } else if (onErrorRef.current) {
+          onErrorRef.current(stateRef.current.errors, options, e);
         }
       } catch (exception) {
         warn(`💡react-cool-form > handleSubmit: `, exception);
@@ -415,7 +428,20 @@ const useForm = <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
-    [setStateRef, stateRef, validateForm]
+    [
+      getFormState,
+      onErrorRef,
+      onSubmitRef,
+      reset,
+      setErrors,
+      setFieldError,
+      setFieldValue,
+      setStateRef,
+      setValues,
+      stateRef,
+      validateField,
+      validateForm,
+    ]
   );
 
   const getChangeEventValue = useCallback(

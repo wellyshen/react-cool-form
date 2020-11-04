@@ -9,13 +9,14 @@ interface Props {
   label: string;
   name: string;
   type?: string;
+  defaultValue: any;
   controller: ControllerType<FormValues, ChangeEvent<HTMLInputElement>>;
 }
 
-const Controller = ({ label, name, type, controller }: Props) => {
+const Controller = ({ label, name, type, defaultValue, controller }: Props) => {
   // console.log(`LOG ==> ${name} is re-rendered`);
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(defaultValue);
   const parser: Parser<ChangeEvent<HTMLInputElement>> = (e) =>
     e.target.value.length % 2 ? "case 1" : "case 2";
 
@@ -25,15 +26,15 @@ const Controller = ({ label, name, type, controller }: Props) => {
       type={type}
       {...controller(name, {
         validate: async (val, values) => {
-          // console.log("LOG ===> validate: ", val, formState);
           // eslint-disable-next-line
           // await new Promise((resolve) => setTimeout(resolve, 1000));
-          return val.length <= 3 ? "Field error" : "";
+          // console.log("LOG ===> validate: ", val, values);
+          return val.length <= 5 ? "Field error" : "";
         },
-        // value,
+        value,
         // parser,
         onChange: (e, val) => {
-          // setValue(val);
+          setValue(val);
           // console.log("LOG ===> onChange: ", val);
         },
         onBlur: (e) => {
