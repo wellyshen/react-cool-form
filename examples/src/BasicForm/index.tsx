@@ -12,7 +12,7 @@ import { container, form, wrapper } from "./styles";
 
 const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
-interface FormValues {
+export interface FormValues {
   text: Record<string, string>;
   controller: any;
   hiddenText: string;

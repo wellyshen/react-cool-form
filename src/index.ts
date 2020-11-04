@@ -442,7 +442,7 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
-  const controller = useCallback<Controller<any, V>>(
+  const controller = useCallback<Controller<V>>(
     (name, { validate, value, parser, onChange, onBlur } = {}) => {
       if (!name) {
         warn('💡react-cool-form > controller: Missing the "name" parameter.');
@@ -458,16 +458,16 @@ const useForm = <V extends FormValues = FormValues>({
         // eslint-disable-next-line react-hooks/rules-of-hooks
         onChange: useCallback(
           (e) => {
-            const parsedEvt = parser ? parser(e) : e;
+            const parsedE = parser ? parser(e) : e;
 
             if (
-              parsedEvt.nativeEvent instanceof Event &&
-              isFieldElement(parsedEvt.target)
+              parsedE.nativeEvent instanceof Event &&
+              isFieldElement(parsedE.target)
             ) {
-              handleFieldChange(parsedEvt.target);
-              if (onChange) onChange(e, getChangeEventValue(parsedEvt.target));
+              handleFieldChange(parsedE.target);
+              if (onChange) onChange(e, getChangeEventValue(parsedE.target));
             } else {
-              setFieldValue(name, parsedEvt);
+              setFieldValue(name, parsedE);
               if (onChange) onChange(e);
             }
           },

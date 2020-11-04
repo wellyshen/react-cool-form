@@ -1,4 +1,4 @@
-import { MutableRefObject, RefObject } from "react";
+import { FocusEvent, MutableRefObject, RefObject } from "react";
 
 // Common
 export type UsedRef = Record<string, boolean>;
@@ -57,7 +57,7 @@ export type Fields = Record<
 >;
 
 export interface Set {
-  (object: any, path: string, value: unknown, immutable?: boolean): any;
+  (object: any, path: string, value?: unknown, immutable?: boolean): any;
 }
 
 interface FormValidator<V> {
@@ -121,7 +121,7 @@ export interface Reset<V> {
   (values?: V, exclude?: (keyof FormState<V>)[]): void;
 }
 
-export interface Controller<E, V> {
+export interface Controller<V, E = any> {
   (
     name: string,
     options?: {
@@ -129,14 +129,14 @@ export interface Controller<E, V> {
       value?: any;
       parser?: (event: E) => any;
       onChange?: (event: E, value?: any) => void;
-      onBlur?: (event: E) => void;
+      onBlur?: (event: FocusEvent<any>) => void;
     }
   ):
     | {
         name: string;
         value: any;
         onChange: (event: E) => void;
-        onBlur: (event: E) => void;
+        onBlur: (event: FocusEvent<any>) => void;
       }
     | Record<string, unknown>;
 }
@@ -159,5 +159,5 @@ export interface Return<V> {
   validateForm: ValidateForm<V>;
   validateField: ValidateField<V>;
   reset: Reset<V>;
-  controller: Controller<any, V>;
+  controller: Controller<V>;
 }
