@@ -22,6 +22,8 @@ export interface FormState<V> {
   dirtyFields: Prop<V, boolean>;
   isValid: boolean;
   isValidating: boolean;
+  isSubmitting: boolean;
+  submitCount: number;
 }
 
 export type StateRef<V> = MutableRefObject<FormState<V>>;
@@ -63,7 +65,7 @@ export type Fields = Record<
 >;
 
 interface OnSubmit<V> {
-  (values: V, options: { formState: FormState<V> }): void | Promise<void>;
+  (values: V, options: { reset: Reset<V> }): void | Promise<void>;
 }
 
 export interface Set {
@@ -132,7 +134,7 @@ export interface Reset<V> {
 }
 
 export interface HandleSubmit {
-  (event?: FormEvent<HTMLFormElement> | SyntheticEvent<any>): void;
+  (event: FormEvent<HTMLFormElement> | SyntheticEvent<any>): void;
 }
 
 export interface Controller<V, E = any> {

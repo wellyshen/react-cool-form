@@ -15,6 +15,8 @@ declare module "react-cool-form" {
     readonly dirtyFields: Prop<V, boolean>;
     readonly isValid: boolean;
     readonly isValidating: boolean;
+    readonly isSubmitting: boolean;
+    readonly submitCount: number;
   }
 
   export interface OnSubmit<V = FormValues> {
@@ -91,7 +93,7 @@ declare module "react-cool-form" {
   }
 
   interface HandleSubmit {
-    (event?: FormEvent<HTMLFormElement> | SyntheticEvent<any>): void;
+    (event: FormEvent<HTMLFormElement> | SyntheticEvent<any>): void;
   }
 
   export interface Parser<E = any, R = any> {

@@ -14,6 +14,7 @@ import {
   FieldValidator,
   FormValues,
   GetFormState,
+  HandleSubmit,
   Reset,
   Return,
   SetErrors,
@@ -392,9 +393,30 @@ const useForm = <V extends FormValues = FormValues>({
     [resetStateRef, setAllDomsValue]
   );
 
-  const handleSubmit = useCallback(() => {
-    // ...
-  }, []);
+  const handleSubmit = useCallback<HandleSubmit>(
+    async (e) => {
+      if (e?.preventDefault) e.preventDefault();
+      if (e?.stopPropagation) e.stopPropagation();
+
+      setStateRef("submitCount", get(stateRef, "submitCount") + 1);
+      setStateRef("isSubmitting", true);
+
+      try {
+        const errors = await validateForm();
+
+        if (isEmptyObject(errors)) {
+          // ...
+        } else {
+          // ...
+        }
+      } catch (exception) {
+        warn(`💡react-cool-form > handleSubmit: `, exception);
+      } finally {
+        setStateRef("isSubmitting", false);
+      }
+    },
+    [setStateRef, stateRef, validateForm]
+  );
 
   const getChangeEventValue = useCallback(
     (field: FieldElement) => {

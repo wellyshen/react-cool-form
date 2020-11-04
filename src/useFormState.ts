@@ -20,6 +20,8 @@ export default <V>(initialValues: V): FormStateReturn<V> => {
     dirtyFields: {},
     isValid: true,
     isValidating: false,
+    isSubmitting: false,
+    submitCount: 0,
   });
   const stateRef = useRef(initialState.current);
   const usedStateRef = useRef<UsedRef>({});
@@ -67,6 +69,7 @@ export default <V>(initialValues: V): FormStateReturn<V> => {
         "isDirty",
         "dirtyFields",
         "isValid",
+        "submitCount",
       ].forEach((key) => {
         const k = key as keyof FormState<V>;
 
