@@ -72,35 +72,39 @@ export default (): JSX.Element => {
     initialValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    // validate: async (values, set) => {
-    //   const errors = { text: { nest: "" } };
+    validate: async (values, set) => {
+      let errors: any = { text: { nest: "" } };
 
-    //   // fib(35);
+      // fib(35);
 
-    //   // eslint-disable-next-line
-    //   /* await new Promise((resolve) => {
-    //     setTimeout(resolve, 1000);
-    //   }); */
+      // eslint-disable-next-line
+      await new Promise((resolve) => {
+        setTimeout(resolve, 3000);
+      });
 
-    //   // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
-    //   if (values.text.nest.length <= 3) errors.text.nest = "Form error";
-    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+      // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
+      if (values.text.nest.length <= 5) {
+        errors.text.nest = "Form error";
+      } else {
+        errors = {};
+      }
+      // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
-    //   // throw new Error("Fake error");
-    //   return errors;
+      // throw new Error("Fake error");
+      return errors;
 
-    //   /* try {
-    //     await schema.validate(values, { abortEarly: false });
-    //   } catch (error) {
-    //     const formErrors = {};
+      /* try {
+        await schema.validate(values, { abortEarly: false });
+      } catch (error) {
+        const formErrors = {};
 
-    //     error.inner.forEach(({ path, message }: any) =>
-    //       set(formErrors, path, message)
-    //     );
+        error.inner.forEach(({ path, message }: any) =>
+          set(formErrors, path, message)
+        );
 
-    //     return formErrors;
-    //   } */
-    // },
+        return formErrors;
+      } */
+    },
     onSubmit: async (values, options, e) => {
       // eslint-disable-next-line
       await new Promise((resolve) => {
@@ -123,7 +127,7 @@ export default (): JSX.Element => {
       errors: "errors",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
-      // isValidating: "isValidating",
+      isValidating: "isValidating",
       // isValid: "isValid",
       // isSubmitting: "isSubmitting",
       // isSubmitted: "isSubmitted",
@@ -173,7 +177,7 @@ export default (): JSX.Element => {
   };
 
   const handleValidateClick = (): void => {
-    validateField("checkbox");
+    validateField("text.nest");
   };
 
   const handleResetClick = (): void => {

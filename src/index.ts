@@ -215,8 +215,8 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const runFieldValidation = useCallback(
-    async (name: string): Promise<Errors<V>> => {
-      if (!fieldValidatorsRef.current[name]) return {};
+    async (name: string): Promise<any> => {
+      if (!fieldValidatorsRef.current[name]) return undefined;
 
       try {
         const error = await fieldValidatorsRef.current[name](
@@ -224,7 +224,7 @@ const useForm = <V extends FormValues = FormValues>({
           stateRef.current.values
         );
 
-        return error ? set({}, name, error) : {};
+        return error;
       } catch (exception) {
         warn(`💡react-cool-form > validate ${name}: `, exception);
         throw exception;
@@ -237,18 +237,20 @@ const useForm = <V extends FormValues = FormValues>({
     const promises = Object.keys(fieldValidatorsRef.current).map((name) =>
       runFieldValidation(name)
     );
+    const names = Object.keys(fieldValidatorsRef.current);
 
     return Promise.all(promises).then((errors) =>
-      errors.reduce((acc, cur) => {
-        acc = { ...acc, ...cur };
+      names.reduce((acc, cur, idx) => {
+        const error = errors[idx];
+        acc = { ...acc, ...(error ? set({}, cur, error) : {}) };
         return acc;
       }, {})
     );
   }, [runFieldValidation]);
 
   const runFormValidation = useCallback(
-    async (name?: string): Promise<Errors<V>> => {
-      if (!formValidatorRef.current) return {};
+    async (name?: string): Promise<any> => {
+      if (!formValidatorRef.current) return name ? undefined : {};
 
       try {
         const errors = await formValidatorRef.current(
@@ -256,11 +258,9 @@ const useForm = <V extends FormValues = FormValues>({
           set
         );
 
-        if (!isPlainObject(errors)) return {};
-        if (!name) return errors;
+        if (name) return get(errors, name);
 
-        const error = get(errors, name);
-        return error ? set({}, name, error) : {};
+        return isPlainObject(errors) ? errors : {};
       } catch (exception) {
         warn(`💡react-cool-form > config.validate: `, exception);
         throw exception;
@@ -270,20 +270,21 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const validateField = useCallback<ValidateField<V>>(
-    (name) => {
+    async (name) => {
       setStateRef("isValidating", true);
 
-      return Promise.all([
-        runFieldValidation(name),
-        runFormValidation(name),
-      ]).then((errors) => {
-        const errs = deepMerge(...errors);
-        setErrors(errs);
+      try {
+        const error =
+          (await runFormValidation(name)) || (await runFieldValidation(name));
+
+        if (error) setStateRef(`errors.${name}`, error);
         setStateRef("isValidating", false);
-        return errs;
-      });
+        return error;
+      } catch (exception) {
+        return exception;
+      }
     },
-    [runFieldValidation, runFormValidation, setErrors, setStateRef]
+    [runFieldValidation, runFormValidation, setStateRef]
   );
 
   const validateForm = useCallback<ValidateForm<V>>(() => {
