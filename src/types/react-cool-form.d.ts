@@ -1,5 +1,5 @@
 declare module "react-cool-form" {
-  import { FormEvent, RefObject, SyntheticEvent } from "react";
+  import { FormEvent, FocusEvent, RefObject, SyntheticEvent } from "react";
 
   export type FormValues = Record<string, any>;
 
@@ -102,11 +102,11 @@ declare module "react-cool-form" {
     (event: E, value?: any): void;
   }
 
-  export interface OnBlur<E = any> {
-    (event: E): void;
+  export interface OnBlur {
+    (event: FocusEvent<any>): void;
   }
 
-  export interface Controller<E = any, V = FormValues> {
+  export interface Controller<V = FormValues, E = any> {
     (
       name: string,
       options?: {
@@ -114,14 +114,14 @@ declare module "react-cool-form" {
         value?: any;
         parser?: Parser<E>;
         onChange?: OnChange<E>;
-        onBlur?: OnBlur<E>;
+        onBlur?: OnBlur;
       }
     ):
       | {
           name: string;
           value: any;
           onChange: (event: E) => void;
-          onBlur: (event: E) => void;
+          onBlur: OnBlur;
         }
       | Record<string, unknown>;
   }
@@ -146,7 +146,7 @@ declare module "react-cool-form" {
     validateField: ValidateField<V>;
     reset: Reset<V>;
     handleSubmit: HandleSubmit;
-    controller: Controller<any, V>;
+    controller: Controller<V>;
   }
 
   const useForm: <V extends FormValues = FormValues>(

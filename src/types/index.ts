@@ -1,4 +1,10 @@
-import { FormEvent, MutableRefObject, RefObject, SyntheticEvent } from "react";
+import {
+  FormEvent,
+  FocusEvent,
+  MutableRefObject,
+  RefObject,
+  SyntheticEvent,
+} from "react";
 
 // Common
 export type UsedRef = Record<string, boolean>;
@@ -61,7 +67,7 @@ interface OnSubmit<V> {
 }
 
 export interface Set {
-  (object: any, path: string, value: unknown, immutable?: boolean): any;
+  (object: any, path: string, value?: unknown, immutable?: boolean): any;
 }
 
 interface FormValidator<V> {
@@ -129,7 +135,7 @@ export interface HandleSubmit {
   (event?: FormEvent<HTMLFormElement> | SyntheticEvent<any>): void;
 }
 
-export interface Controller<E, V> {
+export interface Controller<V, E = any> {
   (
     name: string,
     options?: {
@@ -137,14 +143,14 @@ export interface Controller<E, V> {
       value?: any;
       parser?: (event: E) => any;
       onChange?: (event: E, value?: any) => void;
-      onBlur?: (event: E) => void;
+      onBlur?: (event: FocusEvent<any>) => void;
     }
   ):
     | {
         name: string;
         value: any;
         onChange: (event: E) => void;
-        onBlur: (event: E) => void;
+        onBlur: (event: FocusEvent<any>) => void;
       }
     | Record<string, unknown>;
 }
@@ -169,5 +175,5 @@ export interface Return<V> {
   validateField: ValidateField<V>;
   reset: Reset<V>;
   handleSubmit: HandleSubmit;
-  controller: Controller<any, V>;
+  controller: Controller<V>;
 }

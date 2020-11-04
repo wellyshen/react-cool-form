@@ -12,7 +12,7 @@ import { container, form, wrapper } from "./styles";
 
 const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
-interface FormValues {
+export interface FormValues {
   text: Record<string, string>;
   controller: any;
   hiddenText: string;
@@ -179,10 +179,10 @@ export default (): JSX.Element => {
         <Input
           label="Text:"
           name="text.nest"
-          ref={validate(async (values) => {
+          ref={validate(async (value) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
-            return values.length <= 3 ? "Field error" : "";
+            return value.length <= 3 ? "Field error" : "";
           })}
           // data-rcf-ignore
         />
@@ -201,8 +201,8 @@ export default (): JSX.Element => {
           label="Number:"
           type="number"
           name="number"
-          ref={validate((values) => {
-            return values <= 10 ? "Field error" : "";
+          ref={validate((value) => {
+            return value <= 10 ? "Field error" : "";
           })}
         />
         <Input label="Range:" type="range" name="range" />

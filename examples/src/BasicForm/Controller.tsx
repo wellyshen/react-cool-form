@@ -1,13 +1,15 @@
 import React, { ChangeEvent, memo, useState } from "react";
 import { Controller as ControllerType, Parser } from "react-cool-form";
 
+import { FormValues } from ".";
+
 import Input from "./Input";
 
 interface Props {
   label: string;
   name: string;
   type?: string;
-  controller: ControllerType<ChangeEvent<HTMLInputElement>>;
+  controller: ControllerType<FormValues, ChangeEvent<HTMLInputElement>>;
 }
 
 const Controller = ({ label, name, type, controller }: Props) => {
@@ -22,11 +24,11 @@ const Controller = ({ label, name, type, controller }: Props) => {
       label={label}
       type={type}
       {...controller(name, {
-        validate: async (values, formState) => {
-          // console.log("LOG ===> validate: ", values, formState);
+        validate: async (val, values) => {
+          // console.log("LOG ===> validate: ", val, formState);
           // eslint-disable-next-line
           // await new Promise((resolve) => setTimeout(resolve, 1000));
-          return values.length <= 3 ? "Field error" : "";
+          return val.length <= 3 ? "Field error" : "";
         },
         // value,
         // parser,
