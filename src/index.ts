@@ -162,12 +162,12 @@ const useForm = <V extends FormValues = FormValues>({
         if (watch) path.forEach((p) => setUsedStateRef(p));
         state = path.map((p) => get(stateRef.current, p));
       } else if (isPlainObject(path)) {
-        const pathObj = path as Record<string, string>;
-        const keys = Object.keys(pathObj);
+        const paths = path as Record<string, string>;
+        const keys = Object.keys(paths);
 
-        if (watch) keys.forEach((key) => setUsedStateRef(pathObj[key]));
+        if (watch) keys.forEach((key) => setUsedStateRef(paths[key]));
         state = keys.reduce((state: Record<string, any>, key) => {
-          state[key] = get(stateRef.current, pathObj[key]);
+          state[key] = get(stateRef.current, paths[key]);
           return state;
         }, {});
       } else {
