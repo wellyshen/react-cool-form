@@ -118,16 +118,16 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getFormState({
-      values: "values",
-      touched: "touched",
+      // values: "values",
+      // touched: "touched",
       errors: "errors",
-      isDirty: "isDirty",
-      dirtyFields: "dirtyFields",
-      isValidating: "isValidating",
-      isValid: "isValid",
-      isSubmitting: "isSubmitting",
-      isSubmitted: "isSubmitted",
-      submitCount: "submitCount",
+      // isDirty: "isDirty",
+      // dirtyFields: "dirtyFields",
+      // isValidating: "isValidating",
+      // isValid: "isValid",
+      // isSubmitting: "isSubmitting",
+      // isSubmitted: "isSubmitted",
+      // submitCount: "submitCount",
     })
   );
 
@@ -170,6 +170,10 @@ export default (): JSX.Element => {
 
   const handleClearErrorsClick = (): void => {
     setFieldError("text.nest");
+  };
+
+  const handleValidateClick = (): void => {
+    validateField("checkbox");
   };
 
   const handleResetClick = (): void => {
@@ -267,6 +271,9 @@ export default (): JSX.Element => {
         </button>
         <button type="button" onClick={handleClearErrorsClick}>
           Clear Errors
+        </button>
+        <button type="button" onClick={handleValidateClick}>
+          Validate
         </button>
         <button type="button" onClick={handleResetClick}>
           Reset Method
