@@ -8,13 +8,13 @@ import {
 import {
   Config,
   Controller,
+  EventHandler,
   Errors,
   FieldElement,
   Fields,
   FieldValidator,
   FormValues,
   GetFormState,
-  HandleSubmit,
   Reset,
   Return,
   SetErrors,
@@ -88,6 +88,7 @@ const useForm = <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
+  onReset,
   onSubmit,
   onError,
 }: Config<V>): Return<V> => {
@@ -95,6 +96,7 @@ const useForm = <V extends FormValues = FormValues>({
   const fieldsRef = useRef<Fields>({});
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
+  const onResetRef = useLatest(onReset);
   const onSubmitRef = useLatest(onSubmit);
   const onErrorRef = useLatest(onError);
   const controllersRef = useRef<UsedRef>({});
@@ -396,32 +398,60 @@ const useForm = <V extends FormValues = FormValues>({
     [resetStateRef, setAllDomsValue]
   );
 
-  const handleSubmit = useCallback<HandleSubmit>(
+  const getOptions = useCallback(
+    () => ({
+      getFormState,
+      setErrors,
+      setFieldError,
+      setValues,
+      setFieldValue,
+      validateForm,
+      validateField,
+      reset,
+    }),
+    [
+      getFormState,
+      reset,
+      setErrors,
+      setFieldError,
+      setFieldValue,
+      setValues,
+      validateField,
+      validateForm,
+    ]
+  );
+
+  const handleReset = useCallback<EventHandler>(
+    (e) => {
+      if (e?.preventDefault) e.preventDefault();
+      if (e?.stopPropagation) e.stopPropagation();
+
+      reset();
+
+      if (onResetRef.current)
+        onResetRef.current(stateRef.current.values, getOptions(), e);
+    },
+    [getOptions, onResetRef, reset, stateRef]
+  );
+
+  const handleSubmit = useCallback<EventHandler>(
     async (e) => {
       if (e?.preventDefault) e.preventDefault();
       if (e?.stopPropagation) e.stopPropagation();
 
-      setStateRef("submitCount", stateRef.current.submitCount + 1);
+      const { current: state } = stateRef;
+
+      setStateRef("submitCount", state.submitCount + 1);
       setStateRef("isSubmitting", true);
 
       try {
         const errors = await validateForm();
-        const options = {
-          getFormState,
-          setErrors,
-          setFieldError,
-          setValues,
-          setFieldValue,
-          validateForm,
-          validateField,
-          reset,
-        };
 
         if (onSubmitRef.current && isEmptyObject(errors)) {
-          await onSubmitRef.current(stateRef.current.values, options, e);
+          await onSubmitRef.current(state.values, getOptions(), e);
           setStateRef("isSubmitted", true);
         } else if (onErrorRef.current) {
-          onErrorRef.current(stateRef.current.errors, options, e);
+          onErrorRef.current(state.errors, getOptions(), e);
         }
       } catch (exception) {
         warn(`💡react-cool-form > handleSubmit: `, exception);
@@ -429,20 +459,7 @@ const useForm = <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
-    [
-      getFormState,
-      onErrorRef,
-      onSubmitRef,
-      reset,
-      setErrors,
-      setFieldError,
-      setFieldValue,
-      setStateRef,
-      setValues,
-      stateRef,
-      validateField,
-      validateForm,
-    ]
+    [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
   );
 
   const getChangeEventValue = useCallback(
@@ -628,6 +645,7 @@ const useForm = <V extends FormValues = FormValues>({
     validateForm,
     validateField,
     reset,
+    handleReset,
     handleSubmit,
     controller,
   };

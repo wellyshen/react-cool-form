@@ -22,10 +22,14 @@ declare module "react-cool-form" {
 
   type Options<V> = Omit<
     Return<V>,
-    "formRef" | "validate" | "handleSubmit" | "controller"
+    "formRef" | "validate" | "handleReset" | "handleSubmit" | "controller"
   >;
 
   type Event = FormEvent<HTMLFormElement> | SyntheticEvent<any>;
+
+  export interface OnReset<V = FormValues> {
+    (values: V, options: Options<V>, event: Event): void;
+  }
 
   export interface OnSubmit<V = FormValues> {
     (values: V, options: Options<V>, event: Event): void | Promise<void>;
@@ -102,7 +106,7 @@ declare module "react-cool-form" {
     (values?: V, exclude?: (keyof FormState<V>)[]): void;
   }
 
-  interface HandleSubmit {
+  interface EventHandler {
     (event: Event): void;
   }
 
@@ -143,6 +147,7 @@ declare module "react-cool-form" {
     validate?: FormValidator<V>;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
+    onReset?: OnReset<V>;
     onSubmit?: OnSubmit<V>;
     onError?: OnError<V>;
   }
@@ -158,7 +163,8 @@ declare module "react-cool-form" {
     validateForm: ValidateForm<V>;
     validateField: ValidateField<V>;
     reset: Reset<V>;
-    handleSubmit: HandleSubmit;
+    handleReset: EventHandler;
+    handleSubmit: EventHandler;
     controller: Controller<V>;
   }
 

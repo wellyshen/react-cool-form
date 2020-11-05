@@ -67,6 +67,7 @@ export default (): JSX.Element => {
     validateForm,
     controller,
     reset,
+    handleReset,
     handleSubmit,
   } = useForm<FormValues>({
     initialValues,
@@ -105,16 +106,19 @@ export default (): JSX.Element => {
         return formErrors;
       } */
     },
+    onReset: (values, options, e) => {
+      // console.log("LOG ===> onReset: ", values, options, e);
+    },
     onSubmit: async (values, options, e) => {
       // eslint-disable-next-line
       await new Promise((resolve) => {
         setTimeout(resolve, 3000);
       });
 
-      console.log("LOG ===> onSubmit: ", values);
+      // console.log("LOG ===> onSubmit: ", values, options, e);
     },
     onError: (errors, options, e) => {
-      console.log("LOG ===> onError: ", errors);
+      // console.log("LOG ===> onError: ", errors, options, e);
     },
   });
 
@@ -122,16 +126,16 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getFormState({
-      // values: "values",
-      // touched: "touched",
+      values: "values",
+      touched: "touched",
       errors: "errors",
-      // isDirty: "isDirty",
-      // dirtyFields: "dirtyFields",
+      isDirty: "isDirty",
+      dirtyFields: "dirtyFields",
       isValidating: "isValidating",
-      // isValid: "isValid",
-      // isSubmitting: "isSubmitting",
-      // isSubmitted: "isSubmitted",
-      // submitCount: "submitCount",
+      isValid: "isValid",
+      isSubmitting: "isSubmitting",
+      isSubmitted: "isSubmitted",
+      submitCount: "submitCount",
     })
   );
 
@@ -189,7 +193,13 @@ export default (): JSX.Element => {
 
   return (
     <div css={container}>
-      <form css={form} onSubmit={handleSubmit} noValidate ref={formRef}>
+      <form
+        css={form}
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+        noValidate
+        ref={formRef}
+      >
         <Input
           label="Text:"
           name="text.nest"
@@ -283,15 +293,7 @@ export default (): JSX.Element => {
           Reset Method
         </button>
         <input type="submit" />
-        {/* eslint-disable-next-line react/button-has-type */}
-        <button
-          type="reset"
-          onClick={(e) => {
-            // e.preventDefault();
-          }}
-        >
-          Reset
-        </button>
+        <input type="reset" />
       </form>
     </div>
   );

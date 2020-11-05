@@ -67,10 +67,14 @@ export type Fields = Record<
 
 type Options<V> = Omit<
   Return<V>,
-  "formRef" | "validate" | "handleSubmit" | "controller"
+  "formRef" | "validate" | "handleReset" | "handleSubmit" | "controller"
 >;
 
 type Event = FormEvent<HTMLFormElement> | SyntheticEvent<any>;
+
+interface OnReset<V> {
+  (values: V, options: Options<V>, event: Event): void;
+}
 
 interface OnSubmit<V> {
   (values: V, options: Options<V>, event: Event): void | Promise<void>;
@@ -143,7 +147,7 @@ export interface Reset<V> {
   (values?: V, exclude?: (keyof FormState<V>)[]): void;
 }
 
-export interface HandleSubmit {
+export interface EventHandler {
   (event: Event): void;
 }
 
@@ -172,6 +176,7 @@ export interface Config<V> {
   validate?: FormValidator<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
+  onReset?: OnReset<V>;
   onSubmit?: OnSubmit<V>;
   onError?: OnError<V>;
 }
@@ -187,6 +192,7 @@ export interface Return<V> {
   validateForm: ValidateForm<V>;
   validateField: ValidateField<V>;
   reset: Reset<V>;
-  handleSubmit: HandleSubmit;
+  handleReset: EventHandler;
+  handleSubmit: EventHandler;
   controller: Controller<V>;
 }
