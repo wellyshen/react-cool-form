@@ -380,6 +380,7 @@ const useForm = <V extends FormValues = FormValues>({
       if (isTouched) setFieldTouched(name, false);
       if (isDirty) setFieldDirty(name);
       if (shouldValidate) validateFormWithLowPriority();
+      changedFieldRef.current = name;
     },
     [
       setDomValue,
@@ -501,10 +502,13 @@ const useForm = <V extends FormValues = FormValues>({
 
   const handleFieldChange = useCallback(
     (field: FieldElement) => {
-      setStateRef(`values.${field.name}`, getChangeEventValue(field));
-      setFieldDirty(field.name);
+      const { name } = field;
+
+      setStateRef(`values.${name}`, getChangeEventValue(field));
+      setFieldDirty(name);
 
       if (validateOnChange) validateFormWithLowPriority();
+      changedFieldRef.current = name;
     },
     [
       getChangeEventValue,
@@ -543,8 +547,6 @@ const useForm = <V extends FormValues = FormValues>({
               setFieldValue(name, parsedE);
               if (onChange) onChange(e);
             }
-
-            changedFieldRef.current = name;
           },
           [parser, name, onChange]
         ),
@@ -591,10 +593,8 @@ const useForm = <V extends FormValues = FormValues>({
         return;
       }
 
-      if (fieldsRef.current[name] && !controllersRef.current[name]) {
+      if (fieldsRef.current[name] && !controllersRef.current[name])
         handleFieldChange(field);
-        changedFieldRef.current = name;
-      }
     };
 
     const handleBlur = ({ target }: Event) => {
