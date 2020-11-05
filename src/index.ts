@@ -62,7 +62,7 @@ const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
 
           if (!hasChangeEvent(field)) return false;
           if (!name) {
-            warn('💡react-cool-form: Field is missing "name" attribute.');
+            warn('💡 react-cool-form: Field is missing "name" attribute.');
             return false;
           }
           if (dataset.rcfIgnore || fields[name]) return false;
@@ -229,7 +229,7 @@ const useForm = <V extends FormValues = FormValues>({
 
         return error;
       } catch (exception) {
-        warn(`💡react-cool-form > validate ${name}: `, exception);
+        warn(`💡 react-cool-form > validate ${name}: `, exception);
         throw exception;
       }
     },
@@ -265,7 +265,7 @@ const useForm = <V extends FormValues = FormValues>({
 
         return isPlainObject(errors) ? errors : {};
       } catch (exception) {
-        warn(`💡react-cool-form > config.validate: `, exception);
+        warn(`💡 react-cool-form > config.validate: `, exception);
         throw exception;
       }
     },
@@ -456,7 +456,7 @@ const useForm = <V extends FormValues = FormValues>({
           onErrorRef.current(state.errors, getOptions(), e);
         }
       } catch (exception) {
-        warn(`💡react-cool-form > handleSubmit: `, exception);
+        warn(`💡 react-cool-form > handleSubmit: `, exception);
       } finally {
         setStateRef("isSubmitting", false);
       }
@@ -522,7 +522,7 @@ const useForm = <V extends FormValues = FormValues>({
   const controller = useCallback<Controller<V>>(
     (name, { validate, value, parser, onChange, onBlur } = {}) => {
       if (!name) {
-        warn('💡react-cool-form > controller: Missing the "name" parameter.');
+        warn('💡 react-cool-form > controller: Missing the "name" parameter.');
         return {};
       }
 
@@ -572,7 +572,7 @@ const useForm = <V extends FormValues = FormValues>({
   useLayoutEffect(() => {
     if (!formRef.current) {
       warn(
-        '💡react-cool-form: Don\'t forget to register your form via the "formRef".'
+        '💡 react-cool-form: Don\'t forget to register your form via the "formRef".'
       );
       return;
     }
@@ -589,7 +589,7 @@ const useForm = <V extends FormValues = FormValues>({
       const { name } = field;
 
       if (!name) {
-        warn('💡react-cool-form: Field is missing "name" attribute.');
+        warn('💡 react-cool-form: Field is missing "name" attribute.');
         return;
       }
 
