@@ -107,7 +107,7 @@ export default (): JSX.Element => {
       } */
     },
     onReset: (values, options, e) => {
-      // console.log("LOG ===> onReset: ", values, options, e);
+      console.log("LOG ===> onReset: ", values, options, e);
     },
     onSubmit: async (values, options, e) => {
       // eslint-disable-next-line
@@ -115,10 +115,10 @@ export default (): JSX.Element => {
         setTimeout(resolve, 3000);
       });
 
-      // console.log("LOG ===> onSubmit: ", values, options, e);
+      console.log("LOG ===> onSubmit: ", values, options, e);
     },
     onError: (errors, options, e) => {
-      // console.log("LOG ===> onError: ", errors, options, e);
+      console.log("LOG ===> onError: ", errors, options, e);
     },
   });
 
