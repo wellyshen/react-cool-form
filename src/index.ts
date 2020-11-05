@@ -441,24 +441,23 @@ const useForm = <V extends FormValues = FormValues>({
       if (e?.preventDefault) e.preventDefault();
       if (e?.stopPropagation) e.stopPropagation();
 
-      const { current: state } = stateRef;
-
-      setStateRef("submitCount", state.submitCount + 1);
       setStateRef("isSubmitting", true);
+
+      const { current: state } = stateRef;
 
       try {
         const errors = await validateForm();
 
         if (onSubmitRef.current && isEmptyObject(errors)) {
           await onSubmitRef.current(state.values, getOptions(), e);
+          setStateRef("isSubmitting", false);
           setStateRef("isSubmitted", true);
         } else if (onErrorRef.current) {
           onErrorRef.current(state.errors, getOptions(), e);
+          setStateRef("isSubmitting", false);
         }
       } catch (exception) {
         warn(`💡react-cool-form > handleSubmit: `, exception);
-      } finally {
-        setStateRef("isSubmitting", false);
       }
     },
     [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]

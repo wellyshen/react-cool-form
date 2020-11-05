@@ -40,13 +40,18 @@ export default <V>(initialValues: V): FormStateReturn<V> => {
         isDirty: prevIsDirty,
         isValid: prevIsValid,
       } = nextState;
+      let { submitCount: prevSubmitCount } = nextState;
       const isDirty =
         key === "values"
           ? !isEqual(values, initialStateRef.current.values)
           : prevIsDirty;
       const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
+      const submitCount =
+        key === "isSubmitting" && value
+          ? (prevSubmitCount += 1)
+          : prevSubmitCount;
 
-      stateRef.current = { ...nextState, isDirty, isValid };
+      stateRef.current = { ...nextState, isDirty, isValid, submitCount };
 
       const { current: usedStated } = usedStateRef;
 
