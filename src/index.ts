@@ -451,14 +451,14 @@ const useForm = <V extends FormValues = FormValues>({
 
         if (onSubmitRef.current && isEmptyObject(errors)) {
           await onSubmitRef.current(state.values, getOptions(), e);
-          setStateRef("isSubmitting", false);
           setStateRef("isSubmitted", true);
         } else if (onErrorRef.current) {
           onErrorRef.current(state.errors, getOptions(), e);
-          setStateRef("isSubmitting", false);
         }
       } catch (exception) {
         warn(`💡react-cool-form > handleSubmit: `, exception);
+      } finally {
+        setStateRef("isSubmitting", false);
       }
     },
     [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
