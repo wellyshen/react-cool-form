@@ -100,6 +100,7 @@ const useForm = <V extends FormValues = FormValues>({
   const onSubmitRef = useLatest(onSubmit);
   const onErrorRef = useLatest(onError);
   const controllersRef = useRef<UsedRef>({});
+  const changedFieldRef = useRef<string>();
   const initialValuesRef = useRef(initialValues || {});
   const {
     stateRef,
@@ -315,6 +316,7 @@ const useForm = <V extends FormValues = FormValues>({
       setStateRef(`touched.${name}`, true);
 
       if (shouldValidate) validateFormWithLowPriority();
+      changedFieldRef.current = undefined;
     },
     [setStateRef, validateFormWithLowPriority, validateOnBlur]
   );
@@ -542,13 +544,15 @@ const useForm = <V extends FormValues = FormValues>({
               setFieldValue(name, parsedE);
               if (onChange) onChange(e);
             }
+
+            changedFieldRef.current = name;
           },
           [parser, name, onChange]
         ),
         // eslint-disable-next-line react-hooks/rules-of-hooks
         onBlur: useCallback(
           (e) => {
-            setFieldTouched(name);
+            setFieldTouched(name, name !== changedFieldRef.current);
             if (onBlur) onBlur(e);
           },
           [name, onBlur]
@@ -588,8 +592,10 @@ const useForm = <V extends FormValues = FormValues>({
         return;
       }
 
-      if (fieldsRef.current[name] && !controllersRef.current[name])
+      if (fieldsRef.current[name] && !controllersRef.current[name]) {
         handleFieldChange(field);
+        changedFieldRef.current = name;
+      }
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -602,7 +608,7 @@ const useForm = <V extends FormValues = FormValues>({
       const { name } = target as FieldElement;
 
       if (fieldsRef.current[name] && !controllersRef.current[name])
-        setFieldTouched(name);
+        setFieldTouched(name, name !== changedFieldRef.current);
     };
 
     const form = formRef.current;
