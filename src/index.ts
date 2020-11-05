@@ -60,14 +60,14 @@ const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
           const field = element as FieldElement;
           const { name, dataset } = field;
 
+          if (!hasChangeEvent(field)) return false;
           if (!name) {
             warn('💡react-cool-form: Field is missing "name" attribute.');
             return false;
           }
-
           if (dataset.rcfIgnore || fields[name]) return false;
 
-          return hasChangeEvent(field);
+          return true;
         })
         .reduce((acc: Record<string, any>, cur) => {
           const { name, type } = cur as FieldElement;
