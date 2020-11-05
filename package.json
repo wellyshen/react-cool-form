@@ -29,10 +29,6 @@
   "files": [
     "dist"
   ],
-  "engines": {
-    "node": ">=12",
-    "npm": ">=6"
-  },
   "scripts": {
     "link-pkg": "npm link examples/node_modules/react && yarn link",
     "dev": "yarn clean:build && yarn copy:type && rollup -c rollup/config.js -w",
