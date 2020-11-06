@@ -132,7 +132,7 @@
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@rollup/plugin-replace": "^2.3.4",
     "@testing-library/react-hooks": "^3.4.2",
-    "@types/react": "^16.9.55",
+    "@types/react": "^16.9.56",
     "@types/scheduler": "^0.16.1",
     "cpy-cli": "^3.1.1",
     "eslint": "^7.2.0",
