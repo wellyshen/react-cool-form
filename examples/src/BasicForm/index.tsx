@@ -72,7 +72,7 @@ export default (): JSX.Element => {
   } = useForm<FormValues>({
     initialValues,
     // validateOnChange: false,
-    validateOnBlur: false,
+    // validateOnBlur: false,
     validate: async (values, set) => {
       let errors: any = { text: { nest: "" } };
 
@@ -122,12 +122,12 @@ export default (): JSX.Element => {
   });
 
   // console.log("LOG ===> Re-render");
-  /* console.log(
+  console.log(
     "LOG ===> formState: ",
     getFormState({
       // values: "values",
       // touched: "touched",
-      // errors: "errors",
+      errors: "errors",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
@@ -136,7 +136,7 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  ); */
+  );
 
   useEffect(() => {
     // validateField("text.nest");
