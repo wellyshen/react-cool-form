@@ -37,7 +37,7 @@ jobs:
       - name: Run test
         run: yarn test:cov
       - name: Run build
-        run: yarn build:dist
+        run: yarn build
 
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@master
