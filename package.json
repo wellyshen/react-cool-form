@@ -21,7 +21,8 @@
     "react-hooks",
     "form-state",
     "state-management",
-    "form-validation"
+    "form-validation",
+    "asynchronous"
   ],
   "author": "Welly Shen <hivoid19@gmail.com> (https://github.com/wellyshen)",
   "main": "dist/index.js",
