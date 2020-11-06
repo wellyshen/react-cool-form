@@ -45,7 +45,8 @@
     "clean:cov": "rimraf coverage",
     "copy": "run-p copy:*",
     "copy:cjs": "cpy rollup/cjsEntryFile.js dist --rename=index.js",
-    "copy:type": "cpy src/types/react-cool-form.d.ts dist --rename=index.d.ts"
+    "copy:type": "cpy src/types/react-cool-form.d.ts dist --rename=index.d.ts",
+    "release": "changeset publish"
   },
   "husky": {
     "hooks": {
@@ -124,6 +125,7 @@
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.5",
     "@babel/preset-typescript": "^7.12.1",
+    "@changesets/cli": "^2.11.2",
     "@rollup/plugin-babel": "^5.2.1",
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
