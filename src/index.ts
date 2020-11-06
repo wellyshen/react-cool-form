@@ -343,7 +343,7 @@ const useForm = <V extends FormValues = FormValues>({
       values = isFunction(values) ? values(stateRef.current.values) : values;
 
       setStateRef("values", values);
-      setAllDomsValue(fieldsRef.current, values);
+      setAllDomsValue(undefined, values);
 
       touchedFields.forEach((name) => setFieldTouched(name, false));
       dirtyFields.forEach((name) => setFieldDirty(name));
@@ -396,7 +396,7 @@ const useForm = <V extends FormValues = FormValues>({
   const reset = useCallback<Reset<V>>(
     (values, exclude = []) =>
       resetStateRef(values, exclude, (nextValues) =>
-        setAllDomsValue(fieldsRef.current, nextValues)
+        setAllDomsValue(undefined, nextValues)
       ),
     [resetStateRef, setAllDomsValue]
   );
@@ -553,7 +553,13 @@ const useForm = <V extends FormValues = FormValues>({
         // eslint-disable-next-line react-hooks/rules-of-hooks
         onBlur: useCallback(
           (e) => {
-            setFieldTouched(name, name !== changedFieldRef.current);
+            setFieldTouched(
+              name,
+              (validateOnBlur &&
+                validateOnChange &&
+                name !== changedFieldRef.current) ||
+                undefined
+            );
             if (onBlur) onBlur(e);
           },
           [name, onBlur]
@@ -566,6 +572,8 @@ const useForm = <V extends FormValues = FormValues>({
       handleFieldChange,
       setFieldTouched,
       setFieldValue,
+      validateOnBlur,
+      validateOnChange,
     ]
   );
 
@@ -607,7 +615,13 @@ const useForm = <V extends FormValues = FormValues>({
       const { name } = target as FieldElement;
 
       if (fieldsRef.current[name] && !controllersRef.current[name])
-        setFieldTouched(name, name !== changedFieldRef.current);
+        setFieldTouched(
+          name,
+          (validateOnBlur &&
+            validateOnChange &&
+            name !== changedFieldRef.current) ||
+            undefined
+        );
     };
 
     const form = formRef.current;
@@ -637,7 +651,13 @@ const useForm = <V extends FormValues = FormValues>({
       form.removeEventListener("focusout", handleBlur);
       observer.disconnect();
     };
-  }, [handleFieldChange, setAllDomsValue, setFieldTouched]);
+  }, [
+    handleFieldChange,
+    setAllDomsValue,
+    setFieldTouched,
+    validateOnBlur,
+    validateOnChange,
+  ]);
 
   return {
     formRef,
