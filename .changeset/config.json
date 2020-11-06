@@ -1,9 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@1.4.0/schema.json",
-  "changelog": [
-    "@changesets/changelog-github",
-    { "repo": "wellyshen/react-cool-form" }
-  ],
+  "changelog": "@changesets/cli/changelog",
   "commit": false,
   "linked": [],
   "access": "restricted",
