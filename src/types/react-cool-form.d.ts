@@ -39,6 +39,10 @@ declare module "react-cool-form" {
     (errors: Errors<V>, options: Options<V>, event: Event): void;
   }
 
+  export interface Debug<V> {
+    (formState: FormState<V>): void;
+  }
+
   interface Set {
     (object: any, path: string, value?: unknown, immutable?: boolean): any;
   }
@@ -150,6 +154,7 @@ declare module "react-cool-form" {
     onReset?: OnReset<V>;
     onSubmit?: OnSubmit<V>;
     onError?: OnError<V>;
+    debug?: Debug<V>;
   }
 
   export interface Return<V = FormValues> {

@@ -84,6 +84,10 @@ interface OnError<V> {
   (errors: Errors<V>, options: Options<V>, event: Event): void;
 }
 
+export interface Debug<V> {
+  (formState: FormState<V>): void;
+}
+
 export interface Set {
   (object: any, path: string, value?: unknown, immutable?: boolean): any;
 }
@@ -179,6 +183,7 @@ export interface Config<V> {
   onReset?: OnReset<V>;
   onSubmit?: OnSubmit<V>;
   onError?: OnError<V>;
+  debug?: Debug<V>;
 }
 
 export interface Return<V> {

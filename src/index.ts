@@ -91,6 +91,7 @@ const useForm = <V extends FormValues = FormValues>({
   onReset,
   onSubmit,
   onError,
+  debug,
 }: Config<V>): Return<V> => {
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
@@ -107,7 +108,7 @@ const useForm = <V extends FormValues = FormValues>({
     setStateRef,
     resetStateRef,
     setUsedStateRef,
-  } = useFormState<V>(initialValuesRef.current);
+  } = useFormState<V>(initialValuesRef.current, debug);
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (controllersRef.current[name] || !fieldsRef.current[name]) return;
@@ -444,16 +445,14 @@ const useForm = <V extends FormValues = FormValues>({
 
       setStateRef("isSubmitting", true);
 
-      const { current: state } = stateRef;
-
       try {
         const errors = await validateForm();
 
         if (onSubmitRef.current && isEmptyObject(errors)) {
-          await onSubmitRef.current(state.values, getOptions(), e);
+          await onSubmitRef.current(stateRef.current.values, getOptions(), e);
           setStateRef("isSubmitted", true);
         } else if (onErrorRef.current) {
-          onErrorRef.current(state.errors, getOptions(), e);
+          onErrorRef.current(stateRef.current.errors, getOptions(), e);
         }
       } catch (exception) {
         warn(`💡 react-cool-form > handleSubmit: `, exception);

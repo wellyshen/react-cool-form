@@ -106,9 +106,8 @@ export default (): JSX.Element => {
         return formErrors;
       } */
     },
-    onReset: (values, options, e) => {
-      console.log("LOG ===> onReset: ", values, options, e);
-    },
+    onReset: (values, options, e) =>
+      console.log("LOG ===> onReset: ", values, options, e),
     onSubmit: async (values, options, e) => {
       // eslint-disable-next-line
       await new Promise((resolve) => {
@@ -117,18 +116,18 @@ export default (): JSX.Element => {
 
       console.log("LOG ===> onSubmit: ", values, options, e);
     },
-    onError: (errors, options, e) => {
-      console.log("LOG ===> onError: ", errors, options, e);
-    },
+    onError: (errors, options, e) =>
+      console.log("LOG ===> onError: ", errors, options, e),
+    // debug: (formState) => console.log("LOG ===> debug: ", formState),
   });
 
   // console.log("LOG ===> Re-render");
-  console.log(
+  /* console.log(
     "LOG ===> formState: ",
     getFormState({
       // values: "values",
       // touched: "touched",
-      errors: "errors",
+      // errors: "errors",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
@@ -137,7 +136,7 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  );
+  ); */
 
   useEffect(() => {
     // validateField("text.nest");
