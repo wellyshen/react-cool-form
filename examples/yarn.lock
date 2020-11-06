@@ -1602,7 +1602,7 @@
     lodash "^4.17.15"
     redent "^3.0.0"
 
-"@testing-library/react@^11.1.0":
+"@testing-library/react@^11.1.1":
   version "11.1.1"
   resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-11.1.1.tgz#226d8dc7491b702fcaac2d7d88d42892e655893a"
   integrity sha512-DT/P2opE9o4NWCd/oIL73b6VF/Xk9AY8iYSstKfz9cXw0XYPQ5IhA/cuYfoN9nU+mAynW8DpAVfEWdM6e7zF6g==
@@ -1610,7 +1610,7 @@
     "@babel/runtime" "^7.12.1"
     "@testing-library/dom" "^7.26.4"
 
-"@testing-library/user-event@^12.1.10":
+"@testing-library/user-event@^12.2.0":
   version "12.2.0"
   resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-12.2.0.tgz#fbb0710f93d68a28b9407e2380eb152354c944a7"
   integrity sha512-Vnmm1ZvJ+JSQ7+lGIWMIdGbdLFQBAeWEAZJjw6dZwKWMwVTOBXMFbAxUCewQEVM0xfD4sGrYS/Hxec311WknGw==
@@ -4719,7 +4719,7 @@ eslint-config-react-app@^6.0.0:
   dependencies:
     confusing-browser-globals "^1.0.10"
 
-eslint-config-welly@^1.6.4:
+eslint-config-welly@^1.6.5:
   version "1.6.5"
   resolved "https://registry.yarnpkg.com/eslint-config-welly/-/eslint-config-welly-1.6.5.tgz#bef5abef90ed9cd691f9c04bf2f3e384ae059acc"
   integrity sha512-83WsYeM5wfn5Tv035xuh1AJhhE/8Jf+4zM6PM4IyxxYxoBy6jeoSvo+xMx8Jf9xJi40euJ/uL7LZwfE3GYUQlg==
