@@ -22,7 +22,8 @@
     "form-state",
     "state-management",
     "form-validation",
-    "asynchronous"
+    "asynchronous",
+    "form-builder"
   ],
   "author": "Welly Shen <hivoid19@gmail.com> (https://github.com/wellyshen)",
   "main": "dist/index.js",
