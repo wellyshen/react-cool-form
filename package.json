@@ -1,7 +1,7 @@
 {
   "name": "react-cool-form",
   "version": "0.0.5",
-  "description": "React hooks for building performant forms with good DX.",
+  "description": "React hooks for forms state, validation and performance.",
   "license": "MIT",
   "homepage": "https://github.com/wellyshen/react-cool-form",
   "repository": "https://github.com/wellyshen/react-cool-form",
@@ -29,7 +29,9 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "link-pkg": "npm link examples/node_modules/react && yarn link",
     "dev": "yarn clean:build && yarn copy:type && rollup -c rollup/config.js -w",

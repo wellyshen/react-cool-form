@@ -2,7 +2,7 @@
 
 # <b>REACT COOL FORM</b>
 
-The easiest way to build performant forms
+React hooks for forms state, validation and performance.
 
 [![npm version](https://img.shields.io/npm/v/react-cool-form?style=flat-square)](https://www.npmjs.com/package/react-cool-form)
 [![npm downloads](https://img.shields.io/npm/dm/react-cool-form?style=flat-square)](https://www.npmtrends.com/react-cool-form)
