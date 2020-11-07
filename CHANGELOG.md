@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.5
+
+### Patch Changes
+
+- [`ade598e`](https://github.com/wellyshen/react-cool-form/commit/ade598ece6caa28026363100311b4a9d0ed14035) [#55](https://github.com/wellyshen/react-cool-form/pull/55) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): adjust layout
+
 ## 0.0.4
 
 ### Patch Changes
