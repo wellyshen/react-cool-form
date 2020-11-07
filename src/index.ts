@@ -47,6 +47,9 @@ import {
   warn,
 } from "./utils";
 
+const useUniversalLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
+
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
 
@@ -576,7 +579,7 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
-  useLayoutEffect(() => {
+  useUniversalLayoutEffect(() => {
     if (!formRef.current) {
       warn(
         '💡 react-cool-form: Don\'t forget to register your form via the "formRef".'
