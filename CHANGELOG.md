@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.9
+
+### Patch Changes
+
+- [`0aefe6a`](https://github.com/wellyshen/react-cool-form/commit/0aefe6a3d2fe9e8dd326e360a18c88c003447823) [#67](https://github.com/wellyshen/react-cool-form/pull/67) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): accept function as the values argv of the reset method
+
+* [`8a8f978`](https://github.com/wellyshen/react-cool-form/commit/8a8f9782abf18e8d97fa804bd45825cb560eeb9b) [#65](https://github.com/wellyshen/react-cool-form/pull/65) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): disabled the watch mode of getFormState() for event & remove un-necessary variable
+
 ## 0.0.8
 
 ### Patch Changes
