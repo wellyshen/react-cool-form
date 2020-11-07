@@ -27,7 +27,6 @@
   ],
   "author": "Welly Shen <hivoid19@gmail.com> (https://github.com/wellyshen)",
   "main": "dist/index.js",
-  "jsnext:main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
   "umd:main": "dist/index.umd.production.min.js",
   "unpkg": "dist/index.umd.production.min.js",
