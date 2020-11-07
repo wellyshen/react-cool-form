@@ -1,6 +1,6 @@
 {
   "name": "react-cool-form",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "React hooks for building performant forms with good DX.",
   "license": "MIT",
   "homepage": "https://github.com/wellyshen/react-cool-form",
