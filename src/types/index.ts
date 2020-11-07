@@ -148,7 +148,10 @@ export interface ValidateField<V> {
 }
 
 export interface Reset<V> {
-  (values?: V, exclude?: (keyof FormState<V>)[]): void;
+  (
+    values?: V | ((previousValues: V) => V),
+    exclude?: (keyof FormState<V>)[]
+  ): void;
 }
 
 export interface EventHandler {

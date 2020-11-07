@@ -406,11 +406,14 @@ const useForm = <V extends FormValues = FormValues>({
   );
 
   const reset = useCallback<Reset<V>>(
-    (values, exclude = []) =>
-      resetStateRef(values, exclude, (nextValues) =>
-        setAllDomsValue(nextValues)
-      ),
-    [resetStateRef, setAllDomsValue]
+    (values, exclude = []) => {
+      resetStateRef(
+        isFunction(values) ? values(stateRef.current.values) : values,
+        exclude,
+        (nextValues) => setAllDomsValue(nextValues)
+      );
+    },
+    [resetStateRef, setAllDomsValue, stateRef]
   );
 
   const getOptions = useCallback(

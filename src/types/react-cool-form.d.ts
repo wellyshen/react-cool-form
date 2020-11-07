@@ -107,7 +107,10 @@ declare module "react-cool-form" {
   }
 
   interface Reset<V> {
-    (values?: V, exclude?: (keyof FormState<V>)[]): void;
+    (
+      values?: V | ((previousValues: V) => V),
+      exclude?: (keyof FormState<V>)[]
+    ): void;
   }
 
   interface EventHandler {
