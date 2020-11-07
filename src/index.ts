@@ -244,8 +244,7 @@ const useForm = <V extends FormValues = FormValues>({
 
     return Promise.all(promises).then((errors) =>
       names.reduce((acc, cur, idx) => {
-        const error = errors[idx];
-        acc = { ...acc, ...(error ? set({}, cur, error) : {}) };
+        acc = { ...acc, ...(errors[idx] ? set({}, cur, errors[idx]) : {}) };
         return acc;
       }, {})
     );
@@ -415,7 +414,8 @@ const useForm = <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      getFormState,
+      getFormState: ((path: string, watch = false) =>
+        getFormState(path, watch)) as GetFormState,
       setErrors,
       setFieldError,
       setValues,
