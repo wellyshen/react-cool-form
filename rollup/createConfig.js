@@ -7,6 +7,11 @@ import { terser } from "rollup-plugin-terser";
 
 import pkg from "../package.json";
 
+const babelRuntimeVersion = pkg.dependencies["@babel/runtime"].replace(
+  /^[^0-9]*/,
+  ""
+);
+
 const makeExternalPredicate = (external) =>
   !external.length
     ? () => false
@@ -18,23 +23,30 @@ export default ({ name, format, env, size }) => {
     .filter(Boolean)
     .join(".");
   const extensions = [".ts"];
+  const isUmd = format === "umd";
 
   return {
     input: "src",
     output: {
       file: `dist/${fileName}`,
       format,
-      name,
+      name: pkg.name,
       sourcemap: true,
       globals: { react: "React" },
       exports: "named",
     },
     plugins: [
       resolve({ extensions }),
-      commonjs(),
+      isUmd && commonjs({ include: /\/node_modules\// }),
       babel({
         exclude: "node_modules/**",
-        babelHelpers: "runtime",
+        plugins: [
+          [
+            "@babel/plugin-transform-runtime",
+            { version: babelRuntimeVersion, helpers: !isUmd },
+          ],
+        ],
+        babelHelpers: isUmd ? "bundled" : "runtime",
         extensions,
       }),
       replace({
@@ -48,9 +60,13 @@ export default ({ name, format, env, size }) => {
           compress: { drop_console: true },
         }),
     ].filter(Boolean),
-    external: makeExternalPredicate([
-      ...Object.keys(pkg.peerDependencies),
-      ...Object.keys(pkg.dependencies),
-    ]),
+    external: makeExternalPredicate(
+      isUmd
+        ? Object.keys(pkg.peerDependencies)
+        : [
+            ...Object.keys(pkg.peerDependencies),
+            ...Object.keys(pkg.dependencies),
+          ]
+    ),
   };
 };

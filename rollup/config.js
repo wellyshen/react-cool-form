@@ -17,6 +17,16 @@ const options = [
     name,
     format: "esm",
   },
+  {
+    name,
+    format: "umd",
+    env: "development",
+  },
+  {
+    name,
+    format: "umd",
+    env: "production",
+  },
 ];
 
 export default options
