@@ -49,6 +49,7 @@
     "copy": "run-p copy:*",
     "copy:cjs": "cpy rollup/cjsEntryFile.js dist --rename=index.js",
     "copy:type": "cpy src/types/react-cool-form.d.ts dist --rename=index.d.ts",
+    "prerelease": "run-s type-check lint test build",
     "release": "changeset publish"
   },
   "husky": {
