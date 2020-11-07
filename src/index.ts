@@ -53,7 +53,7 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 const hasChangeEvent = ({ type }: FieldElement) =>
   !/hidden|image|submit|reset/.test(type);
 
-const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
+const getFields = (form: HTMLFormElement | null) =>
   form
     ? Array.from(form.querySelectorAll("input,textarea,select"))
         .filter((element) => {
@@ -65,7 +65,7 @@ const getFields = (form: HTMLFormElement | null, fields: Fields = {}) =>
             warn('💡 react-cool-form: Field is missing "name" attribute.');
             return false;
           }
-          if (dataset.rcfIgnore || fields[name]) return false;
+          if (dataset.rcfIgnore) return false;
 
           return true;
         })
@@ -102,13 +102,12 @@ const useForm = <V extends FormValues = FormValues>({
   const onErrorRef = useLatest(onError);
   const controllersRef = useRef<UsedRef>({});
   const changedFieldRef = useRef<string>();
-  const initialValuesRef = useRef(initialValues || {});
   const {
     stateRef,
     setStateRef,
     resetStateRef,
     setUsedStateRef,
-  } = useFormState<V>(initialValuesRef.current, debug);
+  } = useFormState<V>(initialValues, debug);
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (controllersRef.current[name] || !fieldsRef.current[name]) return;
@@ -144,15 +143,12 @@ const useForm = <V extends FormValues = FormValues>({
   }, []);
 
   const setAllDomsValue = useCallback(
-    (
-      fields: Fields = fieldsRef.current,
-      values: V = initialValuesRef.current
-    ) =>
-      Object.keys(fields).forEach((key) => {
-        const { name } = fields[key].field;
+    (values: V = stateRef.current.values) =>
+      Object.keys(fieldsRef.current).forEach((key) => {
+        const { name } = fieldsRef.current[key].field;
         setDomValue(name, get(values, name));
       }),
-    [setDomValue]
+    [setDomValue, stateRef]
   );
 
   const validateRef = useCallback<ValidateRef<V>>(
@@ -356,7 +352,7 @@ const useForm = <V extends FormValues = FormValues>({
       values = isFunction(values) ? values(stateRef.current.values) : values;
 
       setStateRef("values", values);
-      setAllDomsValue(undefined, values);
+      setAllDomsValue(values);
 
       touchedFields.forEach((name) => setFieldTouched(name, false));
       dirtyFields.forEach((name) => setFieldDirty(name));
@@ -409,7 +405,7 @@ const useForm = <V extends FormValues = FormValues>({
   const reset = useCallback<Reset<V>>(
     (values, exclude = []) =>
       resetStateRef(values, exclude, (nextValues) =>
-        setAllDomsValue(undefined, nextValues)
+        setAllDomsValue(nextValues)
       ),
     [resetStateRef, setAllDomsValue]
   );
@@ -630,12 +626,8 @@ const useForm = <V extends FormValues = FormValues>({
       // eslint-disable-next-line no-restricted-syntax
       for (const { type, addedNodes } of mutations) {
         if (type === "childList" && addedNodes.length) {
-          const addedFields = getFields(form, fieldsRef.current);
-
-          if (!isEmptyObject(addedFields)) {
-            fieldsRef.current = { ...fieldsRef.current, ...addedFields };
-            setAllDomsValue(addedFields);
-          }
+          fieldsRef.current = getFields(form);
+          setAllDomsValue();
 
           break;
         }
