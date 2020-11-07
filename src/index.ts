@@ -414,7 +414,8 @@ const useForm = <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      getFormState: (path: string, watch = false) => getFormState(path, watch),
+      getFormState: ((path: string, watch = false) =>
+        getFormState(path, watch)) as GetFormState,
       setErrors,
       setFieldError,
       setValues,
