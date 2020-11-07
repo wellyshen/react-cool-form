@@ -184,7 +184,7 @@ export default (): JSX.Element => {
   };
 
   const handleResetClick = (): void => {
-    reset({ ...initialValues, text: { nest: "new test" } }, [
+    reset((prevValues) => ({ ...prevValues, text: { nest: "new test" } }), [
       "touched",
       "submitCount",
     ]);
