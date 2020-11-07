@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/core */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import useForm from "react-cool-form";
 import * as Yup from "yup";
 
@@ -73,39 +73,39 @@ export default (): JSX.Element => {
     initialValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    validate: async (values, set) => {
-      let errors: any = { text: { nest: "" } };
+    // validate: async (values, set) => {
+    //   let errors: any = { text: { nest: "" } };
 
-      // fib(35);
+    //   // fib(35);
 
-      // eslint-disable-next-line
-      /* await new Promise((resolve) => {
-        setTimeout(resolve, 3000);
-      }); */
+    //   // eslint-disable-next-line
+    //   /* await new Promise((resolve) => {
+    //     setTimeout(resolve, 3000);
+    //   }); */
 
-      // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
-      if (values.text.nest.length <= 5) {
-        errors.text.nest = "Form error";
-      } else {
-        errors = {};
-      }
-      // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+    //   // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
+    //   if (values.text.nest.length <= 5) {
+    //     errors.text.nest = "Form error";
+    //   } else {
+    //     errors = {};
+    //   }
+    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
-      // throw new Error("Fake error");
-      return errors;
+    //   // throw new Error("Fake error");
+    //   return errors;
 
-      /* try {
-        await schema.validate(values, { abortEarly: false });
-      } catch (error) {
-        const formErrors = {};
+    //   /* try {
+    //     await schema.validate(values, { abortEarly: false });
+    //   } catch (error) {
+    //     const formErrors = {};
 
-        error.inner.forEach(({ path, message }: any) =>
-          set(formErrors, path, message)
-        );
+    //     error.inner.forEach(({ path, message }: any) =>
+    //       set(formErrors, path, message)
+    //     );
 
-        return formErrors;
-      } */
-    },
+    //     return formErrors;
+    //   } */
+    // },
     onReset: (values, options, e) =>
       console.log("LOG ===> onReset: ", values, options, e),
     onSubmit: async (values, options, e) => {
@@ -202,11 +202,11 @@ export default (): JSX.Element => {
         <Input
           label="Text:"
           name="text.nest"
-          ref={validate(async (value) => {
+          /* ref={validate(async (value) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return value.length <= 5 ? "Field error" : "";
-          })}
+          })} */
           // data-rcf-ignore
         />
         <Controller
@@ -214,10 +214,22 @@ export default (): JSX.Element => {
           name="controller"
           defaultValue={initialValues.controller}
           controller={controller}
+          /* validate={useCallback(async (val, values) => {
+            // eslint-disable-next-line
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
+            // console.log("LOG ===> validate: ", val, values);
+            return val.length <= 5 ? "Field error" : "";
+          }, [])} */
         />
         {showInput && (
           <div>
-            <Input label="Hidden Text:" name="hiddenText" />
+            <Input
+              label="Hidden Text:"
+              name="hiddenText"
+              ref={validate(async (value) => {
+                return value.length <= 5 ? "Field error" : "";
+              })}
+            />
           </div>
         )}
         {/* <Input label="Password:" type="password" name="password" /> */}
@@ -225,9 +237,9 @@ export default (): JSX.Element => {
           label="Number:"
           type="number"
           name="number"
-          ref={validate((value) => {
+          /* ref={validate((value) => {
             return value <= 5 ? "Field error" : "";
-          })}
+        })} */
         />
         <Input label="Range:" type="range" name="range" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />

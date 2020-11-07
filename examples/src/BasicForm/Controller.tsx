@@ -1,5 +1,9 @@
 import React, { ChangeEvent, memo, useState } from "react";
-import { Controller as ControllerType, Parser } from "react-cool-form";
+import {
+  Controller as ControllerType,
+  Parser,
+  FieldValidator,
+} from "react-cool-form";
 
 import { FormValues } from ".";
 
@@ -11,9 +15,17 @@ interface Props {
   type?: string;
   defaultValue: any;
   controller: ControllerType<FormValues, ChangeEvent<HTMLInputElement>>;
+  validate?: FieldValidator<FormValues>;
 }
 
-const Controller = ({ label, name, type, defaultValue, controller }: Props) => {
+const Controller = ({
+  label,
+  name,
+  type,
+  defaultValue,
+  controller,
+  validate,
+}: Props) => {
   // console.log(`LOG ==> ${name} is re-rendered`);
 
   const [value, setValue] = useState(defaultValue);
@@ -25,12 +37,7 @@ const Controller = ({ label, name, type, defaultValue, controller }: Props) => {
       label={label}
       type={type}
       {...controller(name, {
-        validate: async (val, values) => {
-          // eslint-disable-next-line
-          // await new Promise((resolve) => setTimeout(resolve, 1000));
-          // console.log("LOG ===> validate: ", val, values);
-          return val.length <= 5 ? "Field error" : "";
-        },
+        validate,
         value,
         // parser,
         onChange: (e, val) => {
@@ -41,17 +48,13 @@ const Controller = ({ label, name, type, defaultValue, controller }: Props) => {
           // console.log("LOG ===> onBlur: ", e);
         },
       })}
-      // ref={validate(async (values) => {
-      //   // eslint-disable-next-line
-      //   // await new Promise((resolve) => setTimeout(resolve, 1000));
-      //   return values.length <= 3 ? "Field error" : "";
-      // })}
     />
   );
 };
 
 Controller.defaultProps = {
   type: undefined,
+  validate: () => null,
 };
 
 export default memo(Controller);
