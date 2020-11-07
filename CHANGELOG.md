@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.8
+
+### Patch Changes
+
+- [`1815a89`](https://github.com/wellyshen/react-cool-form/commit/1815a89be457826aa55ec37e08123b0a237e60e3) [#62](https://github.com/wellyshen/react-cool-form/pull/62) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): add milestone section
+
+* [`d40937d`](https://github.com/wellyshen/react-cool-form/commit/d40937d12b706c642776d0468d398f409b3bf313) [#63](https://github.com/wellyshen/react-cool-form/pull/63) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): elimiate useLayoutEffect warning in SSR
+
 ## 0.0.7
 
 ### Patch Changes
