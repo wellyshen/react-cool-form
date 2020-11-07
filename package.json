@@ -27,9 +27,14 @@
   ],
   "author": "Welly Shen <hivoid19@gmail.com> (https://github.com/wellyshen)",
   "main": "dist/index.js",
+  "jsnext:main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
+  "umd:main": "dist/index.umd.production.min.js",
+  "unpkg": "dist/index.umd.production.min.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "link-pkg": "npm link examples/node_modules/react && yarn link",
     "dev": "yarn clean:build && yarn copy:type && rollup -c rollup/config.js -w",
@@ -73,9 +78,6 @@
       ],
       "@babel/typescript",
       "@babel/react"
-    ],
-    "plugins": [
-      "@babel/plugin-transform-runtime"
     ]
   },
   "eslintConfig": {
