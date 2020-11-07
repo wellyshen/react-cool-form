@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.6
+
+### Patch Changes
+
+- [`6ff974e`](https://github.com/wellyshen/react-cool-form/commit/6ff974ee206aa498ccf3731c065b4bf08dc2e8b2) [#59](https://github.com/wellyshen/react-cool-form/pull/59) Thanks [@wellyshen](https://github.com/wellyshen)! - chore(package.json): adjust description and command
+
+* [`3359813`](https://github.com/wellyshen/react-cool-form/commit/33598136ca8c78d2d0a96ddd09c860caa657339b) [#57](https://github.com/wellyshen/react-cool-form/pull/57) Thanks [@wellyshen](https://github.com/wellyshen)! - docs: update README
+
 ## 0.0.5
 
 ### Patch Changes
