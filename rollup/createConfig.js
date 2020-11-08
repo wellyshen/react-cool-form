@@ -18,12 +18,11 @@ const makeExternalPredicate = (external) =>
     ? () => false
     : (id) => new RegExp(`^(${external.join("|")})($|/)`).test(id);
 
-export default ({ name, umdName, format, env, size }) => {
-  const extensions = [".ts"];
-  const isCjs = format === "cjs";
+export default ({ name, umdName, format, env, measure }) => {
   const isUmd = format === "umd";
-  const isProd = env === "production";
-  const fileName = [name, format, env, isProd ? "min" : "", "js"]
+  const shouldMinify = env === "production";
+  const extensions = [".ts"];
+  const fileName = [name, format, env, shouldMinify ? "min" : "", "js"]
     .filter(Boolean)
     .join(".");
 
@@ -39,17 +38,13 @@ export default ({ name, umdName, format, env, size }) => {
     },
     plugins: [
       resolve({ extensions }),
-      isUmd && commonjs({ include: /\/node_modules\// }),
+      isUmd && commonjs(),
       babel({
         exclude: "node_modules/**",
         plugins: [
           [
             "@babel/plugin-transform-runtime",
-            {
-              version: babelRuntimeVersion,
-              useESModules: !isCjs,
-              helpers: !isUmd,
-            },
+            { version: babelRuntimeVersion, helpers: !isUmd },
           ],
         ],
         babelHelpers: isUmd ? "bundled" : "runtime",
@@ -59,21 +54,17 @@ export default ({ name, umdName, format, env, size }) => {
         __DEV__: 'process.env.NODE_ENV !== "production"',
         ...(env ? { "process.env.NODE_ENV": JSON.stringify(env) } : {}),
       }),
-      size && sizeSnapshot(),
-      isUmd && isProd && visualizer(),
-      isProd &&
+      measure && sizeSnapshot(),
+      measure && isUmd && visualizer(),
+      shouldMinify &&
         terser({
           output: { comments: false },
           compress: { drop_console: true },
         }),
     ].filter(Boolean),
-    external: makeExternalPredicate(
-      isUmd
-        ? Object.keys(pkg.peerDependencies)
-        : [
-            ...Object.keys(pkg.peerDependencies),
-            ...Object.keys(pkg.dependencies),
-          ]
-    ),
+    external: makeExternalPredicate([
+      ...Object.keys(pkg.peerDependencies),
+      ...(isUmd ? [] : Object.keys(pkg.dependencies)),
+    ]),
   };
 };

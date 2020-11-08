@@ -34,4 +34,4 @@ const options = [
 
 export default options
   .filter(({ format }) => (isDev ? format === "esm" : true))
-  .map((option) => createConfig({ ...option, size: !isDev }));
+  .map((option) => createConfig({ ...option, measure: !isDev }));
