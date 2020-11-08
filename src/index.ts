@@ -56,7 +56,7 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 const hasChangeEvent = ({ type }: FieldElement) =>
   !/hidden|image|submit|reset/.test(type);
 
-const getFields = (form: HTMLFormElement | null) =>
+const getFields = (form: HTMLFormElement | null, ignoreFields: string[]) =>
   form
     ? Array.from(form.querySelectorAll("input,textarea,select"))
         .filter((element) => {
@@ -68,7 +68,7 @@ const getFields = (form: HTMLFormElement | null) =>
             warn('💡 react-cool-form: Field is missing "name" attribute.');
             return false;
           }
-          if (dataset.rcfIgnore) return false;
+          if (dataset.rcfIgnore || ignoreFields.includes(name)) return false;
 
           return true;
         })
@@ -92,6 +92,7 @@ export function useForm<V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
+  ignoreFields = [],
   onReset,
   onSubmit,
   onError,
@@ -101,6 +102,7 @@ export function useForm<V extends FormValues = FormValues>({
   const fieldsRef = useRef<Fields>({});
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
+  const ignoreFieldsRef = useRef(ignoreFields);
   const onResetRef = useLatest(onReset);
   const onSubmitRef = useLatest(onSubmit);
   const onErrorRef = useLatest(onError);
@@ -591,7 +593,7 @@ export function useForm<V extends FormValues = FormValues>({
       return;
     }
 
-    fieldsRef.current = getFields(formRef.current);
+    fieldsRef.current = getFields(formRef.current, ignoreFieldsRef.current);
     setAllDomsValue();
   }, [setAllDomsValue]);
 
@@ -633,7 +635,7 @@ export function useForm<V extends FormValues = FormValues>({
       // eslint-disable-next-line no-restricted-syntax
       for (const { type, addedNodes } of mutations) {
         if (type === "childList" && addedNodes.length) {
-          fieldsRef.current = getFields(form);
+          fieldsRef.current = getFields(form, ignoreFieldsRef.current);
           setAllDomsValue();
 
           break;
