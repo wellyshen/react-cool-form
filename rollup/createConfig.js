@@ -30,7 +30,7 @@ export default ({ name, umdName, format, env, size }) => {
   return {
     input: "src",
     output: {
-      file: `dist/${fileName}`,
+      file: `${pkg.files[0]}/${fileName}`,
       format,
       name: umdName,
       sourcemap: true,
