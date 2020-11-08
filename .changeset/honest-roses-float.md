@@ -2,4 +2,4 @@
 "react-cool-form": patch
 ---
 
-feat(useForm): ignore fields
+feat(useForm): add ignoreFields config
