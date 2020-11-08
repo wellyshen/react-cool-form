@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.12
+
+### Patch Changes
+
+- [`9bc2680`](https://github.com/wellyshen/react-cool-form/commit/9bc2680139f543c2cf8ecbdcf78e88696137f09d) [#72](https://github.com/wellyshen/react-cool-form/pull/72) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): adjust export format
+
 ## 0.0.11
 
 ### Patch Changes
