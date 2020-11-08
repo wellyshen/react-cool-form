@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.11
+
+### Patch Changes
+
+- [`ccbbe64`](https://github.com/wellyshen/react-cool-form/commit/ccbbe641dd4fc0975d9597cee394a3c4d797510c) [#70](https://github.com/wellyshen/react-cool-form/pull/70) Thanks [@wellyshen](https://github.com/wellyshen)! - fix: correct UMD format
+
 ## 0.0.10
 
 ### Patch Changes
