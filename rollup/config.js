@@ -2,6 +2,7 @@ import createConfig from "./createConfig";
 
 const isDev = process.env.BUILD !== "production";
 const name = "index";
+const umdName = "ReactCoolForm";
 const options = [
   {
     name,
@@ -19,11 +20,13 @@ const options = [
   },
   {
     name,
+    umdName,
     format: "umd",
     env: "development",
   },
   {
     name,
+    umdName,
     format: "umd",
     env: "production",
   },
