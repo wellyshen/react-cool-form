@@ -176,9 +176,7 @@ declare module "react-cool-form" {
     controller: Controller<V>;
   }
 
-  const useForm: <V extends FormValues = FormValues>(
+  export function useForm<V extends FormValues = FormValues>(
     config: Config<V>
-  ) => Return<V>;
-
-  export default useForm;
+  ): Return<V>;
 }
