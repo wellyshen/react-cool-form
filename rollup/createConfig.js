@@ -18,7 +18,7 @@ const makeExternalPredicate = (external) =>
     ? () => false
     : (id) => new RegExp(`^(${external.join("|")})($|/)`).test(id);
 
-export default ({ name, format, env, size }) => {
+export default ({ name, umdName, format, env, size }) => {
   const extensions = [".ts"];
   const isUmd = format === "umd";
   const isProd = env === "production";
@@ -31,7 +31,7 @@ export default ({ name, format, env, size }) => {
     output: {
       file: `dist/${fileName}`,
       format,
-      name: pkg.name,
+      name: umdName,
       sourcemap: true,
       globals: { react: "React" },
       exports: "named",
@@ -44,7 +44,11 @@ export default ({ name, format, env, size }) => {
         plugins: [
           [
             "@babel/plugin-transform-runtime",
-            { version: babelRuntimeVersion, helpers: !isUmd },
+            {
+              version: babelRuntimeVersion,
+              useESModules: format !== "cjs",
+              helpers: !isUmd,
+            },
           ],
         ],
         babelHelpers: isUmd ? "bundled" : "runtime",
