@@ -86,7 +86,8 @@ const getFields = (form: HTMLFormElement | null) =>
         }, {})
     : {};
 
-const useForm = <V extends FormValues = FormValues>({
+// eslint-disable-next-line import/prefer-default-export
+export function useForm<V extends FormValues = FormValues>({
   initialValues,
   validate,
   validateOnChange = true,
@@ -95,7 +96,7 @@ const useForm = <V extends FormValues = FormValues>({
   onSubmit,
   onError,
   debug,
-}: Config<V>): Return<V> => {
+}: Config<V>): Return<V> {
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
   const formValidatorRef = useLatest(validate);
@@ -663,6 +664,4 @@ const useForm = <V extends FormValues = FormValues>({
     handleSubmit,
     controller,
   };
-};
-
-export default useForm;
+}

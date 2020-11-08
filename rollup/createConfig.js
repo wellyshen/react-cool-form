@@ -20,6 +20,7 @@ const makeExternalPredicate = (external) =>
 
 export default ({ name, umdName, format, env, size }) => {
   const extensions = [".ts"];
+  const isCjs = format === "cjs";
   const isUmd = format === "umd";
   const isProd = env === "production";
   const fileName = [name, format, env, isProd ? "min" : "", "js"]
@@ -46,7 +47,7 @@ export default ({ name, umdName, format, env, size }) => {
             "@babel/plugin-transform-runtime",
             {
               version: babelRuntimeVersion,
-              useESModules: format !== "cjs",
+              useESModules: !isCjs,
               helpers: !isUmd,
             },
           ],
