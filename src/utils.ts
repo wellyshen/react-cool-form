@@ -6,6 +6,12 @@ export const warn = (...args: any[]): void => {
   if (__DEV__) console.warn(...args);
 };
 
+export const arrayToObject = (arr: any[]): Record<string, boolean> =>
+  arr.reduce((obj, key) => {
+    obj[key] = true;
+    return obj;
+  }, {});
+
 export const isNumberField = (field: FieldElement): field is HTMLInputElement =>
   field.type === "number";
 

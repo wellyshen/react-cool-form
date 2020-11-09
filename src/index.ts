@@ -29,6 +29,7 @@ import {
 import useLatest from "./useLatest";
 import useFormState from "./useFormState";
 import {
+  arrayToObject,
   deepMerge,
   get,
   isArray,
@@ -56,7 +57,7 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 const hasChangeEvent = ({ type }: FieldElement) =>
   !/hidden|image|submit|reset/.test(type);
 
-const getFields = (form: HTMLFormElement | null, ignoreFields: string[]) =>
+const getFields = (form: HTMLFormElement | null) =>
   form
     ? Array.from(form.querySelectorAll("input,textarea,select"))
         .filter((element) => {
@@ -68,7 +69,7 @@ const getFields = (form: HTMLFormElement | null, ignoreFields: string[]) =>
             warn('💡 react-cool-form: Field is missing "name" attribute.');
             return false;
           }
-          if (dataset.rcfIgnore || ignoreFields.includes(name)) return false;
+          if (dataset.rcfIgnore) return false;
 
           return true;
         })
@@ -102,11 +103,10 @@ export function useForm<V extends FormValues = FormValues>({
   const fieldsRef = useRef<Fields>({});
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
-  const ignoreFieldsRef = useRef(ignoreFields);
   const onResetRef = useLatest(onReset);
   const onSubmitRef = useLatest(onSubmit);
   const onErrorRef = useLatest(onError);
-  const controllersRef = useRef<UsedRef>({});
+  const ignoreFieldsRef = useRef<UsedRef>(arrayToObject(ignoreFields));
   const changedFieldRef = useRef<string>();
   const {
     stateRef,
@@ -116,7 +116,7 @@ export function useForm<V extends FormValues = FormValues>({
   } = useFormState<V>(initialValues, debug);
 
   const setDomValue = useCallback((name: string, value: any) => {
-    if (controllersRef.current[name] || !fieldsRef.current[name]) return;
+    if (ignoreFieldsRef.current[name] || !fieldsRef.current[name]) return;
 
     const { field, options } = fieldsRef.current[name];
 
@@ -159,7 +159,7 @@ export function useForm<V extends FormValues = FormValues>({
 
   const validateRef = useCallback<ValidateRef<V>>(
     (validate) => (field) => {
-      if (field?.name && !controllersRef.current[field.name])
+      if (field?.name && !ignoreFieldsRef.current[field.name])
         fieldValidatorsRef.current[field.name] = validate;
     },
     []
@@ -542,7 +542,7 @@ export function useForm<V extends FormValues = FormValues>({
         return {};
       }
 
-      controllersRef.current[name] = true;
+      ignoreFieldsRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
 
       return {
@@ -593,7 +593,7 @@ export function useForm<V extends FormValues = FormValues>({
       return;
     }
 
-    fieldsRef.current = getFields(formRef.current, ignoreFieldsRef.current);
+    fieldsRef.current = getFields(formRef.current);
     setAllDomsValue();
   }, [setAllDomsValue]);
 
@@ -609,7 +609,7 @@ export function useForm<V extends FormValues = FormValues>({
         return;
       }
 
-      if (fieldsRef.current[name] && !controllersRef.current[name])
+      if (fieldsRef.current[name] && !ignoreFieldsRef.current[name])
         handleFieldChange(field);
     };
 
@@ -622,7 +622,7 @@ export function useForm<V extends FormValues = FormValues>({
 
       const { name } = target as FieldElement;
 
-      if (fieldsRef.current[name] && !controllersRef.current[name])
+      if (fieldsRef.current[name] && !ignoreFieldsRef.current[name])
         setFieldTouchedIfNeeded(name);
     };
 
@@ -635,7 +635,7 @@ export function useForm<V extends FormValues = FormValues>({
       // eslint-disable-next-line no-restricted-syntax
       for (const { type, addedNodes } of mutations) {
         if (type === "childList" && addedNodes.length) {
-          fieldsRef.current = getFields(form, ignoreFieldsRef.current);
+          fieldsRef.current = getFields(form);
           setAllDomsValue();
 
           break;

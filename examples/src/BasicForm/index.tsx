@@ -73,7 +73,7 @@ export default (): JSX.Element => {
     initialValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    // ignoreFields: ["text.nest", "number"],
+    ignoreFields: ["text.nest", "number"],
     // validate: async (values, set) => {
     //   let errors: any = { text: { nest: "" } };
 
