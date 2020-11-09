@@ -10,7 +10,7 @@ import {
   UsedRef,
 } from "./types";
 import useLatest from "./useLatest";
-import { get, set, isEmptyObject } from "./utils";
+import { get, isEmptyObject, set } from "./utils";
 
 export default <V>(
   initialValues: V,
