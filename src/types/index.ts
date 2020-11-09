@@ -104,7 +104,7 @@ export interface ValidateRef<V> {
   (validate: FieldValidator<V>): (field: FieldElement | null) => void;
 }
 
-export interface GetFormState {
+export interface GetState {
   (path: string | string[] | Record<string, string>, watch?: boolean): any;
 }
 
@@ -193,7 +193,7 @@ export interface Config<V> {
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
   validate: ValidateRef<V>;
-  getFormState: GetFormState;
+  getState: GetState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;
   setValues: SetValues<V>;

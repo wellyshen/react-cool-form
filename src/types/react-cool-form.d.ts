@@ -61,7 +61,7 @@ declare module "react-cool-form" {
     ) => void;
   }
 
-  interface GetFormState {
+  interface GetState {
     (path: string | string[] | Record<string, string>, watch?: boolean): any;
   }
 
@@ -164,7 +164,7 @@ declare module "react-cool-form" {
   export interface Return<V = FormValues> {
     formRef: RefObject<HTMLFormElement>;
     validate: ValidateRef<V>;
-    getFormState: GetFormState;
+    getState: GetState;
     setErrors: SetErrors<V>;
     setFieldError: SetFieldError;
     setValues: SetValues<V>;

@@ -14,7 +14,7 @@ import {
   Fields,
   FieldValidator,
   FormValues,
-  GetFormState,
+  GetState,
   Reset,
   Return,
   SetErrors,
@@ -170,7 +170,7 @@ export function useForm<V extends FormValues = FormValues>({
     []
   );
 
-  const getFormState = useCallback<GetFormState>(
+  const getState = useCallback<GetState>(
     (path, watch = true) => {
       let state;
 
@@ -425,8 +425,8 @@ export function useForm<V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      getFormState: ((path, watch = false) =>
-        getFormState(path, watch)) as GetFormState,
+      getState: ((path, watch = false) =>
+        getState(path, watch)) as GetState,
       setErrors,
       setFieldError,
       setValues,
@@ -436,7 +436,7 @@ export function useForm<V extends FormValues = FormValues>({
       reset,
     }),
     [
-      getFormState,
+      getState,
       reset,
       setErrors,
       setFieldError,
@@ -552,7 +552,7 @@ export function useForm<V extends FormValues = FormValues>({
 
       return {
         name,
-        value: !isUndefined(value) ? value : getFormState(`values.${name}`),
+        value: !isUndefined(value) ? value : getState(`values.${name}`),
         // eslint-disable-next-line react-hooks/rules-of-hooks
         onChange: useCallback(
           (e) => {
@@ -583,7 +583,7 @@ export function useForm<V extends FormValues = FormValues>({
     },
     [
       getChangeEventValue,
-      getFormState,
+      getState,
       handleFieldChange,
       setFieldTouchedIfNeeded,
       setFieldValue,
@@ -659,7 +659,7 @@ export function useForm<V extends FormValues = FormValues>({
   return {
     formRef,
     validate: validateRef,
-    getFormState,
+    getState,
     setErrors,
     setFieldError,
     setValues,
