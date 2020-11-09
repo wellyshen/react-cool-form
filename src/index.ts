@@ -29,7 +29,6 @@ import {
 import useLatest from "./useLatest";
 import useFormState from "./useFormState";
 import {
-  arrayToObject,
   deepMerge,
   get,
   isArray,
@@ -50,6 +49,12 @@ import {
 
 const useUniversalLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+const arrayToObject = (arr: any[]): Record<string, boolean> =>
+  arr.reduce((obj, key) => {
+    obj[key] = true;
+    return obj;
+  }, {});
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
