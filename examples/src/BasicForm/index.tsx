@@ -58,7 +58,7 @@ export default (): JSX.Element => {
   const {
     formRef,
     validate,
-    getFormState,
+    getState,
     setValues,
     setFieldValue,
     setErrors,
@@ -125,7 +125,7 @@ export default (): JSX.Element => {
   // console.log("LOG ===> Re-render");
   console.log(
     "LOG ===> formState: ",
-    getFormState({
+    getState({
       // values: "values",
       // touched: "touched",
       errors: "errors",
