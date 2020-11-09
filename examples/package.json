@@ -94,5 +94,8 @@
     "stylelint": "^13.7.2",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "^20.0.0"
+  },
+  "resolutions": {
+    "postcss-safe-parser": "^4.0.2"
   }
 }
