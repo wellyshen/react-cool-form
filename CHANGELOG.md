@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.15
+
+### Patch Changes
+
+- [`cd173f5`](https://github.com/wellyshen/react-cool-form/commit/cd173f54442321563605db7f2d64c670a7c95b44) [#80](https://github.com/wellyshen/react-cool-form/pull/80) Thanks [@wellyshen](https://github.com/wellyshen)! - upgrade: react v16 to v17
+
+* [`b54bd81`](https://github.com/wellyshen/react-cool-form/commit/b54bd814bc72b2eaf45e14ef8120f574dd71d975) [#81](https://github.com/wellyshen/react-cool-form/pull/81) Thanks [@wellyshen](https://github.com/wellyshen)! - ci: adjust the check-and-test action
+
 ## 0.0.14
 
 ### Patch Changes
