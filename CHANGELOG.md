@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.13
+
+### Patch Changes
+
+- [`087f8a4`](https://github.com/wellyshen/react-cool-form/commit/087f8a4b3ae53df325fbc2afe9ce752cc8762301) [#76](https://github.com/wellyshen/react-cool-form/pull/76) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor: adjust file structure
+
+* [`d456e8e`](https://github.com/wellyshen/react-cool-form/commit/d456e8e4dd49c1f03da73c220368d24a68f369e8) [#74](https://github.com/wellyshen/react-cool-form/pull/74) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): add ignoreFields config
+
 ## 0.0.12
 
 ### Patch Changes
