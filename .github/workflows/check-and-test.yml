@@ -1,6 +1,12 @@
 name: Lint / Test / Build
 
-on: [pull_request, push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
