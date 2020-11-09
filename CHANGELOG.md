@@ -12,7 +12,7 @@
 
 ### Patch Changes
 
-- [`d23d838`](https://github.com/wellyshen/react-cool-form/commit/d23d838f7520c28a93ef7f0922e187fadfa8e5eb) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor: change getFromState() to getState()
+- [`d23d838`](https://github.com/wellyshen/react-cool-form/commit/d23d838f7520c28a93ef7f0922e187fadfa8e5eb) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor: change `getFromState()` to `getState()`
 
 ## 0.0.13
 
