@@ -17,4 +17,5 @@ React hooks for forms state, validation, and performance.
 - [x] CI/CD
 - [ ] Documentation
 - [ ] Unit testing
+- [ ] End to end testing
 - [ ] Examples

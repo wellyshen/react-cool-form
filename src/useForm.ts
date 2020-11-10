@@ -326,18 +326,6 @@ const useForm = <V extends FormValues = FormValues>({
     [setStateRef, validateFormWithLowPriority, validateOnBlur]
   );
 
-  const setFieldTouchedIfNeeded = useCallback(
-    (name: string) =>
-      setFieldTouched(
-        name,
-        (validateOnBlur &&
-          validateOnChange &&
-          name !== changedFieldRef.current) ||
-          undefined
-      ),
-    [setFieldTouched, validateOnBlur, validateOnChange]
-  );
-
   const setFieldDirty = useCallback(
     (name: string) => {
       setStateRef(
@@ -571,7 +559,11 @@ const useForm = <V extends FormValues = FormValues>({
         // eslint-disable-next-line react-hooks/rules-of-hooks
         onBlur: useCallback(
           (e) => {
-            setFieldTouchedIfNeeded(name);
+            setFieldTouched(
+              name,
+              (validateOnChange && name !== changedFieldRef.current) ||
+                validateOnBlur
+            );
             if (onBlur) onBlur(e);
           },
           [name, onBlur]
@@ -582,8 +574,10 @@ const useForm = <V extends FormValues = FormValues>({
       getChangeEventValue,
       getState,
       handleFieldChange,
-      setFieldTouchedIfNeeded,
+      setFieldTouched,
       setFieldValue,
+      validateOnBlur,
+      validateOnChange,
     ]
   );
 
@@ -625,7 +619,11 @@ const useForm = <V extends FormValues = FormValues>({
       const { name } = target as FieldElement;
 
       if (fieldsRef.current[name] && !ignoreFieldsRef.current[name])
-        setFieldTouchedIfNeeded(name);
+        setFieldTouched(
+          name,
+          (validateOnChange && name !== changedFieldRef.current) ||
+            validateOnBlur
+        );
     };
 
     const form = formRef.current;
@@ -651,7 +649,13 @@ const useForm = <V extends FormValues = FormValues>({
       form.removeEventListener("focusout", handleBlur);
       observer.disconnect();
     };
-  }, [handleFieldChange, setAllDomsValue, setFieldTouchedIfNeeded]);
+  }, [
+    handleFieldChange,
+    setAllDomsValue,
+    setFieldTouched,
+    validateOnBlur,
+    validateOnChange,
+  ]);
 
   return {
     formRef,

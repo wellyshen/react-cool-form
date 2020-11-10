@@ -203,11 +203,11 @@ export default (): JSX.Element => {
         <Input
           label="Text:"
           name="text.nest"
-          /* ref={validate(async (value) => {
+          ref={validate(async (value) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return value.length <= 5 ? "Field error" : "";
-          })} */
+          })}
           // data-rcf-ignore
         />
         <Controller
