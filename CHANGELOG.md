@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.16
+
+### Patch Changes
+
+- [`f8c31f1`](https://github.com/wellyshen/react-cool-form/commit/f8c31f1f535d4cbe76414518242ab3b8963283bc) [#84](https://github.com/wellyshen/react-cool-form/pull/84) Thanks [@wellyshen](https://github.com/wellyshen)! - perf(useForm): remove setFieldTouchedIfNeeded() to reduce bundle size
+
+* [`3a39bf1`](https://github.com/wellyshen/react-cool-form/commit/3a39bf1a3004ddf363307f511af3d5a4356a8d40) [#83](https://github.com/wellyshen/react-cool-form/pull/83) Thanks [@wellyshen](https://github.com/wellyshen)! - perf(useForm): reduce bundle size by simplying code
+
 ## 0.0.15
 
 ### Patch Changes
