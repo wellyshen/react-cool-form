@@ -154,10 +154,9 @@ const useForm = <V extends FormValues = FormValues>({
 
   const setAllDomsValue = useCallback(
     (values: V = stateRef.current.values) =>
-      Object.keys(fieldsRef.current).forEach((key) => {
-        const { name } = fieldsRef.current[key].field;
-        setDomValue(name, get(values, name));
-      }),
+      Object.values(fieldsRef.current).forEach(({ field }) =>
+        setDomValue(field.name, get(values, field.name))
+      ),
     [setDomValue, stateRef]
   );
 

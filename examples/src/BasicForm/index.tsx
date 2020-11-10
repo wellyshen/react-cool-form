@@ -72,7 +72,7 @@ export default (): JSX.Element => {
   } = useForm<FormValues>({
     initialValues,
     // validateOnChange: false,
-    validateOnBlur: false,
+    // validateOnBlur: false,
     // ignoreFields: ["text.nest", "number"],
     // validate: async (values, set) => {
     //   let errors: any = { text: { nest: "" } };
