@@ -31,7 +31,9 @@
   "umd:main": "dist/index.umd.production.min.js",
   "unpkg": "dist/index.umd.production.min.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "link-pkg": "npm link examples/node_modules/react && yarn link",
     "dev": "yarn clean:build && yarn copy:type && rollup -c rollup/config.js -w",
@@ -60,60 +62,6 @@
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --fix",
     "**/*": "prettier -w -u"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/env",
-        {
-          "loose": true,
-          "exclude": [
-            "@babel/plugin-transform-async-to-generator",
-            "@babel/plugin-transform-regenerator"
-          ]
-        }
-      ],
-      "@babel/typescript",
-      "@babel/react"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "welly"
-    ],
-    "rules": {
-      "camelcase": "off",
-      "no-shadow": "off",
-      "no-console": [
-        "warn",
-        {
-          "allow": [
-            "warn",
-            "error"
-          ]
-        }
-      ],
-      "no-param-reassign": "off",
-      "no-underscore-dangle": "off"
-    },
-    "settings": {
-      "polyfills": [
-        "Promise"
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "dist",
-    "rollup",
-    "examples"
-  ],
-  "jest": {
-    "preset": "ts-jest",
-    "collectCoverageFrom": [
-      "src/**/*.ts",
-      "!src/index.ts",
-      "!src/types/*"
-    ]
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
