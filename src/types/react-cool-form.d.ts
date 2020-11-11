@@ -125,7 +125,7 @@ declare module "react-cool-form" {
   }
 
   interface Submit<V> {
-    (event?: SyntheticEvent<any>): Promise<V | Errors<V> | void>;
+    (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
   }
 
   export interface Parser<E = any, R = any> {

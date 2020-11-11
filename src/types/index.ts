@@ -160,7 +160,7 @@ export interface Reset<V> {
 }
 
 export interface Submit<V> {
-  (event?: SyntheticEvent<any>): Promise<V | Errors<V> | void>;
+  (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
 }
 
 export interface Controller<V, E = any> {

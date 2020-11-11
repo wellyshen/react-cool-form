@@ -253,7 +253,7 @@ const useForm = <V extends FormValues = FormValues>({
         return error;
       } catch (exception) {
         warn(`💡 react-cool-form > validate ${name}: `, exception);
-        return exception;
+        throw exception;
       }
     },
     [stateRef]
@@ -287,7 +287,7 @@ const useForm = <V extends FormValues = FormValues>({
         return isPlainObject(errors) ? errors : {};
       } catch (exception) {
         warn(`💡 react-cool-form > config.validate: `, exception);
-        return exception;
+        throw exception;
       }
     },
     [formValidatorRef, stateRef]
@@ -479,19 +479,15 @@ const useForm = <V extends FormValues = FormValues>({
           if (onSubmitRef.current)
             await onSubmitRef.current(stateRef.current.values, options, e);
 
-          return stateRef.current.values;
+          return { values: stateRef.current.values };
         }
 
-        if (onErrorRef.current)
-          onErrorRef.current(stateRef.current.errors, options, e);
+        if (onErrorRef.current) onErrorRef.current(errors, options, e);
 
-        // eslint-disable-next-line no-throw-literal
-        throw { isErrors: true, errors };
+        return { errors };
       } catch (exception) {
-        if (exception.isErrors) return exception.errors;
-
         warn(`💡 react-cool-form > submit: `, exception);
-        return undefined;
+        throw exception;
       } finally {
         setStateRef("isSubmitting", false);
       }
