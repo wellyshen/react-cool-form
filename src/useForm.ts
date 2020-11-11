@@ -668,15 +668,10 @@ const useForm = <V extends FormValues = FormValues>({
     form.addEventListener("submit", handleSubmit);
     form.addEventListener("reset", handleReset);
 
-    const observer = new MutationObserver((mutations) => {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const { type, addedNodes } of mutations) {
-        if (type === "childList" && addedNodes.length) {
-          fieldsRef.current = getFields(form);
-          setAllDomsValue();
-
-          break;
-        }
+    const observer = new MutationObserver(([{ type, addedNodes }]) => {
+      if (type === "childList" && addedNodes.length) {
+        fieldsRef.current = getFields(form);
+        setAllDomsValue();
       }
     });
     observer.observe(form, { childList: true, subtree: true });
