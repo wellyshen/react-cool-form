@@ -8,7 +8,6 @@ import {
 import {
   Config,
   Controller,
-  EventHandler,
   Errors,
   FieldElement,
   Fields,
@@ -21,6 +20,7 @@ import {
   SetFieldError,
   SetFieldValue,
   SetValues,
+  Submit,
   UsedRef,
   ValidateRef,
   ValidateField,
@@ -424,17 +424,6 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
-  const reset = useCallback<Reset<V>>(
-    (values, exclude = []) => {
-      resetStateRef(
-        isFunction(values) ? values(stateRef.current.values) : values,
-        exclude,
-        (nextValues) => setAllDomsValue(nextValues)
-      );
-    },
-    [resetStateRef, setAllDomsValue, stateRef]
-  );
-
   const getOptions = useCallback(
     () => ({
       getState: ((path, watch = false) => getState(path, watch)) as GetState,
@@ -444,11 +433,9 @@ const useForm = <V extends FormValues = FormValues>({
       setFieldValue,
       validateForm,
       validateField,
-      reset,
     }),
     [
       getState,
-      reset,
       setErrors,
       setFieldError,
       setFieldValue,
@@ -458,20 +445,26 @@ const useForm = <V extends FormValues = FormValues>({
     ]
   );
 
-  const handleReset = useCallback<EventHandler>(
-    (e) => {
+  const reset = useCallback<Reset<V>>(
+    (values, exclude, e) => {
       if (e?.preventDefault) e.preventDefault();
       if (e?.stopPropagation) e.stopPropagation();
 
-      reset();
+      resetStateRef(
+        isFunction(values)
+          ? values(stateRef.current.values)
+          : values || undefined,
+        exclude || [],
+        (nextValues) => setAllDomsValue(nextValues)
+      );
 
       if (onResetRef.current)
         onResetRef.current(stateRef.current.values, getOptions(), e);
     },
-    [getOptions, onResetRef, reset, stateRef]
+    [getOptions, onResetRef, resetStateRef, setAllDomsValue, stateRef]
   );
 
-  const handleSubmit = useCallback<EventHandler>(
+  const submit = useCallback<Submit<V>>(
     async (e) => {
       if (e?.preventDefault) e.preventDefault();
       if (e?.stopPropagation) e.stopPropagation();
@@ -480,20 +473,34 @@ const useForm = <V extends FormValues = FormValues>({
 
       try {
         const errors = await validateForm();
+        const options = { ...getOptions(), reset };
 
-        if (onSubmitRef.current && isEmptyObject(errors)) {
-          await onSubmitRef.current(stateRef.current.values, getOptions(), e);
-          setStateRef("isSubmitted", true);
-        } else if (onErrorRef.current) {
-          onErrorRef.current(stateRef.current.errors, getOptions(), e);
+        if (isEmptyObject(errors)) {
+          if (onSubmitRef.current)
+            await onSubmitRef.current(stateRef.current.values, options, e);
+
+          return { values: stateRef.current.values };
         }
+
+        if (onErrorRef.current) onErrorRef.current(errors, options, e);
+
+        return { errors };
       } catch (exception) {
-        warn(`💡 react-cool-form > handleSubmit: `, exception);
+        warn(`💡 react-cool-form > submit: `, exception);
+        throw exception;
       } finally {
         setStateRef("isSubmitting", false);
       }
     },
-    [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
+    [
+      getOptions,
+      onErrorRef,
+      onSubmitRef,
+      reset,
+      setStateRef,
+      stateRef,
+      validateForm,
+    ]
   );
 
   const getChangeEventValue = useCallback(
@@ -652,10 +659,16 @@ const useForm = <V extends FormValues = FormValues>({
         );
     };
 
+    const handleSubmit = (e: Event) => submit(e as any);
+
+    const handleReset = (e: Event) => reset(null, null, e as any);
+
     const form = formRef.current;
 
     form.addEventListener("input", handleChange);
     form.addEventListener("focusout", handleBlur);
+    form.addEventListener("submit", handleSubmit);
+    form.addEventListener("reset", handleReset);
 
     const observer = new MutationObserver((mutations) => {
       // eslint-disable-next-line no-restricted-syntax
@@ -673,12 +686,16 @@ const useForm = <V extends FormValues = FormValues>({
     return () => {
       form.removeEventListener("input", handleChange);
       form.removeEventListener("focusout", handleBlur);
+      form.removeEventListener("submit", handleSubmit);
+      form.removeEventListener("reset", handleReset);
       observer.disconnect();
     };
   }, [
     handleFieldChange,
+    reset,
     setAllDomsValue,
     setFieldTouched,
+    submit,
     validateOnBlur,
     validateOnChange,
   ]);
@@ -694,8 +711,7 @@ const useForm = <V extends FormValues = FormValues>({
     validateForm,
     validateField,
     reset,
-    handleReset,
-    handleSubmit,
+    submit,
     controller,
   };
 };

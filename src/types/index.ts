@@ -1,10 +1,4 @@
-import {
-  FormEvent,
-  FocusEvent,
-  MutableRefObject,
-  RefObject,
-  SyntheticEvent,
-} from "react";
+import { FocusEvent, MutableRefObject, RefObject, SyntheticEvent } from "react";
 
 // Common
 export type UsedRef = Record<string, boolean>;
@@ -67,21 +61,31 @@ export type Fields = Record<
 
 type Options<V> = Omit<
   Return<V>,
-  "formRef" | "validate" | "handleReset" | "handleSubmit" | "controller"
+  "formRef" | "validate" | "submit" | "controller"
 >;
 
-type Event = FormEvent<HTMLFormElement> | SyntheticEvent<any>;
-
 interface OnReset<V> {
-  (values: V, options: Options<V>, event: Event): void;
+  (
+    values: V,
+    options: Omit<Options<V>, "reset">,
+    event?: Event | SyntheticEvent<any>
+  ): void;
 }
 
 interface OnSubmit<V> {
-  (values: V, options: Options<V>, event: Event): void | Promise<void>;
+  (
+    values: V,
+    options: Options<V>,
+    event?: Event | SyntheticEvent<any>
+  ): void | Promise<void>;
 }
 
 interface OnError<V> {
-  (errors: Errors<V>, options: Options<V>, event: Event): void;
+  (
+    errors: Errors<V>,
+    options: Options<V>,
+    event?: Event | SyntheticEvent<any>
+  ): void;
 }
 
 export interface Debug<V> {
@@ -149,13 +153,14 @@ export interface ValidateField<V> {
 
 export interface Reset<V> {
   (
-    values?: V | ((previousValues: V) => V),
-    exclude?: (keyof FormState<V>)[]
+    values?: V | ((previousValues: V) => V) | null,
+    exclude?: (keyof FormState<V>)[] | null,
+    event?: SyntheticEvent<any>
   ): void;
 }
 
-export interface EventHandler {
-  (event: Event): void;
+export interface Submit<V> {
+  (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
 }
 
 export interface Controller<V, E = any> {
@@ -201,7 +206,6 @@ export interface Return<V> {
   validateForm: ValidateForm<V>;
   validateField: ValidateField<V>;
   reset: Reset<V>;
-  handleReset: EventHandler;
-  handleSubmit: EventHandler;
+  submit: Submit<V>;
   controller: Controller<V>;
 }

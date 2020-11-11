@@ -67,8 +67,7 @@ export default (): JSX.Element => {
     validateForm,
     controller,
     reset,
-    handleReset,
-    handleSubmit,
+    submit,
   } = useForm<FormValues>({
     initialValues,
     // validateOnChange: false,
@@ -191,23 +190,22 @@ export default (): JSX.Element => {
     ]);
   };
 
+  const handleSubmit = async () => {
+    const res = await submit();
+    console.log("LOG ===> ", res);
+  };
+
   return (
     <div css={container}>
-      <form
-        css={form}
-        onSubmit={handleSubmit}
-        onReset={handleReset}
-        noValidate
-        ref={formRef}
-      >
+      <form css={form} noValidate ref={formRef}>
         <Input
           label="Text:"
           name="text.nest"
-          /* ref={validate(async (value) => {
+          ref={validate(async (value) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return value.length <= 5 ? "Field error" : "";
-          })} */
+          })}
           // required
           // data-rcf-ignore
         />
@@ -306,8 +304,11 @@ export default (): JSX.Element => {
         <button type="button" onClick={handleResetClick}>
           Reset Method
         </button>
+        <button type="button" onClick={handleSubmit}>
+          My Submit
+        </button>
         <input type="submit" />
-        <input type="reset" />
+        <input type="reset" onClick={(e) => reset(null, null, e)} />
       </form>
     </div>
   );
