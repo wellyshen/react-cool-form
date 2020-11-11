@@ -30,29 +30,6 @@
     "*.{css,ts,tsx}": "stylelint --fix",
     "**/*": "prettier -w -u"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "welly"
-    ],
-    "rules": {
-      "emotion/jsx-import": "off"
-    }
-  },
-  "eslintIgnore": [
-    "build"
-  ],
-  "stylelint": {
-    "extends": [
-      "stylelint-config-standard",
-      "stylelint-config-prettier"
-    ],
-    "ignoreFiles": [
-      "build/**/*.css",
-      "coverage/**/*.css"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
