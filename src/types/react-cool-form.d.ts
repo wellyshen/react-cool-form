@@ -1,5 +1,5 @@
 declare module "react-cool-form" {
-  import { FormEvent, FocusEvent, RefObject, SyntheticEvent } from "react";
+  import { FocusEvent, RefObject, SyntheticEvent } from "react";
 
   export type FormValues = Record<string, any>;
 
@@ -22,21 +22,31 @@ declare module "react-cool-form" {
 
   type Options<V> = Omit<
     Return<V>,
-    "formRef" | "validate" | "handleReset" | "handleSubmit" | "controller"
+    "formRef" | "validate" | "submit" | "controller"
   >;
 
-  type Event = FormEvent<HTMLFormElement> | SyntheticEvent<any>;
-
   export interface OnReset<V = FormValues> {
-    (values: V, options: Options<V>, event: Event): void;
+    (
+      values: V,
+      options: Omit<Options<V>, "reset">,
+      event?: Event | SyntheticEvent<any>
+    ): void;
   }
 
   export interface OnSubmit<V = FormValues> {
-    (values: V, options: Options<V>, event: Event): void | Promise<void>;
+    (
+      values: V,
+      options: Options<V>,
+      event?: Event | SyntheticEvent<any>
+    ): void | Promise<void>;
   }
 
   export interface OnError<V = FormValues> {
-    (errors: Errors<V>, options: Options<V>, event: Event): void;
+    (
+      errors: Errors<V>,
+      options: Options<V>,
+      event?: Event | SyntheticEvent<any>
+    ): void;
   }
 
   export interface Debug<V> {
@@ -108,13 +118,14 @@ declare module "react-cool-form" {
 
   interface Reset<V> {
     (
-      values?: V | ((previousValues: V) => V),
-      exclude?: (keyof FormState<V>)[]
+      values?: V | ((previousValues: V) => V) | null,
+      exclude?: (keyof FormState<V>)[] | null,
+      event?: SyntheticEvent<any>
     ): void;
   }
 
-  interface EventHandler {
-    (event: Event): void;
+  interface Submit<V> {
+    (event?: SyntheticEvent<any>): Promise<V | Errors<V> | void>;
   }
 
   export interface Parser<E = any, R = any> {
@@ -172,8 +183,7 @@ declare module "react-cool-form" {
     validateForm: ValidateForm<V>;
     validateField: ValidateField<V>;
     reset: Reset<V>;
-    handleReset: EventHandler;
-    handleSubmit: EventHandler;
+    submit: Submit<V>;
     controller: Controller<V>;
   }
 
