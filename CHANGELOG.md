@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.18
+
+### Patch Changes
+
+- [`7ec087a`](https://github.com/wellyshen/react-cool-form/commit/7ec087a08ab2b3e1e4c41eb2389aeafcad8019c2) [#89](https://github.com/wellyshen/react-cool-form/pull/89) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): remove un-necessary for loop from Mutation Observer
+
 ## 0.0.17
 
 ### Patch Changes
