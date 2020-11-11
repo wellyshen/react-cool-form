@@ -15,7 +15,8 @@ const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 export interface FormValues {
   text: Record<string, string>;
   controller: any;
-  hiddenText: string;
+  hiddenText1: string;
+  hiddenText2: string;
   password: string;
   number: number;
   range: number;
@@ -31,7 +32,8 @@ export interface FormValues {
 const initialValues = {
   text: { nest: "" },
   controller: "",
-  hiddenText: "test",
+  hiddenText1: "test",
+  hiddenText2: "test",
   password: "test",
   number: 5,
   range: 0,
@@ -54,7 +56,8 @@ const schema = Yup.object().shape({
 });
 
 export default (): JSX.Element => {
-  const [showInput, setShowInput] = useState(false);
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
   const {
     formRef,
     validate,
@@ -122,28 +125,30 @@ export default (): JSX.Element => {
   });
 
   // console.log("LOG ===> Re-render");
-  console.log(
-    "LOG ===> formState: ",
-    getState({
-      // values: "values",
-      // touched: "touched",
-      errors: "errors",
-      // isDirty: "isDirty",
-      // dirtyFields: "dirtyFields",
-      // isValidating: "isValidating",
-      // isValid: "isValid",
-      // isSubmitting: "isSubmitting",
-      // isSubmitted: "isSubmitted",
-      // submitCount: "submitCount",
-    })
-  );
+  // console.log(
+  //   "LOG ===> formState: ",
+  //   getState({
+  //     // values: "values",
+  //     // touched: "touched",
+  //     // errors: "errors",
+  //     // isDirty: "isDirty",
+  //     // dirtyFields: "dirtyFields",
+  //     // isValidating: "isValidating",
+  //     // isValid: "isValid",
+  //     // isSubmitting: "isSubmitting",
+  //     // isSubmitted: "isSubmitted",
+  //     // submitCount: "submitCount",
+  //   })
+  // );
 
   useEffect(() => {
     // validateField("text.nest");
     // validateForm();
   }, []);
 
-  const handleToggleInputClick = (): void => setShowInput(!showInput);
+  const handleToggle1Click = (): void => setShow1(!show1);
+
+  const handleToggle2Click = (): void => setShow2(!show2);
 
   const handleSetValueClick = (): void => {
     setValues(
@@ -222,11 +227,22 @@ export default (): JSX.Element => {
           }, [])} */
           maxLength="3"
         />
-        {showInput && (
+        {show1 && (
           <div>
             <Input
-              label="Hidden Text:"
-              name="hiddenText"
+              label="Hidden Text 1:"
+              name="hiddenText1"
+              /* ref={validate(async (value) => {
+                return value.length <= 5 ? "Field error" : "";
+              })} */
+            />
+          </div>
+        )}
+        {show2 && (
+          <div>
+            <Input
+              label="Hidden Text 2:"
+              name="hiddenText2"
               /* ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
               })} */
@@ -286,8 +302,11 @@ export default (): JSX.Element => {
           <option value="value-2">Value 2</option>
         </Select>
         <TextArea label="Text Area:" name="textarea" />
-        <button type="button" onClick={handleToggleInputClick}>
-          Toggle Input
+        <button type="button" onClick={handleToggle1Click}>
+          Toggle 1
+        </button>
+        <button type="button" onClick={handleToggle2Click}>
+          Toggle 2
         </button>
         <button type="button" onClick={handleSetValueClick}>
           Set Values
