@@ -27,7 +27,7 @@ import {
   ValidateForm,
 } from "./types";
 import useLatest from "./useLatest";
-import useFormState from "./useFormState";
+import useState from "./useState";
 import {
   deepMerge,
   get,
@@ -112,12 +112,10 @@ const useForm = <V extends FormValues = FormValues>({
   const onErrorRef = useLatest(onError);
   const ignoreFieldsRef = useRef<UsedRef>(arrayToObject(ignoreFields));
   const changedFieldRef = useRef<string>();
-  const {
-    stateRef,
-    setStateRef,
-    resetStateRef,
-    setUsedStateRef,
-  } = useFormState<V>(initialValues, debug);
+  const { stateRef, setStateRef, resetStateRef, setUsedStateRef } = useState<V>(
+    initialValues,
+    debug
+  );
 
   const setDomValue = useCallback((name: string, value: any) => {
     if (ignoreFieldsRef.current[name] || !fieldsRef.current[name]) return;
