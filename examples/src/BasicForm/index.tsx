@@ -191,8 +191,8 @@ export default (): JSX.Element => {
   };
 
   const handleSubmit = async () => {
-    const rest = await submit();
-    console.log("LOG ===> ", rest);
+    const res = await submit();
+    console.log("LOG ===> ", res);
   };
 
   return (
@@ -201,11 +201,11 @@ export default (): JSX.Element => {
         <Input
           label="Text:"
           name="text.nest"
-          /* ref={validate(async (value) => {
+          ref={validate(async (value) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return value.length <= 5 ? "Field error" : "";
-          })} */
+          })}
           // required
           // data-rcf-ignore
         />
@@ -304,10 +304,10 @@ export default (): JSX.Element => {
         <button type="button" onClick={handleResetClick}>
           Reset Method
         </button>
-        <input type="submit" />
         <button type="button" onClick={handleSubmit}>
           My Submit
         </button>
+        <input type="submit" />
         <input type="reset" onClick={(e) => reset(null, null, e)} />
       </form>
     </div>
