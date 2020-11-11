@@ -16,6 +16,7 @@ interface Props {
   defaultValue: any;
   controller: ControllerType<FormValues, ChangeEvent<HTMLInputElement>>;
   validate?: FieldValidator<FormValues>;
+  [k: string]: any;
 }
 
 const Controller = ({
@@ -25,6 +26,7 @@ const Controller = ({
   defaultValue,
   controller,
   validate,
+  ...rest
 }: Props) => {
   // console.log(`LOG ==> ${name} is re-rendered`);
 
@@ -48,6 +50,7 @@ const Controller = ({
           // console.log("LOG ===> onBlur: ", e);
         },
       })}
+      {...rest}
     />
   );
 };

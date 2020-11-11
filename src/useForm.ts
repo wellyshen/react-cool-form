@@ -223,6 +223,23 @@ const useForm = <V extends FormValues = FormValues>({
     [setErrors, setStateRef, stateRef]
   );
 
+  const runBuiltInValidation = useCallback(
+    (name: string) =>
+      fieldsRef.current[name] &&
+      fieldsRef.current[name].field.validationMessage,
+    []
+  );
+
+  const runAllBuiltInsValidation = useCallback(
+    () =>
+      Object.keys(fieldsRef.current).reduce((errors, name) => {
+        const error = runBuiltInValidation(name);
+        errors = { ...errors, ...(error ? set({}, name, error) : {}) };
+        return errors;
+      }, {}),
+    [runBuiltInValidation]
+  );
+
   const runFieldValidation = useCallback(
     async (name: string): Promise<any> => {
       if (!fieldValidatorsRef.current[name]) return undefined;
@@ -246,10 +263,9 @@ const useForm = <V extends FormValues = FormValues>({
     const promises = Object.keys(fieldValidatorsRef.current).map((name) =>
       runFieldValidation(name)
     );
-    const names = Object.keys(fieldValidatorsRef.current);
 
     return Promise.all(promises).then((errors) =>
-      names.reduce((acc, cur, idx) => {
+      Object.keys(fieldValidatorsRef.current).reduce((acc, cur, idx) => {
         acc = { ...acc, ...(errors[idx] ? set({}, cur, errors[idx]) : {}) };
         return acc;
       }, {})
@@ -283,7 +299,9 @@ const useForm = <V extends FormValues = FormValues>({
 
       try {
         const error =
-          (await runFormValidation(name)) || (await runFieldValidation(name));
+          (await runFormValidation(name)) ||
+          (await runFieldValidation(name)) ||
+          runBuiltInValidation(name);
 
         if (error) setStateRef(`errors.${name}`, error);
         setStateRef("isValidating", false);
@@ -292,21 +310,29 @@ const useForm = <V extends FormValues = FormValues>({
         return exception;
       }
     },
-    [runFieldValidation, runFormValidation, setStateRef]
+    [runBuiltInValidation, runFieldValidation, runFormValidation, setStateRef]
   );
 
   const validateForm = useCallback<ValidateForm<V>>(() => {
     setStateRef("isValidating", true);
 
-    return Promise.all([runAllFieldsValidation(), runFormValidation()]).then(
-      (errors) => {
-        const errs = deepMerge(...errors);
-        setErrors(errs);
-        setStateRef("isValidating", false);
-        return errs;
-      }
-    );
-  }, [runAllFieldsValidation, runFormValidation, setErrors, setStateRef]);
+    return Promise.all([
+      runAllBuiltInsValidation(),
+      runAllFieldsValidation(),
+      runFormValidation(),
+    ]).then((errors) => {
+      const errs = deepMerge(...errors);
+      setErrors(errs);
+      setStateRef("isValidating", false);
+      return errs;
+    });
+  }, [
+    runAllBuiltInsValidation,
+    runAllFieldsValidation,
+    runFormValidation,
+    setErrors,
+    setStateRef,
+  ]);
 
   const validateFormWithLowPriority = useCallback(
     () =>

@@ -29,8 +29,8 @@ export interface FormValues {
 }
 
 const initialValues = {
-  text: { nest: "test" },
-  controller: "test",
+  text: { nest: "" },
+  controller: "",
   hiddenText: "test",
   password: "test",
   number: 5,
@@ -203,11 +203,12 @@ export default (): JSX.Element => {
         <Input
           label="Text:"
           name="text.nest"
-          ref={validate(async (value) => {
+          /* ref={validate(async (value) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return value.length <= 5 ? "Field error" : "";
-          })}
+          })} */
+          // required
           // data-rcf-ignore
         />
         <Controller
@@ -221,15 +222,16 @@ export default (): JSX.Element => {
             // console.log("LOG ===> validate: ", val, values);
             return val.length <= 5 ? "Field error" : "";
           }, [])} */
+          maxLength="3"
         />
         {showInput && (
           <div>
             <Input
               label="Hidden Text:"
               name="hiddenText"
-              ref={validate(async (value) => {
+              /* ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
-              })}
+              })} */
             />
           </div>
         )}
