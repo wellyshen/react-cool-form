@@ -15,6 +15,8 @@ React hooks for forms state, validation, and performance.
 - [x] Type definition
 - [x] Support server-side rendering
 - [x] CI/CD
+- [ ] Performance optimizing
+- [ ] Reduce bundle size
 - [ ] Documentation
 - [ ] Unit testing
 - [ ] End to end testing
