@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.17
+
+### Patch Changes
+
+- [`2a40058`](https://github.com/wellyshen/react-cool-form/commit/2a4005814a1a2e4a9ddd82e7ae366e8896ed1fab) [#87](https://github.com/wellyshen/react-cool-form/pull/87) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): built-in handle-submit and handle-reset for you :)
+
+* [`ab72fdb`](https://github.com/wellyshen/react-cool-form/commit/ab72fdb9a89d3c67a78d6e427cb022859c95170f) [#86](https://github.com/wellyshen/react-cool-form/pull/86) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): support built-in validation
+
+- [`e620376`](https://github.com/wellyshen/react-cool-form/commit/e620376bb4d178575f2647223491412eb8353006) Thanks [@wellyshen](https://github.com/wellyshen)! - chore: move configs out of package.json
+
 ## 0.0.16
 
 ### Patch Changes
