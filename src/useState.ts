@@ -5,7 +5,6 @@ import {
   Debug,
   FormState,
   FormStateReturn,
-  ResetStateRef,
   SetStateRef,
   UsedRef,
 } from "./types";
@@ -13,22 +12,11 @@ import useLatest from "./useLatest";
 import { get, isEmptyObject, set } from "./utils";
 
 export default <V>(
-  initialValues: V,
+  initialState: FormState<V>,
   onChange?: Debug<V>
 ): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
-  const initialStateRef = useRef<FormState<V>>({
-    values: initialValues,
-    touched: {},
-    errors: {},
-    isDirty: false,
-    dirtyFields: {},
-    isValidating: false,
-    isValid: true,
-    isSubmitting: false,
-    isSubmitted: false,
-    submitCount: 0,
-  });
+  const initialStateRef = useRef(initialState);
   const stateRef = useRef(initialStateRef.current);
   const usedStateRef = useRef<UsedRef>({});
   const onChangeRef = useLatest(onChange);
@@ -36,10 +24,17 @@ export default <V>(
   const setStateRef = useCallback<SetStateRef>(
     (path, value) => {
       const key = path.split(".")[0];
-      const shouldUpdate =
-        key === "values" || !isEqual(get(stateRef.current, path), value);
 
-      if (shouldUpdate) {
+      if (!key) {
+        if (!isEqual(stateRef.current, value)) {
+          stateRef.current = value;
+          forceUpdate();
+        }
+
+        return;
+      }
+
+      if (key === "values" || !isEqual(get(stateRef.current, path), value)) {
         const nextState = set(stateRef.current, path, value, true);
         const {
           values,
@@ -75,28 +70,9 @@ export default <V>(
     [onChangeRef]
   );
 
-  const resetStateRef = useCallback<ResetStateRef<V>>(
-    (values = initialStateRef.current.values, exclude, callback) => {
-      Object.keys(initialStateRef.current)
-        .filter((key) => !exclude.includes(key as keyof FormState<V>))
-        .forEach((key) => {
-          if (key === "values") {
-            stateRef.current[key] = values;
-            callback(values);
-          } else {
-            // @ts-expect-error
-            stateRef.current[key] = initialStateRef.current[key];
-          }
-        });
-
-      forceUpdate();
-    },
-    []
-  );
-
   const setUsedStateRef = useCallback((path: string) => {
     usedStateRef.current[path] = true;
   }, []);
 
-  return { stateRef, setStateRef, resetStateRef, setUsedStateRef };
+  return { stateRef, setStateRef, setUsedStateRef };
 };
