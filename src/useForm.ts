@@ -235,7 +235,7 @@ export default <V extends FormValues = FormValues>({
     []
   );
 
-  const runAllBuiltInsValidation = useCallback(
+  const runAllBuiltInValidation = useCallback(
     () =>
       Object.keys(fieldsRef.current).reduce((errors, name) => {
         const error = runBuiltInValidation(name);
@@ -322,7 +322,7 @@ export default <V extends FormValues = FormValues>({
     setStateRef("isValidating", true);
 
     return Promise.all([
-      runAllBuiltInsValidation(),
+      runAllBuiltInValidation(),
       runAllFieldsValidation(),
       runFormValidation(),
     ]).then((errors) => {
@@ -332,7 +332,7 @@ export default <V extends FormValues = FormValues>({
       return errs;
     });
   }, [
-    runAllBuiltInsValidation,
+    runAllBuiltInValidation,
     runAllFieldsValidation,
     runFormValidation,
     setErrors,
