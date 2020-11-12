@@ -460,28 +460,26 @@ const useForm = <V extends FormValues = FormValues>({
       if (e?.preventDefault) e.preventDefault();
       if (e?.stopPropagation) e.stopPropagation();
 
-      const { current: initialState } = initialStateRef;
-      const { current: state } = stateRef;
-      const nextState = { ...state };
+      const state = { ...stateRef.current };
       const skip = arrayToObject(exclude || []);
 
-      Object.keys(state).forEach((key) => {
+      Object.keys(stateRef.current).forEach((key) => {
         if (skip[key]) return;
 
         if (key === "values") {
           values = isFunction(values)
-            ? values(state.values)
-            : values || initialState.values;
+            ? values(stateRef.current.values)
+            : values || initialStateRef.current.values;
 
-          nextState[key] = values;
+          state[key] = values;
           setAllDomsValue(values);
         } else {
           // @ts-expect-error
-          nextState[key] = initialState[key];
+          state[key] = initialStateRef.current[key];
         }
       });
 
-      setStateRef("", nextState);
+      setStateRef("", state);
 
       if (onResetRef.current) onResetRef.current(state.values, getOptions(), e);
     },

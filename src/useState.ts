@@ -35,14 +35,14 @@ export default <V>(
       }
 
       if (key === "values" || !isEqual(get(stateRef.current, path), value)) {
-        const nextState = set(stateRef.current, path, value, true);
+        const state = set(stateRef.current, path, value, true);
         const {
           values,
           errors,
           isDirty: prevIsDirty,
           isValid: prevIsValid,
-        } = nextState;
-        let { submitCount: prevSubmitCount } = nextState;
+        } = state;
+        let { submitCount: prevSubmitCount } = state;
         const isDirty =
           key === "values"
             ? !isEqual(values, initialStateRef.current.values)
@@ -53,7 +53,7 @@ export default <V>(
             ? (prevSubmitCount += 1)
             : prevSubmitCount;
 
-        stateRef.current = { ...nextState, isDirty, isValid, submitCount };
+        stateRef.current = { ...state, isDirty, isValid, submitCount };
 
         if (onChangeRef.current) onChangeRef.current(stateRef.current);
 
