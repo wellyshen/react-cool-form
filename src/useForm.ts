@@ -67,14 +67,13 @@ const getFields = (form: HTMLFormElement | null) =>
     ? Array.from(form.querySelectorAll("input,textarea,select"))
         .filter((element) => {
           const field = element as FieldElement;
-          const { name, dataset } = field;
 
           if (!hasChangeEvent(field)) return false;
-          if (!name) {
+          if (!field.name) {
             warn('💡 react-cool-form: Field is missing "name" attribute.');
             return false;
           }
-          if (dataset.rcfIgnore) return false;
+          if (field.dataset.rcfIgnore) return false;
 
           return true;
         })
