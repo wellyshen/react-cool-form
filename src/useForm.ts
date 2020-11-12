@@ -46,6 +46,7 @@ import {
   isRangeField,
   isUndefined,
   set,
+  unset,
   warn,
 } from "./utils";
 
@@ -215,14 +216,16 @@ export default <V extends FormValues = FormValues>({
         ? error(get(stateRef.current.errors, name))
         : error;
 
-      if (isKey(name) && !error) {
+      if (error) {
+        setStateRef(`errors.${name}`, error);
+      } else {
         setErrors((prevErrors) => {
+          if (!isKey(name)) return unset(prevErrors, name, true);
+
           const nextErrors = { ...prevErrors };
           delete nextErrors[name];
           return nextErrors;
         });
-      } else {
-        setStateRef(`errors.${name}`, error || undefined);
       }
     },
     [setErrors, setStateRef, stateRef]
