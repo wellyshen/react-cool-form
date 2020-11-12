@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.19
+
+### Patch Changes
+
+- [`a77b052`](https://github.com/wellyshen/react-cool-form/commit/a77b052f250eff3e80cea75918ab20529dbf4346) [#91](https://github.com/wellyshen/react-cool-form/pull/91) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor: use reset() instead of resetStateRef()
+
 ## 0.0.18
 
 ### Patch Changes
