@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.20
+
+### Patch Changes
+
+- [`27a6c50`](https://github.com/wellyshen/react-cool-form/commit/27a6c50920fee1089cea1e913b32688b523b50f0) [#93](https://github.com/wellyshen/react-cool-form/pull/93) Thanks [@wellyshen](https://github.com/wellyshen)! - feat: use unset for clear error
+
 ## 0.0.19
 
 ### Patch Changes
