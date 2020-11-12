@@ -30,6 +30,7 @@ import {
 import useLatest from "./useLatest";
 import useState from "./useState";
 import {
+  arrayToMap,
   deepMerge,
   get,
   isArray,
@@ -50,12 +51,6 @@ import {
 
 const useUniversalLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
-
-const arrayToObject = (arr: any[]): Record<string, boolean> =>
-  arr.reduce((obj, key) => {
-    obj[key] = true;
-    return obj;
-  }, {});
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
@@ -110,7 +105,7 @@ const useForm = <V extends FormValues = FormValues>({
   const onResetRef = useLatest(onReset);
   const onSubmitRef = useLatest(onSubmit);
   const onErrorRef = useLatest(onError);
-  const ignoreFieldsRef = useRef<UsedRef>(arrayToObject(ignoreFields));
+  const ignoreFieldsRef = useRef<UsedRef>(arrayToMap(ignoreFields));
   const changedFieldRef = useRef<string>();
   const initialStateRef = useRef<FormState<V>>({
     values: initialValues,
@@ -461,7 +456,7 @@ const useForm = <V extends FormValues = FormValues>({
       e?.stopPropagation();
 
       const state = { ...stateRef.current };
-      const skip = arrayToObject(exclude || []);
+      const skip = arrayToMap(exclude || []);
 
       Object.keys(stateRef.current).forEach((key) => {
         if (skip[key]) return;
