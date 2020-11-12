@@ -5,7 +5,6 @@ import {
   Debug,
   FormState,
   FormStateReturn,
-  ResetStateRef,
   SetStateRef,
   UsedRef,
 } from "./types";
@@ -13,22 +12,11 @@ import useLatest from "./useLatest";
 import { get, isEmptyObject, set } from "./utils";
 
 export default <V>(
-  initialValues: V,
+  initialState: FormState<V>,
   onChange?: Debug<V>
 ): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
-  const initialStateRef = useRef<FormState<V>>({
-    values: initialValues,
-    touched: {},
-    errors: {},
-    isDirty: false,
-    dirtyFields: {},
-    isValidating: false,
-    isValid: true,
-    isSubmitting: false,
-    isSubmitted: false,
-    submitCount: 0,
-  });
+  const initialStateRef = useRef(initialState);
   const stateRef = useRef(initialStateRef.current);
   const usedStateRef = useRef<UsedRef>({});
   const onChangeRef = useLatest(onChange);
@@ -36,18 +24,25 @@ export default <V>(
   const setStateRef = useCallback<SetStateRef>(
     (path, value) => {
       const key = path.split(".")[0];
-      const shouldUpdate =
-        key === "values" || !isEqual(get(stateRef.current, path), value);
 
-      if (shouldUpdate) {
-        const nextState = set(stateRef.current, path, value, true);
+      if (!key) {
+        if (!isEqual(stateRef.current, value)) {
+          stateRef.current = value;
+          forceUpdate();
+        }
+
+        return;
+      }
+
+      if (key === "values" || !isEqual(get(stateRef.current, path), value)) {
+        const state = set(stateRef.current, path, value, true);
         const {
           values,
           errors,
           isDirty: prevIsDirty,
           isValid: prevIsValid,
-        } = nextState;
-        let { submitCount: prevSubmitCount } = nextState;
+        } = state;
+        let { submitCount: prevSubmitCount } = state;
         const isDirty =
           key === "values"
             ? !isEqual(values, initialStateRef.current.values)
@@ -58,7 +53,7 @@ export default <V>(
             ? (prevSubmitCount += 1)
             : prevSubmitCount;
 
-        stateRef.current = { ...nextState, isDirty, isValid, submitCount };
+        stateRef.current = { ...state, isDirty, isValid, submitCount };
 
         if (onChangeRef.current) onChangeRef.current(stateRef.current);
 
@@ -75,28 +70,9 @@ export default <V>(
     [onChangeRef]
   );
 
-  const resetStateRef = useCallback<ResetStateRef<V>>(
-    (values = initialStateRef.current.values, exclude, callback) => {
-      Object.keys(initialStateRef.current)
-        .filter((key) => !exclude.includes(key as keyof FormState<V>))
-        .forEach((key) => {
-          if (key === "values") {
-            stateRef.current[key] = values;
-            callback(values);
-          } else {
-            // @ts-expect-error
-            stateRef.current[key] = initialStateRef.current[key];
-          }
-        });
-
-      forceUpdate();
-    },
-    []
-  );
-
   const setUsedStateRef = useCallback((path: string) => {
     usedStateRef.current[path] = true;
   }, []);
 
-  return { stateRef, setStateRef, resetStateRef, setUsedStateRef };
+  return { stateRef, setStateRef, setUsedStateRef };
 };

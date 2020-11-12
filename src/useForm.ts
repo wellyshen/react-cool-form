@@ -12,6 +12,7 @@ import {
   FieldElement,
   Fields,
   FieldValidator,
+  FormState,
   FormValues,
   GetState,
   Reset,
@@ -111,8 +112,20 @@ const useForm = <V extends FormValues = FormValues>({
   const onErrorRef = useLatest(onError);
   const ignoreFieldsRef = useRef<UsedRef>(arrayToObject(ignoreFields));
   const changedFieldRef = useRef<string>();
-  const { stateRef, setStateRef, resetStateRef, setUsedStateRef } = useState<V>(
-    initialValues,
+  const initialStateRef = useRef<FormState<V>>({
+    values: initialValues,
+    touched: {},
+    errors: {},
+    isDirty: false,
+    dirtyFields: {},
+    isValidating: false,
+    isValid: true,
+    isSubmitting: false,
+    isSubmitted: false,
+    submitCount: 0,
+  });
+  const { stateRef, setStateRef, setUsedStateRef } = useState<V>(
+    initialStateRef.current,
     debug
   );
 
@@ -447,18 +460,30 @@ const useForm = <V extends FormValues = FormValues>({
       if (e?.preventDefault) e.preventDefault();
       if (e?.stopPropagation) e.stopPropagation();
 
-      resetStateRef(
-        isFunction(values)
-          ? values(stateRef.current.values)
-          : values || undefined,
-        exclude || [],
-        (nextValues) => setAllDomsValue(nextValues)
-      );
+      const state = { ...stateRef.current };
+      const skip = arrayToObject(exclude || []);
 
-      if (onResetRef.current)
-        onResetRef.current(stateRef.current.values, getOptions(), e);
+      Object.keys(stateRef.current).forEach((key) => {
+        if (skip[key]) return;
+
+        if (key === "values") {
+          values = isFunction(values)
+            ? values(stateRef.current.values)
+            : values || initialStateRef.current.values;
+
+          state[key] = values;
+          setAllDomsValue(values);
+        } else {
+          // @ts-expect-error
+          state[key] = initialStateRef.current[key];
+        }
+      });
+
+      setStateRef("", state);
+
+      if (onResetRef.current) onResetRef.current(state.values, getOptions(), e);
     },
-    [getOptions, onResetRef, resetStateRef, setAllDomsValue, stateRef]
+    [getOptions, onResetRef, setAllDomsValue, setStateRef, stateRef]
   );
 
   const submit = useCallback<Submit<V>>(

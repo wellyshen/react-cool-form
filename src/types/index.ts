@@ -27,14 +27,6 @@ export interface SetStateRef {
   (path: string, value?: any): void;
 }
 
-export interface ResetStateRef<V> {
-  (
-    values: V | undefined,
-    exclude: (keyof FormState<V>)[],
-    callback: (nextValues: V) => void
-  ): void;
-}
-
 export interface SetUsedStateRef {
   (path: string): void;
 }
@@ -42,7 +34,6 @@ export interface SetUsedStateRef {
 export interface FormStateReturn<V> {
   stateRef: StateRef<V>;
   setStateRef: SetStateRef;
-  resetStateRef: ResetStateRef<V>;
   setUsedStateRef: SetUsedStateRef;
 }
 

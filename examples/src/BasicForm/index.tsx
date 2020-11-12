@@ -30,8 +30,8 @@ export interface FormValues {
 }
 
 const initialValues = {
-  text: { nest: "" },
-  controller: "",
+  text: { nest: "test" },
+  controller: "test",
   hiddenText1: "test",
   hiddenText2: "test",
   password: "test",
@@ -125,21 +125,21 @@ export default (): JSX.Element => {
   });
 
   // console.log("LOG ===> Re-render");
-  // console.log(
-  //   "LOG ===> formState: ",
-  //   getState({
-  //     // values: "values",
-  //     // touched: "touched",
-  //     // errors: "errors",
-  //     // isDirty: "isDirty",
-  //     // dirtyFields: "dirtyFields",
-  //     // isValidating: "isValidating",
-  //     // isValid: "isValid",
-  //     // isSubmitting: "isSubmitting",
-  //     // isSubmitted: "isSubmitted",
-  //     // submitCount: "submitCount",
-  //   })
-  // );
+  console.log(
+    "LOG ===> formState: ",
+    getState({
+      values: "values",
+      touched: "touched",
+      errors: "errors",
+      isDirty: "isDirty",
+      dirtyFields: "dirtyFields",
+      isValidating: "isValidating",
+      isValid: "isValid",
+      isSubmitting: "isSubmitting",
+      isSubmitted: "isSubmitted",
+      submitCount: "submitCount",
+    })
+  );
 
   useEffect(() => {
     // validateField("text.nest");
@@ -321,7 +321,7 @@ export default (): JSX.Element => {
           Validate
         </button>
         <button type="button" onClick={handleResetClick}>
-          Reset Method
+          Reset
         </button>
         <button type="button" onClick={handleSubmit}>
           My Submit
