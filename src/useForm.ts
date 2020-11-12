@@ -87,7 +87,7 @@ const getFields = (form: HTMLFormElement | null) =>
         }, {})
     : {};
 
-const useForm = <V extends FormValues = FormValues>({
+export default <V extends FormValues = FormValues>({
   initialValues,
   validate,
   validateOnChange = true,
@@ -727,5 +727,3 @@ const useForm = <V extends FormValues = FormValues>({
     controller,
   };
 };
-
-export default useForm;
