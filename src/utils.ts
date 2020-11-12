@@ -82,21 +82,48 @@ const cloneObject = (object: unknown): any => {
 };
 
 export const set: Set = (object, path, value, immutable = false) => {
-  if (!isPlainObject(object)) return object;
+  if (!isPlainObject(object)) throw new TypeError("Expected an object.");
 
-  const tempPath = String(path)
+  const segs = String(path)
     .split(/[.[\]]+/)
     .filter(Boolean);
   const newObject = immutable ? cloneObject(object) : object;
 
-  tempPath.slice(0, -1).reduce((obj, key, idx) => {
+  segs.slice(0, -1).reduce((obj, key, idx) => {
     if (isObject(obj[key])) return obj[key];
-    const next = Number(tempPath[idx + 1]);
+    const next = Number(segs[idx + 1]);
     obj[key] = Number.isInteger(next) && next >= 0 ? [] : {};
     return obj[key];
-  }, newObject)[tempPath[tempPath.length - 1] || ""] = value;
+  }, newObject)[segs[segs.length - 1] || ""] = value;
 
   return newObject;
+};
+
+export const unset = (object: any, path: string, immutable = false): any => {
+  if (!isPlainObject(object)) throw new TypeError("Expected an object.");
+
+  const refObject = immutable ? cloneObject(object) : object;
+  let newObject = refObject;
+
+  // eslint-disable-next-line no-prototype-builtins
+  if (newObject.hasOwnProperty(path)) {
+    delete newObject[path];
+    return refObject;
+  }
+
+  if (!isUndefined(get(newObject, path))) {
+    const segs = path.split(".");
+    let last = segs.pop() as string;
+
+    while (segs.length && segs[segs.length - 1].slice(-1) === "\\")
+      last = `${(segs.pop() as string).slice(0, -1)}.${last}`;
+
+    while (segs.length) newObject = newObject[(path = segs.shift() as string)];
+
+    delete newObject[last];
+  }
+
+  return refObject;
 };
 
 export const deepMerge = (...objects: any[]) =>

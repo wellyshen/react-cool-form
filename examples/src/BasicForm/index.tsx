@@ -128,16 +128,16 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      values: "values",
-      touched: "touched",
+      // values: "values",
+      // touched: "touched",
       errors: "errors",
-      isDirty: "isDirty",
-      dirtyFields: "dirtyFields",
-      isValidating: "isValidating",
-      isValid: "isValid",
-      isSubmitting: "isSubmitting",
-      isSubmitted: "isSubmitted",
-      submitCount: "submitCount",
+      // isDirty: "isDirty",
+      // dirtyFields: "dirtyFields",
+      // isValidating: "isValidating",
+      // isValid: "isValid",
+      // isSubmitting: "isSubmitting",
+      // isSubmitted: "isSubmitted",
+      // submitCount: "submitCount",
     })
   );
 
@@ -181,7 +181,8 @@ export default (): JSX.Element => {
   };
 
   const handleClearErrorsClick = (): void => {
-    setFieldError("text.nest");
+    // setFieldError("text.nest");
+    setFieldError("number");
   };
 
   const handleValidateClick = (): void => {
@@ -232,9 +233,9 @@ export default (): JSX.Element => {
             <Input
               label="Hidden Text 1:"
               name="hiddenText1"
-              /* ref={validate(async (value) => {
+              ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
-              })} */
+              })}
             />
           </div>
         )}
@@ -243,9 +244,9 @@ export default (): JSX.Element => {
             <Input
               label="Hidden Text 2:"
               name="hiddenText2"
-              /* ref={validate(async (value) => {
+              ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
-              })} */
+              })}
             />
           </div>
         )}
@@ -254,9 +255,9 @@ export default (): JSX.Element => {
           label="Number:"
           type="number"
           name="number"
-          /* ref={validate((value) => {
+          ref={validate((value) => {
             return value <= 5 ? "Field error" : "";
-        })} */
+          })}
         />
         <Input label="Range:" type="range" name="range" />
         <Input label="Checkbox:" type="checkbox" name="checkbox" />
