@@ -457,8 +457,8 @@ const useForm = <V extends FormValues = FormValues>({
 
   const reset = useCallback<Reset<V>>(
     (values, exclude, e) => {
-      if (e?.preventDefault) e.preventDefault();
-      if (e?.stopPropagation) e.stopPropagation();
+      e?.preventDefault();
+      e?.stopPropagation();
 
       const state = { ...stateRef.current };
       const skip = arrayToObject(exclude || []);
@@ -488,8 +488,8 @@ const useForm = <V extends FormValues = FormValues>({
 
   const submit = useCallback<Submit<V>>(
     async (e) => {
-      if (e?.preventDefault) e.preventDefault();
-      if (e?.stopPropagation) e.stopPropagation();
+      e?.preventDefault();
+      e?.stopPropagation();
 
       setStateRef("isSubmitting", true);
 
