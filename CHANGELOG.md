@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.21
+
+### Patch Changes
+
+- [`c9ca4b9`](https://github.com/wellyshen/react-cool-form/commit/c9ca4b9135e6bc2208e0e79fe459e896376df719) [#96](https://github.com/wellyshen/react-cool-form/pull/96) Thanks [@wellyshen](https://github.com/wellyshen)! - feat: expose `get()` and `set()` utility functions
+
 ## 0.0.20
 
 ### Patch Changes
