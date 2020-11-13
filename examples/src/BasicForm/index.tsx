@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/core */
 
 import React, { useState, useEffect } from "react";
-import { useForm } from "react-cool-form";
+import { useForm, get, set } from "react-cool-form";
 import * as Yup from "yup";
 
 import Input from "./Input";
@@ -76,7 +76,7 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     // ignoreFields: ["text.nest", "number"],
-    // validate: async (values, set) => {
+    // validate: async (values) => {
     //   let errors: any = { text: { nest: "" } };
 
     //   // fib(35);

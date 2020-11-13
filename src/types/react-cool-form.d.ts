@@ -53,12 +53,8 @@ declare module "react-cool-form" {
     (formState: FormState<V>): void;
   }
 
-  interface Set {
-    (object: any, path: string, value?: unknown, immutable?: boolean): any;
-  }
-
   export interface FormValidator<V = FormValues> {
-    (values: V, set: Set): Errors<V> | void | Promise<Errors<V> | void>;
+    (values: V): Errors<V> | void | Promise<Errors<V> | void>;
   }
 
   export interface FieldValidator<V = FormValues> {
@@ -190,4 +186,13 @@ declare module "react-cool-form" {
   export const useForm: <V extends FormValues = FormValues>(
     config: Config<V>
   ) => Return<V>;
+
+  export const get: (object: any, path: string, defaultValue?: unknown) => any;
+
+  export const set: (
+    object: any,
+    path: string,
+    value: unknown,
+    immutable?: boolean
+  ) => any;
 }
