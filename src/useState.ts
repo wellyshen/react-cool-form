@@ -16,8 +16,8 @@ export default <V>(
   onChange?: Debug<V>
 ): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
-  const initialStateRef = useRef(initialState);
-  const stateRef = useRef(initialStateRef.current);
+  const initialValuesRef = useRef(initialState.values);
+  const stateRef = useRef(initialState);
   const usedStateRef = useRef<UsedRef>({});
   const onChangeRef = useLatest(onChange);
 
@@ -45,7 +45,7 @@ export default <V>(
         let { submitCount: prevSubmitCount } = state;
         const isDirty =
           key === "values"
-            ? !isEqual(values, initialStateRef.current.values)
+            ? !isEqual(values, initialValuesRef.current)
             : prevIsDirty;
         const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
         const submitCount =
