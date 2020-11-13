@@ -130,9 +130,9 @@ export default (): JSX.Element => {
     getState({
       // values: "values",
       // touched: "touched",
-      errors: "errors",
+      // errors: "errors",
       // isDirty: "isDirty",
-      // dirtyFields: "dirtyFields",
+      dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
       // isValid: "isValid",
       // isSubmitting: "isSubmitting",
@@ -226,7 +226,7 @@ export default (): JSX.Element => {
             // console.log("LOG ===> validate: ", val, values);
             return val.length <= 5 ? "Field error" : "";
           }, [])} */
-          maxLength="3"
+          // maxLength="3"
         />
         {show1 && (
           <div>

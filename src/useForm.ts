@@ -359,10 +359,14 @@ export default <V extends FormValues = FormValues>({
 
   const setFieldDirty = useCallback(
     (name: string) => {
-      setStateRef(
-        `dirtyFields.${name}`,
-        get(stateRef.current.values, name) !== get(initialValues, name)
-      );
+      if (get(stateRef.current.values, name) !== get(initialValues, name)) {
+        setStateRef(`dirtyFields.${name}`, true);
+      } else {
+        setStateRef(
+          "dirtyFields",
+          unset(stateRef.current.dirtyFields, name, true)
+        );
+      }
     },
     [initialValues, setStateRef, stateRef]
   );
