@@ -285,10 +285,7 @@ export default <V extends FormValues = FormValues>({
       if (!formValidatorRef.current) return name ? undefined : {};
 
       try {
-        const errors = await formValidatorRef.current(
-          stateRef.current.values,
-          set
-        );
+        const errors = await formValidatorRef.current(stateRef.current.values);
 
         if (name) return get(errors, name);
 

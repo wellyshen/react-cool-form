@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/explicit-module-boundary-types */
 
-import { FieldElement, Set } from "./types";
+import { FieldElement } from "./types";
 
 export const warn = (...args: any[]): void => {
   if (__DEV__) console.warn(...args);
@@ -81,7 +81,12 @@ const cloneObject = (object: unknown): any => {
   throw new Error("Unable to clone object.");
 };
 
-export const set: Set = (object, path, value, immutable = false) => {
+export const set = (
+  object: any,
+  path: string,
+  value: unknown,
+  immutable = false
+) => {
   if (!isPlainObject(object)) throw new TypeError("Expected an object.");
 
   const segs = String(path)
@@ -99,7 +104,7 @@ export const set: Set = (object, path, value, immutable = false) => {
   return newObject;
 };
 
-export const unset = (object: any, path: string, immutable = false): any => {
+export const unset = (object: any, path: string, immutable = false) => {
   if (!isPlainObject(object)) throw new TypeError("Expected an object.");
 
   const refObject = immutable ? cloneObject(object) : object;
