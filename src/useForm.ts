@@ -125,7 +125,7 @@ export default <V extends FormValues = FormValues>({
     debug
   );
 
-  const setDomValue = useCallback((name: string, value: any) => {
+  const setNodeValue = useCallback((name: string, value: any) => {
     if (ignoreFieldsRef.current[name] || !fieldsRef.current[name]) return;
 
     const { field, options } = fieldsRef.current[name];
@@ -158,12 +158,12 @@ export default <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const setAllDomsValue = useCallback(
+  const setAllNodesValue = useCallback(
     (values: V = stateRef.current.values) =>
       Object.values(fieldsRef.current).forEach(({ field }) =>
-        setDomValue(field.name, get(values, field.name))
+        setNodeValue(field.name, get(values, field.name))
       ),
-    [setDomValue, stateRef]
+    [setNodeValue, stateRef]
   );
 
   const validateRef = useCallback<ValidateRef<V>>(
@@ -379,14 +379,14 @@ export default <V extends FormValues = FormValues>({
       values = isFunction(values) ? values(stateRef.current.values) : values;
 
       setStateRef("values", values);
-      setAllDomsValue(values);
+      setAllNodesValue(values);
 
       touchedFields.forEach((name) => setFieldTouched(name, false));
       dirtyFields.forEach((name) => setFieldDirty(name));
       if (shouldValidate) validateFormWithLowPriority();
     },
     [
-      setAllDomsValue,
+      setAllNodesValue,
       setFieldDirty,
       setFieldTouched,
       setStateRef,
@@ -411,7 +411,7 @@ export default <V extends FormValues = FormValues>({
         : value;
 
       setStateRef(`values.${name}`, value);
-      setDomValue(name, value);
+      setNodeValue(name, value);
 
       if (isTouched) setFieldTouched(name, false);
       if (isDirty) setFieldDirty(name);
@@ -419,7 +419,7 @@ export default <V extends FormValues = FormValues>({
       changedFieldRef.current = name;
     },
     [
-      setDomValue,
+      setNodeValue,
       setFieldDirty,
       setFieldTouched,
       setStateRef,
@@ -467,7 +467,7 @@ export default <V extends FormValues = FormValues>({
             : values || initialStateRef.current.values;
 
           state[key] = values;
-          setAllDomsValue(values);
+          setAllNodesValue(values);
         } else {
           // @ts-expect-error
           state[key] = initialStateRef.current[key];
@@ -478,7 +478,7 @@ export default <V extends FormValues = FormValues>({
 
       if (onResetRef.current) onResetRef.current(state.values, getOptions(), e);
     },
-    [getOptions, onResetRef, setAllDomsValue, setStateRef, stateRef]
+    [getOptions, onResetRef, setAllNodesValue, setStateRef, stateRef]
   );
 
   const submit = useCallback<Submit<V>>(
@@ -640,8 +640,8 @@ export default <V extends FormValues = FormValues>({
     }
 
     fieldsRef.current = getFields(formRef.current);
-    setAllDomsValue();
-  }, [setAllDomsValue]);
+    setAllNodesValue();
+  }, [setAllNodesValue]);
 
   useEffect(() => {
     if (!formRef.current) return () => null;
@@ -690,7 +690,7 @@ export default <V extends FormValues = FormValues>({
     const observer = new MutationObserver(([{ type, addedNodes }]) => {
       if (type === "childList" && addedNodes.length) {
         fieldsRef.current = getFields(form);
-        setAllDomsValue();
+        setAllNodesValue();
       }
     });
     observer.observe(form, { childList: true, subtree: true });
@@ -705,7 +705,7 @@ export default <V extends FormValues = FormValues>({
   }, [
     handleFieldChange,
     reset,
-    setAllDomsValue,
+    setAllNodesValue,
     setFieldTouched,
     submit,
     validateOnBlur,
