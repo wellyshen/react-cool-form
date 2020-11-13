@@ -687,8 +687,8 @@ export default <V extends FormValues = FormValues>({
     form.addEventListener("submit", handleSubmit);
     form.addEventListener("reset", handleReset);
 
-    const observer = new MutationObserver(([{ type, addedNodes }]) => {
-      if (type === "childList" && addedNodes.length) {
+    const observer = new MutationObserver(([{ type }]) => {
+      if (type === "childList") {
         fieldsRef.current = getFields(form);
         setAllNodesValue();
       }
