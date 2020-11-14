@@ -38,7 +38,6 @@ import {
   isEmptyObject,
   isFileField,
   isFunction,
-  isKey,
   isMultipleSelectField,
   isNumberField,
   isPlainObject,
@@ -220,9 +219,7 @@ export default <V extends FormValues = FormValues>({
       } else {
         setStateRef(
           "errors",
-          isKey(name)
-            ? unset({ ...stateRef.current.errors }, name)
-            : unset(stateRef.current.errors, name, true),
+          unset(stateRef.current.errors, name, true),
           `errors.${name}`
         );
       }
@@ -363,9 +360,7 @@ export default <V extends FormValues = FormValues>({
       } else {
         setStateRef(
           "dirtyFields",
-          isKey(name)
-            ? unset({ ...stateRef.current.dirtyFields }, name)
-            : unset(stateRef.current.dirtyFields, name, true),
+          unset(stateRef.current.dirtyFields, name, true),
           `dirtyFields.${name}`
         );
       }
