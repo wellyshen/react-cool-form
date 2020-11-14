@@ -7,18 +7,18 @@ declare module "react-cool-form" {
 
   type Errors<V> = Prop<V>;
 
-  export interface FormState<V = FormValues> {
-    readonly values: V;
-    readonly touched: Prop<V, boolean>;
-    readonly errors: Errors<V>;
-    readonly isDirty: boolean;
-    readonly dirtyFields: Prop<V, boolean>;
-    readonly isValidating: boolean;
-    readonly isValid: boolean;
-    readonly isSubmitting: boolean;
-    readonly isSubmitted: boolean;
-    readonly submitCount: number;
-  }
+  export type FormState<V = FormValues> = Readonly<{
+    values: V;
+    touched: Prop<V, boolean>;
+    errors: Errors<V>;
+    isDirty: boolean;
+    dirtyFields: Prop<V, boolean>;
+    isValidating: boolean;
+    isValid: boolean;
+    isSubmitting: boolean;
+    isSubmitted: boolean;
+    submitCount: number;
+  }>;
 
   type Options<V> = Omit<
     Return<V>,

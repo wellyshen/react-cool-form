@@ -37,7 +37,7 @@ export interface FormStateReturn<V> {
   setUsedStateRef: SetUsedStateRef;
 }
 
-// Hook
+// Form
 export type FormValues = Record<string, any>;
 
 export type FieldElement =
