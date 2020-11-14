@@ -1,6 +1,14 @@
 declare module "react-cool-form" {
   import { FocusEvent, RefObject, SyntheticEvent } from "react";
 
+  type DeepPartial<T> = T extends Function
+    ? T
+    : T extends object
+    ? T extends unknown[]
+      ? DeepPartial<T[number]>[]
+      : { [K in keyof T]?: DeepPartial<T[K]> }
+    : T;
+
   export type FormValues = Record<string, any>;
 
   type Prop<V, T = any> = { [K in keyof V]?: V[K] extends T ? T : Prop<V[K]> };
@@ -156,17 +164,17 @@ declare module "react-cool-form" {
       | Record<string, unknown>;
   }
 
-  export interface Config<V = FormValues> {
-    initialValues: V;
-    validate?: FormValidator<V>;
-    validateOnChange?: boolean;
-    validateOnBlur?: boolean;
-    ignoreFields?: string[];
-    onReset?: OnReset<V>;
-    onSubmit?: OnSubmit<V>;
-    onError?: OnError<V>;
-    debug?: Debug<V>;
-  }
+  export type Config<V = FormValues> = Partial<{
+    initialValues: DeepPartial<V>;
+    validate: FormValidator<V>;
+    validateOnChange: boolean;
+    validateOnBlur: boolean;
+    ignoreFields: string[];
+    onReset: OnReset<V>;
+    onSubmit: OnSubmit<V>;
+    onError: OnError<V>;
+    debug: Debug<V>;
+  }>;
 
   export interface Return<V = FormValues> {
     formRef: RefObject<HTMLFormElement>;

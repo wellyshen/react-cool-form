@@ -38,7 +38,7 @@ const initialValues = {
   number: 5,
   range: 0,
   checkbox: true,
-  checkboxGroup: ["value-1"],
+  // checkboxGroup: ["value-1"],
   radio: "value-1",
   image: "",
   select: "value-2",
@@ -128,11 +128,11 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      // values: "values",
+      values: "values",
       // touched: "touched",
       // errors: "errors",
       // isDirty: "isDirty",
-      dirtyFields: "dirtyFields",
+      // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
       // isValid: "isValid",
       // isSubmitting: "isSubmitting",
@@ -140,7 +140,6 @@ export default (): JSX.Element => {
       // submitCount: "submitCount",
     })
   );
-  console.log("LOG ===> ", getState("dirtyFields.text.nest"));
 
   useEffect(() => {
     // validateField("text.nest");
@@ -268,6 +267,7 @@ export default (): JSX.Element => {
             type="checkbox"
             name="checkboxGroup"
             value="value-1"
+            defaultChecked
           />
           <Input
             id="checkboxGroup-2"
