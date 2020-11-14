@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.22
+
+### Patch Changes
+
+- [`af29dfd`](https://github.com/wellyshen/react-cool-form/commit/af29dfd485d6450a2d7613d7cf1e09f433fb08e2) [#99](https://github.com/wellyshen/react-cool-form/pull/99) Thanks [@wellyshen](https://github.com/wellyshen)! - avoid un-necessary re-render & strip hidden input from element checking
+
+* [`4f08865`](https://github.com/wellyshen/react-cool-form/commit/4f088655f9593ed011393e092d73982711dd89ec) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): re-parse fields when both add and remove nodes
+
+- [`19e5584`](https://github.com/wellyshen/react-cool-form/commit/19e55844491388b4b8ff6e454e2345d4a3b58484) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): unset dirtyField if not dirty
+
 ## 0.0.21
 
 ### Patch Changes
