@@ -4,25 +4,25 @@ import { FocusEvent, MutableRefObject, RefObject, SyntheticEvent } from "react";
 type DeepPartial<T> = T extends Function
   ? T
   : T extends object
-  ? T extends unknown[]
-    ? DeepPartial<T[number]>[]
-    : { [K in keyof T]?: DeepPartial<T[K]> }
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : T;
+
+type DeepProps<V, T = any> = {
+  [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
+};
 
 // Common
 export type UsedRef = Record<string, boolean>;
 
 // State
-type Prop<V, T = any> = { [K in keyof V]?: V[K] extends T ? T : Prop<V[K]> };
-
-export type Errors<V> = Prop<V>;
+export type Errors<V> = DeepProps<V>;
 
 export interface FormState<V> {
   values: V;
-  touched: Prop<V, boolean>;
+  touched: DeepProps<V, boolean>;
   errors: Errors<V>;
   isDirty: boolean;
-  dirtyFields: Prop<V, boolean>;
+  dirtyFields: DeepProps<V, boolean>;
   isValidating: boolean;
   isValid: boolean;
   isSubmitting: boolean;

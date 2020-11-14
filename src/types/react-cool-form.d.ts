@@ -4,23 +4,23 @@ declare module "react-cool-form" {
   type DeepPartial<T> = T extends Function
     ? T
     : T extends object
-    ? T extends unknown[]
-      ? DeepPartial<T[number]>[]
-      : { [K in keyof T]?: DeepPartial<T[K]> }
+    ? { [K in keyof T]?: DeepPartial<T[K]> }
     : T;
+
+  type DeepProps<V, T = any> = {
+    [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
+  };
 
   export type FormValues = Record<string, any>;
 
-  type Prop<V, T = any> = { [K in keyof V]?: V[K] extends T ? T : Prop<V[K]> };
-
-  type Errors<V> = Prop<V>;
+  type Errors<V> = DeepProps<V>;
 
   export type FormState<V = FormValues> = Readonly<{
     values: V;
-    touched: Prop<V, boolean>;
+    touched: DeepProps<V, boolean>;
     errors: Errors<V>;
     isDirty: boolean;
-    dirtyFields: Prop<V, boolean>;
+    dirtyFields: DeepProps<V, boolean>;
     isValidating: boolean;
     isValid: boolean;
     isSubmitting: boolean;
