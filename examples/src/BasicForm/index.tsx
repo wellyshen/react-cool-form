@@ -128,11 +128,11 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      // values: "values",
+      values: "values",
       // touched: "touched",
       // errors: "errors",
       // isDirty: "isDirty",
-      dirtyFields: "dirtyFields",
+      // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
       // isValid: "isValid",
       // isSubmitting: "isSubmitting",
@@ -140,7 +140,6 @@ export default (): JSX.Element => {
       // submitCount: "submitCount",
     })
   );
-  console.log("LOG ===> ", getState("dirtyFields.text.nest"));
 
   useEffect(() => {
     // validateField("text.nest");
@@ -267,14 +266,14 @@ export default (): JSX.Element => {
             label="Checkbox 1:"
             type="checkbox"
             name="checkboxGroup"
-            value="value-1"
+            // value="value-1"
           />
           <Input
             id="checkboxGroup-2"
             label="Checkbox 2:"
             type="checkbox"
             name="checkboxGroup"
-            value="value-2"
+            // value="value-2"
           />
         </div>
         <div css={wrapper}>
