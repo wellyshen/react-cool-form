@@ -210,7 +210,7 @@ export default <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const setNodeValueToState = useCallback(
+  const setDefaultValue = useCallback(
     (name: string, value: any) => {
       if (isUndefined(get(stateRef.current.values, name)))
         setStateRef(`values.${name}`, value, { shouldUpdate: false });
@@ -227,16 +227,16 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setAllNodesOrStateValue = useCallback(
-    (values: V, shouldSetState = false) =>
+    (values: V, isInit = false) =>
       Object.values(fieldsRef.current).forEach(({ field, options }) => {
         const value = get(values, field.name);
 
         if (!isUndefined(value)) setNodeValue(field.name, value);
 
-        if (shouldSetState && !ignoreFieldsRef.current[field.name])
-          setNodeValueToState(field.name, getNodeValue(field, options));
+        if (isInit && !ignoreFieldsRef.current[field.name])
+          setDefaultValue(field.name, getNodeValue(field, options));
       }),
-    [getNodeValue, setNodeValue, setNodeValueToState]
+    [getNodeValue, setNodeValue, setDefaultValue]
   );
 
   const validateRef = useCallback<ValidateRef<V>>(
@@ -625,7 +625,7 @@ export default <V extends FormValues = FormValues>({
 
       ignoreFieldsRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
-      if (!isUndefined(defaultValue)) setNodeValueToState(name, defaultValue);
+      if (!isUndefined(defaultValue)) setDefaultValue(name, defaultValue);
 
       return {
         name,
@@ -660,7 +660,7 @@ export default <V extends FormValues = FormValues>({
       handleFieldChange,
       setFieldTouched,
       setFieldValue,
-      setNodeValueToState,
+      setDefaultValue,
       validateOnBlur,
       validateOnChange,
     ]
