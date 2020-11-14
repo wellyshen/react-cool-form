@@ -107,7 +107,7 @@ export default <V extends FormValues = FormValues>({
   const ignoreFieldsRef = useRef<UsedRef>(arrayToMap(ignoreFields));
   const changedFieldRef = useRef<string>();
   const initialStateRef = useRef<FormState<V>>({
-    values: initialValues,
+    values: initialValues || {},
     touched: {},
     errors: {},
     isDirty: false,
