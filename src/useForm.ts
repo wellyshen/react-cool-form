@@ -521,7 +521,7 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const getChangeEventValue = useCallback(
+  const getFieldValue = useCallback(
     (field: FieldElement) => {
       const { name, value } = field;
       let val: any = value;
@@ -531,7 +531,7 @@ export default <V extends FormValues = FormValues>({
       } else if (isCheckboxField(field)) {
         let checkValues = get(stateRef.current.values, name);
 
-        if (field.hasAttribute("value") && isArray(checkValues)) {
+        if (isArray(checkValues)) {
           checkValues = new Set(checkValues);
 
           if (field.checked) {
@@ -561,14 +561,14 @@ export default <V extends FormValues = FormValues>({
     (field: FieldElement) => {
       const { name } = field;
 
-      setStateRef(`values.${name}`, getChangeEventValue(field));
+      setStateRef(`values.${name}`, getFieldValue(field));
       setFieldDirty(name);
 
       if (validateOnChange) validateFormWithLowPriority();
       changedFieldRef.current = name;
     },
     [
-      getChangeEventValue,
+      getFieldValue,
       setFieldDirty,
       setStateRef,
       validateFormWithLowPriority,
@@ -599,7 +599,7 @@ export default <V extends FormValues = FormValues>({
               isFieldElement(parsedE.target)
             ) {
               handleFieldChange(parsedE.target);
-              if (onChange) onChange(e, getChangeEventValue(parsedE.target));
+              if (onChange) onChange(e, getFieldValue(parsedE.target));
             } else {
               setFieldValue(name, parsedE);
               if (onChange) onChange(e);
@@ -622,7 +622,7 @@ export default <V extends FormValues = FormValues>({
       };
     },
     [
-      getChangeEventValue,
+      getFieldValue,
       getState,
       handleFieldChange,
       setFieldTouched,
