@@ -379,6 +379,7 @@ export default <V extends FormValues = FormValues>({
 
         if (error) setStateRef(`errors.${name}`, error);
         setStateRef("isValidating", false);
+
         return error;
       } catch (exception) {
         return exception;
@@ -396,8 +397,10 @@ export default <V extends FormValues = FormValues>({
       runFormValidation(),
     ]).then((errors) => {
       const errs = deepMerge(...errors);
+
       setErrors(errs);
       setStateRef("isValidating", false);
+
       return errs;
     });
   }, [

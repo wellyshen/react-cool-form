@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/core */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useForm, get, set } from "react-cool-form";
 import * as Yup from "yup";
 
@@ -126,22 +126,22 @@ export default (): JSX.Element => {
     // debug: (formState) => console.log("LOG ===> debug: ", formState),
   });
 
-  console.log("LOG ===> Re-render");
-  // console.log(
-  //   "LOG ===> formState: ",
-  //   getState({
-  //     values: "values",
-  //     // touched: "touched",
-  //     // errors: "errors",
-  //     // isDirty: "isDirty",
-  //     // dirtyFields: "dirtyFields",
-  //     // isValidating: "isValidating",
-  //     // isValid: "isValid",
-  //     // isSubmitting: "isSubmitting",
-  //     // isSubmitted: "isSubmitted",
-  //     // submitCount: "submitCount",
-  //   })
-  // );
+  // console.log("LOG ===> Re-render");
+  console.log(
+    "LOG ===> formState: ",
+    getState({
+      // values: "values",
+      // touched: "touched",
+      errors: "errors",
+      // isDirty: "isDirty",
+      // dirtyFields: "dirtyFields",
+      // isValidating: "isValidating",
+      // isValid: "isValid",
+      // isSubmitting: "isSubmitting",
+      // isSubmitted: "isSubmitted",
+      // submitCount: "submitCount",
+    })
+  );
 
   useEffect(() => {
     // validateField("text.nest");
@@ -234,7 +234,7 @@ export default (): JSX.Element => {
             // console.log("LOG ===> validate: ", val, values);
             return val.length <= 5 ? "Field error" : "";
           }, [])} */
-          // maxLength="3"
+          required
           defaultValue={defaultValues.controller2}
         />
         {show1 && (
