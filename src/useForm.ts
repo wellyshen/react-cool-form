@@ -123,6 +123,60 @@ export default <V extends FormValues = FormValues>({
     debug
   );
 
+  const getNodeValue = useCallback(
+    (field: FieldElement, options?: FieldElement[]) => {
+      let val: any = field.value;
+
+      if (isNumberField(field) || isRangeField(field))
+        val = parseFloat(val) ?? "";
+
+      if (isCheckboxField(field)) {
+        if (options) {
+          const checkboxs = options as HTMLInputElement[];
+
+          if (options.length > 1) {
+            val = checkboxs
+              .filter((checkbox) => checkbox.checked)
+              .map((checkbox) => checkbox.value);
+          } else {
+            val = checkboxs[0].checked;
+          }
+        } else {
+          let checkValues = get(stateRef.current.values, field.name);
+
+          if (isArray(checkValues)) {
+            checkValues = new Set(checkValues);
+
+            if (field.checked) {
+              checkValues.add(val);
+            } else {
+              checkValues.delete(val);
+            }
+
+            val = Array.from(checkValues);
+          } else {
+            val = field.checked;
+          }
+        }
+      }
+
+      if (isRadioField(field) && options)
+        val =
+          (options as HTMLInputElement[]).find((radio) => radio.checked)
+            ?.value || "";
+
+      if (isMultipleSelectField(field) && !options)
+        val = Array.from(field.options)
+          .filter((option) => option.selected)
+          .map((option) => option.value);
+
+      if (isFileField(field)) val = field.files;
+
+      return val;
+    },
+    [stateRef]
+  );
+
   const setNodeValue = useCallback((name: string, value: any) => {
     if (ignoreFieldsRef.current[name] || !fieldsRef.current[name]) return;
 
@@ -156,12 +210,33 @@ export default <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const setAllNodesValue = useCallback(
-    (values: V = initialStateRef.current.values) =>
-      Object.values(fieldsRef.current).forEach(({ field }) =>
-        setNodeValue(field.name, get(values, field.name))
-      ),
-    [setNodeValue]
+  const setNodeValueToState = useCallback(
+    (name: string, value: any) => {
+      if (isUndefined(get(stateRef.current.values, name)))
+        setStateRef(`values.${name}`, value, { shouldUpdate: false });
+
+      if (isUndefined(get(initialStateRef.current.values, name)))
+        initialStateRef.current.values = set(
+          initialStateRef.current.values,
+          name,
+          value,
+          true
+        );
+    },
+    [setStateRef, stateRef]
+  );
+
+  const setAllNodesOrStateValue = useCallback(
+    (values: V, shouldSetState = false) =>
+      Object.values(fieldsRef.current).forEach(({ field, options }) => {
+        const value = get(values, field.name);
+
+        if (!isUndefined(value)) setNodeValue(field.name, value);
+
+        if (shouldSetState && !ignoreFieldsRef.current[field.name])
+          setNodeValueToState(field.name, getNodeValue(field, options));
+      }),
+    [getNodeValue, setNodeValue, setNodeValueToState]
   );
 
   const validateRef = useCallback<ValidateRef<V>>(
@@ -217,11 +292,9 @@ export default <V extends FormValues = FormValues>({
       if (error) {
         setStateRef(`errors.${name}`, error);
       } else {
-        setStateRef(
-          "errors",
-          unset(stateRef.current.errors, name, true),
-          `errors.${name}`
-        );
+        setStateRef("errors", unset(stateRef.current.errors, name, true), {
+          actualPath: `errors.${name}`,
+        });
       }
     },
     [setStateRef, stateRef]
@@ -361,7 +434,7 @@ export default <V extends FormValues = FormValues>({
         setStateRef(
           "dirtyFields",
           unset(stateRef.current.dirtyFields, name, true),
-          `dirtyFields.${name}`
+          { actualPath: `errors.${name}` }
         );
       }
     },
@@ -380,14 +453,14 @@ export default <V extends FormValues = FormValues>({
       values = isFunction(values) ? values(stateRef.current.values) : values;
 
       setStateRef("values", values);
-      setAllNodesValue(values);
+      setAllNodesOrStateValue(values);
 
       touchedFields.forEach((name) => setFieldTouched(name, false));
       dirtyFields.forEach((name) => setFieldDirty(name));
       if (shouldValidate) validateFormWithLowPriority();
     },
     [
-      setAllNodesValue,
+      setAllNodesOrStateValue,
       setFieldDirty,
       setFieldTouched,
       setStateRef,
@@ -465,10 +538,10 @@ export default <V extends FormValues = FormValues>({
         if (key === "values") {
           values = isFunction(values)
             ? values(stateRef.current.values)
-            : values || initialStateRef.current.values;
+            : { ...initialStateRef.current.values, ...values };
 
           state[key] = values;
-          setAllNodesValue(values);
+          setAllNodesOrStateValue(values);
         } else {
           // @ts-expect-error
           state[key] = initialStateRef.current[key];
@@ -479,7 +552,7 @@ export default <V extends FormValues = FormValues>({
 
       if (onResetRef.current) onResetRef.current(state.values, getOptions(), e);
     },
-    [getOptions, onResetRef, setAllNodesValue, setStateRef, stateRef]
+    [getOptions, onResetRef, setAllNodesOrStateValue, setStateRef, stateRef]
   );
 
   const submit = useCallback<Submit<V>>(
@@ -521,54 +594,18 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const getFieldValue = useCallback(
-    (field: FieldElement) => {
-      const { name, value } = field;
-      let val: any = value;
-
-      if (isNumberField(field) || isRangeField(field)) {
-        val = parseFloat(value) || "";
-      } else if (isCheckboxField(field)) {
-        let checkValues = get(stateRef.current.values, name);
-
-        if (isArray(checkValues)) {
-          checkValues = new Set(checkValues);
-
-          if (field.checked) {
-            checkValues.add(value);
-          } else {
-            checkValues.delete(value);
-          }
-
-          val = Array.from(checkValues);
-        } else {
-          val = field.checked;
-        }
-      } else if (isMultipleSelectField(field)) {
-        val = Array.from(field.options)
-          .filter((option) => option.selected)
-          .map((option) => option.value);
-      } else if (isFileField(field)) {
-        val = field.files;
-      }
-
-      return val;
-    },
-    [stateRef]
-  );
-
   const handleFieldChange = useCallback(
     (field: FieldElement) => {
       const { name } = field;
 
-      setStateRef(`values.${name}`, getFieldValue(field));
+      setStateRef(`values.${name}`, getNodeValue(field));
       setFieldDirty(name);
 
       if (validateOnChange) validateFormWithLowPriority();
       changedFieldRef.current = name;
     },
     [
-      getFieldValue,
+      getNodeValue,
       setFieldDirty,
       setStateRef,
       validateFormWithLowPriority,
@@ -577,7 +614,10 @@ export default <V extends FormValues = FormValues>({
   );
 
   const controller = useCallback<Controller<V>>(
-    (name, { validate, value, parser, onChange, onBlur } = {}) => {
+    (
+      name,
+      { validate, value, defaultValue, parser, onChange, onBlur } = {}
+    ) => {
       if (!name) {
         warn('💡 react-cool-form > controller: Missing the "name" parameter.');
         return {};
@@ -585,48 +625,42 @@ export default <V extends FormValues = FormValues>({
 
       ignoreFieldsRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
+      if (!isUndefined(defaultValue)) setNodeValueToState(name, defaultValue);
 
       return {
         name,
         value: !isUndefined(value) ? value : getState(`values.${name}`),
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        onChange: useCallback(
-          (e) => {
-            const parsedE = parser ? parser(e) : e;
+        onChange: (e) => {
+          const parsedE = parser ? parser(e) : e;
 
-            if (
-              parsedE.nativeEvent instanceof Event &&
-              isFieldElement(parsedE.target)
-            ) {
-              handleFieldChange(parsedE.target);
-              if (onChange) onChange(e, getFieldValue(parsedE.target));
-            } else {
-              setFieldValue(name, parsedE);
-              if (onChange) onChange(e);
-            }
-          },
-          [parser, name, onChange]
-        ),
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        onBlur: useCallback(
-          (e) => {
-            setFieldTouched(
-              name,
-              (validateOnChange && name !== changedFieldRef.current) ||
-                validateOnBlur
-            );
-            if (onBlur) onBlur(e);
-          },
-          [name, onBlur]
-        ),
+          if (
+            parsedE.nativeEvent instanceof Event &&
+            isFieldElement(parsedE.target)
+          ) {
+            handleFieldChange(parsedE.target);
+            if (onChange) onChange(e, getNodeValue(parsedE.target));
+          } else {
+            setFieldValue(name, parsedE);
+            if (onChange) onChange(e);
+          }
+        },
+        onBlur: (e) => {
+          setFieldTouched(
+            name,
+            (validateOnChange && name !== changedFieldRef.current) ||
+              validateOnBlur
+          );
+          if (onBlur) onBlur(e);
+        },
       };
     },
     [
-      getFieldValue,
+      getNodeValue,
       getState,
       handleFieldChange,
       setFieldTouched,
       setFieldValue,
+      setNodeValueToState,
       validateOnBlur,
       validateOnChange,
     ]
@@ -641,8 +675,8 @@ export default <V extends FormValues = FormValues>({
     }
 
     fieldsRef.current = getFields(formRef.current);
-    setAllNodesValue();
-  }, [setAllNodesValue]);
+    setAllNodesOrStateValue(initialStateRef.current.values, true);
+  }, []);
 
   useEffect(() => {
     if (!formRef.current) return () => null;
@@ -691,7 +725,7 @@ export default <V extends FormValues = FormValues>({
     const observer = new MutationObserver(([{ type }]) => {
       if (type === "childList") {
         fieldsRef.current = getFields(form);
-        setAllNodesValue(stateRef.current.values);
+        setAllNodesOrStateValue(stateRef.current.values, true);
       }
     });
     observer.observe(form, { childList: true, subtree: true });
@@ -706,7 +740,7 @@ export default <V extends FormValues = FormValues>({
   }, [
     handleFieldChange,
     reset,
-    setAllNodesValue,
+    setAllNodesOrStateValue,
     setFieldTouched,
     stateRef,
     submit,

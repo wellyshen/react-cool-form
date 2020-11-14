@@ -150,6 +150,7 @@ declare module "react-cool-form" {
       options?: {
         validate?: FieldValidator<V>;
         value?: any;
+        defaultValue?: any;
         parser?: Parser<E>;
         onChange?: OnChange<E>;
         onBlur?: OnBlur;

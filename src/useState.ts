@@ -22,7 +22,7 @@ export default <V>(
   const onChangeRef = useLatest(onChange);
 
   const setStateRef = useCallback<SetStateRef>(
-    (path, value, actualPath) => {
+    (path, value, { actualPath, shouldUpdate = true } = {}) => {
       const key = path.split(".")[0];
 
       if (!key) {
@@ -58,11 +58,12 @@ export default <V>(
         path = actualPath || path;
 
         if (
-          Object.keys(usedStateRef.current).some(
+          shouldUpdate &&
+          (Object.keys(usedStateRef.current).some(
             (key) => path.startsWith(key) || key.startsWith(path)
           ) ||
-          (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
-          (usedStateRef.current.isValid && isValid !== prevIsValid)
+            (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
+            (usedStateRef.current.isValid && isValid !== prevIsValid))
         )
           forceUpdate();
 

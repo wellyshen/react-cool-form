@@ -33,7 +33,11 @@ export interface FormState<V> {
 export type StateRef<V> = MutableRefObject<FormState<V>>;
 
 export interface SetStateRef {
-  (path: string, value?: any, actualPath?: string): void;
+  (
+    path: string,
+    value?: any,
+    options?: { actualPath?: string; shouldUpdate?: boolean }
+  ): void;
 }
 
 export interface SetUsedStateRef {
@@ -165,6 +169,7 @@ export interface Controller<V, E = any> {
     options?: {
       validate?: FieldValidator<V>;
       value?: any;
+      defaultValue?: any;
       parser?: (event: E) => any;
       onChange?: (event: E, value?: any) => void;
       onBlur?: (event: FocusEvent<any>) => void;

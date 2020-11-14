@@ -61,7 +61,7 @@ export const get = (object: any, path: string, defaultValue?: unknown) => {
 };
 
 const cloneObject = (object: unknown): any => {
-  if (!isObject(object)) return object;
+  if (!isObject(object) || object instanceof FileList) return object;
 
   if (object instanceof Date) return new Date(object.getTime());
 

@@ -14,7 +14,8 @@ const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
 export interface FormValues {
   text: Record<string, string>;
-  controller: any;
+  controller1: any;
+  controller2: any;
   hiddenText1: string;
   hiddenText2: string;
   password: string;
@@ -30,20 +31,21 @@ export interface FormValues {
 }
 
 const defaultValues = {
-  // text: { nest: "test" },
-  controller: "test",
-  hiddenText1: "test",
-  hiddenText2: "test",
-  password: "test",
+  text: { nest: "new test" },
+  // controller1: "new test",
+  controller2: "new test",
+  // hiddenText1: "new test",
+  hiddenText2: "new test",
+  password: "new test",
   // number: 5,
-  range: 0,
-  checkbox: true,
+  // range: 0,
+  // checkbox: true,
   // checkboxGroup: ["value-1"],
   // radio: "value-1",
   // image: "",
   // select: "value-2",
   // multiSelect: { nest: ["value-1", "value-2"] },
-  textarea: "test",
+  // textarea: "test",
 };
 
 const schema = Yup.object().shape({
@@ -124,22 +126,22 @@ export default (): JSX.Element => {
     // debug: (formState) => console.log("LOG ===> debug: ", formState),
   });
 
-  // console.log("LOG ===> Re-render");
-  console.log(
-    "LOG ===> formState: ",
-    getState({
-      values: "values",
-      // touched: "touched",
-      // errors: "errors",
-      // isDirty: "isDirty",
-      // dirtyFields: "dirtyFields",
-      // isValidating: "isValidating",
-      // isValid: "isValid",
-      // isSubmitting: "isSubmitting",
-      // isSubmitted: "isSubmitted",
-      // submitCount: "submitCount",
-    })
-  );
+  console.log("LOG ===> Re-render");
+  // console.log(
+  //   "LOG ===> formState: ",
+  //   getState({
+  //     values: "values",
+  //     // touched: "touched",
+  //     // errors: "errors",
+  //     // isDirty: "isDirty",
+  //     // dirtyFields: "dirtyFields",
+  //     // isValidating: "isValidating",
+  //     // isValid: "isValid",
+  //     // isSubmitting: "isSubmitting",
+  //     // isSubmitted: "isSubmitted",
+  //     // submitCount: "submitCount",
+  //   })
+  // );
 
   useEffect(() => {
     // validateField("text.nest");
@@ -215,10 +217,16 @@ export default (): JSX.Element => {
           // data-rcf-ignore
           defaultValue="test"
         />
+        {show1 && (
+          <Input
+            label="Controller 1:"
+            {...controller("controller1", { defaultValue: "test" })}
+          />
+        )}
         <Controller
-          label="Controller:"
-          name="controller"
-          defaultValue={defaultValues.controller}
+          label="Controller 2:"
+          name="controller2"
+          // eslint-disable-next-line react-hooks/exhaustive-deps
           controller={controller}
           /* validate={useCallback(async (val, values) => {
             // eslint-disable-next-line
@@ -227,6 +235,7 @@ export default (): JSX.Element => {
             return val.length <= 5 ? "Field error" : "";
           }, [])} */
           // maxLength="3"
+          defaultValue={defaultValues.controller2}
         />
         {show1 && (
           <div>
@@ -236,6 +245,7 @@ export default (): JSX.Element => {
               /* ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
               })} */
+              defaultValue="test"
             />
           </div>
         )}
@@ -247,10 +257,16 @@ export default (): JSX.Element => {
               /* ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
               })} */
+              defaultValue="test"
             />
           </div>
         )}
-        {/* <Input label="Password:" type="password" name="password" /> */}
+        <Input
+          label="Password:"
+          type="password"
+          name="password"
+          defaultValue="test"
+        />
         <Input
           label="Number:"
           type="number"
@@ -260,7 +276,7 @@ export default (): JSX.Element => {
           })} */
           defaultValue="5"
         />
-        <Input label="Range:" type="range" name="range" />
+        <Input label="Range:" type="range" name="range" defaultValue="0" />
         <Input
           label="Checkbox:"
           type="checkbox"
@@ -311,12 +327,12 @@ export default (): JSX.Element => {
           label="Multi-select:"
           name="multiSelect.nest"
           multiple
-          defaultValue={["value-2"]}
+          defaultValue={["value-1", "value-2"]}
         >
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
         </Select>
-        <TextArea label="Text Area:" name="textarea" />
+        <TextArea label="Text Area:" name="textarea" defaultValue="test" />
         <button type="button" onClick={handleToggle1Click}>
           Toggle 1
         </button>
