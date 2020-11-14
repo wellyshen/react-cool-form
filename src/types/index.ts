@@ -180,7 +180,7 @@ export interface Controller<V, E = any> {
 }
 
 export type Config<V> = Partial<{
-  initialValues: DeepPartial<V>;
+  defaultValues: DeepPartial<V>;
   validate: FormValidator<V>;
   validateOnChange: boolean;
   validateOnBlur: boolean;

@@ -29,7 +29,7 @@ export interface FormValues {
   textarea: string;
 }
 
-const initialValues = {
+const defaultValues = {
   text: { nest: "test" },
   controller: "test",
   hiddenText1: "test",
@@ -72,7 +72,7 @@ export default (): JSX.Element => {
     reset,
     submit,
   } = useForm<FormValues>({
-    initialValues,
+    defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
     // ignoreFields: ["text.nest", "number"],
@@ -217,7 +217,7 @@ export default (): JSX.Element => {
         <Controller
           label="Controller:"
           name="controller"
-          defaultValue={initialValues.controller}
+          defaultValue={defaultValues.controller}
           controller={controller}
           /* validate={useCallback(async (val, values) => {
             // eslint-disable-next-line

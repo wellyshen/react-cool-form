@@ -87,7 +87,7 @@ const getFields = (form: HTMLFormElement | null) =>
     : {};
 
 export default <V extends FormValues = FormValues>({
-  initialValues,
+  defaultValues,
   validate,
   validateOnChange = true,
   validateOnBlur = true,
@@ -107,7 +107,7 @@ export default <V extends FormValues = FormValues>({
   const ignoreFieldsRef = useRef<UsedRef>(arrayToMap(ignoreFields));
   const changedFieldRef = useRef<string>();
   const initialStateRef = useRef<FormState<V>>({
-    values: (initialValues as V) || {},
+    values: (defaultValues as V) || {},
     touched: {},
     errors: {},
     isDirty: false,
@@ -355,7 +355,7 @@ export default <V extends FormValues = FormValues>({
 
   const setFieldDirty = useCallback(
     (name: string) => {
-      if (get(stateRef.current.values, name) !== get(initialValues, name)) {
+      if (get(stateRef.current.values, name) !== get(defaultValues, name)) {
         setStateRef(`dirtyFields.${name}`, true);
       } else {
         setStateRef(
@@ -365,7 +365,7 @@ export default <V extends FormValues = FormValues>({
         );
       }
     },
-    [initialValues, setStateRef, stateRef]
+    [defaultValues, setStateRef, stateRef]
   );
 
   const setValues = useCallback<SetValues<V>>(

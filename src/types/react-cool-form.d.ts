@@ -165,7 +165,7 @@ declare module "react-cool-form" {
   }
 
   export type Config<V = FormValues> = Partial<{
-    initialValues: DeepPartial<V>;
+    defaultValues: DeepPartial<V>;
     validate: FormValidator<V>;
     validateOnChange: boolean;
     validateOnBlur: boolean;
