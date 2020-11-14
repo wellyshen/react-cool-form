@@ -227,13 +227,13 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setAllNodesOrStateValue = useCallback(
-    (values: V, isInit = false) =>
+    (values: V, checkDefaultValue = false) =>
       Object.values(fieldsRef.current).forEach(({ field, options }) => {
         const value = get(values, field.name);
 
         if (!isUndefined(value)) setNodeValue(field.name, value);
 
-        if (isInit && !ignoreFieldsRef.current[field.name])
+        if (checkDefaultValue && !ignoreFieldsRef.current[field.name])
           setDefaultValue(field.name, getNodeValue(field, options));
       }),
     [getNodeValue, setNodeValue, setDefaultValue]
