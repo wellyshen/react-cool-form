@@ -454,6 +454,7 @@ export default <V extends FormValues = FormValues>({
       } = {}
     ) => {
       values = isFunction(values) ? values(stateRef.current.values) : values;
+      values = { ...stateRef.current.values, ...values };
 
       setStateRef("values", values);
       setAllNodesOrStateValue(values);
@@ -541,7 +542,8 @@ export default <V extends FormValues = FormValues>({
         if (key === "values") {
           values = isFunction(values)
             ? values(stateRef.current.values)
-            : { ...initialStateRef.current.values, ...values };
+            : values;
+          values = { ...initialStateRef.current.values, ...values } as V;
 
           state[key] = values;
           setAllNodesOrStateValue(values);
