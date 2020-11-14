@@ -157,11 +157,11 @@ export default <V extends FormValues = FormValues>({
   }, []);
 
   const setAllNodesValue = useCallback(
-    (values: V = stateRef.current.values) =>
+    (values: V = initialStateRef.current.values) =>
       Object.values(fieldsRef.current).forEach(({ field }) =>
         setNodeValue(field.name, get(values, field.name))
       ),
-    [setNodeValue, stateRef]
+    [setNodeValue]
   );
 
   const validateRef = useCallback<ValidateRef<V>>(
@@ -691,7 +691,7 @@ export default <V extends FormValues = FormValues>({
     const observer = new MutationObserver(([{ type }]) => {
       if (type === "childList") {
         fieldsRef.current = getFields(form);
-        setAllNodesValue();
+        setAllNodesValue(stateRef.current.values);
       }
     });
     observer.observe(form, { childList: true, subtree: true });
@@ -708,6 +708,7 @@ export default <V extends FormValues = FormValues>({
     reset,
     setAllNodesValue,
     setFieldTouched,
+    stateRef,
     submit,
     validateOnBlur,
     validateOnChange,
