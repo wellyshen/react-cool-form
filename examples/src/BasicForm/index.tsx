@@ -140,6 +140,7 @@ export default (): JSX.Element => {
       // submitCount: "submitCount",
     })
   );
+  console.log("LOG ===> ", getState("dirtyFields.text.nest"));
 
   useEffect(() => {
     // validateField("text.nest");
@@ -175,13 +176,12 @@ export default (): JSX.Element => {
   };
 
   const handleSetErrorsClick = (): void => {
-    setFieldError("text", false);
+    setFieldError("number", "Error");
     // setFieldError("text.nest", "Required");
     // setFieldError("hiddenText", (prevMsg) => `new ${prevMsg}`);
   };
 
   const handleClearErrorsClick = (): void => {
-    // setFieldError("text.nest");
     setFieldError("number");
   };
 

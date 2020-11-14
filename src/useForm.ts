@@ -56,8 +56,7 @@ const useUniversalLayoutEffect =
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
 
-const hasChangeEvent = ({ type }: FieldElement) =>
-  !/hidden|image|submit|reset/.test(type);
+const isButton = ({ type }: FieldElement) => /image|submit|reset/.test(type);
 
 const getFields = (form: HTMLFormElement | null) =>
   form
@@ -65,7 +64,7 @@ const getFields = (form: HTMLFormElement | null) =>
         .filter((element) => {
           const field = element as FieldElement;
 
-          if (!hasChangeEvent(field)) return false;
+          if (isButton(field)) return false;
           if (!field.name) {
             warn('💡 react-cool-form: Field is missing "name" attribute.');
             return false;
@@ -219,16 +218,16 @@ export default <V extends FormValues = FormValues>({
       if (error) {
         setStateRef(`errors.${name}`, error);
       } else {
-        setErrors((prevErrors) => {
-          if (!isKey(name)) return unset(prevErrors, name, true);
-
-          const nextErrors = { ...prevErrors };
-          delete nextErrors[name];
-          return nextErrors;
-        });
+        setStateRef(
+          "errors",
+          isKey(name)
+            ? unset({ ...stateRef.current.errors }, name)
+            : unset(stateRef.current.errors, name, true),
+          `errors.${name}`
+        );
       }
     },
-    [setErrors, setStateRef, stateRef]
+    [setStateRef, stateRef]
   );
 
   const runBuiltInValidation = useCallback(
@@ -364,7 +363,10 @@ export default <V extends FormValues = FormValues>({
       } else {
         setStateRef(
           "dirtyFields",
-          unset(stateRef.current.dirtyFields, name, true)
+          isKey(name)
+            ? unset({ ...stateRef.current.dirtyFields }, name)
+            : unset(stateRef.current.dirtyFields, name, true),
+          `dirtyFields.${name}`
         );
       }
     },
@@ -666,7 +668,7 @@ export default <V extends FormValues = FormValues>({
     const handleBlur = ({ target }: Event) => {
       if (
         !isFieldElement(target as HTMLElement) ||
-        !hasChangeEvent(target as HTMLInputElement)
+        isButton(target as HTMLInputElement)
       )
         return;
 

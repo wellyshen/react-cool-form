@@ -24,7 +24,7 @@ export interface FormState<V> {
 export type StateRef<V> = MutableRefObject<FormState<V>>;
 
 export interface SetStateRef {
-  (path: string, value?: any): void;
+  (path: string, value?: any, actualPath?: string): void;
 }
 
 export interface SetUsedStateRef {

@@ -22,7 +22,7 @@ export default <V>(
   const onChangeRef = useLatest(onChange);
 
   const setStateRef = useCallback<SetStateRef>(
-    (path, value) => {
+    (path, value, actualPath) => {
       const key = path.split(".")[0];
 
       if (!key) {
@@ -54,8 +54,8 @@ export default <V>(
             : prevSubmitCount;
 
         stateRef.current = { ...state, isDirty, isValid, submitCount };
-
-        if (onChangeRef.current) onChangeRef.current(stateRef.current);
+        
+        path = actualPath || path;
 
         if (
           Object.keys(usedStateRef.current).some(
@@ -65,6 +65,8 @@ export default <V>(
           (usedStateRef.current.isValid && isValid !== prevIsValid)
         )
           forceUpdate();
+
+        if (onChangeRef.current) onChangeRef.current(stateRef.current);
       }
     },
     [onChangeRef]
