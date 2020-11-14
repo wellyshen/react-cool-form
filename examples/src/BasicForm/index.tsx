@@ -30,19 +30,19 @@ export interface FormValues {
 }
 
 const defaultValues = {
-  text: { nest: "test" },
+  // text: { nest: "test" },
   controller: "test",
   hiddenText1: "test",
   hiddenText2: "test",
   password: "test",
-  number: 5,
+  // number: 5,
   range: 0,
   checkbox: true,
   // checkboxGroup: ["value-1"],
-  radio: "value-1",
-  image: "",
-  select: "value-2",
-  multiSelect: { nest: ["value-1", "value-2"] },
+  // radio: "value-1",
+  // image: "",
+  // select: "value-2",
+  // multiSelect: { nest: ["value-1", "value-2"] },
   textarea: "test",
 };
 
@@ -113,11 +113,11 @@ export default (): JSX.Element => {
       console.log("LOG ===> onReset: ", values, options, e),
     onSubmit: async (values, options, e) => {
       // eslint-disable-next-line
-      await new Promise((resolve) => {
+      /* await new Promise((resolve) => {
         setTimeout(resolve, 3000);
-      });
+      }); */
 
-      console.log("LOG ===> onSubmit: ", values, options, e);
+      console.log("LOG ===> onSubmit: ", values);
     },
     onError: (errors, options, e) =>
       console.log("LOG ===> onError: ", errors, options, e),
@@ -206,13 +206,14 @@ export default (): JSX.Element => {
         <Input
           label="Text:"
           name="text.nest"
-          ref={validate(async (value) => {
+          /* ref={validate(async (value) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return value.length <= 5 ? "Field error" : "";
-          })}
+          })} */
           // required
           // data-rcf-ignore
+          defaultValue="test"
         />
         <Controller
           label="Controller:"
@@ -232,9 +233,9 @@ export default (): JSX.Element => {
             <Input
               label="Hidden Text 1:"
               name="hiddenText1"
-              ref={validate(async (value) => {
+              /* ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
-              })}
+              })} */
             />
           </div>
         )}
@@ -243,9 +244,9 @@ export default (): JSX.Element => {
             <Input
               label="Hidden Text 2:"
               name="hiddenText2"
-              ref={validate(async (value) => {
+              /* ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
-              })}
+              })} */
             />
           </div>
         )}
@@ -254,12 +255,18 @@ export default (): JSX.Element => {
           label="Number:"
           type="number"
           name="number"
-          ref={validate((value) => {
+          /* ref={validate((value) => {
             return value <= 5 ? "Field error" : "";
-          })}
+          })} */
+          defaultValue="5"
         />
         <Input label="Range:" type="range" name="range" />
-        <Input label="Checkbox:" type="checkbox" name="checkbox" />
+        <Input
+          label="Checkbox:"
+          type="checkbox"
+          name="checkbox"
+          defaultChecked
+        />
         <div css={wrapper}>
           <Input
             id="checkboxGroup-1"
@@ -267,7 +274,7 @@ export default (): JSX.Element => {
             type="checkbox"
             name="checkboxGroup"
             value="value-1"
-            defaultChecked
+            // defaultChecked
           />
           <Input
             id="checkboxGroup-2"
@@ -275,6 +282,7 @@ export default (): JSX.Element => {
             type="checkbox"
             name="checkboxGroup"
             value="value-2"
+            defaultChecked
           />
         </div>
         <div css={wrapper}>
@@ -291,14 +299,20 @@ export default (): JSX.Element => {
             type="radio"
             name="radio"
             value="value-2"
+            defaultChecked
           />
         </div>
         <Input label="File:" type="file" name="image" />
-        <Select label="Select:" name="select">
+        <Select label="Select:" name="select" defaultValue="value-2">
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
         </Select>
-        <Select label="Multi-select:" name="multiSelect.nest" multiple>
+        <Select
+          label="Multi-select:"
+          name="multiSelect.nest"
+          multiple
+          defaultValue={["value-2"]}
+        >
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
         </Select>
