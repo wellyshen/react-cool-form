@@ -128,21 +128,21 @@ export default <V extends FormValues = FormValues>({
 
   const getNodeValue = useCallback(
     (field: FieldElement, options?: FieldElement[]) => {
-      let val: any = field.value;
+      let value = field.value as any;
 
       if (isNumberField(field) || isRangeField(field))
-        val = parseFloat(val) ?? "";
+        value = parseFloat(value) ?? "";
 
       if (isCheckboxField(field)) {
         if (options) {
           const checkboxs = options as HTMLInputElement[];
 
           if (options.length > 1) {
-            val = checkboxs
+            value = checkboxs
               .filter((checkbox) => checkbox.checked)
               .map((checkbox) => checkbox.value);
           } else {
-            val = checkboxs[0].checked;
+            value = checkboxs[0].checked;
           }
         } else {
           let checkValues = get(stateRef.current.values, field.name);
@@ -151,31 +151,31 @@ export default <V extends FormValues = FormValues>({
             checkValues = new Set(checkValues);
 
             if (field.checked) {
-              checkValues.add(val);
+              checkValues.add(value);
             } else {
-              checkValues.delete(val);
+              checkValues.delete(value);
             }
 
-            val = Array.from(checkValues);
+            value = Array.from(checkValues);
           } else {
-            val = field.checked;
+            value = field.checked;
           }
         }
       }
 
       if (isRadioField(field) && options)
-        val =
+        value =
           (options as HTMLInputElement[]).find((radio) => radio.checked)
             ?.value || "";
 
       if (isMultipleSelectField(field) && !options)
-        val = Array.from(field.options)
+        value = Array.from(field.options)
           .filter((option) => option.selected)
           .map((option) => option.value);
 
-      if (isFileField(field)) val = field.files;
+      if (isFileField(field)) value = field.files;
 
-      return val;
+      return value;
     },
     [stateRef]
   );
