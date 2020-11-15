@@ -31,21 +31,21 @@ export interface FormValues {
 }
 
 const defaultValues = {
-  text: { nest: "new test" },
+  // text: { nest: "new test" },
   // controller1: "new test",
   controller2: "new test",
-  hiddenText1: "new test",
-  hiddenText2: "new test",
-  password: "new test",
-  number: 5,
-  range: 0,
-  checkbox: true,
-  checkboxGroup: ["value-1"],
-  radio: "value-1",
-  image: [],
-  select: "value-2",
-  multiSelect: { nest: ["value-1", "value-2"] },
-  textarea: "test",
+  // hiddenText1: "new test",
+  // hiddenText2: "new test",
+  // password: "new test",
+  // number: 5,
+  // range: 0,
+  // checkbox: true,
+  // checkboxGroup: ["value-1"],
+  // radio: "value-1",
+  // image: [],
+  // select: "value-2",
+  // multiSelect: { nest: ["value-1", "value-2"] },
+  // textarea: "test",
 };
 
 const schema = Yup.object().shape({
@@ -127,8 +127,11 @@ export default (): JSX.Element => {
   });
 
   // console.log("LOG ===> Re-render");
-  // console.log("LOG ===> formState: ", getState("values.text.nest"));
   console.log(
+    "LOG ===> formState: ",
+    getState({ values: "values.text.abc" }, { defaultValues: [] })
+  );
+  /* console.log(
     "LOG ===> formState: ",
     getState({
       values: "values",
@@ -142,7 +145,7 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  );
+  ); */
 
   useEffect(() => {
     // validateField("text.nest");
@@ -222,9 +225,7 @@ export default (): JSX.Element => {
         {!show1 && (
           <Input
             label="Controller 1:"
-            type="checkbox"
-            {...controller("controller1", { defaultValue: true })}
-            // defaultChecked
+            {...controller("controller1", { defaultValue: "test" })}
           />
         )}
         <Controller

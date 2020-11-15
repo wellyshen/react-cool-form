@@ -109,7 +109,10 @@ export interface ValidateRef<V> {
 }
 
 export interface GetState {
-  (path: string | string[] | Record<string, string>, watch?: boolean): any;
+  (
+    path: string | string[] | Record<string, string>,
+    options?: { watch?: boolean; defaultValues?: any }
+  ): any;
 }
 
 export interface SetErrors<V> {

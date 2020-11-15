@@ -251,24 +251,30 @@ export default <V extends FormValues = FormValues>({
   );
 
   const getState = useCallback<GetState>(
-    (path, watch = true) => {
+    (path, { watch = true, defaultValues } = {}) => {
       let state;
 
       if (isArray(path)) {
         if (watch) path.forEach((p) => setUsedStateRef(p));
-        state = path.map((p) => get(stateRef.current, p));
+        state = path.map((p, i) => {
+          const value = get(stateRef.current, p);
+          return isArray(defaultValues) ? value || defaultValues[i] : value;
+        });
       } else if (isPlainObject(path)) {
         const paths = path as Record<string, string>;
         const keys = Object.keys(paths);
 
         if (watch) keys.forEach((key) => setUsedStateRef(paths[key]));
         state = keys.reduce((state: Record<string, any>, key) => {
-          state[key] = get(stateRef.current, paths[key]);
+          const value = get(stateRef.current, paths[key]);
+          state[key] = isPlainObject(defaultValues)
+            ? value || defaultValues[key]
+            : value;
           return state;
         }, {});
       } else {
         if (watch) setUsedStateRef(path);
-        state = get(stateRef.current, path);
+        state = get(stateRef.current, path) || defaultValues;
       }
 
       return state;
@@ -512,7 +518,8 @@ export default <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      getState: ((path, watch = false) => getState(path, watch)) as GetState,
+      getState: ((path, options = { watch: false }) =>
+        getState(path, options)) as GetState,
       setErrors,
       setFieldError,
       setValues,
