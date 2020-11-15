@@ -37,6 +37,7 @@ import {
   isCheckboxField,
   isEmptyObject,
   isFileField,
+  isFileList,
   isFunction,
   isMultipleSelectField,
   isNumberField,
@@ -73,10 +74,12 @@ const getFields = (form: HTMLFormElement | null) =>
           return true;
         })
         .reduce((acc: Record<string, any>, cur) => {
-          const { name, type } = cur as FieldElement;
+          const field = cur as FieldElement;
+          const { name } = field;
+
           acc[name] = { ...acc[name], field: cur };
 
-          if (/checkbox|radio/.test(type)) {
+          if (isCheckboxField(field) || isRadioField(field)) {
             acc[name].options = acc[name].options
               ? [...acc[name].options, cur]
               : [cur];
@@ -203,7 +206,7 @@ export default <V extends FormValues = FormValues>({
         option.selected = !!value.includes(option.value);
       });
     } else if (isFileField(field)) {
-      if (isPlainObject(value)) field.files = value;
+      if (isFileList(value)) field.files = value;
       if (!value) field.value = "";
     } else {
       field.value = value ?? "";
@@ -723,7 +726,6 @@ export default <V extends FormValues = FormValues>({
     const handleReset = (e: Event) => reset(null, null, e as any);
 
     const form = formRef.current;
-
     form.addEventListener("input", handleChange);
     form.addEventListener("focusout", handleBlur);
     form.addEventListener("submit", handleSubmit);

@@ -42,7 +42,7 @@ const defaultValues = {
   checkbox: true,
   checkboxGroup: ["value-1"],
   radio: "value-1",
-  image: "",
+  image: [],
   select: "value-2",
   multiSelect: { nest: ["value-1", "value-2"] },
   textarea: "test",
@@ -154,7 +154,7 @@ export default (): JSX.Element => {
   const handleToggle2Click = (): void => setShow2(!show2);
 
   const handleSetValueClick = (): void => {
-    setValues(
+    /* setValues(
       (prevValues) => ({
         ...prevValues,
         text: { nest: "new test" },
@@ -164,7 +164,7 @@ export default (): JSX.Element => {
         touchedFields: ["text.nest"],
         dirtyFields: ["text.nest"],
       }
-    );
+    ); */
 
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
     // setFieldValue("text.nest", "new test");
@@ -175,6 +175,7 @@ export default (): JSX.Element => {
     // setFieldValue("checkboxGroup", ["value-2"]);
     // setFieldValue("radio", "value-2");
     // setFieldValue("multiSelect.nest", ["value-2"]);
+    setFieldValue("image", "abc");
   };
 
   const handleSetErrorsClick = (): void => {
