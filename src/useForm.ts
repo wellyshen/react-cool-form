@@ -178,7 +178,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setNodeValue = useCallback((name: string, value: any) => {
-    if (ignoreFieldsRef.current[name] || !fieldsRef.current[name]) return;
+    if (!fieldsRef.current[name] || ignoreFieldsRef.current[name]) return;
 
     const { field, options } = fieldsRef.current[name];
 

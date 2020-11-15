@@ -32,7 +32,7 @@ export interface FormValues {
 
 const defaultValues = {
   text: { nest: "new test" },
-  controller1: "new test",
+  // controller1: "new test",
   controller2: "new test",
   hiddenText1: "new test",
   hiddenText2: "new test",
@@ -221,13 +221,14 @@ export default (): JSX.Element => {
         {!show1 && (
           <Input
             label="Controller 1:"
-            {...controller("controller1", { defaultValue: "test" })}
+            type="checkbox"
+            {...controller("controller1", { defaultValue: true })}
+            // defaultChecked
           />
         )}
         <Controller
           label="Controller 2:"
           name="controller2"
-          type="checkbox"
           // eslint-disable-next-line react-hooks/exhaustive-deps
           controller={controller}
           /* validate={useCallback(async (val, values) => {
