@@ -1,5 +1,17 @@
 # react-cool-form
 
+## 0.0.23
+
+### Patch Changes
+
+- [`3d308f2`](https://github.com/wellyshen/react-cool-form/commit/3d308f2fc92470004820ee629a8756f50ce2be82) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): use the default value of checkbox as the value of checkbox-group
+
+* [`7a0d9cb`](https://github.com/wellyshen/react-cool-form/commit/7a0d9cb2aa07b91bccaef4cda71adfcc9cef4708) [#101](https://github.com/wellyshen/react-cool-form/pull/101) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): enable React defaultValue
+
+- [`d203e07`](https://github.com/wellyshen/react-cool-form/commit/d203e07babf1c5ded1e152e85ccd30b3c68f4c3f) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): use empty object as the fallback of initialValues
+
+* [`f213a2d`](https://github.com/wellyshen/react-cool-form/commit/f213a2d524faced26b693a2bdf6e3d2f9a6a7b5c) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor: remove is-key logic
+
 ## 0.0.22
 
 ### Patch Changes
