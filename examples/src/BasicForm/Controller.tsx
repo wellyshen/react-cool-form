@@ -41,6 +41,7 @@ const Controller = ({
       {...controller(name, {
         validate,
         value,
+        defaultValue: "welly",
         // parser,
         onChange: (e, val) => {
           setValue(val);

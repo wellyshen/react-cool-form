@@ -32,20 +32,20 @@ export interface FormValues {
 
 const defaultValues = {
   text: { nest: "new test" },
-  // controller1: "new test",
+  controller1: "new test",
   controller2: "new test",
-  // hiddenText1: "new test",
+  hiddenText1: "new test",
   hiddenText2: "new test",
   password: "new test",
-  // number: 5,
-  // range: 0,
-  // checkbox: true,
-  // checkboxGroup: ["value-1"],
-  // radio: "value-1",
-  // image: "",
-  // select: "value-2",
-  // multiSelect: { nest: ["value-1", "value-2"] },
-  // textarea: "test",
+  number: 5,
+  range: 0,
+  checkbox: true,
+  checkboxGroup: ["value-1"],
+  radio: "value-1",
+  image: "",
+  select: "value-2",
+  multiSelect: { nest: ["value-1", "value-2"] },
+  textarea: "test",
 };
 
 const schema = Yup.object().shape({
@@ -127,12 +127,13 @@ export default (): JSX.Element => {
   });
 
   // console.log("LOG ===> Re-render");
+  // console.log("LOG ===> formState: ", getState("values.text.nest"));
   console.log(
     "LOG ===> formState: ",
     getState({
-      // values: "values",
+      values: "values",
       // touched: "touched",
-      errors: "errors",
+      // errors: "errors",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
@@ -217,7 +218,7 @@ export default (): JSX.Element => {
           // data-rcf-ignore
           defaultValue="test"
         />
-        {show1 && (
+        {!show1 && (
           <Input
             label="Controller 1:"
             {...controller("controller1", { defaultValue: "test" })}
@@ -226,6 +227,7 @@ export default (): JSX.Element => {
         <Controller
           label="Controller 2:"
           name="controller2"
+          type="checkbox"
           // eslint-disable-next-line react-hooks/exhaustive-deps
           controller={controller}
           /* validate={useCallback(async (val, values) => {

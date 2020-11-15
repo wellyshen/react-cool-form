@@ -602,12 +602,15 @@ export default <V extends FormValues = FormValues>({
   const handleFieldChange = useCallback(
     (field: FieldElement) => {
       const { name } = field;
+      const value = getNodeValue(field);
 
-      setStateRef(`values.${name}`, getNodeValue(field));
+      setStateRef(`values.${name}`, value);
       setFieldDirty(name);
 
       if (validateOnChange) validateFormWithLowPriority();
       changedFieldRef.current = name;
+
+      return value;
     },
     [
       getNodeValue,
@@ -642,8 +645,8 @@ export default <V extends FormValues = FormValues>({
             parsedE.nativeEvent instanceof Event &&
             isFieldElement(parsedE.target)
           ) {
-            handleFieldChange(parsedE.target);
-            if (onChange) onChange(e, getNodeValue(parsedE.target));
+            const value = handleFieldChange(parsedE.target);
+            if (onChange) onChange(e, value);
           } else {
             setFieldValue(name, parsedE);
             if (onChange) onChange(e);
@@ -660,12 +663,11 @@ export default <V extends FormValues = FormValues>({
       };
     },
     [
-      getNodeValue,
       getState,
       handleFieldChange,
+      setDefaultValue,
       setFieldTouched,
       setFieldValue,
-      setDefaultValue,
       validateOnBlur,
       validateOnChange,
     ]
