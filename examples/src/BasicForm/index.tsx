@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/core */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useForm, get, set } from "react-cool-form";
 import * as Yup from "yup";
 
@@ -14,7 +14,8 @@ const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
 export interface FormValues {
   text: Record<string, string>;
-  controller: any;
+  controller1: any;
+  controller2: any;
   hiddenText1: string;
   hiddenText2: string;
   password: string;
@@ -29,18 +30,19 @@ export interface FormValues {
   textarea: string;
 }
 
-const initialValues = {
-  text: { nest: "test" },
-  controller: "test",
-  hiddenText1: "test",
-  hiddenText2: "test",
-  password: "test",
+const defaultValues = {
+  text: { nest: "new test" },
+  // controller1: "new test",
+  controller2: "new test",
+  hiddenText1: "new test",
+  hiddenText2: "new test",
+  password: "new test",
   number: 5,
   range: 0,
   checkbox: true,
   checkboxGroup: ["value-1"],
   radio: "value-1",
-  image: "",
+  image: [],
   select: "value-2",
   multiSelect: { nest: ["value-1", "value-2"] },
   textarea: "test",
@@ -72,7 +74,7 @@ export default (): JSX.Element => {
     reset,
     submit,
   } = useForm<FormValues>({
-    initialValues,
+    defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
     // ignoreFields: ["text.nest", "number"],
@@ -113,11 +115,11 @@ export default (): JSX.Element => {
       console.log("LOG ===> onReset: ", values, options, e),
     onSubmit: async (values, options, e) => {
       // eslint-disable-next-line
-      await new Promise((resolve) => {
+      /* await new Promise((resolve) => {
         setTimeout(resolve, 3000);
-      });
+      }); */
 
-      console.log("LOG ===> onSubmit: ", values, options, e);
+      console.log("LOG ===> onSubmit: ", values);
     },
     onError: (errors, options, e) =>
       console.log("LOG ===> onError: ", errors, options, e),
@@ -125,6 +127,7 @@ export default (): JSX.Element => {
   });
 
   // console.log("LOG ===> Re-render");
+  // console.log("LOG ===> formState: ", getState("values.text.nest"));
   console.log(
     "LOG ===> formState: ",
     getState({
@@ -151,7 +154,7 @@ export default (): JSX.Element => {
   const handleToggle2Click = (): void => setShow2(!show2);
 
   const handleSetValueClick = (): void => {
-    setValues(
+    /* setValues(
       (prevValues) => ({
         ...prevValues,
         text: { nest: "new test" },
@@ -161,7 +164,7 @@ export default (): JSX.Element => {
         touchedFields: ["text.nest"],
         dirtyFields: ["text.nest"],
       }
-    );
+    ); */
 
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
     // setFieldValue("text.nest", "new test");
@@ -172,6 +175,7 @@ export default (): JSX.Element => {
     // setFieldValue("checkboxGroup", ["value-2"]);
     // setFieldValue("radio", "value-2");
     // setFieldValue("multiSelect.nest", ["value-2"]);
+    setFieldValue("image", "abc");
   };
 
   const handleSetErrorsClick = (): void => {
@@ -206,18 +210,27 @@ export default (): JSX.Element => {
         <Input
           label="Text:"
           name="text.nest"
-          ref={validate(async (value) => {
+          /* ref={validate(async (value) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return value.length <= 5 ? "Field error" : "";
-          })}
+          })} */
           // required
           // data-rcf-ignore
+          defaultValue="test"
         />
+        {!show1 && (
+          <Input
+            label="Controller 1:"
+            type="checkbox"
+            {...controller("controller1", { defaultValue: true })}
+            // defaultChecked
+          />
+        )}
         <Controller
-          label="Controller:"
-          name="controller"
-          defaultValue={initialValues.controller}
+          label="Controller 2:"
+          name="controller2"
+          // eslint-disable-next-line react-hooks/exhaustive-deps
           controller={controller}
           /* validate={useCallback(async (val, values) => {
             // eslint-disable-next-line
@@ -225,16 +238,18 @@ export default (): JSX.Element => {
             // console.log("LOG ===> validate: ", val, values);
             return val.length <= 5 ? "Field error" : "";
           }, [])} */
-          // maxLength="3"
+          required
+          defaultValue={defaultValues.controller2}
         />
         {show1 && (
           <div>
             <Input
               label="Hidden Text 1:"
               name="hiddenText1"
-              ref={validate(async (value) => {
+              /* ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
-              })}
+              })} */
+              defaultValue="test"
             />
           </div>
         )}
@@ -243,37 +258,51 @@ export default (): JSX.Element => {
             <Input
               label="Hidden Text 2:"
               name="hiddenText2"
-              ref={validate(async (value) => {
+              /* ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
-              })}
+              })} */
+              defaultValue="test"
             />
           </div>
         )}
-        {/* <Input label="Password:" type="password" name="password" /> */}
+        <Input
+          label="Password:"
+          type="password"
+          name="password"
+          defaultValue="test"
+        />
         <Input
           label="Number:"
           type="number"
           name="number"
-          ref={validate((value) => {
+          /* ref={validate((value) => {
             return value <= 5 ? "Field error" : "";
-          })}
+          })} */
+          defaultValue="5"
         />
-        <Input label="Range:" type="range" name="range" />
-        <Input label="Checkbox:" type="checkbox" name="checkbox" />
+        <Input label="Range:" type="range" name="range" defaultValue="0" />
+        <Input
+          label="Checkbox:"
+          type="checkbox"
+          name="checkbox"
+          defaultChecked
+        />
         <div css={wrapper}>
           <Input
             id="checkboxGroup-1"
             label="Checkbox 1:"
             type="checkbox"
             name="checkboxGroup"
-            // value="value-1"
+            value="value-1"
+            // defaultChecked
           />
           <Input
             id="checkboxGroup-2"
             label="Checkbox 2:"
             type="checkbox"
             name="checkboxGroup"
-            // value="value-2"
+            value="value-2"
+            defaultChecked
           />
         </div>
         <div css={wrapper}>
@@ -290,18 +319,24 @@ export default (): JSX.Element => {
             type="radio"
             name="radio"
             value="value-2"
+            defaultChecked
           />
         </div>
         <Input label="File:" type="file" name="image" />
-        <Select label="Select:" name="select">
+        <Select label="Select:" name="select" defaultValue="value-2">
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
         </Select>
-        <Select label="Multi-select:" name="multiSelect.nest" multiple>
+        <Select
+          label="Multi-select:"
+          name="multiSelect.nest"
+          multiple
+          defaultValue={["value-1", "value-2"]}
+        >
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
         </Select>
-        <TextArea label="Text Area:" name="textarea" />
+        <TextArea label="Text Area:" name="textarea" defaultValue="test" />
         <button type="button" onClick={handleToggle1Click}>
           Toggle 1
         </button>

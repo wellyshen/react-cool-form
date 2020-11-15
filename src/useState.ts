@@ -16,13 +16,13 @@ export default <V>(
   onChange?: Debug<V>
 ): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
-  const initialValuesRef = useRef(initialState.values);
+  const defaultValuesRef = useRef(initialState.values);
   const stateRef = useRef(initialState);
   const usedStateRef = useRef<UsedRef>({});
   const onChangeRef = useLatest(onChange);
 
   const setStateRef = useCallback<SetStateRef>(
-    (path, value, actualPath) => {
+    (path, value, { actualPath, shouldUpdate = true } = {}) => {
       const key = path.split(".")[0];
 
       if (!key) {
@@ -45,7 +45,7 @@ export default <V>(
         let { submitCount: prevSubmitCount } = state;
         const isDirty =
           key === "values"
-            ? !isEqual(values, initialValuesRef.current)
+            ? !isEqual(values, defaultValuesRef.current)
             : prevIsDirty;
         const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
         const submitCount =
@@ -54,15 +54,16 @@ export default <V>(
             : prevSubmitCount;
 
         stateRef.current = { ...state, isDirty, isValid, submitCount };
-        
+
         path = actualPath || path;
 
         if (
-          Object.keys(usedStateRef.current).some(
+          shouldUpdate &&
+          (Object.keys(usedStateRef.current).some(
             (key) => path.startsWith(key) || key.startsWith(path)
           ) ||
-          (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
-          (usedStateRef.current.isValid && isValid !== prevIsValid)
+            (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
+            (usedStateRef.current.isValid && isValid !== prevIsValid))
         )
           forceUpdate();
 

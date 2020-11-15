@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { FieldElement } from "./types";
 
@@ -49,6 +49,9 @@ export const isEmptyObject = (value: unknown): value is Record<string, never> =>
 export const isUndefined = (value: unknown): value is undefined =>
   value === undefined;
 
+export const isFileList = (value: unknown): value is FileList =>
+  value instanceof FileList;
+
 export const get = (object: any, path: string, defaultValue?: unknown) => {
   if (!isPlainObject(object) || !path) return defaultValue;
 
@@ -61,7 +64,7 @@ export const get = (object: any, path: string, defaultValue?: unknown) => {
 };
 
 const cloneObject = (object: unknown): any => {
-  if (!isObject(object)) return object;
+  if (!isObject(object) || isFileList(object)) return object;
 
   if (object instanceof Date) return new Date(object.getTime());
 

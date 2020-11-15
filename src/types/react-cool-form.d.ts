@@ -1,18 +1,26 @@
 declare module "react-cool-form" {
   import { FocusEvent, RefObject, SyntheticEvent } from "react";
 
+  type DeepPartial<T> = T extends Function
+    ? T
+    : T extends object
+    ? { [K in keyof T]?: DeepPartial<T[K]> }
+    : T;
+
+  type DeepProps<V, T = any> = {
+    [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
+  };
+
   export type FormValues = Record<string, any>;
 
-  type Prop<V, T = any> = { [K in keyof V]?: V[K] extends T ? T : Prop<V[K]> };
-
-  type Errors<V> = Prop<V>;
+  type Errors<V> = DeepProps<V>;
 
   export type FormState<V = FormValues> = Readonly<{
     values: V;
-    touched: Prop<V, boolean>;
+    touched: DeepProps<V, boolean>;
     errors: Errors<V>;
     isDirty: boolean;
-    dirtyFields: Prop<V, boolean>;
+    dirtyFields: DeepProps<V, boolean>;
     isValidating: boolean;
     isValid: boolean;
     isSubmitting: boolean;
@@ -142,6 +150,7 @@ declare module "react-cool-form" {
       options?: {
         validate?: FieldValidator<V>;
         value?: any;
+        defaultValue?: any;
         parser?: Parser<E>;
         onChange?: OnChange<E>;
         onBlur?: OnBlur;
@@ -156,17 +165,17 @@ declare module "react-cool-form" {
       | Record<string, unknown>;
   }
 
-  export interface Config<V = FormValues> {
-    initialValues: V;
-    validate?: FormValidator<V>;
-    validateOnChange?: boolean;
-    validateOnBlur?: boolean;
-    ignoreFields?: string[];
-    onReset?: OnReset<V>;
-    onSubmit?: OnSubmit<V>;
-    onError?: OnError<V>;
-    debug?: Debug<V>;
-  }
+  export type Config<V = FormValues> = Partial<{
+    defaultValues: DeepPartial<V>;
+    validate: FormValidator<V>;
+    validateOnChange: boolean;
+    validateOnBlur: boolean;
+    ignoreFields: string[];
+    onReset: OnReset<V>;
+    onSubmit: OnSubmit<V>;
+    onError: OnError<V>;
+    debug: Debug<V>;
+  }>;
 
   export interface Return<V = FormValues> {
     formRef: RefObject<HTMLFormElement>;

@@ -1,19 +1,28 @@
 import { FocusEvent, MutableRefObject, RefObject, SyntheticEvent } from "react";
 
+// Utils
+type DeepPartial<T> = T extends Function
+  ? T
+  : T extends object
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : T;
+
+type DeepProps<V, T = any> = {
+  [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
+};
+
 // Common
 export type UsedRef = Record<string, boolean>;
 
 // State
-type Prop<V, T = any> = { [K in keyof V]?: V[K] extends T ? T : Prop<V[K]> };
-
-export type Errors<V> = Prop<V>;
+export type Errors<V> = DeepProps<V>;
 
 export interface FormState<V> {
   values: V;
-  touched: Prop<V, boolean>;
+  touched: DeepProps<V, boolean>;
   errors: Errors<V>;
   isDirty: boolean;
-  dirtyFields: Prop<V, boolean>;
+  dirtyFields: DeepProps<V, boolean>;
   isValidating: boolean;
   isValid: boolean;
   isSubmitting: boolean;
@@ -24,7 +33,11 @@ export interface FormState<V> {
 export type StateRef<V> = MutableRefObject<FormState<V>>;
 
 export interface SetStateRef {
-  (path: string, value?: any, actualPath?: string): void;
+  (
+    path: string,
+    value?: any,
+    options?: { actualPath?: string; shouldUpdate?: boolean }
+  ): void;
 }
 
 export interface SetUsedStateRef {
@@ -156,6 +169,7 @@ export interface Controller<V, E = any> {
     options?: {
       validate?: FieldValidator<V>;
       value?: any;
+      defaultValue?: any;
       parser?: (event: E) => any;
       onChange?: (event: E, value?: any) => void;
       onBlur?: (event: FocusEvent<any>) => void;
@@ -170,17 +184,17 @@ export interface Controller<V, E = any> {
     | Record<string, unknown>;
 }
 
-export interface Config<V> {
-  initialValues: V;
-  validate?: FormValidator<V>;
-  validateOnChange?: boolean;
-  validateOnBlur?: boolean;
-  ignoreFields?: string[];
-  onReset?: OnReset<V>;
-  onSubmit?: OnSubmit<V>;
-  onError?: OnError<V>;
-  debug?: Debug<V>;
-}
+export type Config<V> = Partial<{
+  defaultValues: DeepPartial<V>;
+  validate: FormValidator<V>;
+  validateOnChange: boolean;
+  validateOnBlur: boolean;
+  ignoreFields: string[];
+  onReset: OnReset<V>;
+  onSubmit: OnSubmit<V>;
+  onError: OnError<V>;
+  debug: Debug<V>;
+}>;
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
