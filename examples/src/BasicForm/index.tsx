@@ -1,4 +1,4 @@
-/** @jsxImportSource @emotion/core */
+/** @jsxImportSource @emotion/react */
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useForm, get, set } from "react-cool-form";
