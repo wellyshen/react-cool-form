@@ -58,37 +58,6 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 
 const isButton = ({ type }: FieldElement) => /image|submit|reset/.test(type);
 
-const getFields = (form: HTMLFormElement | null) =>
-  form
-    ? Array.from(form.querySelectorAll("input,textarea,select"))
-        .filter((element) => {
-          const field = element as FieldElement;
-
-          if (isButton(field)) return false;
-          if (!field.name) {
-            warn('💡 react-cool-form: Field is missing "name" attribute.');
-            return false;
-          }
-          if (field.dataset.rcfIgnore) return false;
-
-          return true;
-        })
-        .reduce((acc: Record<string, any>, cur) => {
-          const field = cur as FieldElement;
-          const { name } = field;
-
-          acc[name] = { ...acc[name], field: cur };
-
-          if (isCheckboxField(field) || isRadioField(field)) {
-            acc[name].options = acc[name].options
-              ? [...acc[name].options, cur]
-              : [cur];
-          }
-
-          return acc;
-        }, {})
-    : {};
-
 export default <V extends FormValues = FormValues>({
   defaultValues,
   validate,
@@ -124,6 +93,39 @@ export default <V extends FormValues = FormValues>({
   const { stateRef, setStateRef, setUsedStateRef } = useState<V>(
     initialStateRef.current,
     debug
+  );
+
+  const getFields = useCallback(
+    () =>
+      // @ts-expect-error
+      Array.from(formRef.current.querySelectorAll("input,textarea,select"))
+        .filter((element) => {
+          const field = element as FieldElement;
+
+          if (isButton(field)) return false;
+          if (!field.name) {
+            warn('💡 react-cool-form: Field is missing "name" attribute.');
+            return false;
+          }
+
+          return (
+            !field.dataset.rcfIgnore && !ignoreFieldsRef.current[field.name]
+          );
+        })
+        .reduce((acc: Record<string, any>, cur) => {
+          const field = cur as FieldElement;
+          const { name } = field;
+
+          acc[name] = { ...acc[name], field: cur };
+
+          if (isCheckboxField(field) || isRadioField(field))
+            acc[name].options = acc[name].options
+              ? [...acc[name].options, cur]
+              : [cur];
+
+          return acc;
+        }, {}),
+    []
   );
 
   const getNodeValue = useCallback(
@@ -181,7 +183,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setNodeValue = useCallback((name: string, value: any) => {
-    if (!fieldsRef.current[name] || ignoreFieldsRef.current[name]) return;
+    if (!fieldsRef.current[name]) return;
 
     const { field, options } = fieldsRef.current[name];
 
@@ -235,8 +237,7 @@ export default <V extends FormValues = FormValues>({
         const value = get(values, field.name);
 
         if (!isUndefined(value)) setNodeValue(field.name, value);
-
-        if (checkDefaultValue && !ignoreFieldsRef.current[field.name])
+        if (checkDefaultValue)
           setDefaultValue(field.name, getNodeValue(field, options));
       }),
     [getNodeValue, setNodeValue, setDefaultValue]
@@ -682,9 +683,9 @@ export default <V extends FormValues = FormValues>({
       return;
     }
 
-    fieldsRef.current = getFields(formRef.current);
+    fieldsRef.current = getFields();
     setAllNodesOrStateValue(initialStateRef.current.values, true);
-  }, []);
+  }, [getFields, setAllNodesOrStateValue]);
 
   useEffect(() => {
     if (!formRef.current) return () => null;
@@ -698,8 +699,7 @@ export default <V extends FormValues = FormValues>({
         return;
       }
 
-      if (fieldsRef.current[name] && !ignoreFieldsRef.current[name])
-        handleFieldChange(field);
+      if (fieldsRef.current[name]) handleFieldChange(field);
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -711,7 +711,7 @@ export default <V extends FormValues = FormValues>({
 
       const { name } = target as FieldElement;
 
-      if (fieldsRef.current[name] && !ignoreFieldsRef.current[name])
+      if (fieldsRef.current[name])
         setFieldTouched(
           name,
           (validateOnChange && name !== changedFieldRef.current) ||
@@ -731,7 +731,7 @@ export default <V extends FormValues = FormValues>({
 
     const observer = new MutationObserver(([{ type }]) => {
       if (type === "childList") {
-        fieldsRef.current = getFields(form);
+        fieldsRef.current = getFields();
         setAllNodesOrStateValue(stateRef.current.values, true);
       }
     });
@@ -745,6 +745,7 @@ export default <V extends FormValues = FormValues>({
       observer.disconnect();
     };
   }, [
+    getFields,
     handleFieldChange,
     reset,
     setAllNodesOrStateValue,

@@ -221,14 +221,11 @@ export default (): JSX.Element => {
           // data-rcf-ignore
           defaultValue="test"
         />
-        {!show1 && (
-          <Input
-            label="Controller 1:"
-            type="checkbox"
-            {...controller("controller1", { defaultValue: true })}
-            // defaultChecked
-          />
-        )}
+        <Input
+          label="Controller 1:"
+          {...controller("controller1")}
+          // defaultChecked
+        />
         <Controller
           label="Controller 2:"
           name="controller2"
