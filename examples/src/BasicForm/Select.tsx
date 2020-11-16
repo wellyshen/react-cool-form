@@ -1,4 +1,5 @@
-/** @jsxImportSource @emotion/core */
+/** @jsxImportSource @emotion/react */
+/** @jsxFrag */
 
 import React, { memo, forwardRef } from "react";
 
