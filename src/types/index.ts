@@ -29,7 +29,7 @@ export interface SetStateRef {
   (
     path: string,
     value?: any,
-    options?: { actualPath?: string; shouldUpdate?: boolean }
+    options?: { fieldPath?: string; shouldUpdate?: boolean }
   ): void;
 }
 

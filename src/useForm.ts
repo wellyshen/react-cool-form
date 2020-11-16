@@ -296,7 +296,7 @@ export default <V extends FormValues = FormValues>({
         setStateRef(`errors.${name}`, error);
       } else {
         setStateRef("errors", unset(stateRef.current.errors, name, true), {
-          actualPath: `errors.${name}`,
+          fieldPath: `errors.${name}`,
         });
       }
     },
@@ -440,7 +440,7 @@ export default <V extends FormValues = FormValues>({
         setStateRef(
           "dirtyFields",
           unset(stateRef.current.dirtyFields, name, true),
-          { actualPath: `errors.${name}` }
+          { fieldPath: `errors.${name}` }
         );
       }
     },

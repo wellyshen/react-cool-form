@@ -22,7 +22,7 @@ export default <V>(
   const onChangeRef = useLatest(onChange);
 
   const setStateRef = useCallback<SetStateRef>(
-    (path, value, { actualPath, shouldUpdate = true } = {}) => {
+    (path, value, { fieldPath, shouldUpdate = true } = {}) => {
       const key = path.split(".")[0];
 
       if (!key) {
@@ -55,7 +55,7 @@ export default <V>(
 
         stateRef.current = { ...state, isDirty, isValid, submitCount };
 
-        path = actualPath || path;
+        path = fieldPath || path;
 
         if (
           shouldUpdate &&
