@@ -101,16 +101,15 @@ export default <V extends FormValues = FormValues>({
       Array.from(formRef.current.querySelectorAll("input,textarea,select"))
         .filter((element) => {
           const field = element as FieldElement;
+          const { name, dataset } = field;
 
           if (isButton(field)) return false;
-          if (!field.name) {
+          if (!name) {
             warn('💡 react-cool-form: Field is missing "name" attribute.');
             return false;
           }
 
-          return (
-            !field.dataset.rcfIgnore && !ignoreFieldsRef.current[field.name]
-          );
+          return !dataset.rcfIgnore && !ignoreFieldsRef.current[name];
         })
         .reduce((acc: Record<string, any>, cur) => {
           const field = cur as FieldElement;
@@ -539,7 +538,7 @@ export default <V extends FormValues = FormValues>({
       const state = { ...stateRef.current };
       const skip = arrayToMap(exclude || []);
 
-      Object.keys(stateRef.current).forEach((key) => {
+      Object.keys(state).forEach((key) => {
         if (skip[key]) return;
 
         if (key === "values") {
