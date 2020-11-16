@@ -32,7 +32,7 @@ export interface FormValues {
 
 const defaultValues = {
   text: { nest: "new test" },
-  // controller1: "new test",
+  controller1: "new test",
   controller2: "new test",
   hiddenText1: "new test",
   hiddenText2: "new test",
@@ -193,10 +193,12 @@ export default (): JSX.Element => {
   };
 
   const handleResetClick = (): void => {
-    reset((prevValues) => ({ ...prevValues, text: { nest: "new test" } }), [
+    /* reset((prevValues) => ({ ...prevValues, text: { nest: "test reset" } }), [
       "touched",
       "submitCount",
-    ]);
+    ]); */
+
+    reset();
   };
 
   const handleSubmit = async () => {

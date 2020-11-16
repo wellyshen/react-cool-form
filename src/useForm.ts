@@ -110,7 +110,7 @@ export default <V extends FormValues = FormValues>({
   const ignoreFieldsRef = useRef<UsedRef>(arrayToMap(ignoreFields));
   const changedFieldRef = useRef<string>();
   const initialStateRef = useRef<FormState<V>>({
-    values: (defaultValues as V) || {},
+    values: defaultValues || {},
     touched: {},
     errors: {},
     isDirty: false,
@@ -457,7 +457,6 @@ export default <V extends FormValues = FormValues>({
       } = {}
     ) => {
       values = isFunction(values) ? values(stateRef.current.values) : values;
-      values = { ...stateRef.current.values, ...values };
 
       setStateRef("values", values);
       setAllNodesOrStateValue(values);
@@ -543,10 +542,9 @@ export default <V extends FormValues = FormValues>({
         if (skip[key]) return;
 
         if (key === "values") {
-          values = isFunction(values)
-            ? values(stateRef.current.values)
-            : values;
-          values = { ...initialStateRef.current.values, ...values } as V;
+          values =
+            (isFunction(values) ? values(stateRef.current.values) : values) ||
+            initialStateRef.current.values;
 
           state[key] = values;
           setAllNodesOrStateValue(values);
