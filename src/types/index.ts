@@ -1,20 +1,13 @@
 import { FocusEvent, MutableRefObject, RefObject, SyntheticEvent } from "react";
 
-// Utils
-type DeepPartial<T> = T extends Function
-  ? T
-  : T extends object
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : T;
-
-type DeepProps<V, T = any> = {
-  [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
-};
-
 // Common
 export type UsedRef = Record<string, boolean>;
 
 // State
+type DeepProps<V, T = any> = {
+  [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
+};
+
 export type Errors<V> = DeepProps<V>;
 
 export interface FormState<V> {
@@ -184,17 +177,17 @@ export interface Controller<V, E = any> {
     | Record<string, unknown>;
 }
 
-export type Config<V> = Partial<{
-  defaultValues: DeepPartial<V>;
-  validate: FormValidator<V>;
-  validateOnChange: boolean;
-  validateOnBlur: boolean;
-  ignoreFields: string[];
-  onReset: OnReset<V>;
-  onSubmit: OnSubmit<V>;
-  onError: OnError<V>;
-  debug: Debug<V>;
-}>;
+export interface Config<V> {
+  defaultValues: V;
+  validate?: FormValidator<V>;
+  validateOnChange?: boolean;
+  validateOnBlur?: boolean;
+  ignoreFields?: string[];
+  onReset?: OnReset<V>;
+  onSubmit?: OnSubmit<V>;
+  onError?: OnError<V>;
+  debug?: Debug<V>;
+}
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
