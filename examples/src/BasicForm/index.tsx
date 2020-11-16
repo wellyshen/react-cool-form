@@ -33,7 +33,7 @@ export interface FormValues {
 const defaultValues = {
   // text: { nest: "new test" },
   // controller1: "new test",
-  controller2: "new test",
+  // controller2: "new test",
   // hiddenText1: "new test",
   // hiddenText2: "new test",
   // password: "new test",
@@ -196,10 +196,12 @@ export default (): JSX.Element => {
   };
 
   const handleResetClick = (): void => {
-    reset((prevValues) => ({ ...prevValues, text: { nest: "new test" } }), [
+    /* reset((prevValues) => ({ ...prevValues, text: { nest: "test reset" } }), [
       "touched",
       "submitCount",
-    ]);
+    ]); */
+
+    reset();
   };
 
   const handleSubmit = async () => {
@@ -222,12 +224,20 @@ export default (): JSX.Element => {
           // data-rcf-ignore
           defaultValue="test"
         />
+<<<<<<< HEAD
         {!show1 && (
           <Input
             label="Controller 1:"
             {...controller("controller1", { defaultValue: "test" })}
           />
         )}
+=======
+        <Input
+          label="Controller 1:"
+          {...controller("controller1")}
+          // defaultChecked
+        />
+>>>>>>> master
         <Controller
           label="Controller 2:"
           name="controller2"
