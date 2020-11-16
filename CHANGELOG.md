@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.24
+
+### Patch Changes
+
+- [`8037f98`](https://github.com/wellyshen/react-cool-form/commit/8037f9869a52ccc08742064cf7c0f63819da4e83) [#103](https://github.com/wellyshen/react-cool-form/pull/103) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): adjust the UX of defaultValues, reset(), and setValues()
+
+* [`0890b1c`](https://github.com/wellyshen/react-cool-form/commit/0890b1cff52841df1827a9a62c7ab646af2556cf) [#105](https://github.com/wellyshen/react-cool-form/pull/105) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): move ignoreFieldsRef to getFields()
+
 ## 0.0.23
 
 ### Patch Changes
