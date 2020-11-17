@@ -11,7 +11,6 @@ module.exports = {
     ],
     "no-param-reassign": "off",
     "no-underscore-dangle": "off",
-    "@typescript-eslint/ban-types": "off",
   },
   settings: {
     polyfills: ["Promise"],

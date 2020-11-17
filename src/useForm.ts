@@ -132,7 +132,7 @@ export default <V extends FormValues = FormValues>({
       let value = field.value as any;
 
       if (isNumberField(field) || isRangeField(field))
-        value = parseFloat(value) ?? "";
+        value = value !== "" ? parseFloat(value) : "";
 
       if (isCheckboxField(field)) {
         if (options) {

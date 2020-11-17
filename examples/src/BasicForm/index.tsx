@@ -73,8 +73,9 @@ export default (): JSX.Element => {
     controller,
     reset,
     submit,
+    // @ts-expect-error
   } = useForm<FormValues>({
-    defaultValues,
+    // defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
     // ignoreFields: ["text.nest", "number"],
@@ -219,7 +220,7 @@ export default (): JSX.Element => {
           })} */
           // required
           // data-rcf-ignore
-          defaultValue="test"
+          // defaultValue="test"
         />
         <Input
           label="Controller 1:"
@@ -268,7 +269,7 @@ export default (): JSX.Element => {
           label="Password:"
           type="password"
           name="password"
-          defaultValue="test"
+          // defaultValue="test"
         />
         <Input
           label="Number:"
@@ -277,14 +278,14 @@ export default (): JSX.Element => {
           /* ref={validate((value) => {
             return value <= 5 ? "Field error" : "";
           })} */
-          defaultValue="5"
+          // defaultValue=""
         />
         <Input label="Range:" type="range" name="range" defaultValue="0" />
         <Input
           label="Checkbox:"
           type="checkbox"
           name="checkbox"
-          defaultChecked
+          // defaultChecked
         />
         <div css={wrapper}>
           <Input
@@ -301,7 +302,7 @@ export default (): JSX.Element => {
             type="checkbox"
             name="checkboxGroup"
             value="value-2"
-            defaultChecked
+            // defaultChecked
           />
         </div>
         <div css={wrapper}>
@@ -318,11 +319,11 @@ export default (): JSX.Element => {
             type="radio"
             name="radio"
             value="value-2"
-            defaultChecked
+            // defaultChecked
           />
         </div>
         <Input label="File:" type="file" name="image" />
-        <Select label="Select:" name="select" defaultValue="value-2">
+        <Select label="Select:" name="select">
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
         </Select>
@@ -335,7 +336,7 @@ export default (): JSX.Element => {
           <option value="value-1">Value 1</option>
           <option value="value-2">Value 2</option>
         </Select>
-        <TextArea label="Text Area:" name="textarea" defaultValue="test" />
+        <TextArea label="Text Area:" name="textarea" />
         <button type="button" onClick={handleToggle1Click}>
           Toggle 1
         </button>
