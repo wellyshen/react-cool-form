@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.26
+
+### Patch Changes
+
+- [`6821f0d`](https://github.com/wellyshen/react-cool-form/commit/6821f0de12a40a607139c8f4b6c74dd366d6c3d0) [#106](https://github.com/wellyshen/react-cool-form/pull/106) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): correct number data type
+
 ## 0.0.24
 
 ### Patch Changes
