@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types */
 
 import { FieldElement } from "./types";
 
