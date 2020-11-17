@@ -280,7 +280,7 @@ export default (): JSX.Element => {
           })} */
           // defaultValue=""
         />
-        <Input label="Range:" type="range" name="range" defaultValue="0" />
+        <Input label="Range:" type="range" name="range" />
         <Input
           label="Checkbox:"
           type="checkbox"
