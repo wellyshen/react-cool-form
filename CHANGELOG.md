@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.27
+
+### Patch Changes
+
+- [`0ceb94a`](https://github.com/wellyshen/react-cool-form/commit/0ceb94a72259492d802f23e0bd288085c86df7a2) [#108](https://github.com/wellyshen/react-cool-form/pull/108) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): auto add/remove fields
+
 ## 0.0.26
 
 ### Patch Changes
