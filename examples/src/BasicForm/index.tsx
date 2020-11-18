@@ -127,14 +127,14 @@ export default (): JSX.Element => {
   });
 
   // console.log("LOG ===> Re-render");
-  console.log(
+  /* console.log(
     "LOG ===> ",
     getState([
       "values.controller1",
       "errors.controller1",
       "dirtyFields.controller1",
     ])
-  );
+  ); */
   // console.log("LOG ===> ", getState(["values.hiddenText1"]));
   /* console.log(
     "LOG ===> formState: ",

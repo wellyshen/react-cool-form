@@ -733,12 +733,12 @@ export default <V extends FormValues = FormValues>({
     const observer = new MutationObserver(([{ type }]) => {
       if (type !== "childList") return;
 
-      const allFields = getFields(form);
+      const fields = getFields(form);
       let { values } = stateRef.current;
 
       Object.keys({ ...fieldsRef.current, ...ignoreFieldsRef.current }).forEach(
         (name) => {
-          if (allFields[name]) return;
+          if (fields[name]) return;
 
           values = unset(values, name, true);
 
@@ -764,12 +764,11 @@ export default <V extends FormValues = FormValues>({
         }
       );
 
-      fieldsRef.current = Object.keys(allFields)
-        .filter((key) => !ignoreFieldsRef.current[key])
-        .reduce((acc: Fields, key) => {
-          acc[key] = allFields[key];
-          return acc;
-        }, {});
+      Object.keys(ignoreFieldsRef.current).forEach(
+        (name) => delete fields[name]
+      );
+
+      fieldsRef.current = fields;
       setAllNodesOrStateValue(values, true);
     });
     observer.observe(form, { childList: true, subtree: true });
