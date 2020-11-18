@@ -17,7 +17,7 @@ export interface FormValues {
   controller1?: any;
   controller2: any;
   hiddenText1?: string;
-  hiddenText2: string;
+  hiddenText2?: string;
   password: string;
   number: number;
   range: number;
@@ -32,7 +32,7 @@ export interface FormValues {
 
 const defaultValues = {
   text: { nest: "new test" },
-  // controller1: "new test",
+  controller1: "new test",
   controller2: "new test",
   hiddenText1: "new test",
   hiddenText2: "new test",
@@ -127,11 +127,19 @@ export default (): JSX.Element => {
   });
 
   // console.log("LOG ===> Re-render");
-  // console.log("LOG ===> formState: ", getState("values.text.nest"));
-  console.log(
+  /* console.log(
+    "LOG ===> ",
+    getState([
+      "values.controller1",
+      "errors.controller1",
+      "dirtyFields.controller1",
+    ])
+  ); */
+  // console.log("LOG ===> ", getState(["values.hiddenText1"]));
+  /* console.log(
     "LOG ===> formState: ",
     getState({
-      values: "values",
+      // values: "values",
       // touched: "touched",
       // errors: "errors",
       // isDirty: "isDirty",
@@ -142,7 +150,7 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  );
+  ); */
 
   useEffect(() => {
     // validateField("text.nest");
@@ -221,10 +229,15 @@ export default (): JSX.Element => {
           // data-rcf-ignore
           // defaultValue="test"
         />
-        {!show1 && (
+        {show1 && (
           <Input
             label="Controller 1:"
-            {...controller("controller1", { defaultValue: "test" })}
+            {...controller("controller1", {
+              defaultValue: "test",
+              validate: async (val) => {
+                return val.length <= 5 ? "Field error" : "";
+              },
+            })}
             // defaultChecked
           />
         )}
@@ -242,30 +255,28 @@ export default (): JSX.Element => {
           // required
           defaultValue={defaultValues.controller2}
         />
-        {show1 && (
+        {show2 && (
           <div>
             <Input
               label="Hidden Text 1:"
               name="hiddenText1"
-              /* ref={validate(async (value) => {
+              ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
-              })} */
+              })}
               defaultValue="test"
             />
           </div>
         )}
-        {show2 && (
-          <div>
-            <Input
-              label="Hidden Text 2:"
-              name="hiddenText2"
-              /* ref={validate(async (value) => {
-                return value.length <= 5 ? "Field error" : "";
-              })} */
-              defaultValue="test"
-            />
-          </div>
-        )}
+        <div>
+          <Input
+            label="Hidden Text 2:"
+            name="hiddenText2"
+            ref={validate(async (value) => {
+              return value.length <= 5 ? "Field error" : "";
+            })}
+            defaultValue="test"
+          />
+        </div>
         <Input
           label="Password:"
           type="password"
