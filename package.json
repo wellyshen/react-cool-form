@@ -41,6 +41,7 @@
     "lint": "run-s lint:*",
     "lint:code": "eslint --fix . --ext .js,.ts,.tsx",
     "lint:type": "tsc",
+    "lint:format": "prettier -w . -u --loglevel silent",
     "test": "jest",
     "test:watch": "yarn test --watch",
     "test:cov": "yarn clean:cov && yarn test --coverage",
