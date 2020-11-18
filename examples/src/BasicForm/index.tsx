@@ -14,9 +14,9 @@ const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
 export interface FormValues {
   text: Record<string, string>;
-  controller1: any;
+  controller1?: any;
   controller2: any;
-  hiddenText1: string;
+  hiddenText1?: string;
   hiddenText2: string;
   password: string;
   number: number;
@@ -32,7 +32,7 @@ export interface FormValues {
 
 const defaultValues = {
   text: { nest: "new test" },
-  controller1: "new test",
+  // controller1: "new test",
   controller2: "new test",
   hiddenText1: "new test",
   hiddenText2: "new test",
@@ -73,9 +73,8 @@ export default (): JSX.Element => {
     controller,
     reset,
     submit,
-    // @ts-expect-error
   } = useForm<FormValues>({
-    // defaultValues,
+    defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
     // ignoreFields: ["text.nest", "number"],
@@ -222,11 +221,13 @@ export default (): JSX.Element => {
           // data-rcf-ignore
           // defaultValue="test"
         />
-        <Input
-          label="Controller 1:"
-          {...controller("controller1")}
-          // defaultChecked
-        />
+        {!show1 && (
+          <Input
+            label="Controller 1:"
+            {...controller("controller1", { defaultValue: "test" })}
+            // defaultChecked
+          />
+        )}
         <Controller
           label="Controller 2:"
           name="controller2"
@@ -238,7 +239,7 @@ export default (): JSX.Element => {
             // console.log("LOG ===> validate: ", val, values);
             return val.length <= 5 ? "Field error" : "";
           }, [])} */
-          required
+          // required
           defaultValue={defaultValues.controller2}
         />
         {show1 && (
