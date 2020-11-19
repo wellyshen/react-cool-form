@@ -16,8 +16,8 @@ export interface FormValues {
   text: Record<string, string>;
   controller1?: any;
   controller2: any;
-  hiddenText1?: string;
-  hiddenText2?: string;
+  dynamicText1?: string;
+  dynamicText2?: string;
   password: string;
   number: number;
   range: number;
@@ -34,8 +34,8 @@ const defaultValues = {
   text: { nest: "new test" },
   controller1: "new test",
   controller2: "new test",
-  hiddenText1: "new test",
-  hiddenText2: "new test",
+  dynamicText1: "new test",
+  dynamicText2: "new test",
   password: "new test",
   number: 5,
   range: 0,
@@ -58,7 +58,7 @@ const schema = Yup.object().shape({
 });
 
 export default (): JSX.Element => {
-  const [show1, setShow1] = useState(false);
+  const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(false);
   const {
     formRef,
@@ -135,7 +135,7 @@ export default (): JSX.Element => {
       "dirtyFields.controller1",
     ])
   ); */
-  // console.log("LOG ===> ", getState(["values.hiddenText1"]));
+  console.log("LOG ===> ", getState("values.dynamicText1"));
   /* console.log(
     "LOG ===> formState: ",
     getState({
@@ -229,18 +229,16 @@ export default (): JSX.Element => {
           // data-rcf-ignore
           // defaultValue="test"
         />
-        {show1 && (
-          <Input
-            label="Controller 1:"
-            {...controller("controller1", {
-              defaultValue: "test",
-              validate: async (val) => {
-                return val.length <= 5 ? "Field error" : "";
-              },
-            })}
-            // defaultChecked
-          />
-        )}
+        <Input
+          label="Controller 1:"
+          {...controller("controller1", {
+            defaultValue: "test",
+            validate: async (val) => {
+              return val.length <= 5 ? "Field error" : "";
+            },
+          })}
+          // defaultChecked
+        />
         <Controller
           label="Controller 2:"
           name="controller2"
@@ -255,11 +253,11 @@ export default (): JSX.Element => {
           // required
           defaultValue={defaultValues.controller2}
         />
-        {show2 && (
+        {show1 && (
           <div>
             <Input
-              label="Hidden Text 1:"
-              name="hiddenText1"
+              label="Dynamic Text 1:"
+              name="dynamicText1"
               ref={validate(async (value) => {
                 return value.length <= 5 ? "Field error" : "";
               })}
@@ -269,8 +267,8 @@ export default (): JSX.Element => {
         )}
         <div>
           <Input
-            label="Hidden Text 2:"
-            name="hiddenText2"
+            label="Dynamic Text 2:"
+            name="dynamicText2"
             ref={validate(async (value) => {
               return value.length <= 5 ? "Field error" : "";
             })}
