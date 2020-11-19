@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.28
+
+### Patch Changes
+
+- [`d935f68`](https://github.com/wellyshen/react-cool-form/commit/d935f68da3e734aaec792493c1418784e32c9a77) [#111](https://github.com/wellyshen/react-cool-form/pull/111) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): correct dynamic fields behavior
+
 ## 0.0.27
 
 ### Patch Changes
