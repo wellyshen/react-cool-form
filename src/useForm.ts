@@ -215,11 +215,6 @@ export default <V extends FormValues = FormValues>({
 
   const setDefaultValue = useCallback(
     (name: string, value: any) => {
-      if (isUndefined(get(stateRef.current.values, name)))
-        setStateRef(`values.${name}`, value, {
-          shouldUpdate: !isInitRef.current,
-        });
-
       if (isUndefined(get(initialStateRef.current.values, name)))
         initialStateRef.current.values = set(
           initialStateRef.current.values,
@@ -227,6 +222,11 @@ export default <V extends FormValues = FormValues>({
           value,
           true
         );
+
+      if (isUndefined(get(stateRef.current.values, name)))
+        setStateRef(`values.${name}`, initialStateRef.current.values[name], {
+          shouldUpdate: !isInitRef.current,
+        });
     },
     [setStateRef, stateRef]
   );
@@ -639,7 +639,7 @@ export default <V extends FormValues = FormValues>({
 
       return {
         name,
-        value: !isUndefined(value) ? value : getState(`values.${name}`),
+        value: !isUndefined(value) ? value : getState(`values.${name}`) ?? "",
         onChange: (e) => {
           const parsedE = parser ? parser(e) : e;
 
@@ -741,7 +741,6 @@ export default <V extends FormValues = FormValues>({
           if (fields[name]) return;
 
           values = unset(values, name, true);
-
           setStateRef("values", values, { fieldPath: `values.${name}` });
           setStateRef("errors", unset(stateRef.current.errors, name, true), {
             fieldPath: `errors.${name}`,
@@ -753,11 +752,6 @@ export default <V extends FormValues = FormValues>({
               fieldPath: `dirtyFields.${name}`,
             }
           );
-          initialStateRef.current.values = unset(
-            initialStateRef.current.values,
-            name,
-            true
-          );
 
           delete fieldValidatorsRef.current[name];
           delete ignoreFieldsRef.current[name];
@@ -767,6 +761,16 @@ export default <V extends FormValues = FormValues>({
       Object.keys(ignoreFieldsRef.current).forEach(
         (name) => delete fields[name]
       );
+
+      Object.keys(fields).forEach((name) => {
+        if (!fieldsRef.current[name] && initialStateRef.current.values[name])
+          values = set(
+            values,
+            name,
+            initialStateRef.current.values[name],
+            true
+          );
+      });
 
       fieldsRef.current = fields;
       setAllNodesOrStateValue(values, true);
