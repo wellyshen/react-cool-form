@@ -31,7 +31,7 @@ export interface FormValues {
 }
 
 const defaultValues = {
-  text: { nest: "new test" },
+  text: { nest: "" },
   controller1: "new test",
   controller2: "new test",
   dynamicText1: "new test",
@@ -78,39 +78,39 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     // ignoreFields: ["text.nest", "number"],
-    // validate: async (values) => {
-    //   let errors: any = { text: { nest: "" } };
+    validate: async (values) => {
+      let errors: any = { text: { nest: "" } };
 
-    //   // fib(35);
+      fib(40);
 
-    //   // eslint-disable-next-line
-    //   /* await new Promise((resolve) => {
-    //     setTimeout(resolve, 3000);
-    //   }); */
+      // eslint-disable-next-line
+      /* await new Promise((resolve) => {
+        setTimeout(resolve, 3000);
+      }); */
 
-    //   // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
-    //   if (values.text.nest.length <= 5) {
-    //     errors.text.nest = "Form error";
-    //   } else {
-    //     errors = {};
-    //   }
-    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+      // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
+      if (values.text.nest.length <= 5) {
+        errors.text.nest = "Form error";
+      } else {
+        errors = {};
+      }
+      // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
-    //   // throw new Error("Fake error");
-    //   return errors;
+      // throw new Error("Fake error");
+      return errors;
 
-    //   /* try {
-    //     await schema.validate(values, { abortEarly: false });
-    //   } catch (error) {
-    //     const formErrors = {};
+      /* try {
+        await schema.validate(values, { abortEarly: false });
+      } catch (error) {
+        const formErrors = {};
 
-    //     error.inner.forEach(({ path, message }: any) =>
-    //       set(formErrors, path, message)
-    //     );
+        error.inner.forEach(({ path, message }: any) =>
+          set(formErrors, path, message)
+        );
 
-    //     return formErrors;
-    //   } */
-    // },
+        return formErrors;
+      } */
+    },
     onReset: (values, options, e) =>
       console.log("LOG ===> onReset: ", values, options, e),
     onSubmit: async (values, options, e) => {
@@ -135,13 +135,13 @@ export default (): JSX.Element => {
       "dirtyFields.controller1",
     ])
   ); */
-  console.log("LOG ===> ", getState("values.dynamicText1"));
-  /* console.log(
+  // console.log("LOG ===> ", getState("values.dynamicText1"));
+  console.log(
     "LOG ===> formState: ",
     getState({
       // values: "values",
       // touched: "touched",
-      // errors: "errors",
+      errors: "errors",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
@@ -150,7 +150,7 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  ); */
+  );
 
   useEffect(() => {
     // validateField("text.nest");
