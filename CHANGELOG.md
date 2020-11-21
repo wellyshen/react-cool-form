@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.30
+
+### Patch Changes
+
+- [`1621ce1`](https://github.com/wellyshen/react-cool-form/commit/1621ce1b88c5027b1feef37e87dbe7a06fb44060) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): move runWithLowPrioirty into useForm
+
 ## 0.0.29
 
 ### Patch Changes
