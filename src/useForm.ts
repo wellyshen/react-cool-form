@@ -48,21 +48,19 @@ import {
 const useUniversalLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-const runWithLowPriority = (callback: () => any) =>
-  (
-    window.requestIdleCallback ||
-    ((callback) => {
-      const start = Date.now();
-      return setTimeout(
-        () =>
-          callback({
-            didTimeout: false,
-            timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
-          }),
-        1
-      );
-    })
-  )(callback, { timeout: 2000 });
+const requestIdleCallback =
+  window.requestIdleCallback ||
+  ((callback) => {
+    const start = Date.now();
+    return setTimeout(
+      () =>
+        callback({
+          didTimeout: false,
+          timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
+        }),
+      1
+    );
+  });
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
@@ -427,7 +425,7 @@ export default <V extends FormValues = FormValues>({
   ]);
 
   const validateFormWithLowPriority = useCallback(
-    () => runWithLowPriority(validateForm),
+    () => requestIdleCallback(validateForm, { timeout: 2000 }),
     [validateForm]
   );
 

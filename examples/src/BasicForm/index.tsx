@@ -81,12 +81,12 @@ export default (): JSX.Element => {
     validate: async (values) => {
       let errors: any = { text: { nest: "" } };
 
-      fib(40);
+      // fib(40);
 
       // eslint-disable-next-line
-      /* await new Promise((resolve) => {
+      await new Promise((resolve) => {
         setTimeout(resolve, 3000);
-      }); */
+      });
 
       // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
       if (values.text.nest.length <= 5) {
