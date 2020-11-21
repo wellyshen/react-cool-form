@@ -1,16 +1,11 @@
 declare const __DEV__: boolean;
 
-interface RequestIdleCallback {
-  (deadline: {
-    readonly didTimeout: boolean;
-    timeRemaining: () => number;
-  }): void;
-}
-
 interface Window {
   requestIdleCallback: (
-    callback: RequestIdleCallback,
+    callback: (deadline: {
+      readonly didTimeout: boolean;
+      timeRemaining: () => number;
+    }) => void,
     options?: { timeout: number }
   ) => any;
-  cancelIdleCallback: (handle: any) => void;
 }

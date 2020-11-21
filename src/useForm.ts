@@ -24,7 +24,6 @@ import {
 } from "./types";
 import useLatest from "./useLatest";
 import useState from "./useState";
-import runWithLowPriority from "./runWithLowPriority";
 import {
   arrayToMap,
   deepMerge,
@@ -48,6 +47,22 @@ import {
 
 const useUniversalLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+const runWithLowPriority = (callback: () => any) =>
+  (
+    window.requestIdleCallback ||
+    ((callback) => {
+      const start = Date.now();
+      return setTimeout(
+        () =>
+          callback({
+            didTimeout: false,
+            timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
+          }),
+        1
+      );
+    })
+  )(callback, { timeout: 2000 });
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
