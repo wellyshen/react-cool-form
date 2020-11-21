@@ -1,6 +1,7 @@
 import createConfig from "./createConfig";
 
-const isDev = process.env.BUILD !== "production";
+const isProd = process.env.BUILD === "production";
+const isBundleSize = process.env.BUILD === "bundlesize";
 const name = "index";
 const umdName = "ReactCoolForm";
 const options = [
@@ -33,5 +34,5 @@ const options = [
 ];
 
 export default options
-  .filter(({ format }) => (isDev ? format === "esm" : true))
-  .map((option) => createConfig({ ...option, measure: !isDev }));
+  .filter(({ format }) => (isProd || isBundleSize ? true : format === "esm"))
+  .map((option) => createConfig({ ...option, measure: isProd }));

@@ -1,4 +1,4 @@
-name: Lint / Test / Build
+name: Lint / Test / Size
 
 on:
   push:
@@ -42,8 +42,8 @@ jobs:
         run: yarn lint
       - name: Run test
         run: yarn test:cov
-      - name: Run build
-        run: yarn build
+      - name: Run bundlesize
+        run: yarn bundlesize
 
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@master
