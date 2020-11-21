@@ -85,9 +85,11 @@ declare module "react-cool-form" {
     (name: string, error?: any | ((previousError?: any) => any)): void;
   }
 
+  type ValuesArg<V> = V | ((previousValues: V) => V);
+
   interface SetValues<V> {
     (
-      values: V | ((previousValues: V) => V),
+      values: ValuesArg<V>,
       options?: {
         shouldValidate?: boolean;
         touchedFields?: string[];
@@ -116,7 +118,7 @@ declare module "react-cool-form" {
 
   interface Reset<V> {
     (
-      values?: V | ((previousValues: V) => V) | null,
+      values?: ValuesArg<V> | null,
       exclude?: (keyof FormState<V>)[] | null,
       event?: SyntheticEvent<any>
     ): void;

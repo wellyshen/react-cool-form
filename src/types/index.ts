@@ -115,9 +115,11 @@ export interface SetFieldError {
   (name: string, error?: any | ((previousError?: any) => any)): void;
 }
 
+type ValuesArg<V> = V | ((previousValues: V) => V);
+
 export interface SetValues<V> {
   (
-    values: V | ((previousValues: V) => V),
+    values: ValuesArg<V>,
     options?: {
       shouldValidate?: boolean;
       touchedFields?: string[];
@@ -146,7 +148,7 @@ export interface ValidateField<V> {
 
 export interface Reset<V> {
   (
-    values?: V | ((previousValues: V) => V) | null,
+    values?: ValuesArg<V> | null,
     exclude?: (keyof FormState<V>)[] | null,
     event?: SyntheticEvent<any>
   ): void;
