@@ -1,5 +1,19 @@
 # react-cool-form
 
+## 0.0.32
+
+### Patch Changes
+
+- [`732b593`](https://github.com/wellyshen/react-cool-form/commit/732b593ad77175e4e866cf6439abc0772b1c118c) Thanks [@wellyshen](https://github.com/wellyshen)! - chore: add more github templates
+
+* [`c8c715d`](https://github.com/wellyshen/react-cool-form/commit/c8c715de6779da10b1563baaa2fbccea69a57f03) [#124](https://github.com/wellyshen/react-cool-form/pull/124) Thanks [@wellyshen](https://github.com/wellyshen)! - chore: use bundlesize
+
+- [`495f275`](https://github.com/wellyshen/react-cool-form/commit/495f275851858aafd0429e5222aa4d0b52502088) Thanks [@wellyshen](https://github.com/wellyshen)! - docs: update readme
+
+* [`908f7fe`](https://github.com/wellyshen/react-cool-form/commit/908f7fe0500c7ccfdb767737d35fbcc9bdcf5fb4) Thanks [@wellyshen](https://github.com/wellyshen)! - chore: adjust package commands and rollup config
+
+- [`e3e0e73`](https://github.com/wellyshen/react-cool-form/commit/e3e0e73a568456228b28a489d133074b74954593) [#126](https://github.com/wellyshen/react-cool-form/pull/126) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): correct the logic of avoid double validating of setFieldTouched()
+
 ## 0.0.31
 
 ### Patch Changes
