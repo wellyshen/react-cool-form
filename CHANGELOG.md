@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.31
+
+### Patch Changes
+
+- [`abc5239`](https://github.com/wellyshen/react-cool-form/commit/abc52396e0036db192f12b0e89c1e56320de1d1f) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): change runWithLowPrioirty() to requestIdleCallback()
+
 ## 0.0.30
 
 ### Patch Changes
