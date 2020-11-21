@@ -14,7 +14,6 @@ examples/build
 .DS_Store
 *.log
 .size-snapshot.json
-stats.html
 examples/.env.local
 examples/.env.development.local
 examples/.env.test.local
