@@ -45,7 +45,7 @@
     "test": "jest",
     "test:watch": "yarn test --watch",
     "test:cov": "yarn clean:cov && yarn test --coverage",
-    "bundlesize": "yarn build --environment BUILD:bundlesize && bundlesize --enable-github-checks",
+    "bundlesize": "yarn build --environment BUILD:bundlesize && bundlesize",
     "clean": "run-p clean:*",
     "clean:build": "rimraf dist",
     "clean:size": "rimraf .size-snapshot.json",
