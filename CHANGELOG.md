@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.29
+
+### Patch Changes
+
+- [`948807c`](https://github.com/wellyshen/react-cool-form/commit/948807c6f045948f1fb033052d8984364580f0bb) [#120](https://github.com/wellyshen/react-cool-form/pull/120) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): use requestIdleCallback instead of scheduler
+
 ## 0.0.28
 
 ### Patch Changes
