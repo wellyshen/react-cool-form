@@ -443,7 +443,7 @@ export default <V extends FormValues = FormValues>({
     (name: string) =>
       setFieldTouched(
         name,
-        validateOnChange && name === changedFieldRef.current ? false : undefined
+        validateOnChange ? name !== changedFieldRef.current : undefined
       ),
     [setFieldTouched, validateOnChange]
   );
