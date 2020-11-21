@@ -73,7 +73,7 @@ const App = () => {
       {touched.email && <p>{errors.email}</p>}
 
       <label>Password</label>
-      <input name="password" required minLength={8} />
+      <input name="password" type="password" required minLength={8} />
       {touched.password && <p>{errors.password}</p>}
 
       <input type="reset" />
