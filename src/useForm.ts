@@ -439,6 +439,15 @@ export default <V extends FormValues = FormValues>({
     [setStateRef, validateFormWithLowPriority, validateOnBlur]
   );
 
+  const setFieldTouchedMaybeValidate = useCallback(
+    (name: string) =>
+      setFieldTouched(
+        name,
+        validateOnChange && name === changedFieldRef.current ? false : undefined
+      ),
+    [setFieldTouched, validateOnChange]
+  );
+
   const setFieldDirty = useCallback(
     (name: string) => {
       if (get(stateRef.current.values, name) !== get(defaultValues, name)) {
@@ -661,11 +670,7 @@ export default <V extends FormValues = FormValues>({
           }
         },
         onBlur: (e) => {
-          setFieldTouched(
-            name,
-            (validateOnChange && name !== changedFieldRef.current) ||
-              validateOnBlur
-          );
+          setFieldTouchedMaybeValidate(name);
           if (onBlur) onBlur(e);
         },
       };
@@ -674,10 +679,8 @@ export default <V extends FormValues = FormValues>({
       getState,
       handleFieldChange,
       setDefaultValue,
-      setFieldTouched,
+      setFieldTouchedMaybeValidate,
       setFieldValue,
-      validateOnBlur,
-      validateOnChange,
     ]
   );
 
@@ -718,12 +721,7 @@ export default <V extends FormValues = FormValues>({
 
       const { name } = target as FieldElement;
 
-      if (fieldsRef.current[name])
-        setFieldTouched(
-          name,
-          (validateOnChange && name !== changedFieldRef.current) ||
-            validateOnBlur
-        );
+      if (fieldsRef.current[name]) setFieldTouchedMaybeValidate(name);
     };
 
     const handleSubmit = (e: Event) => submit(e as any);
@@ -794,12 +792,10 @@ export default <V extends FormValues = FormValues>({
     handleFieldChange,
     reset,
     setAllNodesOrStateValue,
-    setFieldTouched,
+    setFieldTouchedMaybeValidate,
     setStateRef,
     stateRef,
     submit,
-    validateOnBlur,
-    validateOnChange,
   ]);
 
   return {
