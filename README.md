@@ -83,4 +83,4 @@ const App = () => {
 };
 ```
 
-Super easy right? The above example is just the tip of the iceberg. `react-cool-form` is a lightweight and powerful form library, you can visit the [type definition](https://github.com/wellyshen/react-cool-form/blob/master/src/types/react-cool-form.d.ts) to understand how it rocks 😎.
+Super easy right? The above example is just the tip of the iceberg. `react-cool-form` is a lightweight and powerful form library, you can visit the [type definition](https://github.com/wellyshen/react-cool-form/blob/master/src/types/react-cool-form.d.ts) to understand how it rocks 🤘🏻.
