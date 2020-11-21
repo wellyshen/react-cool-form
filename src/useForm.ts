@@ -1,9 +1,4 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
-import {
-  unstable_LowPriority,
-  unstable_runWithPriority,
-  unstable_scheduleCallback,
-} from "scheduler";
 
 import {
   Config,
@@ -29,6 +24,7 @@ import {
 } from "./types";
 import useLatest from "./useLatest";
 import useState from "./useState";
+import runWithLowPriority from "./runWithLowPriority";
 import {
   arrayToMap,
   deepMerge,
@@ -416,10 +412,7 @@ export default <V extends FormValues = FormValues>({
   ]);
 
   const validateFormWithLowPriority = useCallback(
-    () =>
-      unstable_runWithPriority(unstable_LowPriority, () =>
-        unstable_scheduleCallback(unstable_LowPriority, validateForm as any)
-      ),
+    () => runWithLowPriority(validateForm),
     [validateForm]
   );
 
