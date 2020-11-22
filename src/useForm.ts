@@ -581,6 +581,15 @@ export default <V extends FormValues = FormValues>({
       e?.preventDefault();
       e?.stopPropagation();
 
+      const touched = Object.keys({
+        ...fieldsRef.current,
+        ...controlledFieldsRef.current,
+      }).reduce((acc: Map, key) => {
+        acc = set(acc, key, true);
+        return acc;
+      }, {});
+
+      setStateRef("touched", touched);
       setStateRef("isSubmitting", true);
 
       try {

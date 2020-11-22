@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types */
 
-import { FieldElement } from "./types";
+import { FieldElement, Map } from "./types";
 
 export const warn = (...args: any[]): void => {
   if (__DEV__) console.warn(...args);
 };
 
-export const arrayToMap = (arr: any[]): Record<string, boolean> =>
+export const arrayToMap = (arr: any[]): Map =>
   arr.reduce((obj, key) => {
     obj[key] = true;
     return obj;
