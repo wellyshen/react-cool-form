@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.36
+
+### Patch Changes
+
+- [`a5ee7d9`](https://github.com/wellyshen/react-cool-form/commit/a5ee7d9784038f200f4065ead3728cfdc09f0689) [#132](https://github.com/wellyshen/react-cool-form/pull/132) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): change the ignoreFields to iControlledFields
+
+* [`957de35`](https://github.com/wellyshen/react-cool-form/commit/957de35fa996357d90ac0c017a4e09316a1f8dca) [#134](https://github.com/wellyshen/react-cool-form/pull/134) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): set all fields to touched when submitting
+
 ## 0.0.35
 
 ### Patch Changes

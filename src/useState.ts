@@ -1,7 +1,7 @@
 import { useReducer, useRef, useCallback } from "react";
 import isEqual from "fast-deep-equal";
 
-import { Debug, FormState, FormStateReturn, SetStateRef, Map } from "./types";
+import { Debug, FormState, FormStateReturn, Map, SetStateRef } from "./types";
 import useLatest from "./useLatest";
 import { get, isEmptyObject, set } from "./utils";
 
