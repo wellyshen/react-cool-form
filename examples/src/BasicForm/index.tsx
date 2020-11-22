@@ -77,7 +77,7 @@ export default (): JSX.Element => {
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    // ignoreFields: ["text.nest", "number"],
+    // iControlledFields: ["text.nest", "number"],
     // validate: async (values) => {
     //   let errors: any = { text: { nest: "" } };
 
@@ -227,7 +227,7 @@ export default (): JSX.Element => {
             return value.length <= 5 ? "Field error" : "";
           })} */
           required
-          // data-rcf-ignore
+          // data-icf
           // defaultValue="test"
         />
         {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>}

@@ -10,6 +10,7 @@ import {
   FormState,
   FormValues,
   GetState,
+  Map,
   Reset,
   Return,
   SetErrors,
@@ -17,7 +18,6 @@ import {
   SetFieldValue,
   SetValues,
   Submit,
-  UsedRef,
   ValidateRef,
   ValidateField,
   ValidateForm,
@@ -67,7 +67,7 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 
 const isButton = ({ type }: FieldElement) => /image|submit|reset/.test(type);
 
-const getFields = (form: HTMLFormElement, ignoreFields?: UsedRef) =>
+const getFields = (form: HTMLFormElement, controlledFields?: Map) =>
   Array.from(form.querySelectorAll("input,textarea,select"))
     .filter((element) => {
       const field = element as FieldElement;
@@ -79,9 +79,9 @@ const getFields = (form: HTMLFormElement, ignoreFields?: UsedRef) =>
         return false;
       }
 
-      return ignoreFields
-        ? !dataset.rcfIgnore && !ignoreFields[name]
-        : !dataset.rcfIgnore;
+      return controlledFields
+        ? !dataset.icf && !controlledFields[name]
+        : !dataset.icf;
     })
     .reduce((acc: Record<string, any>, cur) => {
       const field = cur as FieldElement;
@@ -102,7 +102,7 @@ export default <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
-  ignoreFields = [],
+  iControlledFields = [],
   onReset,
   onSubmit,
   onError,
@@ -111,13 +111,13 @@ export default <V extends FormValues = FormValues>({
   const isInitRef = useRef(true);
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
+  const controlledFieldsRef = useRef<Map>(arrayToMap(iControlledFields));
+  const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
   const onResetRef = useLatest(onReset);
   const onSubmitRef = useLatest(onSubmit);
   const onErrorRef = useLatest(onError);
-  const ignoreFieldsRef = useRef<UsedRef>(arrayToMap(ignoreFields));
-  const changedFieldRef = useRef<string>();
   const prevBuiltInErrorsRef = useRef<Record<string, string>>({});
   const initialStateRef = useRef<FormState<V>>({
     values: defaultValues || {},
@@ -255,7 +255,7 @@ export default <V extends FormValues = FormValues>({
 
   const validateRef = useCallback<ValidateRef<V>>(
     (validate) => (field) => {
-      if (field?.name && !ignoreFieldsRef.current[field.name])
+      if (field?.name && !controlledFieldsRef.current[field.name])
         fieldValidatorsRef.current[field.name] = validate;
     },
     []
@@ -652,7 +652,7 @@ export default <V extends FormValues = FormValues>({
         return {};
       }
 
-      ignoreFieldsRef.current[name] = true;
+      controlledFieldsRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
       if (!isUndefined(defaultValue)) setDefaultValue(name, defaultValue);
 
@@ -700,7 +700,7 @@ export default <V extends FormValues = FormValues>({
       return;
     }
 
-    fieldsRef.current = getFields(formRef.current, ignoreFieldsRef.current);
+    fieldsRef.current = getFields(formRef.current, controlledFieldsRef.current);
     setAllNodesOrStateValue(initialStateRef.current.values, true);
     isInitRef.current = false;
   }, [setAllNodesOrStateValue]);
@@ -752,30 +752,31 @@ export default <V extends FormValues = FormValues>({
       const fields = getFields(form);
       let { values } = stateRef.current;
 
-      Object.keys({ ...fieldsRef.current, ...ignoreFieldsRef.current }).forEach(
-        (name) => {
-          if (fields[name]) return;
+      Object.keys({
+        ...fieldsRef.current,
+        ...controlledFieldsRef.current,
+      }).forEach((name) => {
+        if (fields[name]) return;
 
-          values = unset(values, name, true);
-          setStateRef("values", values, { fieldPath: `values.${name}` });
-          setStateRef("errors", unset(stateRef.current.errors, name, true), {
-            fieldPath: `errors.${name}`,
-          });
-          setStateRef(
-            "dirtyFields",
-            unset(stateRef.current.dirtyFields, name, true),
-            {
-              fieldPath: `dirtyFields.${name}`,
-            }
-          );
+        values = unset(values, name, true);
+        setStateRef("values", values, { fieldPath: `values.${name}` });
+        setStateRef("errors", unset(stateRef.current.errors, name, true), {
+          fieldPath: `errors.${name}`,
+        });
+        setStateRef(
+          "dirtyFields",
+          unset(stateRef.current.dirtyFields, name, true),
+          {
+            fieldPath: `dirtyFields.${name}`,
+          }
+        );
 
-          delete fieldValidatorsRef.current[name];
-          delete prevBuiltInErrorsRef.current[name];
-          delete ignoreFieldsRef.current[name];
-        }
-      );
+        delete fieldValidatorsRef.current[name];
+        delete prevBuiltInErrorsRef.current[name];
+        delete controlledFieldsRef.current[name];
+      });
 
-      Object.keys(ignoreFieldsRef.current).forEach(
+      Object.keys(controlledFieldsRef.current).forEach(
         (name) => delete fields[name]
       );
 

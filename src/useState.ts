@@ -1,13 +1,7 @@
 import { useReducer, useRef, useCallback } from "react";
 import isEqual from "fast-deep-equal";
 
-import {
-  Debug,
-  FormState,
-  FormStateReturn,
-  SetStateRef,
-  UsedRef,
-} from "./types";
+import { Debug, FormState, FormStateReturn, SetStateRef, Map } from "./types";
 import useLatest from "./useLatest";
 import { get, isEmptyObject, set } from "./utils";
 
@@ -18,7 +12,7 @@ export default <V>(
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const defaultValuesRef = useRef(initialState.values);
   const stateRef = useRef(initialState);
-  const usedStateRef = useRef<UsedRef>({});
+  const usedStateRef = useRef<Map>({});
   const onChangeRef = useLatest(onChange);
 
   const setStateRef = useCallback<SetStateRef>(
