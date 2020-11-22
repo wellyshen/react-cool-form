@@ -39,16 +39,10 @@ Here's the basic example of how does it works, I'll provide the full documentati
 ```js
 import { useForm } from "react-cool-form";
 
-const defaultValues = {
-  name: "",
-  email: "",
-  password: "",
-};
-
 const App = () => {
   const { formRef, getState } = useForm({
     // Provide the default values for our form state
-    defaultValues,
+    defaultValues: { name: "", email: "", password: "" },
     // The event only triggered when the form is valid
     onSubmit: (values, actions) => {
       console.log("onSubmit: ", values);
