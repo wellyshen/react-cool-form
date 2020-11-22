@@ -67,7 +67,7 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 
 const isButton = ({ type }: FieldElement) => /image|submit|reset/.test(type);
 
-const getFields = (form: HTMLFormElement, controllers?: Map) =>
+const getFields = (form: HTMLFormElement, ignoreFields?: Map) =>
   Array.from(form.querySelectorAll("input,textarea,select"))
     .filter((element) => {
       const field = element as FieldElement;
@@ -79,7 +79,7 @@ const getFields = (form: HTMLFormElement, controllers?: Map) =>
         return false;
       }
 
-      return controllers ? !dataset.icf && !controllers[name] : !dataset.icf;
+      return ignoreFields ? !dataset.icf && !ignoreFields[name] : !dataset.icf;
     })
     .reduce((acc: Record<string, any>, cur) => {
       const field = cur as FieldElement;
@@ -101,6 +101,7 @@ export default <V extends FormValues = FormValues>({
   validateOnChange = true,
   validateOnBlur = true,
   iControlFields = [],
+  excludeFields = [],
   onReset,
   onSubmit,
   onError,
@@ -110,6 +111,11 @@ export default <V extends FormValues = FormValues>({
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
   const controllersRef = useRef<Map>(arrayToMap(iControlFields));
+  const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
+  const ignoreFieldsRef = useRef({
+    ...controllersRef.current,
+    ...excludeFieldsRef.current,
+  });
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
@@ -132,6 +138,14 @@ export default <V extends FormValues = FormValues>({
   const { stateRef, setStateRef, setUsedStateRef } = useState<V>(
     initialStateRef.current,
     debug
+  );
+
+  const validateRef = useCallback<ValidateRef<V>>(
+    (validate) => (field) => {
+      if (field?.name && !ignoreFieldsRef.current[field.name])
+        fieldValidatorsRef.current[field.name] = validate;
+    },
+    []
   );
 
   const getNodeValue = useCallback(
@@ -249,14 +263,6 @@ export default <V extends FormValues = FormValues>({
           setDefaultValue(field.name, getNodeValue(field, options));
       }),
     [getNodeValue, setNodeValue, setDefaultValue]
-  );
-
-  const validateRef = useCallback<ValidateRef<V>>(
-    (validate) => (field) => {
-      if (field?.name && !controllersRef.current[field.name])
-        fieldValidatorsRef.current[field.name] = validate;
-    },
-    []
   );
 
   const getState = useCallback<GetState>(
@@ -653,6 +659,8 @@ export default <V extends FormValues = FormValues>({
         warn('💡 react-cool-form > controller: Missing the "name" parameter.');
         return {};
       }
+      if (excludeFieldsRef.current[name])
+        return { name, value, onChange, onBlur };
 
       controllersRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
@@ -702,7 +710,7 @@ export default <V extends FormValues = FormValues>({
       return;
     }
 
-    fieldsRef.current = getFields(formRef.current, controllersRef.current);
+    fieldsRef.current = getFields(formRef.current, ignoreFieldsRef.current);
     setAllNodesOrStateValue(initialStateRef.current.values, true);
     isInitRef.current = false;
   }, [setAllNodesOrStateValue]);
@@ -778,7 +786,7 @@ export default <V extends FormValues = FormValues>({
         delete controllersRef.current[name];
       });
 
-      Object.keys(controllersRef.current).forEach(
+      Object.keys(ignoreFieldsRef.current).forEach(
         (name) => delete fields[name]
       );
 
