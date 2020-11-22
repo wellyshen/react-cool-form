@@ -62,15 +62,16 @@ const App = () => {
       <label>Name</label>
       {/* Support built-in validation attributes */}
       <input name="name" required />
-      {touched.name && <p>{errors.name}</p>}
+      {/* Show error on blur for better UX */}
+      {touched.name && errors.name && <p>{errors.name}</p>}
 
       <label>Email</label>
       <input name="email" type="email" required />
-      {touched.email && <p>{errors.email}</p>}
+      {touched.email && errors.email && <p>{errors.email}</p>}
 
       <label>Password</label>
       <input name="password" type="password" required minLength={8} />
-      {touched.password && <p>{errors.password}</p>}
+      {touched.password && errors.password && <p>{errors.password}</p>}
 
       <input type="reset" />
       <input type="submit" />
