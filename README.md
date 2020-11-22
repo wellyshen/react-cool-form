@@ -49,13 +49,9 @@ const App = () => {
   const { formRef, getState } = useForm({
     // Provide the default values for our form state
     defaultValues,
-    // The event is triggered when the form is valid
+    // The event only triggered when the form is valid
     onSubmit: (values, actions) => {
       console.log("onSubmit: ", values);
-    },
-    // The event is triggered when the form is invalid
-    onError: (errors, actions) => {
-      console.log("onError: ", errors);
     },
   });
 
