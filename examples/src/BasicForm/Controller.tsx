@@ -44,7 +44,8 @@ const Controller = ({
         defaultValue: "welly",
         // parser,
         onChange: (e, val) => {
-          setValue(val);
+          // setValue(val);
+          setValue(e.target.value);
           // console.log("LOG ===> onChange: ", val);
         },
         onBlur: (e) => {
