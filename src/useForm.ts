@@ -67,7 +67,7 @@ const isFieldElement = ({ tagName }: HTMLElement) =>
 
 const isButton = ({ type }: FieldElement) => /image|submit|reset/.test(type);
 
-const getFields = (form: HTMLFormElement, controlledFields?: Map) =>
+const getFields = (form: HTMLFormElement, controllers?: Map) =>
   Array.from(form.querySelectorAll("input,textarea,select"))
     .filter((element) => {
       const field = element as FieldElement;
@@ -79,9 +79,7 @@ const getFields = (form: HTMLFormElement, controlledFields?: Map) =>
         return false;
       }
 
-      return controlledFields
-        ? !dataset.icf && !controlledFields[name]
-        : !dataset.icf;
+      return controllers ? !dataset.icf && !controllers[name] : !dataset.icf;
     })
     .reduce((acc: Record<string, any>, cur) => {
       const field = cur as FieldElement;
@@ -102,7 +100,7 @@ export default <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
-  iControlledFields = [],
+  iControlFields = [],
   onReset,
   onSubmit,
   onError,
@@ -111,7 +109,7 @@ export default <V extends FormValues = FormValues>({
   const isInitRef = useRef(true);
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
-  const controlledFieldsRef = useRef<Map>(arrayToMap(iControlledFields));
+  const controllersRef = useRef<Map>(arrayToMap(iControlFields));
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
@@ -255,7 +253,7 @@ export default <V extends FormValues = FormValues>({
 
   const validateRef = useCallback<ValidateRef<V>>(
     (validate) => (field) => {
-      if (field?.name && !controlledFieldsRef.current[field.name])
+      if (field?.name && !controllersRef.current[field.name])
         fieldValidatorsRef.current[field.name] = validate;
     },
     []
@@ -583,7 +581,7 @@ export default <V extends FormValues = FormValues>({
 
       const touched = Object.keys({
         ...fieldsRef.current,
-        ...controlledFieldsRef.current,
+        ...controllersRef.current,
       }).reduce((acc: Map, key) => {
         acc = set(acc, key, true);
         return acc;
@@ -656,7 +654,7 @@ export default <V extends FormValues = FormValues>({
         return {};
       }
 
-      controlledFieldsRef.current[name] = true;
+      controllersRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
       if (!isUndefined(defaultValue)) setDefaultValue(name, defaultValue);
 
@@ -704,7 +702,7 @@ export default <V extends FormValues = FormValues>({
       return;
     }
 
-    fieldsRef.current = getFields(formRef.current, controlledFieldsRef.current);
+    fieldsRef.current = getFields(formRef.current, controllersRef.current);
     setAllNodesOrStateValue(initialStateRef.current.values, true);
     isInitRef.current = false;
   }, [setAllNodesOrStateValue]);
@@ -758,7 +756,7 @@ export default <V extends FormValues = FormValues>({
 
       Object.keys({
         ...fieldsRef.current,
-        ...controlledFieldsRef.current,
+        ...controllersRef.current,
       }).forEach((name) => {
         if (fields[name]) return;
 
@@ -777,10 +775,10 @@ export default <V extends FormValues = FormValues>({
 
         delete fieldValidatorsRef.current[name];
         delete prevBuiltInErrorsRef.current[name];
-        delete controlledFieldsRef.current[name];
+        delete controllersRef.current[name];
       });
 
-      Object.keys(controlledFieldsRef.current).forEach(
+      Object.keys(controllersRef.current).forEach(
         (name) => delete fields[name]
       );
 
