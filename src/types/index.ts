@@ -184,7 +184,7 @@ export interface Config<V> {
   validate?: FormValidator<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
-  iControlledFields?: string[];
+  iControlFields?: string[];
   onReset?: OnReset<V>;
   onSubmit?: OnSubmit<V>;
   onError?: OnError<V>;

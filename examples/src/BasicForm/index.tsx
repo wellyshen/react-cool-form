@@ -77,7 +77,7 @@ export default (): JSX.Element => {
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    // iControlledFields: ["text.nest", "number"],
+    // iControlFields: ["text.nest", "number"],
     // validate: async (values) => {
     //   let errors: any = { text: { nest: "" } };
 
