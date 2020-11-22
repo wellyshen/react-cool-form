@@ -1,5 +1,17 @@
 # react-cool-form
 
+## 0.0.35
+
+### Patch Changes
+
+- [`9134efa`](https://github.com/wellyshen/react-cool-form/commit/9134efa42c2444874f1e24f2efc80e38906fb76f) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update the example section
+
+* [`704e67c`](https://github.com/wellyshen/react-cool-form/commit/704e67cb22c70081e4b47a7ccacd2d80a8689b10) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update example
+
+- [`72c3aaa`](https://github.com/wellyshen/react-cool-form/commit/72c3aaa08cba5fb130f56dccdd72c6f55491f051) [#129](https://github.com/wellyshen/react-cool-form/pull/129) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): remove setFieldTouchedMaybeValidate()
+
+* [`428c80b`](https://github.com/wellyshen/react-cool-form/commit/428c80baa3b917c4bdf8b12d30e9892c56cbd169) [#131](https://github.com/wellyshen/react-cool-form/pull/131) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): cache previous built-in errors for better DX
+
 ## 0.0.34
 
 ### Patch Changes
