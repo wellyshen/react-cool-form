@@ -26,7 +26,7 @@ To use `react-cool-form`, you must use `react@16.8.0` or greater which includes 
 
 You can install this package via [npm](https://www.npmjs.com/package/react-cool-form).
 
-```bash
+```sh
 $ yarn add react-cool-form
 # or
 $ npm install --save react-cool-form
@@ -36,7 +36,7 @@ Here's the basic example of how does it works, I'll provide the full documentati
 
 [![Edit useForm - basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/react-cool-form-basic-gb0dj?fontsize=14&hidenavigation=1&theme=dark)
 
-```javascript
+```js
 import { useForm } from "react-cool-form";
 
 const defaultValues = {
@@ -78,6 +78,37 @@ const App = () => {
     </form>
   );
 };
+```
+
+The form state of the above example will look something like this:
+
+```json
+{
+  "values": {
+    "name": "Welly",
+    "email": "hivoid19@gmail.com",
+    "password": "12345"
+  },
+  "touched": {
+    "name": true,
+    "email": true,
+    "password": true
+  },
+  "isValidating": false,
+  "isValid": false,
+  "errors": {
+    "password": "Please lengthen this text to 8 characters or more"
+  },
+  "isDirty": true,
+  "dirtyFields": {
+    "name": true,
+    "email": true,
+    "password": true
+  },
+  "isSubmitting": false,
+  "isSubmitted": false,
+  "submitCount": 1
+}
 ```
 
 Super easy right? The above example is just the tip of the iceberg. `react-cool-form` is a lightweight and powerful form library, you can visit the [type definition](https://github.com/wellyshen/react-cool-form/blob/master/src/types/react-cool-form.d.ts) to understand how it rocks 🤘🏻.
