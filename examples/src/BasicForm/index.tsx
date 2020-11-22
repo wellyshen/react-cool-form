@@ -36,7 +36,7 @@ const defaultValues = {
   controller2: "new test",
   dynamicText1: "new test",
   dynamicText2: "new test",
-  password: "new test",
+  password: "",
   number: 5,
   range: 0,
   checkbox: true,
@@ -78,39 +78,39 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     // ignoreFields: ["text.nest", "number"],
-    validate: async (values) => {
-      let errors: any = { text: { nest: "" } };
+    // validate: async (values) => {
+    //   let errors: any = { text: { nest: "" } };
 
-      // fib(40);
+    //   // fib(40);
 
-      // eslint-disable-next-line
-      await new Promise((resolve) => {
-        setTimeout(resolve, 3000);
-      });
+    //   // eslint-disable-next-line
+    //   await new Promise((resolve) => {
+    //     setTimeout(resolve, 3000);
+    //   });
 
-      // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
-      if (values.text.nest.length <= 5) {
-        errors.text.nest = "Form error";
-      } else {
-        errors = {};
-      }
-      // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
+    //   // if (text.nest.length <= 3) set(errors, "text.nest", "Form error");
+    //   if (values.text.nest.length <= 5) {
+    //     errors.text.nest = "Form error";
+    //   } else {
+    //     errors = {};
+    //   }
+    //   // if (hiddenText.length <= 3) errors.hiddenText = "Form error";
 
-      // throw new Error("Fake error");
-      return errors;
+    //   // throw new Error("Fake error");
+    //   return errors;
 
-      /* try {
-        await schema.validate(values, { abortEarly: false });
-      } catch (error) {
-        const formErrors = {};
+    //   /* try {
+    //     await schema.validate(values, { abortEarly: false });
+    //   } catch (error) {
+    //     const formErrors = {};
 
-        error.inner.forEach(({ path, message }: any) =>
-          set(formErrors, path, message)
-        );
+    //     error.inner.forEach(({ path, message }: any) =>
+    //       set(formErrors, path, message)
+    //     );
 
-        return formErrors;
-      } */
-    },
+    //     return formErrors;
+    //   } */
+    // },
     onReset: (values, options, e) =>
       console.log("LOG ===> onReset: ", values, options, e),
     onSubmit: async (values, options, e) => {
@@ -136,12 +136,12 @@ export default (): JSX.Element => {
     ])
   ); */
   // console.log("LOG ===> ", getState("values.dynamicText1"));
-  console.log(
+  /* console.log(
     "LOG ===> formState: ",
     getState({
       // values: "values",
       // touched: "touched",
-      errors: "errors",
+      // errors: "errors",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
@@ -150,7 +150,8 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  );
+  ); */
+  const [errors, touched] = getState(["errors", "touched"]);
 
   useEffect(() => {
     // validateField("text.nest");
@@ -225,10 +226,11 @@ export default (): JSX.Element => {
             // await new Promise((resolve) => setTimeout(resolve, 1000));
             return value.length <= 5 ? "Field error" : "";
           })} */
-          // required
+          required
           // data-rcf-ignore
           // defaultValue="test"
         />
+        {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>}
         <Input
           label="Controller 1:"
           {...controller("controller1", {
@@ -253,18 +255,16 @@ export default (): JSX.Element => {
           // required
           defaultValue={defaultValues.controller2}
         />
-        {show1 && (
-          <div>
-            <Input
-              label="Dynamic Text 1:"
-              name="dynamicText1"
-              ref={validate(async (value) => {
-                return value.length <= 5 ? "Field error" : "";
-              })}
-              defaultValue="test"
-            />
-          </div>
-        )}
+        <div>
+          <Input
+            label="Dynamic Text 1:"
+            name="dynamicText1"
+            ref={validate(async (value) => {
+              return value.length <= 5 ? "Field error" : "";
+            })}
+            defaultValue="test"
+          />
+        </div>
         <div>
           <Input
             label="Dynamic Text 2:"
@@ -275,12 +275,17 @@ export default (): JSX.Element => {
             defaultValue="test"
           />
         </div>
-        <Input
-          label="Password:"
-          type="password"
-          name="password"
-          // defaultValue="test"
-        />
+        {show1 && (
+          <Input
+            label="Password:"
+            type="password"
+            name="password"
+            required
+            minLength={5}
+            // defaultValue="test"
+          />
+        )}
+        {touched.password && errors.password && <p>{errors.password}</p>}
         <Input
           label="Number:"
           type="number"
