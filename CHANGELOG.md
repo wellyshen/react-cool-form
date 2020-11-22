@@ -1,5 +1,17 @@
 # react-cool-form
 
+## 0.0.37
+
+### Patch Changes
+
+- [`ccb2ef9`](https://github.com/wellyshen/react-cool-form/commit/ccb2ef96f94e99e44c19bc9c95af266443ffa4c5) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): refine submit()
+
+* [`0ed35f0`](https://github.com/wellyshen/react-cool-form/commit/0ed35f0f770ce2eff703e392b3049268a4b8b581) [#137](https://github.com/wellyshen/react-cool-form/pull/137) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): add excludeFields config
+
+- [`6f034af`](https://github.com/wellyshen/react-cool-form/commit/6f034afd65fcd561ba9e1dbe59c60b7c8e4133df) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(package.json): update example
+
+* [`130e476`](https://github.com/wellyshen/react-cool-form/commit/130e4769a1a8dd4e4dee4d075801fbf0e02dfb2b) [#136](https://github.com/wellyshen/react-cool-form/pull/136) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): change iControlledFields config to iControlFields
+
 ## 0.0.36
 
 ### Patch Changes
