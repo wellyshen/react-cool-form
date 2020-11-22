@@ -22,7 +22,7 @@ React hooks for forms state, validation, and performance.
 
 ## Getting Started
 
-To use `react-cool-form`, you must use react@16.8.0 or greater which includes hooks.
+To use `react-cool-form`, you must use `react@16.8.0` or greater which includes hooks.
 
 You can install this package via [npm](https://www.npmjs.com/package/react-cool-form).
 
