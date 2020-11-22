@@ -1,7 +1,7 @@
 import { FocusEvent, MutableRefObject, RefObject, SyntheticEvent } from "react";
 
 // Common
-export type UsedRef = Record<string, boolean>;
+export type Map = Record<string, boolean>;
 
 // State
 type DeepProps<V, T = any> = {
@@ -184,7 +184,7 @@ export interface Config<V> {
   validate?: FormValidator<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
-  ignoreFields?: string[];
+  iControlledFields?: string[];
   onReset?: OnReset<V>;
   onSubmit?: OnSubmit<V>;
   onError?: OnError<V>;

@@ -166,7 +166,7 @@ declare module "react-cool-form" {
     validate?: FormValidator<V>;
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
-    ignoreFields?: string[];
+    iControlledFields?: string[];
     onReset?: OnReset<V>;
     onSubmit?: OnSubmit<V>;
     onError?: OnError<V>;
