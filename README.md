@@ -67,8 +67,8 @@ const App = () => {
       <input name="password" type="password" required minLength={8} />
       {touched.password && errors.password && <p>{errors.password}</p>}
 
-      <input type="reset" />
-      <input type="submit" />
+      <button type="reset">RESET</button>
+      <button type="submit">SUBMIT</button>
     </form>
   );
 };
