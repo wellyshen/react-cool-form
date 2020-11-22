@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.34
+
+### Patch Changes
+
+- [`40c5e05`](https://github.com/wellyshen/react-cool-form/commit/40c5e057ebde404a00794b36045f7cc823413972) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): enhance the readability of setFieldTouchedMaybeValidate()
+
+* [`9b451a4`](https://github.com/wellyshen/react-cool-form/commit/9b451a49e1cb913135818b749c88440441fd4990) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update example
+
 ## 0.0.33
 
 ### Patch Changes
