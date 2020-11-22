@@ -118,6 +118,7 @@ export default <V extends FormValues = FormValues>({
   const onErrorRef = useLatest(onError);
   const ignoreFieldsRef = useRef<UsedRef>(arrayToMap(ignoreFields));
   const changedFieldRef = useRef<string>();
+  const prevBuiltInErrorsRef = useRef<Record<string, string>>({});
   const initialStateRef = useRef<FormState<V>>({
     values: defaultValues || {},
     touched: {},
@@ -313,12 +314,19 @@ export default <V extends FormValues = FormValues>({
     [setStateRef, stateRef]
   );
 
-  const runBuiltInValidation = useCallback(
-    (name: string) =>
-      fieldsRef.current[name] &&
-      fieldsRef.current[name].field.validationMessage,
-    []
-  );
+  const runBuiltInValidation = useCallback((name: string) => {
+    if (!fieldsRef.current[name]) return undefined;
+
+    let error = fieldsRef.current[name].field.validationMessage;
+    error =
+      name === changedFieldRef.current
+        ? error
+        : error || prevBuiltInErrorsRef.current[name];
+
+    prevBuiltInErrorsRef.current[name] = error;
+
+    return error;
+  }, []);
 
   const runAllBuiltInValidation = useCallback(
     () =>
@@ -576,19 +584,24 @@ export default <V extends FormValues = FormValues>({
       setStateRef("isSubmitting", true);
 
       try {
-        const errors = await validateForm();
+        let { errors } = stateRef.current;
         const options = { ...getOptions(), reset };
 
-        if (isEmptyObject(errors)) {
-          if (onSubmitRef.current)
-            await onSubmitRef.current(stateRef.current.values, options, e);
-
-          return { values: stateRef.current.values };
+        if (!isEmptyObject(errors)) {
+          if (onErrorRef.current) onErrorRef.current(errors, options, e);
+          return { errors };
         }
 
-        if (onErrorRef.current) onErrorRef.current(errors, options, e);
+        errors = await validateForm();
 
-        return { errors };
+        if (!isEmptyObject(errors)) {
+          if (onErrorRef.current) onErrorRef.current(errors, options, e);
+          return { errors };
+        }
+
+        if (onSubmitRef.current)
+          await onSubmitRef.current(stateRef.current.values, options, e);
+        return { values: stateRef.current.values };
       } catch (exception) {
         warn(`💡 react-cool-form > submit: `, exception);
         throw exception;
@@ -757,6 +770,7 @@ export default <V extends FormValues = FormValues>({
           );
 
           delete fieldValidatorsRef.current[name];
+          delete prevBuiltInErrorsRef.current[name];
           delete ignoreFieldsRef.current[name];
         }
       );
