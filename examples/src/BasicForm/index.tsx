@@ -140,16 +140,16 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      values: "values",
+      // values: "values",
       // errors: "errors",
       // touched: "touched",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
       // isValid: "isValid",
-      // isSubmitting: "isSubmitting",
-      // isSubmitted: "isSubmitted",
-      // submitCount: "submitCount",
+      isSubmitting: "isSubmitting",
+      isSubmitted: "isSubmitted",
+      submitCount: "submitCount",
     })
   );
   // const [errors, touched] = getState(["errors", "touched"]);

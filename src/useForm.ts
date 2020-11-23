@@ -626,10 +626,13 @@ export default <V extends FormValues = FormValues>({
 
         if (!isEmptyObject(errors)) {
           onErrorRef.current(errors, options, e);
+
           return { errors };
         }
 
         await onSubmitRef.current(stateRef.current.values, options, e);
+        setStateRef("isSubmitted", true);
+
         return { values: stateRef.current.values };
       } catch (exception) {
         warn(`💡 react-cool-form > submit: `, exception);
