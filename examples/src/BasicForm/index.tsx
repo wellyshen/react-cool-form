@@ -78,7 +78,7 @@ export default (): JSX.Element => {
     // validateOnChange: false,
     // validateOnBlur: false,
     // iControlFields: ["text.nest", "number"],
-    excludeFields: ["text.nest", "controller1", "controller2"],
+    // excludeFields: ["text.nest", "controller1", "controller2"],
     // validate: async (values) => {
     //   let errors: any = { text: { nest: "" } };
 
@@ -137,12 +137,12 @@ export default (): JSX.Element => {
     ])
   ); */
   // console.log("LOG ===> ", getState("values.dynamicText1"));
-  console.log(
+  /* console.log(
     "LOG ===> formState: ",
     getState({
-      values: "values",
-      touched: "touched",
-      errors: "errors",
+      // values: "values",
+      // touched: "touched",
+      // errors: "errors",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
@@ -151,8 +151,8 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  );
-  // const [errors, touched] = getState(["errors", "touched"]);
+  ); */
+  const [errors, touched] = getState(["errors", "touched"]);
 
   useEffect(() => {
     // validateField("text.nest");
@@ -195,7 +195,7 @@ export default (): JSX.Element => {
   };
 
   const handleClearErrorsClick = (): void => {
-    setFieldError("number");
+    setFieldError("password");
   };
 
   const handleValidateClick = (): void => {
@@ -223,27 +223,24 @@ export default (): JSX.Element => {
           <Input
             label="Text:"
             name="text.nest"
-            ref={validate(async (value) => {
+            /* ref={validate(async (value) => {
               // eslint-disable-next-line
               // await new Promise((resolve) => setTimeout(resolve, 1000));
               return value.length <= 5 ? "Field error" : "";
-            })}
+            })} */
             required
             // data-icf
             // defaultValue="test"
           />
         )}
-        {/* {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>} */}
+        {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>}
         <Input
           label="Controller 1:"
           {...controller("controller1", {
             defaultValue: "test",
-            validate: async (val) => {
+            /* validate: async (val) => {
               return val.length <= 5 ? "Field error" : "";
-            },
-          })}
-          ref={validate((value) => {
-            return value.length <= 5 ? "Field error" : "";
+            }, */
           })}
           // defaultChecked
         />
@@ -265,9 +262,9 @@ export default (): JSX.Element => {
           <Input
             label="Dynamic Text 1:"
             name="dynamicText1"
-            ref={validate((value) => {
+            /* ref={validate((value) => {
               return value.length <= 5 ? "Field error" : "";
-            })}
+            })} */
             defaultValue="test"
           />
         </div>
@@ -275,9 +272,9 @@ export default (): JSX.Element => {
           <Input
             label="Dynamic Text 2:"
             name="dynamicText2"
-            ref={validate((value) => {
+            /* ref={validate((value) => {
               return value.length <= 5 ? "Field error" : "";
-            })}
+            })} */
             defaultValue="test"
           />
         </div>
@@ -286,19 +283,22 @@ export default (): JSX.Element => {
             label="Password:"
             type="password"
             name="password"
-            required
-            minLength={5}
+            ref={validate((value) => {
+              return value.length <= 5 ? "Field error" : "";
+            })}
+            // required
+            // minLength={5}
             // defaultValue="test"
           />
         )}
-        {/* {touched.password && errors.password && <p>{errors.password}</p>} */}
+        {touched.password && errors.password && <p>{errors.password}</p>}
         <Input
           label="Number:"
           type="number"
           name="number"
-          ref={validate((value) => {
+          /* ref={validate((value) => {
             return value <= 5 ? "Field error" : "";
-          })}
+          })} */
           // defaultValue=""
         />
         <Input label="Range:" type="range" name="range" />
