@@ -1,5 +1,21 @@
 # react-cool-form
 
+## 0.0.39
+
+### Patch Changes
+
+- [`cf06541`](https://github.com/wellyshen/react-cool-form/commit/cf06541eb192f6bb66d0b9b4989f90406f219ce3) [#142](https://github.com/wellyshen/react-cool-form/pull/142) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): correct the logic between controlled and un-controlled fields
+
+* [`3e3ef26`](https://github.com/wellyshen/react-cool-form/commit/3e3ef26624289b8065ca59bb33b3cdf255f8f652) [#143](https://github.com/wellyshen/react-cool-form/pull/143) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): get the deep intial value as the default value of field
+
+- [`7399a99`](https://github.com/wellyshen/react-cool-form/commit/7399a9920eaf3938a513ba67f4978d97b47c4f87) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor: use default value for events
+
+* [`8c8209d`](https://github.com/wellyshen/react-cool-form/commit/8c8209de9abd1234bca8458d655ad537232ba30f) [#141](https://github.com/wellyshen/react-cool-form/pull/141) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): use validate field instead of validate form for single updated field
+
+- [`401f7ec`](https://github.com/wellyshen/react-cool-form/commit/401f7ec539527d7a28c63ada663b9dba28ca7658) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): remove the logic of checking exist errors on submit
+
+* [`1d3c5e8`](https://github.com/wellyshen/react-cool-form/commit/1d3c5e8618f5f5eb72c95c1e99838fff33d0893d) [#139](https://github.com/wellyshen/react-cool-form/pull/139) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useState): debug event not be sent correctly
+
 ## 0.0.38
 
 ### Patch Changes
