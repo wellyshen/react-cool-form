@@ -525,9 +525,9 @@ export default <V extends FormValues = FormValues>({
       name,
       value,
       {
+        shouldTouched = true,
+        shouldDirty = true,
         shouldValidate = validateOnChange,
-        isTouched = true,
-        isDirty = true,
       } = {}
     ) => {
       value = isFunction(value)
@@ -537,8 +537,8 @@ export default <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, value);
       setNodeValue(name, value);
 
-      if (isTouched) setFieldTouched(name, false);
-      if (isDirty) setFieldDirty(name);
+      if (shouldTouched) setFieldTouched(name, false);
+      if (shouldDirty) setFieldDirty(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
       changedFieldRef.current = name;
     },
