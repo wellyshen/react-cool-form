@@ -13,11 +13,11 @@ import { container, form, wrapper } from "./styles";
 const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
 export interface FormValues {
-  text?: Record<string, string>;
-  controller1?: any;
+  text: Record<string, string>;
+  controller1: any;
   controller2: any;
   dynamicText1?: string;
-  dynamicText2: string;
+  dynamicText2?: string;
   password: string;
   number: number;
   range: number;
@@ -31,12 +31,12 @@ export interface FormValues {
 }
 
 const defaultValues = {
-  // text: { nest: "new test" },
+  text: { nest: "" },
   controller1: "new test",
   controller2: "new test",
-  // dynamicText1: "new test",
+  dynamicText1: "new test",
   dynamicText2: "new test",
-  password: "new test",
+  password: "",
   number: 5,
   range: 0,
   checkbox: true,
@@ -141,18 +141,18 @@ export default (): JSX.Element => {
     "LOG ===> formState: ",
     getState({
       // values: "values",
-      // errors: "errors",
+      errors: "errors",
       // touched: "touched",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
       // isValid: "isValid",
-      isSubmitting: "isSubmitting",
-      isSubmitted: "isSubmitted",
-      submitCount: "submitCount",
+      // isSubmitting: "isSubmitting",
+      // isSubmitted: "isSubmitted",
+      // submitCount: "submitCount",
     })
   );
-  // const [errors, touched] = getState(["errors", "touched"]);
+  const [errors, touched] = getState(["errors", "touched"]);
 
   useEffect(() => {
     // validateField("text.nest");
@@ -233,7 +233,7 @@ export default (): JSX.Element => {
             defaultValue="test"
           />
         )}
-        {/* {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>} */}
+        {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>}
         {show2 && (
           <Input
             label="Controller 1:"
@@ -280,10 +280,10 @@ export default (): JSX.Element => {
           type="password"
           name="password"
           required
-          minLength={8}
+          minLength={5}
           // defaultValue="test"
         />
-        {/* {touched.password && errors.password && <p>{errors.password}</p>} */}
+        {touched.password && errors.password && <p>{errors.password}</p>}
         <Input label="Number:" type="number" name="number" />
         <Input label="Range:" type="range" name="range" />
         <Input

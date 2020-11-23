@@ -413,7 +413,13 @@ export default <V extends FormValues = FormValues>({
           (await runFieldValidation(name)) ||
           runBuiltInValidation(name);
 
-        if (error) setStateRef(`errors.${name}`, error);
+        if (error) {
+          setStateRef(`errors.${name}`, error);
+        } else {
+          setStateRef("errors", unset(stateRef.current.errors, name, true), {
+            fieldPath: `errors.${name}`,
+          });
+        }
         setStateRef("isValidating", false);
 
         return error;
@@ -421,7 +427,13 @@ export default <V extends FormValues = FormValues>({
         return exception;
       }
     },
-    [runBuiltInValidation, runFieldValidation, runFormValidation, setStateRef]
+    [
+      runBuiltInValidation,
+      runFieldValidation,
+      runFormValidation,
+      setStateRef,
+      stateRef,
+    ]
   );
 
   const validateFieldWithLowPriority = useCallback<ValidateField<V>>(
