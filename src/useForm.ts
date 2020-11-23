@@ -525,9 +525,9 @@ export default <V extends FormValues = FormValues>({
       name,
       value,
       {
+        shouldValidate = validateOnChange,
         shouldTouched = true,
         shouldDirty = true,
-        shouldValidate = validateOnChange,
       } = {}
     ) => {
       value = isFunction(value)
@@ -703,7 +703,7 @@ export default <V extends FormValues = FormValues>({
           ) {
             value = handleFieldChange(parsedE.target);
           } else {
-            setFieldValue(name, parsedE);
+            setFieldValue(name, parsedE, { shouldTouched: false });
           }
 
           if (onChange) onChange(e, value);
