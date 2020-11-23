@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.41
+
+### Patch Changes
+
+- [`57f5fc9`](https://github.com/wellyshen/react-cool-form/commit/57f5fc904aa016a1c7d1c2a7157a7226ea163f62) [#148](https://github.com/wellyshen/react-cool-form/pull/148) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): avoid duplicated set field touched for controller
+
+* [`9a060e0`](https://github.com/wellyshen/react-cool-form/commit/9a060e0faff59c320c147c6bf396c6c51176f045) [#146](https://github.com/wellyshen/react-cool-form/pull/146) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): consist options name of the `setFieldValue` method
+
 ## 0.0.40
 
 ### Patch Changes
