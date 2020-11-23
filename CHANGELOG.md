@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.42
+
+### Patch Changes
+
+- [`0df48ee`](https://github.com/wellyshen/react-cool-form/commit/0df48ee12ac086a33e5b217034b07628a21b2f21) [#149](https://github.com/wellyshen/react-cool-form/pull/149) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): built-in errors not be cleaned
+
 ## 0.0.41
 
 ### Patch Changes
