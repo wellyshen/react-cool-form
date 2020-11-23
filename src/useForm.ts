@@ -119,9 +119,9 @@ export default <V extends FormValues = FormValues>({
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
-  const onResetRef = useLatest(onReset);
-  const onSubmitRef = useLatest(onSubmit);
-  const onErrorRef = useLatest(onError);
+  const onResetRef = useLatest(onReset || (() => undefined));
+  const onSubmitRef = useLatest(onSubmit || (() => undefined));
+  const onErrorRef = useLatest(onError || (() => undefined));
   const prevBuiltInErrorsRef = useRef<Record<string, string>>({});
   const initialStateRef = useRef<FormState<V>>({
     values: defaultValues || {},
@@ -574,8 +574,7 @@ export default <V extends FormValues = FormValues>({
       });
 
       setStateRef("", state);
-
-      if (onResetRef.current) onResetRef.current(state.values, getOptions(), e);
+      onResetRef.current(state.values, getOptions(), e);
     },
     [getOptions, onResetRef, setAllNodesOrStateValue, setStateRef, stateRef]
   );
@@ -601,12 +600,11 @@ export default <V extends FormValues = FormValues>({
         const options = { ...getOptions(), reset };
 
         if (!isEmptyObject(errors)) {
-          if (onErrorRef.current) onErrorRef.current(errors, options, e);
+          onErrorRef.current(errors, options, e);
           return { errors };
         }
 
-        if (onSubmitRef.current)
-          await onSubmitRef.current(stateRef.current.values, options, e);
+        await onSubmitRef.current(stateRef.current.values, options, e);
         return { values: stateRef.current.values };
       } catch (exception) {
         warn(`💡 react-cool-form > submit: `, exception);

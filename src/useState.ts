@@ -13,7 +13,7 @@ export default <V>(
   const defaultValuesRef = useRef(initialState.values);
   const stateRef = useRef(initialState);
   const usedStateRef = useRef<Map>({});
-  const onChangeRef = useLatest(onChange);
+  const onChangeRef = useLatest(onChange || (() => undefined));
 
   const setStateRef = useCallback<SetStateRef>(
     (path, value, { fieldPath, shouldUpdate = true } = {}) => {
@@ -23,8 +23,7 @@ export default <V>(
         if (!isEqual(stateRef.current, value)) {
           stateRef.current = value;
           forceUpdate();
-
-          if (onChangeRef.current) onChangeRef.current(stateRef.current);
+          onChangeRef.current(stateRef.current);
         }
 
         return;
@@ -62,8 +61,7 @@ export default <V>(
             (usedStateRef.current.isValid && isValid !== prevIsValid))
         ) {
           forceUpdate();
-
-          if (onChangeRef.current) onChangeRef.current(stateRef.current);
+          onChangeRef.current(stateRef.current);
         }
       }
     },
