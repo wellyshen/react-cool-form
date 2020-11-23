@@ -597,9 +597,7 @@ export default <V extends FormValues = FormValues>({
       setStateRef("isSubmitting", true);
 
       try {
-        const errors = !isEmptyObject(stateRef.current.errors)
-          ? stateRef.current.errors
-          : await validateForm();
+        const errors = await validateForm();
         const options = { ...getOptions(), reset };
 
         if (!isEmptyObject(errors)) {
