@@ -251,9 +251,11 @@ export default <V extends FormValues = FormValues>({
         );
 
       if (isUndefined(get(stateRef.current.values, name)))
-        setStateRef(`values.${name}`, initialStateRef.current.values[name], {
-          shouldUpdate: !isInitRef.current,
-        });
+        setStateRef(
+          `values.${name}`,
+          get(initialStateRef.current.values, name),
+          { shouldUpdate: !isInitRef.current }
+        );
     },
     [setStateRef, stateRef]
   );
