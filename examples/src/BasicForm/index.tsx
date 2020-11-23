@@ -137,12 +137,12 @@ export default (): JSX.Element => {
     ])
   ); */
   // console.log("LOG ===> ", getState("values.dynamicText1"));
-  /* console.log(
+  console.log(
     "LOG ===> formState: ",
     getState({
       // values: "values",
       // touched: "touched",
-      // errors: "errors",
+      errors: "errors",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
@@ -151,7 +151,7 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  ); */
+  );
   const [errors, touched] = getState(["errors", "touched"]);
 
   useEffect(() => {
@@ -237,11 +237,12 @@ export default (): JSX.Element => {
         <Input
           label="Controller 1:"
           {...controller("controller1", {
-            defaultValue: "test",
+            // defaultValue: "test",
             /* validate: async (val) => {
               return val.length <= 5 ? "Field error" : "";
             }, */
           })}
+          required
           // defaultChecked
         />
         <Controller

@@ -48,19 +48,21 @@ import {
 const useUniversalLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-const requestIdleCallback =
-  window.requestIdleCallback ||
-  ((callback) => {
-    const start = Date.now();
-    return setTimeout(
-      () =>
-        callback({
-          didTimeout: false,
-          timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
-        }),
-      1
-    );
-  });
+const runWithLowPriority = (callback: (args: any) => any) =>
+  (
+    window.requestIdleCallback ||
+    ((callback) => {
+      const start = Date.now();
+      return setTimeout(
+        () =>
+          callback({
+            didTimeout: false,
+            timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
+          }),
+        1
+      );
+    })
+  )(callback, { timeout: 2000 });
 
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
@@ -413,6 +415,11 @@ export default <V extends FormValues = FormValues>({
     [runBuiltInValidation, runFieldValidation, runFormValidation, setStateRef]
   );
 
+  const validateFieldWithLowPriority = useCallback<ValidateField<V>>(
+    (name) => runWithLowPriority(() => validateField(name)),
+    [validateField]
+  );
+
   const validateForm = useCallback<ValidateForm<V>>(() => {
     setStateRef("isValidating", true);
 
@@ -436,19 +443,9 @@ export default <V extends FormValues = FormValues>({
     setStateRef,
   ]);
 
-  const validateFormWithLowPriority = useCallback(
-    () => requestIdleCallback(validateForm, { timeout: 2000 }),
+  const validateFormWithLowPriority = useCallback<ValidateForm<V>>(
+    () => runWithLowPriority(validateForm),
     [validateForm]
-  );
-
-  const setFieldTouched = useCallback(
-    (name: string, shouldValidate = validateOnBlur) => {
-      setStateRef(`touched.${name}`, true);
-
-      if (shouldValidate) validateFormWithLowPriority();
-      changedFieldRef.current = undefined;
-    },
-    [setStateRef, validateFormWithLowPriority, validateOnBlur]
   );
 
   const setFieldDirty = useCallback(
@@ -464,6 +461,25 @@ export default <V extends FormValues = FormValues>({
       }
     },
     [defaultValues, setStateRef, stateRef]
+  );
+
+  const setFieldTouched = useCallback(
+    (name: string, shouldValidate = validateOnBlur) => {
+      setStateRef(`touched.${name}`, true);
+
+      if (shouldValidate) validateFieldWithLowPriority(name);
+      changedFieldRef.current = undefined;
+    },
+    [setStateRef, validateFieldWithLowPriority, validateOnBlur]
+  );
+
+  const setFieldTouchedMaybeValidate = useCallback(
+    (name) =>
+      setFieldTouched(
+        name,
+        validateOnChange ? name !== changedFieldRef.current : undefined
+      ),
+    [setFieldTouched, validateOnChange]
   );
 
   const setValues = useCallback<SetValues<V>>(
@@ -514,16 +530,16 @@ export default <V extends FormValues = FormValues>({
 
       if (isTouched) setFieldTouched(name, false);
       if (isDirty) setFieldDirty(name);
-      if (shouldValidate) validateFormWithLowPriority();
+      if (shouldValidate) validateFieldWithLowPriority(name);
       changedFieldRef.current = name;
     },
     [
-      setNodeValue,
       setFieldDirty,
       setFieldTouched,
+      setNodeValue,
       setStateRef,
       stateRef,
-      validateFormWithLowPriority,
+      validateFieldWithLowPriority,
       validateOnChange,
     ]
   );
@@ -632,7 +648,7 @@ export default <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, value);
       setFieldDirty(name);
 
-      if (validateOnChange) validateFormWithLowPriority();
+      if (validateOnChange) validateFieldWithLowPriority(name);
       changedFieldRef.current = name;
 
       return value;
@@ -641,7 +657,7 @@ export default <V extends FormValues = FormValues>({
       getNodeValue,
       setFieldDirty,
       setStateRef,
-      validateFormWithLowPriority,
+      validateFieldWithLowPriority,
       validateOnChange,
     ]
   );
@@ -680,10 +696,7 @@ export default <V extends FormValues = FormValues>({
           }
         },
         onBlur: (e) => {
-          setFieldTouched(
-            name,
-            validateOnChange ? name !== changedFieldRef.current : undefined
-          );
+          setFieldTouchedMaybeValidate(name);
           if (onBlur) onBlur(e);
         },
       };
@@ -692,9 +705,8 @@ export default <V extends FormValues = FormValues>({
       getState,
       handleFieldChange,
       setDefaultValue,
-      setFieldTouched,
+      setFieldTouchedMaybeValidate,
       setFieldValue,
-      validateOnChange,
     ]
   );
 
@@ -735,11 +747,7 @@ export default <V extends FormValues = FormValues>({
 
       const { name } = target as FieldElement;
 
-      if (fieldsRef.current[name])
-        setFieldTouched(
-          name,
-          validateOnChange ? name !== changedFieldRef.current : undefined
-        );
+      if (fieldsRef.current[name]) setFieldTouchedMaybeValidate(name);
     };
 
     const handleSubmit = (e: Event) => submit(e as any);
@@ -812,11 +820,10 @@ export default <V extends FormValues = FormValues>({
     handleFieldChange,
     reset,
     setAllNodesOrStateValue,
-    setFieldTouched,
+    setFieldTouchedMaybeValidate,
     setStateRef,
     stateRef,
     submit,
-    validateOnChange,
   ]);
 
   return {
