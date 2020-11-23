@@ -13,11 +13,11 @@ import { container, form, wrapper } from "./styles";
 const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
 export interface FormValues {
-  text: Record<string, string>;
+  text?: Record<string, string>;
   controller1?: any;
   controller2: any;
   dynamicText1?: string;
-  dynamicText2?: string;
+  dynamicText2: string;
   password: string;
   number: number;
   range: number;
@@ -31,12 +31,12 @@ export interface FormValues {
 }
 
 const defaultValues = {
-  text: { nest: "" },
+  // text: { nest: "new test" },
   controller1: "new test",
   controller2: "new test",
-  dynamicText1: "new test",
+  // dynamicText1: "new test",
   dynamicText2: "new test",
-  password: "",
+  password: "new test",
   number: 5,
   range: 0,
   checkbox: true,
@@ -59,7 +59,7 @@ const schema = Yup.object().shape({
 
 export default (): JSX.Element => {
   const [show1, setShow1] = useState(true);
-  const [show2, setShow2] = useState(false);
+  const [show2, setShow2] = useState(true);
   const {
     formRef,
     validate,
@@ -140,9 +140,9 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      // values: "values",
+      values: "values",
+      // errors: "errors",
       // touched: "touched",
-      errors: "errors",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
@@ -152,7 +152,7 @@ export default (): JSX.Element => {
       // submitCount: "submitCount",
     })
   );
-  const [errors, touched] = getState(["errors", "touched"]);
+  // const [errors, touched] = getState(["errors", "touched"]);
 
   useEffect(() => {
     // validateField("text.nest");
@@ -230,21 +230,23 @@ export default (): JSX.Element => {
             })} */
             required
             // data-icf
-            // defaultValue="test"
+            defaultValue="test"
           />
         )}
-        {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>}
-        <Input
-          label="Controller 1:"
-          {...controller("controller1", {
-            // defaultValue: "test",
-            /* validate: async (val) => {
+        {/* {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>} */}
+        {show2 && (
+          <Input
+            label="Controller 1:"
+            {...controller("controller1", {
+              defaultValue: "test",
+              /* validate: async (val) => {
               return val.length <= 5 ? "Field error" : "";
             }, */
-          })}
-          required
-          // defaultChecked
-        />
+            })}
+            required
+            // defaultChecked
+          />
+        )}
         <Controller
           label="Controller 2:"
           name="controller2"
@@ -263,9 +265,6 @@ export default (): JSX.Element => {
           <Input
             label="Dynamic Text 1:"
             name="dynamicText1"
-            /* ref={validate((value) => {
-              return value.length <= 5 ? "Field error" : "";
-            })} */
             defaultValue="test"
           />
         </div>
@@ -273,35 +272,19 @@ export default (): JSX.Element => {
           <Input
             label="Dynamic Text 2:"
             name="dynamicText2"
-            /* ref={validate((value) => {
-              return value.length <= 5 ? "Field error" : "";
-            })} */
             defaultValue="test"
           />
         </div>
-        {show1 && (
-          <Input
-            label="Password:"
-            type="password"
-            name="password"
-            /* ref={validate((value) => {
-              return value.length <= 5 ? "Field error" : "";
-            })} */
-            required
-            minLength={8}
-            // defaultValue="test"
-          />
-        )}
-        {touched.password && errors.password && <p>{errors.password}</p>}
         <Input
-          label="Number:"
-          type="number"
-          name="number"
-          /* ref={validate((value) => {
-            return value <= 5 ? "Field error" : "";
-          })} */
-          // defaultValue=""
+          label="Password:"
+          type="password"
+          name="password"
+          required
+          minLength={8}
+          // defaultValue="test"
         />
+        {/* {touched.password && errors.password && <p>{errors.password}</p>} */}
+        <Input label="Number:" type="number" name="number" />
         <Input label="Range:" type="range" name="range" />
         <Input
           label="Checkbox:"
