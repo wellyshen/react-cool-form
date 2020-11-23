@@ -23,6 +23,8 @@ export default <V>(
         if (!isEqual(stateRef.current, value)) {
           stateRef.current = value;
           forceUpdate();
+
+          if (onChangeRef.current) onChangeRef.current(stateRef.current);
         }
 
         return;
@@ -58,10 +60,11 @@ export default <V>(
           ) ||
             (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
             (usedStateRef.current.isValid && isValid !== prevIsValid))
-        )
+        ) {
           forceUpdate();
 
-        if (onChangeRef.current) onChangeRef.current(stateRef.current);
+          if (onChangeRef.current) onChangeRef.current(stateRef.current);
+        }
       }
     },
     [onChangeRef]
