@@ -67,36 +67,6 @@ const runWithLowPriority = (callback: (args: any) => any) =>
 const isFieldElement = ({ tagName }: HTMLElement) =>
   /INPUT|TEXTAREA|SELECT/.test(tagName);
 
-const isButton = ({ type }: FieldElement) => /image|submit|reset/.test(type);
-
-const getFields = (form: HTMLFormElement, ignoreFields?: Map) =>
-  Array.from(form.querySelectorAll("input,textarea,select"))
-    .filter((element) => {
-      const field = element as FieldElement;
-      const { name, dataset } = field;
-
-      if (isButton(field)) return false;
-      if (!name) {
-        warn('💡 react-cool-form: Field is missing "name" attribute.');
-        return false;
-      }
-
-      return ignoreFields ? !dataset.icf && !ignoreFields[name] : !dataset.icf;
-    })
-    .reduce((acc: Record<string, any>, cur) => {
-      const field = cur as FieldElement;
-      const { name } = field;
-
-      acc[name] = { ...acc[name], field: cur };
-
-      if (isCheckboxField(field) || isRadioField(field))
-        acc[name].options = acc[name].options
-          ? [...acc[name].options, cur]
-          : [cur];
-
-      return acc;
-    }, {});
-
 export default <V extends FormValues = FormValues>({
   defaultValues,
   validate,
@@ -114,10 +84,6 @@ export default <V extends FormValues = FormValues>({
   const fieldsRef = useRef<Fields>({});
   const controllersRef = useRef<Map>(arrayToMap(iControlFields));
   const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
-  const ignoreFieldsRef = useRef({
-    ...controllersRef.current,
-    ...excludeFieldsRef.current,
-  });
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
@@ -142,9 +108,46 @@ export default <V extends FormValues = FormValues>({
     debug
   );
 
+  const getFields = useCallback(
+    (form: HTMLFormElement) =>
+      Array.from(form.querySelectorAll("input,textarea,select"))
+        .filter((element) => {
+          const field = element as FieldElement;
+          const { type, name, dataset } = field;
+
+          if (/image|submit|reset/.test(type)) return false;
+          if (!name) {
+            warn('💡 react-cool-form: Field is missing "name" attribute.');
+            return false;
+          }
+
+          return excludeFieldsRef.current
+            ? !dataset.icf && !excludeFieldsRef.current[name]
+            : !dataset.icf;
+        })
+        .reduce((acc: Record<string, any>, cur) => {
+          const field = cur as FieldElement;
+          const { name } = field;
+
+          acc[name] = { ...acc[name], field: cur };
+
+          if (isCheckboxField(field) || isRadioField(field))
+            acc[name].options = acc[name].options
+              ? [...acc[name].options, cur]
+              : [cur];
+
+          return acc;
+        }, {}),
+    []
+  );
+
   const validateRef = useCallback<ValidateRef<V>>(
     (validate) => (field) => {
-      if (field?.name && !ignoreFieldsRef.current[field.name])
+      if (
+        field?.name &&
+        !controllersRef.current[field.name] &&
+        !excludeFieldsRef.current[field.name]
+      )
         fieldValidatorsRef.current[field.name] = validate;
     },
     []
@@ -205,7 +208,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setNodeValue = useCallback((name: string, value: any) => {
-    if (!fieldsRef.current[name]) return;
+    if (!fieldsRef.current[name] || controllersRef.current[name]) return;
 
     const { field, options } = fieldsRef.current[name];
 
@@ -258,11 +261,15 @@ export default <V extends FormValues = FormValues>({
   const setAllNodesOrStateValue = useCallback(
     (values: V, checkDefaultValue = false) =>
       Object.values(fieldsRef.current).forEach(({ field, options }) => {
-        const value = get(values, field.name);
+        const { name } = field;
 
-        if (!isUndefined(value)) setNodeValue(field.name, value);
+        if (controllersRef.current[name]) return;
+
+        const value = get(values, name);
+
+        if (!isUndefined(value)) setNodeValue(name, value);
         if (checkDefaultValue)
-          setDefaultValue(field.name, getNodeValue(field, options));
+          setDefaultValue(name, getNodeValue(field, options));
       }),
     [getNodeValue, setNodeValue, setDefaultValue]
   );
@@ -683,17 +690,18 @@ export default <V extends FormValues = FormValues>({
         value: !isUndefined(value) ? value : getState(`values.${name}`) ?? "",
         onChange: (e) => {
           const parsedE = parser ? parser(e) : e;
+          let value;
 
           if (
             parsedE.nativeEvent instanceof Event &&
             isFieldElement(parsedE.target)
           ) {
-            const value = handleFieldChange(parsedE.target);
-            if (onChange) onChange(e, value);
+            value = handleFieldChange(parsedE.target);
           } else {
             setFieldValue(name, parsedE);
-            if (onChange) onChange(e);
           }
+
+          if (onChange) onChange(e, value);
         },
         onBlur: (e) => {
           setFieldTouchedMaybeValidate(name);
@@ -718,10 +726,10 @@ export default <V extends FormValues = FormValues>({
       return;
     }
 
-    fieldsRef.current = getFields(formRef.current, ignoreFieldsRef.current);
+    fieldsRef.current = getFields(formRef.current);
     setAllNodesOrStateValue(initialStateRef.current.values, true);
     isInitRef.current = false;
-  }, [setAllNodesOrStateValue]);
+  }, [getFields, setAllNodesOrStateValue]);
 
   useEffect(() => {
     if (!formRef.current) return () => null;
@@ -735,19 +743,17 @@ export default <V extends FormValues = FormValues>({
         return;
       }
 
-      if (fieldsRef.current[name]) handleFieldChange(field);
+      if (fieldsRef.current[name] && !controllersRef.current[name])
+        handleFieldChange(field);
     };
 
     const handleBlur = ({ target }: Event) => {
-      if (
-        !isFieldElement(target as HTMLElement) ||
-        isButton(target as HTMLInputElement)
-      )
-        return;
+      if (!isFieldElement(target as HTMLElement)) return;
 
       const { name } = target as FieldElement;
 
-      if (fieldsRef.current[name]) setFieldTouchedMaybeValidate(name);
+      if (fieldsRef.current[name] && !controllersRef.current[name])
+        setFieldTouchedMaybeValidate(name);
     };
 
     const handleSubmit = (e: Event) => submit(e as any);
@@ -766,10 +772,7 @@ export default <V extends FormValues = FormValues>({
       const fields = getFields(form);
       let { values } = stateRef.current;
 
-      Object.keys({
-        ...fieldsRef.current,
-        ...controllersRef.current,
-      }).forEach((name) => {
+      Object.keys(fieldsRef.current).forEach((name) => {
         if (fields[name]) return;
 
         values = unset(values, name, true);
@@ -789,10 +792,6 @@ export default <V extends FormValues = FormValues>({
         delete prevBuiltInErrorsRef.current[name];
         delete controllersRef.current[name];
       });
-
-      Object.keys(ignoreFieldsRef.current).forEach(
-        (name) => delete fields[name]
-      );
 
       Object.keys(fields).forEach((name) => {
         if (!fieldsRef.current[name] && initialStateRef.current.values[name])
@@ -817,6 +816,7 @@ export default <V extends FormValues = FormValues>({
       observer.disconnect();
     };
   }, [
+    getFields,
     handleFieldChange,
     reset,
     setAllNodesOrStateValue,
