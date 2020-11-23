@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 /** @jsxFrag */
 
-import React, { memo, forwardRef } from "react";
+import { memo, forwardRef } from "react";
 
 import { label as labelStyle } from "./styles";
 
