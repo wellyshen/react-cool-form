@@ -185,7 +185,7 @@ export default (): JSX.Element => {
     // setFieldValue("checkboxGroup", ["value-2"]);
     // setFieldValue("radio", "value-2");
     // setFieldValue("multiSelect.nest", ["value-2"]);
-    setFieldValue("image", "abc");
+    setFieldValue("password", "12345678");
   };
 
   const handleSetErrorsClick = (): void => {
@@ -283,11 +283,11 @@ export default (): JSX.Element => {
             label="Password:"
             type="password"
             name="password"
-            ref={validate((value) => {
+            /* ref={validate((value) => {
               return value.length <= 5 ? "Field error" : "";
-            })}
-            // required
-            // minLength={5}
+            })} */
+            required
+            minLength={8}
             // defaultValue="test"
           />
         )}
