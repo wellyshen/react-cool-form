@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.40
+
+### Patch Changes
+
+- [`701b8f9`](https://github.com/wellyshen/react-cool-form/commit/701b8f95a2719dc07f59351a1ab4a042c2527708) [#144](https://github.com/wellyshen/react-cool-form/pull/144) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): turn isSubmitted to `true` once submit is successful
+
 ## 0.0.39
 
 ### Patch Changes
