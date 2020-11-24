@@ -14,7 +14,7 @@ const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
 export interface FormValues {
   text: Record<string, string>;
-  controller1?: any;
+  controller1: any;
   controller2: any;
   dynamicText1?: string;
   dynamicText2?: string;
@@ -32,7 +32,7 @@ export interface FormValues {
 
 const defaultValues = {
   text: { nest: "new test" },
-  // controller1: "new test",
+  controller1: "new test",
   controller2: "new test",
   dynamicText1: "new test",
   dynamicText2: "new test",
@@ -241,7 +241,7 @@ export default (): JSX.Element => {
             }, */
           })}
           // required
-          data-rcf-ignore
+          // data-rcf-ignore
           // defaultChecked
         />
         <Controller

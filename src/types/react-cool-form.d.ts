@@ -132,6 +132,10 @@ declare module "react-cool-form" {
     (event: E): R;
   }
 
+  export interface Format {
+    (value: any): any;
+  }
+
   export interface OnChange<E = any> {
     (event: E, value?: any): void;
   }
@@ -148,6 +152,7 @@ declare module "react-cool-form" {
         value?: any;
         defaultValue?: any;
         parse?: Parse<E>;
+        format?: Format;
         onChange?: OnChange<E>;
         onBlur?: OnBlur;
       }

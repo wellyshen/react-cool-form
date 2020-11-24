@@ -43,6 +43,7 @@ const Controller = ({
         value,
         defaultValue: "welly",
         // parse,
+        format: (val) => `formatted ${val}`,
         onChange: (e, val) => {
           setValue(val);
           // setValue(e.target.value);
