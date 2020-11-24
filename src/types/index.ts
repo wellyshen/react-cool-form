@@ -165,7 +165,7 @@ export interface Controller<V, E = any> {
       validate?: FieldValidator<V>;
       value?: any;
       defaultValue?: any;
-      parser?: (event: E) => any;
+      parse?: (event: E) => any;
       onChange?: (event: E, value?: any) => void;
       onBlur?: (event: FocusEvent<any>) => void;
     }

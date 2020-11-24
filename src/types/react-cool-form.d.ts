@@ -128,7 +128,7 @@ declare module "react-cool-form" {
     (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
   }
 
-  export interface Parser<E = any, R = any> {
+  export interface Parse<E = any, R = any> {
     (event: E): R;
   }
 
@@ -147,7 +147,7 @@ declare module "react-cool-form" {
         validate?: FieldValidator<V>;
         value?: any;
         defaultValue?: any;
-        parser?: Parser<E>;
+        parse?: Parse<E>;
         onChange?: OnChange<E>;
         onBlur?: OnBlur;
       }

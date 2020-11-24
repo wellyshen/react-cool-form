@@ -684,10 +684,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const controller = useCallback<Controller<V>>(
-    (
-      name,
-      { validate, value, defaultValue, parser, onChange, onBlur } = {}
-    ) => {
+    (name, { validate, value, defaultValue, parse, onChange, onBlur } = {}) => {
       if (!name) {
         warn('💡 react-cool-form > controller: Missing the "name" parameter.');
         return {};
@@ -701,7 +698,7 @@ export default <V extends FormValues = FormValues>({
         name,
         value: !isUndefined(value) ? value : getState(`values.${name}`) ?? "",
         onChange: (e) => {
-          const parsedE = parser ? parser(e) : e;
+          const parsedE = parse ? parse(e) : e;
           let value;
 
           if (
