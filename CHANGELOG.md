@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.43
+
+### Patch Changes
+
+- [`6a2939d`](https://github.com/wellyshen/react-cool-form/commit/6a2939deb842977eabd0495013c70f726bc6adb1) [#155](https://github.com/wellyshen/react-cool-form/pull/155) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): remove `iControlFields` and `excludeFields` configs use `ignoreFields` instead
+
 ## 0.0.42
 
 ### Patch Changes
