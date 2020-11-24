@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.44
+
+### Patch Changes
+
+- [`afab297`](https://github.com/wellyshen/react-cool-form/commit/afab2978d4344dc332635b1926c250b21ecaf5e4) [#159](https://github.com/wellyshen/react-cool-form/pull/159) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): add `format` option for `controller`
+
+* [`5c79904`](https://github.com/wellyshen/react-cool-form/commit/5c7990433e9df4a7972f882e5566ed17625f25a7) [#157](https://github.com/wellyshen/react-cool-form/pull/157) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): change the `parser` option of controller to `parse`
+
 ## 0.0.43
 
 ### Patch Changes
