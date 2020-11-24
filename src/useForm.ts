@@ -72,8 +72,7 @@ export default <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
-  iControlFields = [],
-  excludeFields = [],
+  ignoreFields = [],
   onReset,
   onSubmit,
   onError,
@@ -82,8 +81,8 @@ export default <V extends FormValues = FormValues>({
   const isInitRef = useRef(true);
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
-  const controllersRef = useRef<Map>(arrayToMap(iControlFields));
-  const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
+  const controllersRef = useRef<Map>({});
+  const ignoreFieldsRef = useRef<Map>(arrayToMap(ignoreFields));
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
@@ -121,9 +120,10 @@ export default <V extends FormValues = FormValues>({
             return false;
           }
 
-          return excludeFieldsRef.current
-            ? !dataset.icf && !excludeFieldsRef.current[name]
-            : !dataset.icf;
+          return (
+            controllersRef.current[name] ||
+            !(dataset.rcfIgnore || ignoreFieldsRef.current[name])
+          );
         })
         .reduce((acc: Record<string, any>, cur) => {
           const field = cur as FieldElement;
@@ -146,7 +146,7 @@ export default <V extends FormValues = FormValues>({
       if (
         field?.name &&
         !controllersRef.current[field.name] &&
-        !excludeFieldsRef.current[field.name]
+        !ignoreFieldsRef.current[field.name]
       )
         fieldValidatorsRef.current[field.name] = validate;
     },
@@ -621,10 +621,7 @@ export default <V extends FormValues = FormValues>({
       e?.preventDefault();
       e?.stopPropagation();
 
-      const touched = Object.keys({
-        ...fieldsRef.current,
-        ...controllersRef.current,
-      }).reduce((acc: Map, key) => {
+      const touched = Object.keys(fieldsRef.current).reduce((acc: Map, key) => {
         acc = set(acc, key, true);
         return acc;
       }, {});
@@ -695,8 +692,6 @@ export default <V extends FormValues = FormValues>({
         warn('💡 react-cool-form > controller: Missing the "name" parameter.');
         return {};
       }
-      if (excludeFieldsRef.current[name])
-        return { name, value, onChange, onBlur };
 
       controllersRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
