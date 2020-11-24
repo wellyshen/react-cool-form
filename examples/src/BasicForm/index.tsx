@@ -218,35 +218,32 @@ export default (): JSX.Element => {
   return (
     <div css={container}>
       <form css={form} noValidate ref={formRef}>
-        {show1 && (
-          <Input
-            label="Text:"
-            name="text.nest"
-            /* ref={validate(async (value) => {
+        <Input name="hidden" type="hidden" defaultValue="test" />
+        <Input
+          label="Text:"
+          name="text.nest"
+          /* ref={validate(async (value) => {
               // eslint-disable-next-line
               // await new Promise((resolve) => setTimeout(resolve, 1000));
               return value.length <= 5 ? "Field error" : "";
             })} */
-            // data-rcf-ignore
-            // required
-            // defaultValue="test"
-          />
-        )}
+          // data-rcf-ignore
+          // required
+          // defaultValue="test"
+        />
         {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>}
-        {show2 && (
-          <Input
-            label="Controller 1:"
-            {...controller("controller1", {
-              defaultValue: "test",
-              /* validate: async (val) => {
+        <Input
+          label="Controller 1:"
+          {...controller("controller1", {
+            defaultValue: "test",
+            /* validate: async (val) => {
               return val.length <= 5 ? "Field error" : "";
             }, */
-            })}
-            // required
-            data-rcf-ignore
-            // defaultChecked
-          />
-        )}
+          })}
+          // required
+          data-rcf-ignore
+          // defaultChecked
+        />
         <Controller
           label="Controller 2:"
           name="controller2"
