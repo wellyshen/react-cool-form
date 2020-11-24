@@ -1,7 +1,7 @@
 import { ChangeEvent, memo, useState } from "react";
 import {
   Controller as ControllerType,
-  Parser,
+  Parse,
   FieldValidator,
 } from "react-cool-form";
 
@@ -31,7 +31,7 @@ const Controller = ({
   // console.log(`LOG ==> ${name} is re-rendered`);
 
   const [value, setValue] = useState(defaultValue);
-  const parser: Parser<ChangeEvent<HTMLInputElement>> = (e) =>
+  const parse: Parse<ChangeEvent<HTMLInputElement>> = (e) =>
     e.target.value.length % 2 ? "case 1" : "case 2";
 
   return (
@@ -42,7 +42,7 @@ const Controller = ({
         validate,
         value,
         defaultValue: "welly",
-        // parser,
+        // parse,
         onChange: (e, val) => {
           setValue(val);
           // setValue(e.target.value);
