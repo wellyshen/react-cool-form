@@ -14,7 +14,7 @@ const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
 export interface FormValues {
   text: Record<string, string>;
-  controller1: any;
+  controller1?: any;
   controller2: any;
   dynamicText1?: string;
   dynamicText2?: string;
@@ -31,8 +31,8 @@ export interface FormValues {
 }
 
 const defaultValues = {
-  text: { nest: "" },
-  controller1: "new test",
+  text: { nest: "new test" },
+  // controller1: "new test",
   controller2: "new test",
   dynamicText1: "new test",
   dynamicText2: "new test",
@@ -77,8 +77,7 @@ export default (): JSX.Element => {
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    // iControlFields: ["text.nest", "number"],
-    // excludeFields: ["text.nest", "controller1", "controller2"],
+    // ignoreFields: ["text.nest", "controller1"],
     // validate: async (values) => {
     //   let errors: any = { text: { nest: "" } };
 
@@ -140,8 +139,8 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      // values: "values",
-      errors: "errors",
+      values: "values",
+      // errors: "errors",
       // touched: "touched",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
@@ -228,9 +227,9 @@ export default (): JSX.Element => {
               // await new Promise((resolve) => setTimeout(resolve, 1000));
               return value.length <= 5 ? "Field error" : "";
             })} */
-            required
-            // data-icf
-            defaultValue="test"
+            // data-rcf-ignore
+            // required
+            // defaultValue="test"
           />
         )}
         {touched.text?.nest && errors.text?.nest && <p>{errors.text?.nest}</p>}
@@ -243,7 +242,8 @@ export default (): JSX.Element => {
               return val.length <= 5 ? "Field error" : "";
             }, */
             })}
-            required
+            // required
+            data-rcf-ignore
             // defaultChecked
           />
         )}
