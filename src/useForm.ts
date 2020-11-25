@@ -259,9 +259,13 @@ export default <V extends FormValues = FormValues>({
   );
 
   const getState = useCallback<GetState>(
-    (path, { watch = true, filterUntouchedErrors = true } = {}) => {
+    (path, watch = { filterUntouchedErrors: true }) => {
       const touchedErrorEnhancer = (path: string, state: any) => {
-        if (!filterUntouchedErrors || !watch || !path.startsWith("errors"))
+        if (
+          !watch ||
+          !watch.filterUntouchedErrors ||
+          !path.startsWith("errors")
+        )
           return state;
 
         path = path.replace("errors", "touched");
@@ -559,8 +563,7 @@ export default <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      getState: ((path, options = { watch: false }) =>
-        getState(path, options)) as GetState,
+      getState: ((path, watch = false) => getState(path, watch)) as GetState,
       setErrors,
       setFieldError,
       setValues,
