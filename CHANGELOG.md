@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.45
+
+### Patch Changes
+
+- [`56345dc`](https://github.com/wellyshen/react-cool-form/commit/56345dcf46776b590b95833f9c11e6a36d6920ba) [#161](https://github.com/wellyshen/react-cool-form/pull/161) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(type): enhance the type of `controller`
+
+* [`996eb40`](https://github.com/wellyshen/react-cool-form/commit/996eb40d118c8febd0e75f36e34f3cb56ef7a19e) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor: move utility functions from useForm to utils
+
+- [`e69ea75`](https://github.com/wellyshen/react-cool-form/commit/e69ea75fabff4a9d32f31f14bce72398f29ab917) [#163](https://github.com/wellyshen/react-cool-form/pull/163) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): get touched error only
+
 ## 0.0.44
 
 ### Patch Changes
