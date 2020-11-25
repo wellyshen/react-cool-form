@@ -70,7 +70,10 @@ declare module "react-cool-form" {
   }
 
   interface GetState {
-    (path: string | string[] | Record<string, string>, watch?: boolean): any;
+    (
+      path: string | string[] | Record<string, string>,
+      options?: { watch?: boolean; filterUntouchedErrors?: boolean }
+    ): any;
   }
 
   interface SetErrors<V> {
