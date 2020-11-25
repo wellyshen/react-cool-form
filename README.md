@@ -61,7 +61,6 @@ const App = () => {
       <label>Name</label>
       {/* Support built-in validation attributes */}
       <input name="name" required />
-      {/* Show error on blur for better UX */}
       {errors.name && <p>{errors.name}</p>}
 
       <label>Email</label>
