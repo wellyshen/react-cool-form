@@ -151,8 +151,8 @@ export default (): JSX.Element => {
       // submitCount: "submitCount",
     })
   ); */
-  const errors = getState("errors");
-  // console.log("LOG ===> ", errors);
+  const errors = getState("errors", { watch: false });
+  console.log("LOG ===> ", errors);
 
   useEffect(() => {
     // validateField("text.nest");

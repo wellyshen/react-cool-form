@@ -55,7 +55,6 @@ export default <V extends FormValues = FormValues>({
   validateOnChange = true,
   validateOnBlur = true,
   ignoreFields = [],
-  getTouchedErrorOnly = true,
   onReset,
   onSubmit,
   onError,
@@ -260,9 +259,9 @@ export default <V extends FormValues = FormValues>({
   );
 
   const getState = useCallback<GetState>(
-    (path, watch = true) => {
+    (path, { watch = true, filterUntouchedErrors = true } = {}) => {
       const touchedErrorEnhancer = (path: string, state: any) => {
-        if (!getTouchedErrorOnly || !watch || !path.startsWith("errors"))
+        if (!filterUntouchedErrors || !watch || !path.startsWith("errors"))
           return state;
 
         path = path.replace("errors", "touched");
@@ -292,7 +291,7 @@ export default <V extends FormValues = FormValues>({
 
       return state;
     },
-    [getTouchedErrorOnly, setUsedStateRef, stateRef]
+    [setUsedStateRef, stateRef]
   );
 
   const setErrors = useCallback<SetErrors<V>>(
@@ -560,7 +559,8 @@ export default <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      getState: ((path, watch = false) => getState(path, watch)) as GetState,
+      getState: ((path, options = { watch: false }) =>
+        getState(path, options)) as GetState,
       setErrors,
       setFieldError,
       setValues,
