@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.46
+
+### Patch Changes
+
+- [`988f9a8`](https://github.com/wellyshen/react-cool-form/commit/988f9a8df656e47921b763e01d122706e13d2a2a) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): add type definition
+
+* [`35f9872`](https://github.com/wellyshen/react-cool-form/commit/35f9872d1db152f045cdee6434b7de1a26a996be) [#164](https://github.com/wellyshen/react-cool-form/pull/164) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): adjust the `watch` arg of `getState()`
+
 ## 0.0.45
 
 ### Patch Changes
