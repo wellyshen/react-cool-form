@@ -115,7 +115,7 @@ Super easy right? The above example is just the tip of the iceberg. `react-cool-
 ```ts
 import { FocusEvent, RefObject, SyntheticEvent } from "react";
 
-export type FormValues = Record<string, any>;
+type FormValues = Record<string, any>;
 
 type DeepProps<V, T = any> = {
   [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
@@ -123,7 +123,7 @@ type DeepProps<V, T = any> = {
 
 type Errors<V> = DeepProps<V>;
 
-export type FormState<V = FormValues> = Readonly<{
+type FormState<V = FormValues> = Readonly<{
   values: V;
   touched: DeepProps<V, boolean>;
   errors: Errors<V>;
@@ -141,7 +141,7 @@ type Options<V> = Omit<
   "formRef" | "validate" | "submit" | "controller"
 >;
 
-export interface OnReset<V = FormValues> {
+interface OnReset<V = FormValues> {
   (
     values: V,
     options: Omit<Options<V>, "reset">,
@@ -149,7 +149,7 @@ export interface OnReset<V = FormValues> {
   ): void;
 }
 
-export interface OnSubmit<V = FormValues> {
+interface OnSubmit<V = FormValues> {
   (
     values: V,
     options: Options<V>,
@@ -157,7 +157,7 @@ export interface OnSubmit<V = FormValues> {
   ): void | Promise<void>;
 }
 
-export interface OnError<V = FormValues> {
+interface OnError<V = FormValues> {
   (
     errors: Errors<V>,
     options: Options<V>,
@@ -165,15 +165,15 @@ export interface OnError<V = FormValues> {
   ): void;
 }
 
-export interface Debug<V> {
+interface Debug<V> {
   (formState: FormState<V>): void;
 }
 
-export interface FormValidator<V = FormValues> {
+interface FormValidator<V = FormValues> {
   (values: V): Errors<V> | void | Promise<Errors<V> | void>;
 }
 
-export interface FieldValidator<V = FormValues> {
+interface FieldValidator<V = FormValues> {
   (value: any, values: V): any | Promise<any>;
 }
 
@@ -243,23 +243,23 @@ interface Submit<V> {
   (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
 }
 
-export interface Parse<E = any, R = any> {
+interface Parse<E = any, R = any> {
   (event: E): R;
 }
 
-export interface Format<V = any, R = any> {
+interface Format<V = any, R = any> {
   (value: V): R;
 }
 
-export interface OnChange<E = any> {
+interface OnChange<E = any> {
   (event: E, value?: any): void;
 }
 
-export interface OnBlur {
+interface OnBlur {
   (event: FocusEvent<any>): void;
 }
 
-export interface Controller<V = FormValues, E = any> {
+interface Controller<V = FormValues, E = any> {
   (
     name: string,
     options?: {
@@ -281,7 +281,7 @@ export interface Controller<V = FormValues, E = any> {
     | Record<string, unknown>;
 }
 
-export interface Config<V = FormValues> {
+interface Config<V = FormValues> {
   defaultValues: V;
   validate?: FormValidator<V>;
   validateOnChange?: boolean;
@@ -293,7 +293,7 @@ export interface Config<V = FormValues> {
   debug?: Debug<V>;
 }
 
-export interface Return<V = FormValues> {
+interface Return<V = FormValues> {
   formRef: RefObject<HTMLFormElement>;
   validate: ValidateRef<V>;
   getState: GetState;
@@ -308,13 +308,13 @@ export interface Return<V = FormValues> {
   controller: Controller<V>;
 }
 
-export const useForm: <V extends FormValues = FormValues>(
+const useForm: <V extends FormValues = FormValues>(
   config: Config<V>
 ) => Return<V>;
 
-export const get: (object: any, path: string, defaultValue?: unknown) => any;
+const get: (object: any, path: string, defaultValue?: unknown) => any;
 
-export const set: (
+const set: (
   object: any,
   path: string,
   value: unknown,
