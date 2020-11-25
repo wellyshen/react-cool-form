@@ -1,16 +1,40 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types */
 
+import { useEffect, useLayoutEffect } from "react";
+
 import { FieldElement, Map } from "./types";
 
 export const warn = (...args: any[]): void => {
   if (__DEV__) console.warn(...args);
 };
 
+export const useUniversalLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+export const runWithLowPriority = (callback: (args: any) => any) =>
+  (
+    window.requestIdleCallback ||
+    ((callback) => {
+      const start = Date.now();
+      return setTimeout(
+        () =>
+          callback({
+            didTimeout: false,
+            timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
+          }),
+        1
+      );
+    })
+  )(callback, { timeout: 2000 });
+
 export const arrayToMap = (arr: any[]): Map =>
   arr.reduce((obj, key) => {
     obj[key] = true;
     return obj;
   }, {});
+
+export const isFieldElement = (element: HTMLElement): element is FieldElement =>
+  /INPUT|TEXTAREA|SELECT/.test(element.tagName);
 
 export const isNumberField = (field: FieldElement): field is HTMLInputElement =>
   field.type === "number";
