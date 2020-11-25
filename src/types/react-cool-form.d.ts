@@ -132,8 +132,8 @@ declare module "react-cool-form" {
     (event: E): R;
   }
 
-  export interface Format {
-    (value: any): any;
+  export interface Format<V = any, R = any> {
+    (value: V): R;
   }
 
   export interface OnChange<E = any> {
