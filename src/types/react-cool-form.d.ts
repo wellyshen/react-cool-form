@@ -172,6 +172,7 @@ declare module "react-cool-form" {
     validateOnChange?: boolean;
     validateOnBlur?: boolean;
     ignoreFields?: string[];
+    getTouchedErrorOnly?: boolean;
     onReset?: OnReset<V>;
     onSubmit?: OnSubmit<V>;
     onError?: OnError<V>;

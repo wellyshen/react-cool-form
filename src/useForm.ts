@@ -27,6 +27,7 @@ import useState from "./useState";
 import {
   arrayToMap,
   deepMerge,
+  filterError,
   get,
   isArray,
   isCheckboxField,
@@ -54,6 +55,7 @@ export default <V extends FormValues = FormValues>({
   validateOnChange = true,
   validateOnBlur = true,
   ignoreFields = [],
+  getTouchedErrorOnly = true,
   onReset,
   onSubmit,
   onError,
@@ -259,28 +261,38 @@ export default <V extends FormValues = FormValues>({
 
   const getState = useCallback<GetState>(
     (path, watch = true) => {
+      const touchedErrorEnhancer = (path: string, state: any) => {
+        if (!getTouchedErrorOnly || !watch || !path.startsWith("errors"))
+          return state;
+
+        path = path.replace("errors", "touched");
+        setUsedStateRef(path);
+
+        return filterError(state, get(stateRef.current, path));
+      };
       let state;
 
       if (isArray(path)) {
-        if (watch) path.forEach((p) => setUsedStateRef(p));
-        state = path.map((p) => get(stateRef.current, p));
+        state = path.map((path) => {
+          if (watch) setUsedStateRef(path);
+          return touchedErrorEnhancer(path, get(stateRef.current, path));
+        });
       } else if (isPlainObject(path)) {
         const paths = path as Record<string, string>;
-        const keys = Object.keys(paths);
-
-        if (watch) keys.forEach((key) => setUsedStateRef(paths[key]));
-        state = keys.reduce((state: Record<string, any>, key) => {
-          state[key] = get(stateRef.current, paths[key]);
+        state = Object.keys(paths).reduce((state: Record<string, any>, key) => {
+          const path = paths[key];
+          if (watch) setUsedStateRef(path);
+          state[key] = touchedErrorEnhancer(path, get(stateRef.current, path));
           return state;
         }, {});
       } else {
         if (watch) setUsedStateRef(path);
-        state = get(stateRef.current, path);
+        state = touchedErrorEnhancer(path, get(stateRef.current, path));
       }
 
       return state;
     },
-    [setUsedStateRef, stateRef]
+    [getTouchedErrorOnly, setUsedStateRef, stateRef]
   );
 
   const setErrors = useCallback<SetErrors<V>>(

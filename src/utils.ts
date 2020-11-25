@@ -76,6 +76,19 @@ export const isUndefined = (value: unknown): value is undefined =>
 export const isFileList = (value: unknown): value is FileList =>
   value instanceof FileList;
 
+export const filterError = (error: unknown, touched: unknown): any => {
+  if (!isPlainObject(error) || error instanceof Date)
+    return touched ? error : undefined;
+
+  return Object.keys(error).reduce((obj: Record<string, any>, key) => {
+    obj[key] = filterError(
+      (error as Record<string, any>)[key],
+      (touched as Record<string, any>)[key]
+    );
+    return obj;
+  }, {});
+};
+
 export const get = (object: any, path: string, defaultValue?: unknown) => {
   if (!isPlainObject(object) || !path) return defaultValue;
 
