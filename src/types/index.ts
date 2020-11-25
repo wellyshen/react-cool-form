@@ -104,7 +104,7 @@ export interface ValidateRef<V> {
 export interface GetState {
   (
     path: string | string[] | Record<string, string>,
-    options?: { watch?: boolean; filterUntouchedErrors?: boolean }
+    watch?: { filterUntouchedErrors: boolean } | false
   ): any;
 }
 
