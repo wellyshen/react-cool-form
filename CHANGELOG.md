@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.47
+
+### Patch Changes
+
+- [`75f42bc`](https://github.com/wellyshen/react-cool-form/commit/75f42bcd15e512250b006a4058a28da7f0c17d78) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update the type definition section
+
 ## 0.0.46
 
 ### Patch Changes
