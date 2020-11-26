@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.49
+
+### Patch Changes
+
+- [`aef2df3`](https://github.com/wellyshen/react-cool-form/commit/aef2df3c714faa692d4d42eb91a5f6eac44fdf52) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): crash due to filer untouched errors
+
 ## 0.0.48
 
 ### Patch Changes
