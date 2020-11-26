@@ -83,7 +83,7 @@ export const filterError = (error: unknown, touched: unknown): any => {
   return Object.keys(error).reduce((obj: Record<string, any>, key) => {
     obj[key] = filterError(
       (error as Record<string, any>)[key],
-      (touched as Record<string, any>)[key]
+      (touched as Record<string, any>)[key] || false
     );
     return obj;
   }, {});
