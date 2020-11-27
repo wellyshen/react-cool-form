@@ -272,7 +272,7 @@ export default <V extends FormValues = FormValues>({
 
   const getState = useCallback<GetState>(
     (path, watch = { filterUntouchedErrors: true }) => {
-      const touchedErrorEnhancer = (path: string, state: any) => {
+      const errorEnhancer = (path: string, state: any) => {
         if (
           !watch ||
           !watch.filterUntouchedErrors ||
@@ -290,19 +290,19 @@ export default <V extends FormValues = FormValues>({
       if (isArray(path)) {
         state = path.map((path) => {
           if (watch) setUsedStateRef(path);
-          return touchedErrorEnhancer(path, get(stateRef.current, path));
+          return errorEnhancer(path, get(stateRef.current, path));
         });
       } else if (isPlainObject(path)) {
         const paths = path as Record<string, string>;
         state = Object.keys(paths).reduce((state: Record<string, any>, key) => {
           path = paths[key];
           if (watch) setUsedStateRef(path);
-          state[key] = touchedErrorEnhancer(path, get(stateRef.current, path));
+          state[key] = errorEnhancer(path, get(stateRef.current, path));
           return state;
         }, {});
       } else {
         if (watch) setUsedStateRef(path);
-        state = touchedErrorEnhancer(path, get(stateRef.current, path));
+        state = errorEnhancer(path, get(stateRef.current, path));
       }
 
       return state;
