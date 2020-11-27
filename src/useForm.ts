@@ -98,7 +98,7 @@ export default <V extends FormValues = FormValues>({
 
           if (/image|submit|reset/.test(type)) return false;
           if (!name) {
-            warn('💡 react-cool-form: Field is missing "name" attribute.');
+            warn('💡 react-cool-form > field: Missing "name" attribute.');
             return false;
           }
 
@@ -283,7 +283,7 @@ export default <V extends FormValues = FormValues>({
       } else if (isPlainObject(path)) {
         const paths = path as Record<string, string>;
         state = Object.keys(paths).reduce((state: Record<string, any>, key) => {
-          const path = paths[key];
+          path = paths[key];
           if (watch) setUsedStateRef(path);
           state[key] = touchedErrorEnhancer(path, get(stateRef.current, path));
           return state;
@@ -750,7 +750,7 @@ export default <V extends FormValues = FormValues>({
       const { name } = field;
 
       if (!name) {
-        warn('💡 react-cool-form: Field is missing "name" attribute.');
+        warn('💡 react-cool-form > field: Missing "name" attribute.');
         return;
       }
 
