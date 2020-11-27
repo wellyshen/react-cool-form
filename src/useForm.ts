@@ -565,7 +565,13 @@ export default <V extends FormValues = FormValues>({
         ? value(get(stateRef.current.values, name))
         : value;
 
-      setStateRef(`values.${name}`, value);
+      if (!isUndefined(value)) {
+        setStateRef(`values.${name}`, value);
+      } else {
+        setStateRef("values", unset(stateRef.current.values, name, true), {
+          fieldPath: `values.${name}`,
+        });
+      }
       setNodeValue(name, value);
 
       if (shouldTouched) setFieldTouched(name, true, false);
@@ -812,8 +818,10 @@ export default <V extends FormValues = FormValues>({
       Object.keys(fieldsRef.current).forEach((name) => {
         if (fields[name]) return;
 
-        setStateRef("values", unset(values, name, true), {
-          fieldPath: `values.${name}`,
+        setFieldValue(name, undefined, {
+          shouldValidate: false,
+          shouldTouched: false,
+          shouldDirty: true,
         });
         setFieldTouched(name, false, false);
         setFieldDirty(name, true);
@@ -866,7 +874,7 @@ export default <V extends FormValues = FormValues>({
     setFieldError,
     setFieldTouched,
     setFieldTouchedMaybeValidate,
-    setStateRef,
+    setFieldValue,
     stateRef,
     submit,
   ]);
