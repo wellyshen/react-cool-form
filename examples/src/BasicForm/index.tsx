@@ -141,11 +141,11 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      // values: "values",
-      // errors: "errors",
-      // touched: "touched",
-      isDirty: "isDirty",
-      // dirtyFields: "dirtyFields",
+      values: "values",
+      errors: "errors",
+      touched: "touched",
+      // isDirty: "isDirty",
+      dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
       // isValid: "isValid",
       // isSubmitting: "isSubmitting",
@@ -153,7 +153,7 @@ export default (): JSX.Element => {
       // submitCount: "submitCount",
     })
   );
-  // const errors = getState("errors");
+  const errors = getState("errors");
   // console.log("LOG ===> ", errors);
   // const isDirty = getState("isDirty");
   // console.log("LOG ===> ", isDirty);
@@ -168,7 +168,7 @@ export default (): JSX.Element => {
   const handleToggle2Click = (): void => setShow2(!show2);
 
   const handleSetValueClick = (): void => {
-    setValues(
+    /* setValues(
       (prevValues) => ({
         ...prevValues,
         text: { nest: "new test" },
@@ -178,7 +178,9 @@ export default (): JSX.Element => {
         touchedFields: ["text.nest"],
         dirtyFields: ["text.nest"],
       }
-    );
+    ); */
+
+    setFieldValue("password", "123");
 
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
     // setFieldValue("text.nest", "new test");
@@ -238,7 +240,7 @@ export default (): JSX.Element => {
             defaultValue="test"
           />
         )}
-        {/* {errors.text?.nest && <p>{errors.text?.nest}</p>} */}
+        {errors.text?.nest && <p>{errors.text?.nest}</p>}
         <Input
           label="Controller 1:"
           {...controller("controller1", {
@@ -287,7 +289,7 @@ export default (): JSX.Element => {
           minLength={5}
           // defaultValue="test"
         />
-        {/* {errors.password && <p>{errors.password}</p>} */}
+        {errors.password && <p>{errors.password}</p>}
         <Input label="Number:" type="number" name="number" />
         <Input label="Range:" type="range" name="range" />
         <Input
