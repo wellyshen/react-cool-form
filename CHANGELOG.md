@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.50
+
+### Patch Changes
+
+- [`af56a0b`](https://github.com/wellyshen/react-cool-form/commit/af56a0b818f61fe971417fe7daf917d31d166f00) [#171](https://github.com/wellyshen/react-cool-form/pull/171) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): auto delete undefined value for `setFieldValue()`
+
+* [`f1e05d1`](https://github.com/wellyshen/react-cool-form/commit/f1e05d1ba9a1f142c2a1fddef7a80bca69ba05fb) [#169](https://github.com/wellyshen/react-cool-form/pull/169) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): correct the logic of `dirtyFields` and `isDirty`
+
+- [`e7adb99`](https://github.com/wellyshen/react-cool-form/commit/e7adb99ec60171bebdbbd2d648f7027e2209a459) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): prevent un-necessary default values checking
+
 ## 0.0.49
 
 ### Patch Changes
