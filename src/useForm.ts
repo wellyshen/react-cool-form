@@ -72,8 +72,9 @@ export default <V extends FormValues = FormValues>({
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
   const prevBuiltInErrorsRef = useRef<Record<string, string>>({});
+  const defaultValuesRef = useRef(defaultValues || {});
   const initialStateRef = useRef<FormState<V>>({
-    values: defaultValues || {},
+    values: defaultValuesRef.current,
     touched: {},
     errors: {},
     isDirty: false,
@@ -84,10 +85,12 @@ export default <V extends FormValues = FormValues>({
     isSubmitted: false,
     submitCount: 0,
   });
-  const { stateRef, setStateRef, setUsedStateRef } = useState<V>(
-    initialStateRef.current,
-    debug
-  );
+  const {
+    stateRef,
+    setStateRef,
+    setUsedStateRef,
+    setDefaultValuesRef,
+  } = useState<V>(initialStateRef.current, debug);
 
   const getFields = useCallback(
     (form: HTMLFormElement) =>
@@ -98,7 +101,7 @@ export default <V extends FormValues = FormValues>({
 
           if (/image|submit|reset/.test(type)) return false;
           if (!name) {
-            warn('💡 react-cool-form > field: Missing "name" attribute.');
+            warn('💡 react-cool-form > field: Missing the "name" attribute.');
             return false;
           }
 
@@ -222,24 +225,24 @@ export default <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const setDefaultValue = useCallback(
+  const setDefaultValueIfNeeded = useCallback(
     (name: string, value: any) => {
-      if (isUndefined(get(initialStateRef.current.values, name)))
-        initialStateRef.current.values = set(
-          initialStateRef.current.values,
-          name,
-          value,
-          true
-        );
+      if (!isUndefined(get(initialStateRef.current.values, name))) return;
 
-      if (isUndefined(get(stateRef.current.values, name)))
-        setStateRef(
-          `values.${name}`,
-          get(initialStateRef.current.values, name),
-          { shouldUpdate: !isInitRef.current }
-        );
+      initialStateRef.current.values = set(
+        initialStateRef.current.values,
+        name,
+        !isUndefined(value) ? value : "",
+        true
+      );
+
+      setStateRef(`values.${name}`, get(initialStateRef.current.values, name), {
+        shouldUpdate: !isInitRef.current,
+      });
+
+      setDefaultValuesRef(initialStateRef.current.values);
     },
-    [setStateRef, stateRef]
+    [setDefaultValuesRef, setStateRef]
   );
 
   const setAllNodesOrStateValue = useCallback(
@@ -252,10 +255,19 @@ export default <V extends FormValues = FormValues>({
         const value = get(values, name);
 
         if (!isUndefined(value)) setNodeValue(name, value);
-        if (checkDefaultValues)
-          setDefaultValue(name, getNodeValue(field, options));
+
+        if (checkDefaultValues) {
+          const defaultValue = get(defaultValuesRef.current, name);
+
+          setDefaultValueIfNeeded(
+            name,
+            !isUndefined(defaultValue)
+              ? defaultValue
+              : getNodeValue(field, options)
+          );
+        }
       }),
-    [getNodeValue, setNodeValue, setDefaultValue]
+    [getNodeValue, setDefaultValueIfNeeded, setNodeValue]
   );
 
   const getState = useCallback<GetState>(
@@ -691,7 +703,12 @@ export default <V extends FormValues = FormValues>({
 
       controllersRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
-      if (!isUndefined(defaultValue)) setDefaultValue(name, defaultValue);
+
+      const formDefaultValue = get(defaultValuesRef.current, name);
+      setDefaultValueIfNeeded(
+        name,
+        !isUndefined(formDefaultValue) ? formDefaultValue : defaultValue
+      );
 
       value = !isUndefined(value) ? value : getState(`values.${name}`);
       value = (format ? format(value) : value) ?? "";
@@ -723,7 +740,7 @@ export default <V extends FormValues = FormValues>({
     [
       getState,
       handleFieldChange,
-      setDefaultValue,
+      setDefaultValueIfNeeded,
       setFieldTouchedMaybeValidate,
       setFieldValue,
     ]
@@ -750,7 +767,7 @@ export default <V extends FormValues = FormValues>({
       const { name } = field;
 
       if (!name) {
-        warn('💡 react-cool-form > field: Missing "name" attribute.');
+        warn('💡 react-cool-form > field: Missing the "name" attribute.');
         return;
       }
 
@@ -786,8 +803,9 @@ export default <V extends FormValues = FormValues>({
       Object.keys(fieldsRef.current).forEach((name) => {
         if (fields[name]) return;
 
-        values = unset(values, name, true);
-        setStateRef("values", values, { fieldPath: `values.${name}` });
+        setStateRef("values", unset(values, name, true), {
+          fieldPath: `values.${name}`,
+        });
         setStateRef("errors", unset(stateRef.current.errors, name, true), {
           fieldPath: `errors.${name}`,
         });
@@ -799,28 +817,33 @@ export default <V extends FormValues = FormValues>({
           }
         );
 
+        initialStateRef.current.values = unset(
+          initialStateRef.current.values,
+          name,
+          true
+        );
+        setDefaultValuesRef(initialStateRef.current.values);
+
         delete fieldValidatorsRef.current[name];
         delete prevBuiltInErrorsRef.current[name];
         delete controllersRef.current[name];
       });
 
-      let checkDefaultValues = false;
+      let isAdd = false;
 
       Object.keys(fields).forEach((name) => {
-        if (!fieldsRef.current[name] && initialStateRef.current.values[name]) {
-          values = set(
-            values,
-            name,
-            initialStateRef.current.values[name],
-            true
-          );
+        if (fieldsRef.current[name] || controllersRef.current[name]) return;
 
-          checkDefaultValues = true;
-        }
+        const defaultValue = get(defaultValuesRef.current, name);
+
+        if (!isUndefined(defaultValue))
+          values = set(values, name, defaultValue, true);
+
+        isAdd = true;
       });
 
       fieldsRef.current = fields;
-      setAllNodesOrStateValue(values, checkDefaultValues);
+      if (isAdd) setAllNodesOrStateValue(values, true);
     });
     observer.observe(form, { childList: true, subtree: true });
 
@@ -836,6 +859,7 @@ export default <V extends FormValues = FormValues>({
     handleFieldChange,
     reset,
     setAllNodesOrStateValue,
+    setDefaultValuesRef,
     setFieldTouchedMaybeValidate,
     setStateRef,
     stateRef,

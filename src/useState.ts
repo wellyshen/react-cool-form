@@ -6,6 +6,7 @@ import {
   FormState,
   FormStateReturn,
   Map,
+  SetDefaultValuesRef,
   SetStateRef,
   SetUsedStateRef,
 } from "./types";
@@ -79,5 +80,9 @@ export default <V>(
     usedStateRef.current[path] = true;
   }, []);
 
-  return { stateRef, setStateRef, setUsedStateRef };
+  const setDefaultValuesRef = useCallback<SetDefaultValuesRef<V>>((values) => {
+    defaultValuesRef.current = values;
+  }, []);
+
+  return { stateRef, setStateRef, setUsedStateRef, setDefaultValuesRef };
 };
