@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect } from "react";
 
 import { FieldElement, Map } from "./types";
 
-export const warn = (...args: any[]): void => {
+export const warn = (...args: any[]) => {
   if (__DEV__) console.warn(...args);
 };
 
@@ -87,6 +87,24 @@ export const filterError = (error: unknown, touched: unknown): any => {
     );
     return obj;
   }, {});
+};
+
+export const getIsDirty = (object: object): boolean => {
+  const parse = (object: object, found: any[] = []) => {
+    // eslint-disable-next-line consistent-return
+    Object.values(object).forEach((obj): any[] | void => {
+      if (obj === true) {
+        found.push(obj);
+        return found;
+      }
+
+      if (isPlainObject(obj)) parse(obj, found);
+    });
+
+    return found;
+  };
+
+  return !!parse(object).length;
 };
 
 export const get = (object: any, path: string, defaultValue?: unknown) => {

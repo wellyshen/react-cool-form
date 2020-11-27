@@ -13,11 +13,12 @@ import { container, form, wrapper } from "./styles";
 const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
 export interface FormValues {
-  text: Record<string, string>;
-  controller1: any;
+  hidden: string;
+  text?: Record<string, string>;
+  controller1?: any;
   controller2: any;
   dynamicText1?: string;
-  dynamicText2?: string;
+  dynamicText2: string;
   password: string;
   number: number;
   range: number;
@@ -31,12 +32,13 @@ export interface FormValues {
 }
 
 const defaultValues = {
-  text: { nest: "" },
+  hidden: "new test",
+  text: { nest: "new test" },
   controller1: "new test",
   controller2: "new test",
   dynamicText1: "new test",
   dynamicText2: "new test",
-  password: "",
+  password: "nest test",
   number: 5,
   range: 0,
   checkbox: true,
@@ -136,13 +138,13 @@ export default (): JSX.Element => {
     ])
   ); */
   // console.log("LOG ===> ", getState("values.dynamicText1"));
-  /* console.log(
+  console.log(
     "LOG ===> formState: ",
     getState({
       // values: "values",
       // errors: "errors",
       // touched: "touched",
-      // isDirty: "isDirty",
+      isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
       // isValid: "isValid",
@@ -150,9 +152,11 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  ); */
-  const errors = getState("errors");
-  console.log("LOG ===> ", errors);
+  );
+  // const errors = getState("errors");
+  // console.log("LOG ===> ", errors);
+  // const isDirty = getState("isDirty");
+  // console.log("LOG ===> ", isDirty);
 
   useEffect(() => {
     // validateField("text.nest");
@@ -164,7 +168,7 @@ export default (): JSX.Element => {
   const handleToggle2Click = (): void => setShow2(!show2);
 
   const handleSetValueClick = (): void => {
-    /* setValues(
+    setValues(
       (prevValues) => ({
         ...prevValues,
         text: { nest: "new test" },
@@ -174,7 +178,7 @@ export default (): JSX.Element => {
         touchedFields: ["text.nest"],
         dirtyFields: ["text.nest"],
       }
-    ); */
+    );
 
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
     // setFieldValue("text.nest", "new test");
@@ -185,7 +189,7 @@ export default (): JSX.Element => {
     // setFieldValue("checkboxGroup", ["value-2"]);
     // setFieldValue("radio", "value-2");
     // setFieldValue("multiSelect.nest", ["value-2"]);
-    setFieldValue("password", "12345678");
+    // setFieldValue("password", "12345678");
   };
 
   const handleSetErrorsClick = (): void => {
@@ -220,19 +224,21 @@ export default (): JSX.Element => {
     <div css={container}>
       <form css={form} noValidate ref={formRef}>
         <Input name="hidden" type="hidden" defaultValue="test" />
-        <Input
-          label="Text:"
-          name="text.nest"
-          /* ref={validate(async (value) => {
+        {show1 && (
+          <Input
+            label="Text:"
+            name="text.nest"
+            /* ref={validate(async (value) => {
               // eslint-disable-next-line
               // await new Promise((resolve) => setTimeout(resolve, 1000));
               return value.length <= 5 ? "Field error" : "";
             })} */
-          // data-rcf-ignore
-          required
-          // defaultValue="test"
-        />
-        {errors.text?.nest && <p>{errors.text?.nest}</p>}
+            // data-rcf-ignore
+            required
+            defaultValue="test"
+          />
+        )}
+        {/* {errors.text?.nest && <p>{errors.text?.nest}</p>} */}
         <Input
           label="Controller 1:"
           {...controller("controller1", {
@@ -281,7 +287,7 @@ export default (): JSX.Element => {
           minLength={5}
           // defaultValue="test"
         />
-        {errors.password && <p>{errors.password}</p>}
+        {/* {errors.password && <p>{errors.password}</p>} */}
         <Input label="Number:" type="number" name="number" />
         <Input label="Range:" type="range" name="range" />
         <Input

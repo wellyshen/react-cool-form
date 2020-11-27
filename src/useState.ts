@@ -6,11 +6,12 @@ import {
   FormState,
   FormStateReturn,
   Map,
+  SetDefaultValuesRef,
   SetStateRef,
   SetUsedStateRef,
 } from "./types";
 import useLatest from "./useLatest";
-import { get, isEmptyObject, set } from "./utils";
+import { get, getIsDirty, isEmptyObject, set } from "./utils";
 
 export default <V>(
   initialState: FormState<V>,
@@ -39,16 +40,14 @@ export default <V>(
       if (key === "values" || !isEqual(get(stateRef.current, path), value)) {
         const state = set(stateRef.current, path, value, true);
         const {
-          values,
           errors,
+          dirtyFields,
           isDirty: prevIsDirty,
           isValid: prevIsValid,
         } = state;
         let { submitCount: prevSubmitCount } = state;
         const isDirty =
-          key === "values"
-            ? !isEqual(values, defaultValuesRef.current)
-            : prevIsDirty;
+          key === "dirtyFields" ? getIsDirty(dirtyFields) : prevIsDirty;
         const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
         const submitCount =
           key === "isSubmitting" && value
@@ -79,5 +78,9 @@ export default <V>(
     usedStateRef.current[path] = true;
   }, []);
 
-  return { stateRef, setStateRef, setUsedStateRef };
+  const setDefaultValuesRef = useCallback<SetDefaultValuesRef<V>>((values) => {
+    defaultValuesRef.current = values;
+  }, []);
+
+  return { stateRef, setStateRef, setUsedStateRef, setDefaultValuesRef };
 };
