@@ -225,14 +225,14 @@ export default <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const setDefaultValueIfNeeded = useCallback(
+  const setDefaultValue = useCallback(
     (name: string, value: any) => {
       if (!isUndefined(get(initialStateRef.current.values, name))) return;
 
       initialStateRef.current.values = set(
         initialStateRef.current.values,
         name,
-        !isUndefined(value) ? value : "",
+        value,
         true
       );
 
@@ -259,7 +259,7 @@ export default <V extends FormValues = FormValues>({
         if (checkDefaultValues) {
           const defaultValue = get(defaultValuesRef.current, name);
 
-          setDefaultValueIfNeeded(
+          setDefaultValue(
             name,
             !isUndefined(defaultValue)
               ? defaultValue
@@ -267,7 +267,7 @@ export default <V extends FormValues = FormValues>({
           );
         }
       }),
-    [getNodeValue, setDefaultValueIfNeeded, setNodeValue]
+    [getNodeValue, setDefaultValue, setNodeValue]
   );
 
   const getState = useCallback<GetState>(
@@ -478,14 +478,17 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setFieldDirty = useCallback(
-    (name: string) => {
-      if (get(stateRef.current.values, name) !== get(defaultValues, name)) {
+    (name: string, clear = false) => {
+      if (
+        get(stateRef.current.values, name) !== get(defaultValues, name) &&
+        !clear
+      ) {
         setStateRef(`dirtyFields.${name}`, true);
       } else {
         setStateRef(
           "dirtyFields",
           unset(stateRef.current.dirtyFields, name, true),
-          { fieldPath: `errors.${name}` }
+          { fieldPath: `dirtyFields.${name}` }
         );
       }
     },
@@ -493,19 +496,26 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setFieldTouched = useCallback(
-    (name: string, shouldValidate = validateOnBlur) => {
-      setStateRef(`touched.${name}`, true);
+    (name: string, isTouched: boolean, shouldValidate = validateOnBlur) => {
+      if (isTouched) {
+        setStateRef(`touched.${name}`, isTouched);
+      } else {
+        setStateRef("touched", unset(stateRef.current.touched, name, true), {
+          fieldPath: `touched.${name}`,
+        });
+      }
 
       if (shouldValidate) validateFieldWithLowPriority(name);
       changedFieldRef.current = undefined;
     },
-    [setStateRef, validateFieldWithLowPriority, validateOnBlur]
+    [setStateRef, stateRef, validateFieldWithLowPriority, validateOnBlur]
   );
 
   const setFieldTouchedMaybeValidate = useCallback(
     (name) =>
       setFieldTouched(
         name,
+        true,
         validateOnChange ? name !== changedFieldRef.current : undefined
       ),
     [setFieldTouched, validateOnChange]
@@ -525,7 +535,7 @@ export default <V extends FormValues = FormValues>({
       setStateRef("values", values);
       setAllNodesOrStateValue(values);
 
-      touchedFields.forEach((name) => setFieldTouched(name, false));
+      touchedFields.forEach((name) => setFieldTouched(name, true, false));
       dirtyFields.forEach((name) => setFieldDirty(name));
       if (shouldValidate) validateFormWithLowPriority();
     },
@@ -557,7 +567,7 @@ export default <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, value);
       setNodeValue(name, value);
 
-      if (shouldTouched) setFieldTouched(name, false);
+      if (shouldTouched) setFieldTouched(name, true, false);
       if (shouldDirty) setFieldDirty(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
       changedFieldRef.current = name;
@@ -704,11 +714,9 @@ export default <V extends FormValues = FormValues>({
       controllersRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
 
-      const formDefaultValue = get(defaultValuesRef.current, name);
-      setDefaultValueIfNeeded(
-        name,
-        !isUndefined(formDefaultValue) ? formDefaultValue : defaultValue
-      );
+      const val = get(defaultValuesRef.current, name);
+      defaultValue = !isUndefined(val) ? val : defaultValue;
+      if (!isUndefined(defaultValue)) setDefaultValue(name, defaultValue);
 
       value = !isUndefined(value) ? value : getState(`values.${name}`);
       value = (format ? format(value) : value) ?? "";
@@ -740,7 +748,7 @@ export default <V extends FormValues = FormValues>({
     [
       getState,
       handleFieldChange,
-      setDefaultValueIfNeeded,
+      setDefaultValue,
       setFieldTouchedMaybeValidate,
       setFieldValue,
     ]
@@ -806,16 +814,9 @@ export default <V extends FormValues = FormValues>({
         setStateRef("values", unset(values, name, true), {
           fieldPath: `values.${name}`,
         });
-        setStateRef("errors", unset(stateRef.current.errors, name, true), {
-          fieldPath: `errors.${name}`,
-        });
-        setStateRef(
-          "dirtyFields",
-          unset(stateRef.current.dirtyFields, name, true),
-          {
-            fieldPath: `dirtyFields.${name}`,
-          }
-        );
+        setFieldTouched(name, false, false);
+        setFieldDirty(name, true);
+        setFieldError(name);
 
         initialStateRef.current.values = unset(
           initialStateRef.current.values,
@@ -860,6 +861,9 @@ export default <V extends FormValues = FormValues>({
     reset,
     setAllNodesOrStateValue,
     setDefaultValuesRef,
+    setFieldDirty,
+    setFieldError,
+    setFieldTouched,
     setFieldTouchedMaybeValidate,
     setStateRef,
     stateRef,

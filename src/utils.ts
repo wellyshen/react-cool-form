@@ -89,6 +89,13 @@ export const filterError = (error: unknown, touched: unknown): any => {
   }, {});
 };
 
+export const getIsDirty = (object: unknown): any => {
+  if (!isPlainObject(object)) return true;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const obj of Object.values(object)) return getIsDirty(obj);
+  return false;
+};
+
 export const get = (object: any, path: string, defaultValue?: unknown) => {
   if (!isPlainObject(object) || !path) return defaultValue;
 

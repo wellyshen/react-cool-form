@@ -2,4 +2,4 @@
 "react-cool-form": patch
 ---
 
-fix(useForm): correct isDirty logic
+fix(useForm): correct the logic of `dirtyFields` and `isDirty`
