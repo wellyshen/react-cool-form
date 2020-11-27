@@ -480,7 +480,8 @@ export default <V extends FormValues = FormValues>({
   const setFieldDirty = useCallback(
     (name: string, clear = false) => {
       if (
-        get(stateRef.current.values, name) !== get(defaultValues, name) &&
+        get(stateRef.current.values, name) !==
+          get(initialStateRef.current.values, name) &&
         !clear
       ) {
         setStateRef(`dirtyFields.${name}`, true);
@@ -492,7 +493,7 @@ export default <V extends FormValues = FormValues>({
         );
       }
     },
-    [defaultValues, setStateRef, stateRef]
+    [setStateRef, stateRef]
   );
 
   const setFieldTouched = useCallback(
