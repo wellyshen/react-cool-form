@@ -243,7 +243,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setAllNodesOrStateValue = useCallback(
-    (values: V, checkDefaultValue = false) =>
+    (values: V, checkDefaultValues = false) =>
       Object.values(fieldsRef.current).forEach(({ field, options }) => {
         const { name } = field;
 
@@ -252,7 +252,7 @@ export default <V extends FormValues = FormValues>({
         const value = get(values, name);
 
         if (!isUndefined(value)) setNodeValue(name, value);
-        if (checkDefaultValue)
+        if (checkDefaultValues)
           setDefaultValue(name, getNodeValue(field, options));
       }),
     [getNodeValue, setNodeValue, setDefaultValue]
@@ -804,18 +804,23 @@ export default <V extends FormValues = FormValues>({
         delete controllersRef.current[name];
       });
 
+      let checkDefaultValues = false;
+
       Object.keys(fields).forEach((name) => {
-        if (!fieldsRef.current[name] && initialStateRef.current.values[name])
+        if (!fieldsRef.current[name] && initialStateRef.current.values[name]) {
           values = set(
             values,
             name,
             initialStateRef.current.values[name],
             true
           );
+
+          checkDefaultValues = true;
+        }
       });
 
       fieldsRef.current = fields;
-      setAllNodesOrStateValue(values, true);
+      setAllNodesOrStateValue(values, checkDefaultValues);
     });
     observer.observe(form, { childList: true, subtree: true });
 
