@@ -1,7 +1,14 @@
 import { useReducer, useRef, useCallback } from "react";
 import isEqual from "fast-deep-equal";
 
-import { Debug, FormState, FormStateReturn, Map, SetStateRef } from "./types";
+import {
+  Debug,
+  FormState,
+  FormStateReturn,
+  Map,
+  SetStateRef,
+  SetUsedStateRef,
+} from "./types";
 import useLatest from "./useLatest";
 import { get, isEmptyObject, set } from "./utils";
 
@@ -68,7 +75,7 @@ export default <V>(
     [onChangeRef]
   );
 
-  const setUsedStateRef = useCallback((path: string) => {
+  const setUsedStateRef = useCallback<SetUsedStateRef>((path) => {
     usedStateRef.current[path] = true;
   }, []);
 
