@@ -278,13 +278,10 @@ export default <V extends FormValues = FormValues>({
   );
 
   const getState = useCallback<GetState>(
-    (path, watch = { filterUntouchedErrors: true }) => {
+    (path, { target, watch = true, filterUntouchedErrors = true } = {}) => {
+      const getPath = (path: string) => (target ? `${target}.${path}` : path);
       const errorEnhancer = (path: string, state: any) => {
-        if (
-          !watch ||
-          !watch.filterUntouchedErrors ||
-          !path.startsWith("errors")
-        )
+        if (!watch || !filterUntouchedErrors || !path.startsWith("errors"))
           return state;
 
         path = path.replace("errors", "touched");
@@ -296,18 +293,20 @@ export default <V extends FormValues = FormValues>({
 
       if (isArray(path)) {
         state = path.map((path) => {
+          path = getPath(path);
           if (watch) setUsedStateRef(path);
           return errorEnhancer(path, get(stateRef.current, path));
         });
       } else if (isPlainObject(path)) {
         const paths = path as Record<string, string>;
         state = Object.keys(paths).reduce((state: Record<string, any>, key) => {
-          path = paths[key];
+          path = getPath(paths[key]);
           if (watch) setUsedStateRef(path);
           state[key] = errorEnhancer(path, get(stateRef.current, path));
           return state;
         }, {});
       } else {
+        path = getPath(path);
         if (watch) setUsedStateRef(path);
         state = errorEnhancer(path, get(stateRef.current, path));
       }
@@ -583,7 +582,8 @@ export default <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      getState: ((path, watch = false) => getState(path, watch)) as GetState,
+      getState: ((path, options = { watch: false }) =>
+        getState(path, options)) as GetState,
       setErrors,
       setFieldError,
       setValues,
