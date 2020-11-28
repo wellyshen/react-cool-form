@@ -14,7 +14,7 @@ const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
 export interface FormValues {
   hidden: string;
-  text?: Record<string, string>;
+  text?: Record<string, any>;
   controller1?: any;
   controller2: any;
   dynamicText1?: string;
@@ -33,7 +33,7 @@ export interface FormValues {
 
 const defaultValues = {
   hidden: "new test",
-  text: { nest: "new test" },
+  text: { nest: { nest: "new test" } },
   controller1: "new test",
   controller2: "new test",
   dynamicText1: "new test",
@@ -141,11 +141,11 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      values: "values",
-      errors: "errors",
-      touched: "touched",
-      // isDirty: "isDirty",
-      dirtyFields: "dirtyFields",
+      // values: "values",
+      // errors: "errors",
+      // touched: "touched",
+      isDirty: "isDirty",
+      // dirtyFields: "dirtyFields",
       // isValidating: "isValidating",
       // isValid: "isValid",
       // isSubmitting: "isSubmitting",
@@ -153,7 +153,7 @@ export default (): JSX.Element => {
       // submitCount: "submitCount",
     })
   );
-  const errors = getState("errors");
+  // const errors = getState("errors");
   // console.log("LOG ===> ", errors);
   // const isDirty = getState("isDirty");
   // console.log("LOG ===> ", isDirty);
@@ -229,7 +229,7 @@ export default (): JSX.Element => {
         {show1 && (
           <Input
             label="Text:"
-            name="text.nest"
+            name="text.nest.nest"
             /* ref={validate(async (value) => {
               // eslint-disable-next-line
               // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -240,7 +240,7 @@ export default (): JSX.Element => {
             defaultValue="test"
           />
         )}
-        {errors.text?.nest && <p>{errors.text?.nest}</p>}
+        {/* {errors.text?.nest && <p>{errors.text?.nest}</p>} */}
         <Input
           label="Controller 1:"
           {...controller("controller1", {
@@ -289,7 +289,7 @@ export default (): JSX.Element => {
           minLength={5}
           // defaultValue="test"
         />
-        {errors.password && <p>{errors.password}</p>}
+        {/* {errors.password && <p>{errors.password}</p>} */}
         <Input label="Number:" type="number" name="number" />
         <Input label="Range:" type="range" name="range" />
         <Input

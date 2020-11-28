@@ -90,21 +90,21 @@ export const filterError = (error: unknown, touched: unknown): any => {
 };
 
 export const getIsDirty = (object: object): boolean => {
-  const parse = (object: object, found: any[] = []) => {
-    // eslint-disable-next-line consistent-return
-    Object.values(object).forEach((obj): any[] | void => {
+  const search = (object: object, found: any[] = []) => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const obj of Object.values(object)) {
       if (obj === true) {
         found.push(obj);
         return found;
       }
 
-      if (isPlainObject(obj)) parse(obj, found);
-    });
+      if (isPlainObject(obj)) search(obj, found);
+    }
 
     return found;
   };
 
-  return !!parse(object).length;
+  return !!search(object).length;
 };
 
 export const get = (object: any, path: string, defaultValue?: unknown) => {
