@@ -185,7 +185,11 @@ interface ValidateRef<V> {
 interface GetState {
   (
     path: string | string[] | Record<string, string>,
-    watch?: { filterUntouchedErrors: boolean } | false
+    options?: {
+      target?: string;
+      watch?: boolean;
+      filterUntouchedErrors?: boolean;
+    }
   ): any;
 }
 
