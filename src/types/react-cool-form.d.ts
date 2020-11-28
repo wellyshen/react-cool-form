@@ -163,14 +163,12 @@ declare module "react-cool-form" {
         onChange?: OnChange<E>;
         onBlur?: OnBlur;
       }
-    ):
-      | {
-          name: string;
-          value: any;
-          onChange: (event: E) => void;
-          onBlur: OnBlur;
-        }
-      | Record<string, unknown>;
+    ): {
+      name: string;
+      value: any;
+      onChange: (event: E) => void;
+      onBlur: OnBlur;
+    } | void;
   }
 
   export interface Config<V = FormValues> {

@@ -692,7 +692,7 @@ export default <V extends FormValues = FormValues>({
     ) => {
       if (!name) {
         warn('💡 react-cool-form > controller: Missing the "name" parameter.');
-        return {};
+        return undefined;
       }
 
       controllersRef.current[name] = true;

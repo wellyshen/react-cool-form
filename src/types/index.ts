@@ -182,14 +182,12 @@ export interface Controller<V, E = any> {
       onChange?: (event: E, value?: any) => void;
       onBlur?: (event: FocusEvent<any>) => void;
     }
-  ):
-    | {
-        name: string;
-        value: any;
-        onChange: (event: E) => void;
-        onBlur: (event: FocusEvent<any>) => void;
-      }
-    | Record<string, unknown>;
+  ): {
+    name: string;
+    value: any;
+    onChange: (event: E) => void;
+    onBlur: (event: FocusEvent<any>) => void;
+  } | void;
 }
 
 export interface Config<V> {

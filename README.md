@@ -275,14 +275,12 @@ interface Controller<V = FormValues, E = any> {
       onChange?: OnChange<E>;
       onBlur?: OnBlur;
     }
-  ):
-    | {
-        name: string;
-        value: any;
-        onChange: (event: E) => void;
-        onBlur: OnBlur;
-      }
-    | Record<string, unknown>;
+  ): {
+    name: string;
+    value: any;
+    onChange: (event: E) => void;
+    onBlur: OnBlur;
+  } | void;
 }
 
 interface Config<V = FormValues> {
