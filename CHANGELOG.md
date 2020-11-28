@@ -1,5 +1,23 @@
 # react-cool-form
 
+## 0.0.51
+
+### Patch Changes
+
+- [`a9bc203`](https://github.com/wellyshen/react-cool-form/commit/a9bc203a74919e3693ecc8dbd0d5e125c22bde9a) Thanks [@wellyshen](https://github.com/wellyshen)! - perf(utils): improve the performance of `getIsDirty()`
+
+* [`7e296d0`](https://github.com/wellyshen/react-cool-form/commit/7e296d02a248d636aa6718d7f79d42d3ad20bfa7) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update example
+
+- [`c4acafc`](https://github.com/wellyshen/react-cool-form/commit/c4acafcb96378b369321236eb767bd93ec25686b) Thanks [@wellyshen](https://github.com/wellyshen)! - chore: refine project structure
+
+* [`7eb1693`](https://github.com/wellyshen/react-cool-form/commit/7eb1693af7995207550da212435e4272ec15ff39) [#175](https://github.com/wellyshen/react-cool-form/pull/175) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): correct the behavior of built-in validation
+
+- [`57278de`](https://github.com/wellyshen/react-cool-form/commit/57278de50edbf5959f51472969b659c3743022e8) [#174](https://github.com/wellyshen/react-cool-form/pull/174) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): adjust the API of `getState()`
+
+* [`9af09b2`](https://github.com/wellyshen/react-cool-form/commit/9af09b2b01552414897b041deb6e1c64ca21ca9f) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update example
+
+- [`daac107`](https://github.com/wellyshen/react-cool-form/commit/daac107aafc61ccc761ad79f47fa9a4a441896aa) [#173](https://github.com/wellyshen/react-cool-form/pull/173) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): re-use methods
+
 ## 0.0.50
 
 ### Patch Changes
