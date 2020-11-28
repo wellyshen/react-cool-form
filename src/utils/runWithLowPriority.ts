@@ -1,6 +1,4 @@
-export default (
-  callback: (args: any) => any
-): typeof window.requestIdleCallback =>
+export default (callback: (args: any) => any): any =>
   (
     window.requestIdleCallback ||
     ((callback) => {
