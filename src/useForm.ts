@@ -82,12 +82,10 @@ export default <V extends FormValues = FormValues>({
     isSubmitted: false,
     submitCount: 0,
   });
-  const {
-    stateRef,
-    setStateRef,
-    setUsedStateRef,
-    setDefaultValuesRef,
-  } = useState<V>(initialStateRef.current, debug);
+  const { stateRef, setStateRef, setUsedStateRef } = useState<V>(
+    initialStateRef.current,
+    debug
+  );
 
   const getFields = useCallback(
     (form: HTMLFormElement) =>
@@ -243,10 +241,8 @@ export default <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, get(initialStateRef.current.values, name), {
         shouldUpdate: !isInitRef.current,
       });
-
-      setDefaultValuesRef(initialStateRef.current.values);
     },
-    [setDefaultValuesRef, setStateRef]
+    [setStateRef]
   );
 
   const setAllNodesOrStateValue = useCallback(
@@ -821,7 +817,6 @@ export default <V extends FormValues = FormValues>({
           name,
           true
         );
-        setDefaultValuesRef(initialStateRef.current.values);
 
         delete fieldValidatorsRef.current[name];
         delete controllersRef.current[name];
@@ -858,7 +853,6 @@ export default <V extends FormValues = FormValues>({
     handleUnset,
     reset,
     setAllNodesOrStateValue,
-    setDefaultValuesRef,
     setFieldTouchedMaybeValidate,
     stateRef,
     submit,
