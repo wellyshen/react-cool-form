@@ -41,7 +41,8 @@ import { useForm } from "react-cool-form";
 
 const App = () => {
   const { formRef, getState } = useForm({
-    // Provide the default values for our form state
+    // Provide the default values of the form state
+    // just like we use "React.useState" or "React.useReducer"
     defaultValues: { name: "", email: "", password: "" },
     // The event only triggered when the form is valid
     onSubmit: (values, actions) => {
@@ -51,8 +52,8 @@ const App = () => {
 
   const errors = getState(
     "errors",
-    // The second argument is the "watch" mode, it can be: { filterUntouchedErrors: true } | false
-    // Default as below, which helps you display an error until filed is blurred for better UX
+    // react-cool-form auto filters the errors before a field is blurred
+    // Which helps the user focus on typing without be annoying
     { filterUntouchedErrors: true }
   );
 
