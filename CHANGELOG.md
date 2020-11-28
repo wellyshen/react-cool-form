@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.53
+
+### Patch Changes
+
+- [`573c7f7`](https://github.com/wellyshen/react-cool-form/commit/573c7f79c3c2e70d429e8759724b317aa5c28bd3) [#178](https://github.com/wellyshen/react-cool-form/pull/178) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useState): remove `setDefaultValuesRef` method
+
 ## 0.0.52
 
 ### Patch Changes
