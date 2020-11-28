@@ -168,21 +168,18 @@ export default (): JSX.Element => {
   const handleToggle2Click = (): void => setShow2(!show2);
 
   const handleSetValueClick = (): void => {
-    console.log(
-      "LOG ===> errors: ",
-      getState("errors.password", { watch: false })
-    );
-    /* setValues(
+    // setFieldValue("password", "123");
+
+    setValues(
       (prevValues) => ({
         ...prevValues,
-        text: { nest: "new test" },
-        number: 123,
+        password: "123",
       }),
       {
-        touchedFields: ["text.nest"],
-        dirtyFields: ["text.nest"],
+        touchedFields: ["password"],
+        dirtyFields: ["password"],
       }
-    ); */
+    );
 
     // setFieldValue("text.nest", (prevValue: string) => `new ${prevValue}`);
     // setFieldValue("text.nest", "new test");

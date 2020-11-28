@@ -69,7 +69,6 @@ export default <V extends FormValues = FormValues>({
   const onResetRef = useLatest(onReset || (() => undefined));
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
-  const prevBuiltInErrorsRef = useRef<Record<string, string>>({});
   const defaultValuesRef = useRef(defaultValues || {});
   const initialStateRef = useRef<FormState<V>>({
     values: defaultValuesRef.current,
@@ -342,15 +341,7 @@ export default <V extends FormValues = FormValues>({
   const runBuiltInValidation = useCallback((name: string) => {
     if (!fieldsRef.current[name]) return undefined;
 
-    let error = fieldsRef.current[name].field.validationMessage;
-    error =
-      name === changedFieldRef.current
-        ? error
-        : error || prevBuiltInErrorsRef.current[name];
-
-    prevBuiltInErrorsRef.current[name] = error;
-
-    return error;
+    return fieldsRef.current[name].field.validationMessage;
   }, []);
 
   const runAllBuiltInValidation = useCallback(
@@ -497,7 +488,6 @@ export default <V extends FormValues = FormValues>({
       setStateRef(`touched.${name}`, true);
 
       if (shouldValidate) validateFieldWithLowPriority(name);
-      changedFieldRef.current = undefined;
     },
     [setStateRef, validateFieldWithLowPriority, validateOnBlur]
   );
@@ -564,7 +554,6 @@ export default <V extends FormValues = FormValues>({
       if (shouldTouched) setFieldTouched(name, false);
       if (shouldDirty) setFieldDirty(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
-      changedFieldRef.current = name;
     },
     [
       handleUnset,
@@ -684,7 +673,6 @@ export default <V extends FormValues = FormValues>({
       setFieldDirty(name);
 
       if (validateOnChange) validateFieldWithLowPriority(name);
-      changedFieldRef.current = name;
 
       return value;
     },
@@ -734,10 +722,12 @@ export default <V extends FormValues = FormValues>({
           }
 
           if (onChange) onChange(e, value);
+          changedFieldRef.current = name;
         },
         onBlur: (e) => {
           setFieldTouchedMaybeValidate(name);
           if (onBlur) onBlur(e);
+          changedFieldRef.current = undefined;
         },
       };
     },
@@ -775,8 +765,10 @@ export default <V extends FormValues = FormValues>({
         return;
       }
 
-      if (fieldsRef.current[name] && !controllersRef.current[name])
+      if (fieldsRef.current[name] && !controllersRef.current[name]) {
         handleFieldChange(field);
+        changedFieldRef.current = name;
+      }
     };
 
     const handleBlur = ({ target }: Event) => {
@@ -784,8 +776,10 @@ export default <V extends FormValues = FormValues>({
 
       const { name } = target as FieldElement;
 
-      if (fieldsRef.current[name] && !controllersRef.current[name])
+      if (fieldsRef.current[name] && !controllersRef.current[name]) {
         setFieldTouchedMaybeValidate(name);
+        changedFieldRef.current = undefined;
+      }
     };
 
     const handleSubmit = (e: Event) => submit(e as any);
@@ -830,7 +824,6 @@ export default <V extends FormValues = FormValues>({
         setDefaultValuesRef(initialStateRef.current.values);
 
         delete fieldValidatorsRef.current[name];
-        delete prevBuiltInErrorsRef.current[name];
         delete controllersRef.current[name];
       });
 
