@@ -37,15 +37,10 @@ export interface SetUsedStateRef {
   (path: string): void;
 }
 
-export interface SetDefaultValuesRef<V> {
-  (values: V): void;
-}
-
 export interface FormStateReturn<V> {
   stateRef: StateRef<V>;
   setStateRef: SetStateRef;
   setUsedStateRef: SetUsedStateRef;
-  setDefaultValuesRef: SetDefaultValuesRef<V>;
 }
 
 // Form

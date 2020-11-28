@@ -6,7 +6,6 @@ import {
   FormState,
   FormStateReturn,
   Map,
-  SetDefaultValuesRef,
   SetStateRef,
   SetUsedStateRef,
 } from "../types";
@@ -18,7 +17,6 @@ export default <V>(
   onChange?: Debug<V>
 ): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
-  const defaultValuesRef = useRef(initialState.values);
   const stateRef = useRef(initialState);
   const usedStateRef = useRef<Map>({});
   const onChangeRef = useLatest(onChange || (() => undefined));
@@ -78,9 +76,5 @@ export default <V>(
     usedStateRef.current[path] = true;
   }, []);
 
-  const setDefaultValuesRef = useCallback<SetDefaultValuesRef<V>>((values) => {
-    defaultValuesRef.current = values;
-  }, []);
-
-  return { stateRef, setStateRef, setUsedStateRef, setDefaultValuesRef };
+  return { stateRef, setStateRef, setUsedStateRef };
 };
