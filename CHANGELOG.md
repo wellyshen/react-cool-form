@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.52
+
+### Patch Changes
+
+- [`fa7ebf6`](https://github.com/wellyshen/react-cool-form/commit/fa7ebf6d56f145a82cb30f1e981fc6b3b00f9df6) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(utils): delete the filtered property for `filterError()`
+
+* [`68d232d`](https://github.com/wellyshen/react-cool-form/commit/68d232d66844389a7416700cfd8d485bf855a92e) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): refine the type of `controller`
+
 ## 0.0.51
 
 ### Patch Changes
