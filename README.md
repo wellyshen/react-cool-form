@@ -53,7 +53,7 @@ const App = () => {
   const errors = getState(
     "errors",
     // react-cool-form auto filters the errors before a field is blurred
-    // Which helps the user focus on typing without be annoying
+    // Which helps the user focus on typing without being annoying
     { filterUntouchedErrors: true }
   );
 
