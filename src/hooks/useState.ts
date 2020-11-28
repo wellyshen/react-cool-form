@@ -9,9 +9,9 @@ import {
   SetDefaultValuesRef,
   SetStateRef,
   SetUsedStateRef,
-} from "./types";
+} from "../types";
 import useLatest from "./useLatest";
-import { get, getIsDirty, isEmptyObject, set } from "./utils";
+import { get, getIsDirty, isEmptyObject, set } from "../utils";
 
 export default <V>(
   initialState: FormState<V>,

@@ -22,8 +22,7 @@ import {
   ValidateField,
   ValidateForm,
 } from "./types";
-import useLatest from "./useLatest";
-import useState from "./useState";
+import { useIsoLayoutEffect, useLatest, useState } from "./hooks";
 import {
   arrayToMap,
   deepMerge,
@@ -45,7 +44,6 @@ import {
   runWithLowPriority,
   set,
   unset,
-  useUniversalLayoutEffect,
   warn,
 } from "./utils";
 
@@ -752,7 +750,7 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  useUniversalLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     if (!formRef.current) {
       warn(
         '💡 react-cool-form: Don\'t forget to register your form via the "formRef".'
