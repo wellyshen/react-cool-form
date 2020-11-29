@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.54
+
+### Patch Changes
+
+- [`53fd53c`](https://github.com/wellyshen/react-cool-form/commit/53fd53c489f58f70eac35d05d103c267edc30b69) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(utils): filter the `undefined` property only for `filterError`
+
 ## 0.0.53
 
 ### Patch Changes
