@@ -1,7 +1,7 @@
 import isPlainObject from "./isPlainObject";
 import isUndefined from "./isUndefined";
 
-const filterError = (error: unknown, touched: unknown): any => {
+const filterErrors = (error: unknown, touched: unknown): any => {
   if (!isPlainObject(error) || error instanceof Date)
     return touched ? error : undefined;
 
