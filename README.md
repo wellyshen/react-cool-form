@@ -1,4 +1,4 @@
-> 🚨 Under developing API may be changed super fast, don't use it now. Please note any changes via [release](https://github.com/wellyshen/react-cool-form/releases). Here's the [milestone](#milestone).
+> 🚨 Under developing the API may be changed fast, **don't use it in production atm**. Please note any changes via [release](https://github.com/wellyshen/react-cool-form/releases). Here's the [milestone](#milestone).
 
 # <b>REACT COOL FORM</b>
 
@@ -15,9 +15,9 @@ React hooks for forms state, validation, and performance.
 - [x] Type definition
 - [x] Support server-side rendering
 - [x] CI/CD
-- [ ] Documentation
+- [ ] Documentation (in-progress...)
+- [ ] Unit testing (in-progress...)
 - [ ] Examples
-- [ ] Unit testing
 - [ ] End to end testing
 
 ## Getting Started
