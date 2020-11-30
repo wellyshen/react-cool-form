@@ -109,6 +109,12 @@ describe("useState", () => {
     });
   });
 
+  it.todo("check state's values deep equal");
+
+  it.todo("check re-render by parent match (from used-state)");
+
+  it.todo("check re-render by parent match (from set-state)");
+
   it("should skip re-render", () => {
     const { setStateRef, setUsedStateRef } = renderHelper();
     setUsedStateRef("values.name");
