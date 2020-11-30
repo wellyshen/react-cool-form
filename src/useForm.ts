@@ -26,7 +26,7 @@ import { useIsoLayoutEffect, useLatest, useState } from "./hooks";
 import {
   arrayToMap,
   deepMerge,
-  filterError,
+  filterErrors,
   get,
   isArray,
   isCheckboxField,
