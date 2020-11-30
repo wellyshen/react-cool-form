@@ -322,4 +322,6 @@ const set: (
   value: unknown,
   immutable?: boolean
 ) => any;
+
+const unset: (object: any, path: string, immutable?: boolean) => any;
 ```
