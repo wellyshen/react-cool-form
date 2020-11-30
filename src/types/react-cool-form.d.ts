@@ -210,4 +210,6 @@ declare module "react-cool-form" {
     value: unknown,
     immutable?: boolean
   ) => any;
+
+  export const unset: (object: any, path: string, immutable?: boolean) => any;
 }
