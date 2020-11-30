@@ -27,7 +27,7 @@ describe("useState", () => {
   };
   const nextState = {
     ...initialState,
-    values: { name: "Wei-Yu-Yu" },
+    values: { name: "Wei-Yu" },
     touched: { name: true },
     errors: { name: "Required" },
     isDirty: true,
@@ -62,7 +62,7 @@ describe("useState", () => {
   it("should set state's values and re-render correctly", () => {
     const { stateRef, setStateRef, setUsedStateRef } = renderHelper();
 
-    const name = "Wei-Yu-Yu";
+    const name = "Wei-Yu";
     setUsedStateRef("values.name");
     setStateRef("values.name", name);
     expect(forceUpdate).toHaveBeenCalledTimes(1);
