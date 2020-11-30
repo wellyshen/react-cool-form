@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.55
+
+### Patch Changes
+
+- [`e60deba`](https://github.com/wellyshen/react-cool-form/commit/e60deba4f44e273ff3225bb24579a27dd5f25237) [#181](https://github.com/wellyshen/react-cool-form/pull/181) Thanks [@wellyshen](https://github.com/wellyshen)! - feat: expose the `unset` utility function
+
 ## 0.0.54
 
 ### Patch Changes
