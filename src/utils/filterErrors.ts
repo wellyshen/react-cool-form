@@ -6,7 +6,7 @@ const filterErrors = (error: unknown, touched: unknown): any => {
     return touched ? error : undefined;
 
   return Object.keys(error).reduce((obj: Record<string, any>, key) => {
-    const nextError = filterError(
+    const nextError = filterErrors(
       (error as Record<string, any>)[key],
       (touched as Record<string, any>)[key] || false
     );
@@ -21,4 +21,4 @@ const filterErrors = (error: unknown, touched: unknown): any => {
   }, {});
 };
 
-export default filterError;
+export default filterErrors;
