@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.57
+
+### Patch Changes
+
+- [`ae3447c`](https://github.com/wellyshen/react-cool-form/commit/ae3447cbefdcc025e9ca7f10858003d088db38f4) Thanks [@wellyshen](https://github.com/wellyshen)! - chore: update slogan
+
 ## 0.0.56
 
 ### Patch Changes
