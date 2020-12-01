@@ -1,7 +1,7 @@
 {
   "name": "react-cool-form",
   "version": "0.0.56",
-  "description": "React hooks for forms state, validation, and performance.",
+  "description": "React hooks for forms state and validation, less code more performant.",
   "license": "MIT",
   "homepage": "https://github.com/wellyshen/react-cool-form#readme",
   "repository": "https://github.com/wellyshen/react-cool-form",
