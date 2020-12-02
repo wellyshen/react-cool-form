@@ -660,7 +660,7 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const handleFieldChange = useCallback(
+  const handleChangeEvent = useCallback(
     (field: FieldElement) => {
       const { name } = field;
       const value = getNodeValue(field);
@@ -712,7 +712,7 @@ export default <V extends FormValues = FormValues>({
             parsedE.nativeEvent instanceof Event &&
             isFieldElement(parsedE.target)
           ) {
-            value = handleFieldChange(parsedE.target);
+            value = handleChangeEvent(parsedE.target);
           } else {
             setFieldValue(name, parsedE, { shouldTouched: false });
           }
@@ -729,7 +729,7 @@ export default <V extends FormValues = FormValues>({
     },
     [
       getState,
-      handleFieldChange,
+      handleChangeEvent,
       setDefaultValue,
       setFieldTouchedMaybeValidate,
       setFieldValue,
@@ -762,7 +762,7 @@ export default <V extends FormValues = FormValues>({
       }
 
       if (fieldsRef.current[name] && !controllersRef.current[name]) {
-        handleFieldChange(field);
+        handleChangeEvent(field);
         changedFieldRef.current = name;
       }
     };
@@ -849,7 +849,7 @@ export default <V extends FormValues = FormValues>({
     };
   }, [
     getFields,
-    handleFieldChange,
+    handleChangeEvent,
     handleUnset,
     reset,
     setAllNodesOrStateValue,
