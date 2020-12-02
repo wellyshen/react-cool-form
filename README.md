@@ -247,13 +247,11 @@ interface Submit<V> {
   (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
 }
 
-interface Parse<E = any, R = any> {
-  (event: E): R;
-}
-
-interface Format<V = any, R = any> {
+interface Parse<V = any, R = any> {
   (value: V): R;
 }
+
+type Format<V = any, R = any> = Parse<V, R>;
 
 interface OnChange<E = any> {
   (event: E, value?: any): void;
@@ -270,7 +268,7 @@ interface Controller<V = FormValues, E = any> {
       validate?: FieldValidator<V>;
       value?: any;
       defaultValue?: any;
-      parse?: Parse<E>;
+      parse?: Parse;
       format?: Format;
       onChange?: OnChange<E>;
       onBlur?: OnBlur;
