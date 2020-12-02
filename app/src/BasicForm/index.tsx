@@ -138,10 +138,10 @@ export default (): JSX.Element => {
     ])
   ); */
   // console.log("LOG ===> ", getState("values.dynamicText1"));
-  /* console.log(
+  console.log(
     "LOG ===> formState: ",
     getState({
-      // values: "values",
+      values: "values",
       // errors: "errors",
       // touched: "touched",
       // isDirty: "isDirty",
@@ -152,11 +152,8 @@ export default (): JSX.Element => {
       // isSubmitted: "isSubmitted",
       // submitCount: "submitCount",
     })
-  ); */
+  );
   const errors = getState("errors");
-  console.log("LOG ===> ", errors);
-  // const errors = getState("text.nest", { target: "errors" });
-  // console.log("LOG ===> ", errors);
 
   useEffect(() => {
     // validateField("text.nest");
