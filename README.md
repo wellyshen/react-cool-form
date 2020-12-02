@@ -136,10 +136,7 @@ type FormState<V = FormValues> = Readonly<{
   submitCount: number;
 }>;
 
-type Options<V> = Omit<
-  Return<V>,
-  "formRef" | "validate" | "submit" | "controller"
->;
+type Options<V> = Omit<Return<V>, "formRef" | "validate" | "submit" | "field">;
 
 interface OnReset<V = FormValues> {
   (
@@ -263,7 +260,7 @@ interface OnBlur {
   (event: FocusEvent<any>): void;
 }
 
-interface Controller<V = FormValues, E = any> {
+interface Field<V = FormValues, E = any> {
   (
     name: string,
     options?: {
@@ -307,7 +304,7 @@ interface Return<V = FormValues> {
   validateField: ValidateField<V>;
   reset: Reset<V>;
   submit: Submit<V>;
-  controller: Controller<V>;
+  field: Field<V>;
 }
 
 const useForm: <V extends FormValues = FormValues>(
