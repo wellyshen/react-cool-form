@@ -24,7 +24,7 @@ declare module "react-cool-form" {
 
   type Options<V> = Omit<
     Return<V>,
-    "formRef" | "validate" | "submit" | "controller"
+    "formRef" | "validate" | "submit" | "field"
   >;
 
   export interface OnReset<V = FormValues> {
@@ -151,7 +151,7 @@ declare module "react-cool-form" {
     (event: FocusEvent<any>): void;
   }
 
-  export interface Controller<V = FormValues, E = any> {
+  export interface Field<V = FormValues, E = any> {
     (
       name: string,
       options?: {
@@ -195,7 +195,7 @@ declare module "react-cool-form" {
     validateField: ValidateField<V>;
     reset: Reset<V>;
     submit: Submit<V>;
-    controller: Controller<V>;
+    field: Field<V>;
   }
 
   export const useForm: <V extends FormValues = FormValues>(

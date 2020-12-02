@@ -1,9 +1,5 @@
 import { ChangeEvent, memo, useState } from "react";
-import {
-  Controller as ControllerType,
-  Parse,
-  FieldValidator,
-} from "react-cool-form";
+import { Field as FieldType, Parse, FieldValidator } from "react-cool-form";
 
 import { FormValues } from ".";
 
@@ -14,17 +10,17 @@ interface Props {
   name: string;
   type?: string;
   defaultValue: any;
-  controller: ControllerType<FormValues, ChangeEvent<HTMLInputElement>>;
+  field: FieldType<FormValues, ChangeEvent<HTMLInputElement>>;
   validate?: FieldValidator<FormValues>;
   [k: string]: any;
 }
 
-const Controller = ({
+const Field = ({
   label,
   name,
   type,
   defaultValue,
-  controller,
+  field,
   validate,
   ...rest
 }: Props) => {
@@ -38,7 +34,7 @@ const Controller = ({
     <Input
       label={label}
       type={type}
-      {...controller(name, {
+      {...field(name, {
         validate,
         value,
         defaultValue: "welly",
@@ -58,9 +54,9 @@ const Controller = ({
   );
 };
 
-Controller.defaultProps = {
+Field.defaultProps = {
   type: undefined,
   validate: () => null,
 };
 
-export default memo(Controller);
+export default memo(Field);
