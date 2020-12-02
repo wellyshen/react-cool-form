@@ -173,6 +173,7 @@ export interface Field<V, E = any> {
       format?: (value: any) => any;
       onChange?: (event: E, value?: any) => void;
       onBlur?: (event: FocusEvent<any>) => void;
+      controlled?: boolean;
     }
   ): {
     name: string;

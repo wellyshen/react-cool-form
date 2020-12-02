@@ -162,6 +162,7 @@ declare module "react-cool-form" {
         format?: Format;
         onChange?: OnChange<E>;
         onBlur?: OnBlur;
+        controlled?: boolean;
       }
     ): {
       name: string;

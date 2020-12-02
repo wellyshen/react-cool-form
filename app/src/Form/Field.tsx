@@ -38,7 +38,7 @@ const Field = ({
         validate,
         value,
         defaultValue: "welly",
-        // parse,
+        parse,
         format: (val) => `formatted ${val}`,
         onChange: (e, val) => {
           setValue(val);
@@ -48,6 +48,7 @@ const Field = ({
         onBlur: (e) => {
           // console.log("LOG ===> onBlur: ", e);
         },
+        controlled: false,
       })}
       {...rest}
     />

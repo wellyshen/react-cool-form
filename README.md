@@ -271,6 +271,7 @@ interface Field<V = FormValues, E = any> {
       format?: Format;
       onChange?: OnChange<E>;
       onBlur?: OnBlur;
+      controlled?: boolean;
     }
   ): {
     name: string;
