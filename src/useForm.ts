@@ -669,8 +669,6 @@ export default <V extends FormValues = FormValues>({
       setFieldDirty(name);
 
       if (validateOnChange) validateFieldWithLowPriority(name);
-
-      return value;
     },
     [
       getNodeValue,
@@ -705,18 +703,14 @@ export default <V extends FormValues = FormValues>({
         name,
         value,
         onChange: (e) => {
-          const parsedE = parse ? parse(e) : e;
           let value;
+          value =
+            e.nativeEvent instanceof Event && isFieldElement(e.target)
+              ? getNodeValue(e.target)
+              : e;
+          value = parse ? parse(value) : value;
 
-          if (
-            parsedE.nativeEvent instanceof Event &&
-            isFieldElement(parsedE.target)
-          ) {
-            value = handleChangeEvent(parsedE.target);
-          } else {
-            setFieldValue(name, parsedE, { shouldTouched: false });
-          }
-
+          setFieldValue(name, value, { shouldTouched: false });
           if (onChange) onChange(e, value);
           changedFieldRef.current = name;
         },
@@ -728,8 +722,8 @@ export default <V extends FormValues = FormValues>({
       };
     },
     [
+      getNodeValue,
       getState,
-      handleChangeEvent,
       setDefaultValue,
       setFieldTouchedMaybeValidate,
       setFieldValue,
