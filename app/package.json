@@ -1,10 +1,10 @@
 {
-  "name": "react-cool-form-examples",
+  "name": "react-cool-form-app",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "link-pkg": "yarn link 'react-cool-form'",
-    "start": "react-scripts start",
+    "start:dev": "react-scripts start",
     "start:prod": "yarn build && serve -s build",
     "build": "react-scripts build",
     "lint": "run-s lint:*",

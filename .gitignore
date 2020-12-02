@@ -1,21 +1,21 @@
 # dependencies
 node_modules
-examples/.pnp
-examples/.pnp.js
+app/.pnp
+app/.pnp.js
 
 # testing
 coverage
 
 # production
 dist
-examples/build
+app/build
 
 # misc
+.size-snapshot.json
+app/.env.local
+app/.env.development.local
+app/.env.test.local
+app/.env.production.local
+app/.eslintcache
 .DS_Store
 *.log
-.size-snapshot.json
-examples/.env.local
-examples/.env.development.local
-examples/.env.test.local
-examples/.env.production.local
-examples/.eslintcache

@@ -1,10 +1,6 @@
-# testing
+app
+dist
 coverage
 
-# production
-dist
-
-# misc
-examples
 *.log
 .size-snapshot.json
