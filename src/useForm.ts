@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef } from "react";
 
 import {
   Config,
-  Controller,
   Errors,
+  Field,
   FieldElement,
   Fields,
   FieldValidator,
@@ -681,13 +681,13 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const controller = useCallback<Controller<V>>(
+  const field = useCallback<Field<V>>(
     (
       name,
       { validate, value, defaultValue, parse, format, onChange, onBlur } = {}
     ) => {
       if (!name) {
-        warn('💡 react-cool-form > controller: Missing the "name" parameter.');
+        warn('💡 react-cool-form > field: Missing the "name" parameter.');
         return undefined;
       }
 
@@ -870,6 +870,6 @@ export default <V extends FormValues = FormValues>({
     validateField,
     reset,
     submit,
-    controller,
+    field,
   };
 };

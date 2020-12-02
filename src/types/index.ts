@@ -56,10 +56,7 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
-type Options<V> = Omit<
-  Return<V>,
-  "formRef" | "validate" | "submit" | "controller"
->;
+type Options<V> = Omit<Return<V>, "formRef" | "validate" | "submit" | "field">;
 
 interface OnReset<V> {
   (
@@ -165,7 +162,7 @@ export interface Submit<V> {
   (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
 }
 
-export interface Controller<V, E = any> {
+export interface Field<V, E = any> {
   (
     name: string,
     options?: {
@@ -209,5 +206,5 @@ export interface Return<V> {
   validateField: ValidateField<V>;
   reset: Reset<V>;
   submit: Submit<V>;
-  controller: Controller<V>;
+  field: Field<V>;
 }

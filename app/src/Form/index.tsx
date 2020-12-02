@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useForm, get, set } from "react-cool-form";
 import * as Yup from "yup";
 
+import Field from "./Field";
 import Input from "./Input";
-import Controller from "./Controller";
 import Select from "./Select";
 import TextArea from "./TextArea";
 import { container, form, wrapper } from "./styles";
@@ -15,8 +15,8 @@ const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 export interface FormValues {
   hidden: string;
   text?: Record<string, string>;
-  controller1?: any;
-  controller2: any;
+  field1?: any;
+  field2: any;
   dynamicText1?: string;
   dynamicText2: string;
   password: string;
@@ -34,8 +34,8 @@ export interface FormValues {
 const defaultValues = {
   hidden: "new test",
   text: { nest: "new test" },
-  controller1: "new test",
-  controller2: "new test",
+  field1: "new test",
+  field2: "new test",
   dynamicText1: "new test",
   dynamicText2: "new test",
   password: "nest test",
@@ -72,14 +72,14 @@ export default (): JSX.Element => {
     setFieldError,
     validateField,
     validateForm,
-    controller,
+    field,
     reset,
     submit,
   } = useForm<FormValues>({
     defaultValues,
     // validateOnChange: false,
     // validateOnBlur: false,
-    // ignoreFields: ["text.nest", "controller1"],
+    // ignoreFields: ["text.nest", "field1"],
     // validate: async (values) => {
     //   let errors: any = { text: { nest: "" } };
 
@@ -132,9 +132,9 @@ export default (): JSX.Element => {
   /* console.log(
     "LOG ===> ",
     getState([
-      "values.controller1",
-      "errors.controller1",
-      "dirtyFields.controller1",
+      "values.field1",
+      "errors.field1",
+      "dirtyFields.field1",
     ])
   ); */
   // console.log("LOG ===> ", getState("values.dynamicText1"));
@@ -238,8 +238,8 @@ export default (): JSX.Element => {
         )}
         {errors.text?.nest && <p>{errors.text?.nest}</p>}
         <Input
-          label="Controller 1:"
-          {...controller("controller1", {
+          label="Field 1:"
+          {...field("field1", {
             defaultValue: "test",
             /* validate: async (val) => {
               return val.length <= 5 ? "Field error" : "";
@@ -249,11 +249,11 @@ export default (): JSX.Element => {
           // data-rcf-ignore
           // defaultChecked
         />
-        <Controller
-          label="Controller 2:"
-          name="controller2"
+        <Field
+          label="Field 2:"
+          name="field2"
           // eslint-disable-next-line react-hooks/exhaustive-deps
-          controller={controller}
+          field={field}
           /* validate={useCallback(async (val, values) => {
             // eslint-disable-next-line
             // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -261,7 +261,7 @@ export default (): JSX.Element => {
             return val.length <= 5 ? "Field error" : "";
           }, [])} */
           // required
-          defaultValue={defaultValues.controller2}
+          defaultValue={defaultValues.field2}
         />
         <div>
           <Input
