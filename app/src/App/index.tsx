@@ -1,7 +1,7 @@
 import { Global, css } from "@emotion/react";
 import normalize from "normalize.css";
 
-import BasicFrom from "../BasicForm";
+import Form from "../Form";
 import { root } from "./styles";
 
 export default (): JSX.Element => (
@@ -12,6 +12,6 @@ export default (): JSX.Element => (
         ${root}
       `}
     />
-    <BasicFrom />
+    <Form />
   </>
 );
