@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.58
+
+### Patch Changes
+
+- [`df94182`](https://github.com/wellyshen/react-cool-form/commit/df94182b0c327053535fb7c69b99b8dd518e0173) [#189](https://github.com/wellyshen/react-cool-form/pull/189) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): use `valueAsNumber` instead `parseFloat()` for converting data
+
+* [`4eae04c`](https://github.com/wellyshen/react-cool-form/commit/4eae04c9feb6dde4d07b0c83633ce95792c96ea2) [#193](https://github.com/wellyshen/react-cool-form/pull/193) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): correct the logic of `controller` method
+
+- [`26936f5`](https://github.com/wellyshen/react-cool-form/commit/26936f5b8f8f49f39c115d5acb913a94fd0fdb50) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): rename `handleFieldChange` to `handleChangeEvent`
+
 ## 0.0.57
 
 ### Patch Changes
