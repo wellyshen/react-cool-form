@@ -731,12 +731,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   useIsoLayoutEffect(() => {
-    if (!formRef.current) {
-      warn(
-        '💡 react-cool-form: Don\'t forget to register your form via the "form" ref.'
-      );
-      return;
-    }
+    if (!formRef.current) return;
 
     fieldsRef.current = getFields(formRef.current);
     setAllNodesOrStateValue(initialStateRef.current.values, true);
