@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { useState, useEffect, useCallback } from "react";
-import { useForm, get, set } from "react-cool-form";
+import { useForm, get, set, unset } from "react-cool-form";
 import * as Yup from "yup";
 
 import Input from "./Input";
@@ -39,7 +39,7 @@ const defaultValues = {
   dynamicText1: "new test",
   dynamicText2: "new test",
   password: "nest test",
-  number: 5,
+  number: 0,
   range: 0,
   checkbox: true,
   checkboxGroup: ["value-1"],
@@ -141,8 +141,8 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      // values: "values",
-      errors: "errors",
+      values: "values",
+      // errors: "errors",
       // touched: "touched",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
@@ -153,7 +153,7 @@ export default (): JSX.Element => {
       // submitCount: "submitCount",
     })
   );
-  const errors = getState("errors");
+  // const errors = getState("errors");
 
   useEffect(() => {
     // validateField("text.nest");
@@ -234,7 +234,7 @@ export default (): JSX.Element => {
           required
           defaultValue="test"
         />
-        {errors.text?.nest && <p>{errors.text?.nest}</p>}
+        {/* {errors.text?.nest && <p>{errors.text?.nest}</p>} */}
         <Input
           label="Controller 1:"
           {...controller("controller1", {
@@ -283,8 +283,19 @@ export default (): JSX.Element => {
           minLength={5}
           // defaultValue="test"
         />
-        {errors.password && <p>{errors.password}</p>}
-        <Input label="Number:" type="number" name="number" />
+        {/* {errors.password && <p>{errors.password}</p>} */}
+        <Input
+          label="Number:"
+          type="number"
+          name="number"
+          ref={field({ valueAsNumber: true })}
+        />
+        <Input
+          label="Date:"
+          type="date"
+          name="date"
+          ref={field({ valueAsDate: false })}
+        />
         <Input label="Range:" type="range" name="range" />
         <Input
           label="Checkbox:"
