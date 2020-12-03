@@ -138,7 +138,7 @@ type FormState<V = FormValues> = Readonly<{
 
 type Options<V> = Omit<
   Return<V>,
-  "formRef" | "validate" | "submit" | "controller"
+  "formRef" | "field" | "submit" | "controller"
 >;
 
 interface OnReset<V = FormValues> {
@@ -177,7 +177,7 @@ interface FieldValidator<V = FormValues> {
   (value: any, values: V): any | Promise<any>;
 }
 
-interface ValidateRef<V> {
+interface Field<V> {
   (validate: FieldValidator<V>): (
     field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
   ) => void;
@@ -295,7 +295,7 @@ interface Config<V = FormValues> {
 
 interface Return<V = FormValues> {
   formRef: RefObject<HTMLFormElement>;
-  validate: ValidateRef<V>;
+  field: Field<V>;
   getState: GetState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;

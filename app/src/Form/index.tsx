@@ -64,7 +64,7 @@ export default (): JSX.Element => {
   const [show2, setShow2] = useState(true);
   const {
     formRef,
-    validate,
+    field,
     getState,
     setValues,
     setFieldValue,
@@ -141,8 +141,8 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      values: "values",
-      // errors: "errors",
+      // values: "values",
+      errors: "errors",
       // touched: "touched",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
@@ -222,20 +222,18 @@ export default (): JSX.Element => {
     <div css={container}>
       <form css={form} noValidate ref={formRef}>
         <Input name="hidden" type="hidden" defaultValue="test" />
-        {show1 && (
-          <Input
-            label="Text:"
-            name="text.nest"
-            /* ref={validate(async (value) => {
-              // eslint-disable-next-line
-              // await new Promise((resolve) => setTimeout(resolve, 1000));
-              return value.length <= 5 ? "Field error" : "";
-            })} */
-            // data-rcf-ignore
-            required
-            defaultValue="test"
-          />
-        )}
+        <Input
+          label="Text:"
+          name="text.nest"
+          ref={field(async (value) => {
+            // eslint-disable-next-line
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
+            return value.length <= 5 ? "Field error" : "";
+          })}
+          // data-rcf-ignore
+          required
+          defaultValue="test"
+        />
         {errors.text?.nest && <p>{errors.text?.nest}</p>}
         <Input
           label="Controller 1:"
