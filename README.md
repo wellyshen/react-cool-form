@@ -174,7 +174,7 @@ interface FieldValidator<V = FormValues> {
   (value: any, values: V): any | Promise<any>;
 }
 
-interface Field<V> {
+interface FieldRef<V> {
   (validate: FieldValidator<V>): (
     field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
   ) => void;
@@ -292,7 +292,7 @@ interface Config<V = FormValues> {
 
 interface Return<V = FormValues> {
   form: RefObject<HTMLFormElement>;
-  field: Field<V>;
+  field: FieldRef<V>;
   getState: GetState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;

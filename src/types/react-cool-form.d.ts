@@ -60,7 +60,7 @@ declare module "react-cool-form" {
     (value: any, values: V): any | Promise<any>;
   }
 
-  interface Field<V> {
+  interface FieldRef<V> {
     (validate: FieldValidator<V>): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
@@ -180,7 +180,7 @@ declare module "react-cool-form" {
 
   export interface Return<V = FormValues> {
     form: RefObject<HTMLFormElement>;
-    field: Field<V>;
+    field: FieldRef<V>;
     getState: GetState;
     setErrors: SetErrors<V>;
     setFieldError: SetFieldError;

@@ -4,8 +4,8 @@ import {
   Config,
   Controller,
   Errors,
-  Field,
   FieldElement,
+  FieldRef,
   Fields,
   FieldValidator,
   FormState,
@@ -128,7 +128,7 @@ export default <V extends FormValues = FormValues>({
     [setStateRef]
   );
 
-  const fieldRef = useCallback<Field<V>>(
+  const fieldRef = useCallback<FieldRef<V>>(
     (validate) => (field) => {
       if (
         field?.name &&
