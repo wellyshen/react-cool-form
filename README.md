@@ -40,7 +40,7 @@ Here's the basic example of how does it works, full documentation will be provid
 import { useForm } from "react-cool-form";
 
 const App = () => {
-  const { formRef, getState } = useForm({
+  const { form, getState } = useForm({
     // Provide the default values of the form state
     // just like we use "React.useState" or "React.useReducer"
     defaultValues: { name: "", email: "", password: "" },
@@ -58,7 +58,7 @@ const App = () => {
   );
 
   return (
-    <form ref={formRef} noValidate>
+    <form ref={form} noValidate>
       <label>Name</label>
       {/* Support built-in validation attributes */}
       <input name="name" required />
@@ -136,10 +136,7 @@ type FormState<V = FormValues> = Readonly<{
   submitCount: number;
 }>;
 
-type Options<V> = Omit<
-  Return<V>,
-  "formRef" | "field" | "submit" | "controller"
->;
+type Options<V> = Omit<Return<V>, "form" | "field" | "submit" | "controller">;
 
 interface OnReset<V = FormValues> {
   (
@@ -294,7 +291,7 @@ interface Config<V = FormValues> {
 }
 
 interface Return<V = FormValues> {
-  formRef: RefObject<HTMLFormElement>;
+  form: RefObject<HTMLFormElement>;
   field: Field<V>;
   getState: GetState;
   setErrors: SetErrors<V>;

@@ -22,10 +22,7 @@ declare module "react-cool-form" {
     submitCount: number;
   }>;
 
-  type Options<V> = Omit<
-    Return<V>,
-    "formRef" | "field" | "submit" | "controller"
-  >;
+  type Options<V> = Omit<Return<V>, "form" | "field" | "submit" | "controller">;
 
   export interface OnReset<V = FormValues> {
     (
@@ -182,7 +179,7 @@ declare module "react-cool-form" {
   }
 
   export interface Return<V = FormValues> {
-    formRef: RefObject<HTMLFormElement>;
+    form: RefObject<HTMLFormElement>;
     field: Field<V>;
     getState: GetState;
     setErrors: SetErrors<V>;

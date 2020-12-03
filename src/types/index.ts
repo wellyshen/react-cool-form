@@ -56,10 +56,7 @@ export type Fields = Record<
   { field: FieldElement; options?: FieldElement[] }
 >;
 
-type Options<V> = Omit<
-  Return<V>,
-  "formRef" | "field" | "submit" | "controller"
->;
+type Options<V> = Omit<Return<V>, "form" | "field" | "submit" | "controller">;
 
 interface OnReset<V> {
   (
@@ -198,7 +195,7 @@ export interface Config<V> {
 }
 
 export interface Return<V> {
-  formRef: RefObject<HTMLFormElement>;
+  form: RefObject<HTMLFormElement>;
   field: Field<V>;
   getState: GetState;
   setErrors: SetErrors<V>;

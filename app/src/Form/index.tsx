@@ -8,7 +8,7 @@ import Input from "./Input";
 import Controller from "./Controller";
 import Select from "./Select";
 import TextArea from "./TextArea";
-import { container, form, wrapper } from "./styles";
+import { container, form as formStyle, wrapper } from "./styles";
 
 const fib = (n: number): number => (n < 3 ? 1 : fib(n - 2) + fib(n - 1));
 
@@ -63,7 +63,7 @@ export default (): JSX.Element => {
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(true);
   const {
-    formRef,
+    form,
     field,
     getState,
     setValues,
@@ -220,7 +220,7 @@ export default (): JSX.Element => {
 
   return (
     <div css={container}>
-      <form css={form} noValidate ref={formRef}>
+      <form css={formStyle} noValidate ref={form}>
         <Input name="hidden" type="hidden" defaultValue="test" />
         <Input
           label="Text:"

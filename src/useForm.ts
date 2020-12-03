@@ -733,7 +733,7 @@ export default <V extends FormValues = FormValues>({
   useIsoLayoutEffect(() => {
     if (!formRef.current) {
       warn(
-        '💡 react-cool-form: Don\'t forget to register your form via the "formRef".'
+        '💡 react-cool-form: Don\'t forget to register your form via the "form" ref.'
       );
       return;
     }
@@ -853,7 +853,7 @@ export default <V extends FormValues = FormValues>({
   ]);
 
   return {
-    formRef,
+    form: formRef,
     field: fieldRef,
     getState,
     setErrors,
