@@ -97,7 +97,7 @@ export interface FieldValidator<V> {
   (value: any, values: V): any | Promise<any>;
 }
 
-export interface Field<V> {
+export interface FieldRef<V> {
   (validate: FieldValidator<V>): (field: FieldElement | null) => void;
 }
 
@@ -199,7 +199,7 @@ export interface Config<V> {
 
 export interface Return<V> {
   formRef: RefObject<HTMLFormElement>;
-  field: Field<V>;
+  field: FieldRef<V>;
   getState: GetState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;
