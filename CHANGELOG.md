@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.59
+
+### Patch Changes
+
+- [`e50b2ff`](https://github.com/wellyshen/react-cool-form/commit/e50b2ff3efa4b1051a79de1a2bc7374442374e22) [#195](https://github.com/wellyshen/react-cool-form/pull/195) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): change `formRef` to `form`
+
+* [`a0c41f8`](https://github.com/wellyshen/react-cool-form/commit/a0c41f833929c67b571513a4783e6b566097c8c3) [#195](https://github.com/wellyshen/react-cool-form/pull/195) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): change `validate` to `field`
+
+- [`b769633`](https://github.com/wellyshen/react-cool-form/commit/b76963398517ff5c98ebadfca12a0dad4e6093a8) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): remove form ref warning
+
 ## 0.0.58
 
 ### Patch Changes
