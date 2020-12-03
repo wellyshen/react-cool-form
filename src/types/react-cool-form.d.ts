@@ -22,10 +22,7 @@ declare module "react-cool-form" {
     submitCount: number;
   }>;
 
-  type Options<V> = Omit<
-    Return<V>,
-    "formRef" | "validate" | "submit" | "controller"
-  >;
+  type Options<V> = Omit<Return<V>, "form" | "field" | "submit" | "controller">;
 
   export interface OnReset<V = FormValues> {
     (
@@ -63,7 +60,7 @@ declare module "react-cool-form" {
     (value: any, values: V): any | Promise<any>;
   }
 
-  interface ValidateRef<V> {
+  interface FieldRef<V> {
     (validate: FieldValidator<V>): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
@@ -182,8 +179,8 @@ declare module "react-cool-form" {
   }
 
   export interface Return<V = FormValues> {
-    formRef: RefObject<HTMLFormElement>;
-    validate: ValidateRef<V>;
+    form: RefObject<HTMLFormElement>;
+    field: FieldRef<V>;
     getState: GetState;
     setErrors: SetErrors<V>;
     setFieldError: SetFieldError;

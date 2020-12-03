@@ -40,7 +40,7 @@ Here's the basic example of how does it works, full documentation will be provid
 import { useForm } from "react-cool-form";
 
 const App = () => {
-  const { formRef, getState } = useForm({
+  const { form, getState } = useForm({
     // Provide the default values of the form state
     // just like we use "React.useState" or "React.useReducer"
     defaultValues: { name: "", email: "", password: "" },
@@ -58,7 +58,7 @@ const App = () => {
   );
 
   return (
-    <form ref={formRef} noValidate>
+    <form ref={form} noValidate>
       <label>Name</label>
       {/* Support built-in validation attributes */}
       <input name="name" required />
@@ -136,10 +136,7 @@ type FormState<V = FormValues> = Readonly<{
   submitCount: number;
 }>;
 
-type Options<V> = Omit<
-  Return<V>,
-  "formRef" | "validate" | "submit" | "controller"
->;
+type Options<V> = Omit<Return<V>, "form" | "field" | "submit" | "controller">;
 
 interface OnReset<V = FormValues> {
   (
@@ -177,7 +174,7 @@ interface FieldValidator<V = FormValues> {
   (value: any, values: V): any | Promise<any>;
 }
 
-interface ValidateRef<V> {
+interface FieldRef<V> {
   (validate: FieldValidator<V>): (
     field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
   ) => void;
@@ -294,8 +291,8 @@ interface Config<V = FormValues> {
 }
 
 interface Return<V = FormValues> {
-  formRef: RefObject<HTMLFormElement>;
-  validate: ValidateRef<V>;
+  form: RefObject<HTMLFormElement>;
+  field: FieldRef<V>;
   getState: GetState;
   setErrors: SetErrors<V>;
   setFieldError: SetFieldError;

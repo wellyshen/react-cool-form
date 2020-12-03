@@ -5,6 +5,7 @@ import {
   Controller,
   Errors,
   FieldElement,
+  FieldRef,
   Fields,
   FieldValidator,
   FormState,
@@ -18,7 +19,6 @@ import {
   SetFieldValue,
   SetValues,
   Submit,
-  ValidateRef,
   ValidateField,
   ValidateForm,
 } from "./types";
@@ -128,7 +128,7 @@ export default <V extends FormValues = FormValues>({
     [setStateRef]
   );
 
-  const validateRef = useCallback<ValidateRef<V>>(
+  const fieldRef = useCallback<FieldRef<V>>(
     (validate) => (field) => {
       if (
         field?.name &&
@@ -733,7 +733,7 @@ export default <V extends FormValues = FormValues>({
   useIsoLayoutEffect(() => {
     if (!formRef.current) {
       warn(
-        '💡 react-cool-form: Don\'t forget to register your form via the "formRef".'
+        '💡 react-cool-form: Don\'t forget to register your form via the "form" ref.'
       );
       return;
     }
@@ -853,8 +853,8 @@ export default <V extends FormValues = FormValues>({
   ]);
 
   return {
-    formRef,
-    validate: validateRef,
+    form: formRef,
+    field: fieldRef,
     getState,
     setErrors,
     setFieldError,
