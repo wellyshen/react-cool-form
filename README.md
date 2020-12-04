@@ -17,6 +17,7 @@ React hooks for forms state and validation, less code more performant.
 - [x] CI/CD
 - [ ] Documentation (in-progress...)
 - [ ] Unit testing (in-progress...)
+- [ ] Logo design
 - [ ] Examples
 - [ ] End to end testing
 
