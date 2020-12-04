@@ -288,7 +288,10 @@ export default (): JSX.Element => {
           label="Number:"
           type="number"
           name="number"
-          ref={field({ valueAsNumber: true })}
+          ref={field({
+            valueAsNumber: true,
+            parse: (value) => `Parsed ${value}`,
+          })}
         />
         <Input
           label="Date:"

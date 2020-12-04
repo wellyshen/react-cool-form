@@ -2,4 +2,4 @@
 "react-cool-form": patch
 ---
 
-fix(useForm): correct the behavior of `controller`
+add `parse` option for field ref & correct the behavior of `controller`

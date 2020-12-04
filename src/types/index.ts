@@ -108,6 +108,7 @@ export interface FieldRef<V> {
           validate?: FieldValidator<V>;
           valueAsNumber?: boolean;
           valueAsDate?: boolean;
+          parse?: Parse;
         }
   ): (field: FieldElement | null) => void;
 }

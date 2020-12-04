@@ -182,6 +182,7 @@ interface FieldRef<V> {
           validate?: FieldValidator<V>;
           valueAsNumber?: boolean;
           valueAsDate?: boolean;
+          parse?: Parse;
         }
   ): (
     field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
