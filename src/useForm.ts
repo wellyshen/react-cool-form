@@ -686,8 +686,10 @@ export default <V extends FormValues = FormValues>({
   );
 
   const handleChangeEvent = useCallback(
-    ({ name }: FieldElement) => {
-      const value = getNodeValue(name);
+    (name: string, value?: any) => {
+      const { parse } = fieldsRef.current[name];
+      value = value || getNodeValue(name);
+      value = parse ? parse(value) : value;
 
       setStateRef(`values.${name}`, value);
       setFieldDirty(name);
@@ -715,6 +717,8 @@ export default <V extends FormValues = FormValues>({
 
       controllersRef.current[name] = true;
       if (validate) fieldValidatorsRef.current[name] = validate;
+      if (parse)
+        fieldsRef.current[name] = { ...fieldsRef.current[name], parse };
 
       const val = get(defaultValuesRef.current, name);
       defaultValue = !isUndefined(val) ? val : defaultValue;
@@ -727,13 +731,12 @@ export default <V extends FormValues = FormValues>({
         name,
         value,
         onChange: (e) => {
-          let value =
+          const value =
             e.nativeEvent instanceof Event && isFieldElement(e.target)
               ? getNodeValue(name)
               : e;
-          value = parse ? parse(value) : value;
 
-          setFieldValue(name, value, { shouldTouched: false });
+          handleChangeEvent(name, value);
           if (onChange) onChange(e, value);
           changedFieldRef.current = name;
         },
@@ -747,9 +750,9 @@ export default <V extends FormValues = FormValues>({
     [
       getNodeValue,
       getState,
+      handleChangeEvent,
       setDefaultValue,
       setFieldTouchedMaybeValidate,
-      setFieldValue,
     ]
   );
 
@@ -765,8 +768,7 @@ export default <V extends FormValues = FormValues>({
     if (!formRef.current) return () => null;
 
     const handleChange = ({ target }: Event) => {
-      const field = target as FieldElement;
-      const { name } = field;
+      const { name } = target as FieldElement;
 
       if (!name) {
         warn('💡 react-cool-form > field: Missing the "name" attribute.');
@@ -774,7 +776,7 @@ export default <V extends FormValues = FormValues>({
       }
 
       if (fieldsRef.current[name] && !controllersRef.current[name]) {
-        handleChangeEvent(field);
+        handleChangeEvent(name);
         changedFieldRef.current = name;
       }
     };

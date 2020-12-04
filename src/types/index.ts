@@ -58,6 +58,7 @@ export type Fields = Record<
     options?: FieldElement[];
     valueAsNumber?: boolean;
     valueAsDate?: boolean;
+    parse?: Parse;
   }
 >;
 
@@ -175,6 +176,12 @@ export interface Submit<V> {
   (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
 }
 
+interface Parse {
+  (value: any): any;
+}
+
+type format = Parse;
+
 export interface Controller<V, E = any> {
   (
     name: string,
@@ -182,8 +189,8 @@ export interface Controller<V, E = any> {
       validate?: FieldValidator<V>;
       value?: any;
       defaultValue?: any;
-      parse?: (value: any) => any;
-      format?: (value: any) => any;
+      parse?: Parse;
+      format?: format;
       onChange?: (event: E, value?: any) => void;
       onBlur?: (event: FocusEvent<any>) => void;
     }
