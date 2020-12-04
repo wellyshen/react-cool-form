@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.61
+
+### Patch Changes
+
+- [`3caa0d1`](https://github.com/wellyshen/react-cool-form/commit/3caa0d1c92f481b1f3aa54b16a8e1245f64969a0) [#201](https://github.com/wellyshen/react-cool-form/pull/201) Thanks [@wellyshen](https://github.com/wellyshen)! - perf: use `dequal` instead of `fast-deep-equal`
+
 ## 0.0.60
 
 ### Patch Changes
