@@ -359,11 +359,10 @@ export default <V extends FormValues = FormValues>({
     [handleUnset, setStateRef, stateRef]
   );
 
-  const runBuiltInValidation = useCallback((name: string) => {
-    if (!fieldsRef.current[name]) return undefined;
-
-    return fieldsRef.current[name].field.validationMessage;
-  }, []);
+  const runBuiltInValidation = useCallback(
+    (name: string) => fieldsRef.current[name]?.field.validationMessage,
+    []
+  );
 
   const runAllBuiltInValidation = useCallback(
     () =>
@@ -716,9 +715,8 @@ export default <V extends FormValues = FormValues>({
       }
 
       controllersRef.current[name] = true;
+      fieldsRef.current[name] = { ...fieldsRef.current[name], parse };
       if (validate) fieldValidatorsRef.current[name] = validate;
-      if (parse)
-        fieldsRef.current[name] = { ...fieldsRef.current[name], parse };
 
       const val = get(defaultValuesRef.current, name);
       defaultValue = !isUndefined(val) ? val : defaultValue;
