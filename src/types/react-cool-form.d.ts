@@ -68,6 +68,7 @@ declare module "react-cool-form" {
             validate?: FieldValidator<V>;
             valueAsNumber?: boolean;
             valueAsDate?: boolean;
+            parse?: Parse;
           }
     ): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null

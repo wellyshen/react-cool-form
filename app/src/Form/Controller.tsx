@@ -31,8 +31,7 @@ const Controller = ({
   // console.log(`LOG ==> ${name} is re-rendered`);
 
   const [value, setValue] = useState(defaultValue);
-  const parse: Parse<ChangeEvent<HTMLInputElement>> = (e) =>
-    e.target.value.length % 2 ? "case 1" : "case 2";
+  const parse: Parse<ChangeEvent<HTMLInputElement>> = (val) => `parsed ${val}`;
 
   return (
     <Input
@@ -41,12 +40,11 @@ const Controller = ({
       {...controller(name, {
         validate,
         value,
-        defaultValue: "welly",
-        // parse,
-        format: (val) => `formatted ${val}`,
+        // defaultValue: "welly",
+        parse,
+        // format: (val) => `formatted ${val}`,
         onChange: (e, val) => {
           setValue(val);
-          // setValue(e.target.value);
           // console.log("LOG ===> onChange: ", val);
         },
         onBlur: (e) => {
