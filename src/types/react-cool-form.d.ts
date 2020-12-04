@@ -61,7 +61,15 @@ declare module "react-cool-form" {
   }
 
   interface FieldRef<V> {
-    (validate: FieldValidator<V>): (
+    (
+      validateOrOptions:
+        | FieldValidator<V>
+        | {
+            validate?: FieldValidator<V>;
+            valueAsNumber?: boolean;
+            valueAsDate?: boolean;
+          }
+    ): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
   }

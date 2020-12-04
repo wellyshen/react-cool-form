@@ -53,7 +53,12 @@ export type FieldElement =
 
 export type Fields = Record<
   string,
-  { field: FieldElement; options?: FieldElement[] }
+  {
+    field: FieldElement;
+    options?: FieldElement[];
+    valueAsNumber?: boolean;
+    valueAsDate?: boolean;
+  }
 >;
 
 type Options<V> = Omit<Return<V>, "form" | "field" | "submit" | "controller">;
@@ -95,7 +100,15 @@ export interface FieldValidator<V> {
 }
 
 export interface FieldRef<V> {
-  (validate: FieldValidator<V>): (field: FieldElement | null) => void;
+  (
+    validateOrOptions:
+      | FieldValidator<V>
+      | {
+          validate?: FieldValidator<V>;
+          valueAsNumber?: boolean;
+          valueAsDate?: boolean;
+        }
+  ): (field: FieldElement | null) => void;
 }
 
 export interface GetState {
