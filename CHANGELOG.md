@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.60
+
+### Patch Changes
+
+- [`577de2a`](https://github.com/wellyshen/react-cool-form/commit/577de2a3ff3726bbfd497f810b734f3be7b0c8fd) [#200](https://github.com/wellyshen/react-cool-form/pull/200) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): shorten code
+
+* [`b09a2c0`](https://github.com/wellyshen/react-cool-form/commit/b09a2c0b7e22bb21e49cb94c60e6819aed2b2156) [#199](https://github.com/wellyshen/react-cool-form/pull/199) Thanks [@wellyshen](https://github.com/wellyshen)! - add `parse` option for field ref & correct the behavior of `controller`
+
+- [`a089883`](https://github.com/wellyshen/react-cool-form/commit/a0898831fda1858ee44841518fbc1b96aa8d972f) [#197](https://github.com/wellyshen/react-cool-form/pull/197) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): support `valueAsNumber` and `valueAsDate` for field ref
+
 ## 0.0.59
 
 ### Patch Changes
