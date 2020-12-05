@@ -31,6 +31,6 @@ Have you done all of these things?
 
 - [ ] Documentation added
 - [ ] Tests
-- [ ] Typescript definitions updated
+- [ ] TypeScript definitions updated
 - [ ] [Add a changeset](https://github.com/atlassian/changesets/blob/master/docs/adding-a-changeset.md)
 - [ ] Ready to be merged
