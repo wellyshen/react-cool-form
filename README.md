@@ -15,9 +15,9 @@ React hooks for forms state and validation, less code more performant.
 - 🗃 Manages complex form state without hassle.
 - 🚦 Supports built-in / field-level / form-level validations.
 - 🚀 Highly performant by minimizing re-renders for you.
-- 🧱 Seamless integration with popular UI libraries.
+- 🧱 Seamless integration with custom components or popular UI libraries.
 - 🎛 Super flexible API design, built with DX in mind.
-- 🔩 Provides useful utility functions to speed up your app development.
+- 🔩 Provides useful utility functions to boost forms development.
 - 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
 - ☁️ Server-side rendering compatibility.
 - 🦔 Tiny size ([~ 4.7KB gzipped](https://bundlephobia.com/result?p=react-cool-form)).
