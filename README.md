@@ -9,17 +9,18 @@ React hooks for forms state and validation, less code more performant.
 [![npm downloads](https://img.shields.io/npm/dt/react-cool-form?style=flat-square)](https://www.npmtrends.com/react-cool-form)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/react-cool-form?style=flat-square)](https://bundlephobia.com/result?p=react-cool-form)
 
-## Milestone
+## Features
 
-- [x] Core features
-- [x] Type definition
-- [x] Support server-side rendering
-- [x] CI/CD
-- [ ] Documentation (in-progress...)
-- [ ] Unit testing (in-progress...)
-- [ ] Logo design
-- [ ] Examples
-- [ ] End to end testing
+- 🎣 Easy to use, just a React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook).
+- 🗃 Manages complex form state without hassle.
+- 🚦 Supports built-in / field-level / form-level validations.
+- 🚀 Highly performant by minimizing re-renders for you.
+- 🧱 Seamless integration with popular UI libraries.
+- 🎛 Super flexible API design, built with DX in mind.
+- 🔩 Provides useful utility functions to speed up your app development.
+- 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
+- ☁️ Server-side rendering compatibility.
+- 🦔 Tiny size ([~ 4.7KB gzipped](https://bundlephobia.com/result?p=react-cool-form)).
 
 ## Getting Started
 
@@ -339,3 +340,15 @@ const set: (
 
 const unset: (object: any, path: string, immutable?: boolean) => any;
 ```
+
+## Milestone
+
+- [x] Core features
+- [x] Type definition
+- [x] Support server-side rendering
+- [x] CI/CD
+- [ ] Unit testing (in-progress...)
+- [ ] Documentation (in-progress...)
+- [ ] Logo design
+- [ ] Examples
+- [ ] End to end testing
