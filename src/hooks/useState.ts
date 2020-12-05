@@ -1,5 +1,5 @@
 import { useReducer, useRef, useCallback } from "react";
-import { dequal as isEqual } from "dequal/lite";
+import { dequal } from "dequal/lite";
 
 import {
   Debug,
@@ -26,7 +26,7 @@ export default <V>(
       const key = path.split(".")[0];
 
       if (!key) {
-        if (!isEqual(stateRef.current, value)) {
+        if (!dequal(stateRef.current, value)) {
           stateRef.current = value;
           forceUpdate();
           onChangeRef.current(stateRef.current);
@@ -35,7 +35,7 @@ export default <V>(
         return;
       }
 
-      if (key === "values" || !isEqual(get(stateRef.current, path), value)) {
+      if (key === "values" || !dequal(get(stateRef.current, path), value)) {
         const state = set(stateRef.current, path, value, true);
         const {
           errors,

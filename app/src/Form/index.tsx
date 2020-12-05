@@ -141,8 +141,8 @@ export default (): JSX.Element => {
   console.log(
     "LOG ===> formState: ",
     getState({
-      values: "values",
-      // errors: "errors",
+      // values: "values",
+      errors: "errors",
       // touched: "touched",
       // isDirty: "isDirty",
       // dirtyFields: "dirtyFields",
