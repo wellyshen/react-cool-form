@@ -3,7 +3,7 @@ import { render } from "react-dom";
 
 import { useForm } from "react-cool-form";
 
-import "./basic.scss";
+import "./styles.scss";
 
 interface FormValues {
   name: string;
@@ -14,7 +14,7 @@ interface FormValues {
 export default function App() {
   const { form, getState } = useForm<FormValues>({
     defaultValues: { name: "", email: "", password: "" },
-    onSubmit: (values) => alert(JSON.stringify(values)),
+    onSubmit: (values) => alert(JSON.stringify(values))
   });
 
   const errors = getState("errors");
