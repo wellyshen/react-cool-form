@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "link-pkg": "npm link app/node_modules/react && yarn link",
-    "dev": "yarn clean:build && yarn copy:type && rollup -c rollup/config.js -w",
+    "start": "yarn clean:build && yarn copy:type && rollup -c rollup/config.js -w",
     "build": "yarn clean:build && yarn clean:size && yarn copy && rollup -c rollup/config.js --environment BUILD:production",
     "lint": "run-s lint:*",
     "lint:code": "eslint --fix . --ext .js,.ts,.tsx",

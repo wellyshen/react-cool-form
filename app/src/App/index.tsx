@@ -1,7 +1,8 @@
 import { Global, css } from "@emotion/react";
 import normalize from "normalize.css";
 
-import Form from "../Form";
+import Playground from "../Playground";
+import Automation from "../Automation";
 import { root } from "./styles";
 
 export default (): JSX.Element => (
@@ -12,6 +13,6 @@ export default (): JSX.Element => (
         ${root}
       `}
     />
-    <Form />
+    {process.env.REACT_APP_ENV === "dev" ? <Playground /> : <Automation />}
   </>
 );
