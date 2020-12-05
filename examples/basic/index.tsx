@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { render } from "react-dom";
 
 import { useForm } from "react-cool-form";
@@ -22,20 +22,23 @@ function App() {
   return (
     <form ref={form} noValidate>
       <div>
-        <label>Name</label>
-        <input name="name" required />
+        <input name="name" placeholder="Name" required />
         {errors.name && <p>{errors.name}</p>}
       </div>
 
       <div>
-        <label>Email</label>
-        <input name="email" type="email" required />
+        <input name="email" type="email" placeholder="Email" required />
         {errors.email && <p>{errors.email}</p>}
       </div>
 
       <div>
-        <label>Password</label>
-        <input name="password" type="password" required minLength={8} />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          minLength={8}
+        />
         {errors.password && <p>{errors.password}</p>}
       </div>
 

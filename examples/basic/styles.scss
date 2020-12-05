@@ -1,36 +1,35 @@
 body {
   font-family: sans-serif;
-  display: flex;
-  justify-content: center;
-  padding: 5rem 1rem 0;
+  background: #222;
 }
 
 form {
-  width: 20rem;
+  margin: 5rem auto 0;
+  width: 24rem;
 
   div {
-    margin-bottom: 1rem;
-  }
-
-  p {
-    margin-top: 0.25rem;
-    color: red;
-  }
-
-  label {
-    display: block;
+    width: inherit;
+    margin-bottom: 1.5rem;
   }
 
   input {
-    width: 19.5rem;
+    padding: 0 0.5rem;
+    width: inherit;
+    line-height: 2;
+    box-sizing: border-box;
   }
 
   input[type="submit"],
   input[type="reset"] {
-    width: 100%;
+    height: 2rem;
+
+    &[type="submit"] {
+      margin-bottom: 0.75rem;
+    }
   }
 
-  input[type="submit"] {
-    margin: 0.5rem 0 0.5rem;
+  p {
+    margin-top: 0.5rem;
+    color: orangered;
   }
 }
