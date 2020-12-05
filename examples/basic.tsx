@@ -1,8 +1,6 @@
 import React from "react";
 import { useForm } from "react-cool-form";
 
-import "./styles.scss";
-
 interface FormValues {
   name: string;
   email: string;
