@@ -60,21 +60,29 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <label>Name</label>
-      {/* Support built-in validation attributes */}
-      <input name="name" required />
-      {errors.name && <p>{errors.name}</p>}
+      <div>
+        <input name="name" placeholder="Name" required />
+        {errors.name && <p>{errors.name}</p>}
+      </div>
 
-      <label>Email</label>
-      <input name="email" type="email" required />
-      {errors.email && <p>{errors.email}</p>}
+      <div>
+        <input name="email" type="email" placeholder="Email" required />
+        {errors.email && <p>{errors.email}</p>}
+      </div>
 
-      <label>Password</label>
-      <input name="password" type="password" required minLength={8} />
-      {errors.password && <p>{errors.password}</p>}
+      <div>
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          minLength={8}
+        />
+        {errors.password && <p>{errors.password}</p>}
+      </div>
 
-      <input type="reset" />
       <input type="submit" />
+      <input type="reset" />
     </form>
   );
 };
