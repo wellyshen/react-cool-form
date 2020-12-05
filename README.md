@@ -35,7 +35,7 @@ $ npm install --save react-cool-form
 
 Here's the basic example of how does it works, full documentation will be provided soon. If you have any question, feel free to [ask me](https://github.com/wellyshen/react-cool-form/issues/new?template=question.md).
 
-[![Edit RCF - Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-basic-lzivw?fontsize=14&hidenavigation=1&theme=dark)
+[![Edit RCF - Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-basic-2umh5?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
 import { useForm } from "react-cool-form";
