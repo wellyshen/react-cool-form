@@ -1,6 +1,6 @@
 {
   "name": "react-cool-form-app",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "link-pkg": "yarn link 'react-cool-form'",
