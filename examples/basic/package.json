@@ -2,7 +2,7 @@
   "name": "react-cool-form-basic",
   "version": "1.0.0",
   "description": "The basic example of react-cool-form",
-  "main": "src/index.tsx",
+  "main": "index.tsx",
   "dependencies": {
     "react": "^17.0.1",
     "react-cool-form": "latest",
