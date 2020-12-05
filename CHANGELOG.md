@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.63
+
+### Patch Changes
+
+- [`bcc1e9b`](https://github.com/wellyshen/react-cool-form/commit/bcc1e9b75a9fe17e47bdf372b96894a6323efe34) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update features section
+
 ## 0.0.62
 
 ### Patch Changes
