@@ -1,7 +1,7 @@
 {
   "name": "rcf-basic",
   "version": "1.0.0",
-  "description": "The basic example of RCF",
+  "description": "The basic example of RCF.",
   "main": "index.tsx",
   "dependencies": {
     "react": "^17.0.1",
@@ -19,5 +19,11 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject"
   },
-  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "keywords": []
 }
