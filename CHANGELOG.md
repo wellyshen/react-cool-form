@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.65
+
+### Patch Changes
+
+- [`0649089`](https://github.com/wellyshen/react-cool-form/commit/064908920ada6ad411095a2af95844e47b6a4888) [#207](https://github.com/wellyshen/react-cool-form/pull/207) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): correct the `onChange` type of `controller`
+
 ## 0.0.64
 
 ### Patch Changes
