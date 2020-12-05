@@ -15,17 +15,14 @@ form {
   input {
     padding: 0 0.5rem;
     width: inherit;
-    line-height: 2;
+    height: 2rem;
+    border: none;
+    border-radius: 4px;
     box-sizing: border-box;
   }
 
-  input[type="submit"],
-  input[type="reset"] {
-    height: 2rem;
-
-    &[type="submit"] {
-      margin-bottom: 0.75rem;
-    }
+  input[type="submit"] {
+    margin-bottom: 0.75rem;
   }
 
   p {
