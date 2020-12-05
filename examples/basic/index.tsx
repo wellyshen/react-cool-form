@@ -11,7 +11,7 @@ interface FormValues {
   password: string;
 }
 
-export default function App() {
+function App() {
   const { form, getState } = useForm<FormValues>({
     defaultValues: { name: "", email: "", password: "" },
     onSubmit: (values) => alert(JSON.stringify(values))
