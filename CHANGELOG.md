@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.62
+
+### Patch Changes
+
+- [`edcf47d`](https://github.com/wellyshen/react-cool-form/commit/edcf47d80bcb3c779cd2bd9f65f434553afd6724) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update example
+
+* [`d1199b6`](https://github.com/wellyshen/react-cool-form/commit/d1199b6b68d114655805eab94336ade91384c20a) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): add features section
+
+- [`e7b29d9`](https://github.com/wellyshen/react-cool-form/commit/e7b29d9c2aa7d0e9ecdba038ce5fea223e98e5f2) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update demo link
+
 ## 0.0.61
 
 ### Patch Changes
