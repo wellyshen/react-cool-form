@@ -1,5 +1,9 @@
-import React from "react";
+import * as React from "react";
+import { render } from "react-dom";
+
 import { useForm } from "react-cool-form";
+
+import "./basic.scss";
 
 interface FormValues {
   name: string;
@@ -40,3 +44,5 @@ export default function App() {
     </form>
   );
 }
+
+render(<App />, document.getElementById("root"));
