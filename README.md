@@ -14,7 +14,7 @@ React hooks for forms state and validation, less code more performant.
 - 🎣 Easy to use, just a React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook).
 - 🗃 Manages complex form state without hassle.
 - 🚦 Supports built-in / field-level / form-level validations.
-- 🚀 Highly performant by minimizing re-renders for you.
+- 🚀 Highly performant, minimizing re-renders for you.
 - 🧱 Seamless integration with custom components or popular UI libraries.
 - 🎛 Super flexible API design, built with DX in mind.
 - 🔩 Provides useful utility functions to boost forms development.
