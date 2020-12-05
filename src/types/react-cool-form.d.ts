@@ -148,7 +148,7 @@ declare module "react-cool-form" {
   export type Format<V = any, R = any> = Parse<V, R>;
 
   export interface OnChange<E = any> {
-    (event: E, value?: any): void;
+    (event: E, value: any): void;
   }
 
   export interface OnBlur {

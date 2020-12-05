@@ -192,7 +192,7 @@ export interface Controller<V, E = any> {
       defaultValue?: any;
       parse?: Parse;
       format?: format;
-      onChange?: (event: E, value?: any) => void;
+      onChange?: (event: E, value: any) => void;
       onBlur?: (event: FocusEvent<any>) => void;
     }
   ): {
