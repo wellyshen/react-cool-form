@@ -61,6 +61,7 @@ const App = () => {
   return (
     <form ref={form} noValidate>
       <div>
+        {/* Support built-in validation */}
         <input name="name" placeholder="Name" required />
         {errors.name && <p>{errors.name}</p>}
       </div>
