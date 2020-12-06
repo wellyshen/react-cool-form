@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.67
+
+### Patch Changes
+
+- [`d887fb9`](https://github.com/wellyshen/react-cool-form/commit/d887fb946177899b3a4bde1dc031eed570df53c0) [#210](https://github.com/wellyshen/react-cool-form/pull/210) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): add warning for getting `values` state alone
+
 ## 0.0.66
 
 ### Patch Changes
