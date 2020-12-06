@@ -47,9 +47,7 @@ const App = () => {
     // just like we use "React.useState" or "React.useReducer"
     defaultValues: { name: "", email: "", password: "" },
     // The event only triggered when the form is valid
-    onSubmit: (values, actions) => {
-      console.log("onSubmit: ", values);
-    },
+    onSubmit: (values, actions) => console.log("onSubmit: ", values),
   });
 
   const errors = getState(
