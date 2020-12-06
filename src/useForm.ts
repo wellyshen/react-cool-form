@@ -297,7 +297,14 @@ export default <V extends FormValues = FormValues>({
 
   const getState = useCallback<GetState>(
     (path, { target, watch = true, filterUntouchedErrors = true } = {}) => {
-      const getPath = (path: string) => (target ? `${target}.${path}` : path);
+      const getPath = (path: string) => {
+        if (path === "values" && !target && watch)
+          warn(
+            '💡 react-cool-form > getState: Get the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning.'
+          );
+
+        return target ? `${target}.${path}` : path;
+      };
       const errorsEnhancer = (path: string, state: any) => {
         if (!watch || !filterUntouchedErrors || !path.startsWith("errors"))
           return state;
