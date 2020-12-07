@@ -23,6 +23,13 @@ form {
 
   input[type="submit"] {
     margin-bottom: 0.75rem;
+    background: #faa627;
+    cursor: pointer;
+  }
+
+  input[type="reset"] {
+    background: #ccc;
+    cursor: pointer;
   }
 
   p {
