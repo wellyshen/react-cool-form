@@ -12,7 +12,7 @@ Please note we have a [code of conduct](https://github.com/wellyshen/react-cool-
 2. Run `yarn` to install dependencies.
 3. If you’ve fixed a bug or added code that should be tested.
 4. Ensure the test suite passes by running `yarn test`.
-5. Update the [README.md](https://github.com/wellyshen/react-cool-form/blob/master/README.md) with details of changes to the interface.
+5. Update related [documents](https://github.com/wellyshen/react-cool-form/tree/master/website/docs) with details of changes to the interface.
 6. Update related [examples](https://github.com/wellyshen/react-cool-form/tree/master/examples) if needed.
 7. Make sure your code lints by running `yarn lint`.
 8. Run `yarn changeset` to [add a changeset](https://github.com/atlassian/changesets/blob/master/docs/adding-a-changeset.md).
