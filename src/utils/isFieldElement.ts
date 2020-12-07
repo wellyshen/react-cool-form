@@ -1,4 +1,5 @@
 import { FieldElement } from "../types";
+import isInputElement from "./isInputElement";
 
 export default (element: HTMLElement): element is FieldElement =>
-  /INPUT|TEXTAREA|SELECT/.test(element.tagName);
+  isInputElement(element) || /TEXTAREA|SELECT/.test(element.tagName);

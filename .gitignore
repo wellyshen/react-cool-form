@@ -1,21 +1,13 @@
 # dependencies
 node_modules
-app/.pnp
-app/.pnp.js
 
 # testing
 coverage
 
 # production
 dist
-app/build
 
 # misc
 .size-snapshot.json
-app/.env.local
-app/.env.development.local
-app/.env.test.local
-app/.env.production.local
-app/.eslintcache
 .DS_Store
 *.log
