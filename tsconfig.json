@@ -31,11 +31,5 @@
     // Report errors for fallthrough cases in switch statement
     "noFallthroughCasesInSwitch": true
   },
-  "exclude": [
-    "node_modules",
-    "app",
-    "examples",
-    "dist/index.d.ts",
-    "src/types/react-cool-form.d.ts"
-  ]
+  "include": ["src"]
 }
