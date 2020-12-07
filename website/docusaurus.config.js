@@ -18,10 +18,10 @@ module.exports = {
     },
     navbar: {
       title: "React Cool Form",
-      logo: {
+      /* logo: {
         alt: "My Site Logo",
         src: "img/logo.svg",
-      },
+      }, */
       items: [
         {
           to: "docs/",
@@ -84,7 +84,7 @@ module.exports = {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           editUrl:
-            "https://github.com/wellyshen/react-cool-form/edit/master/docs",
+            "https://github.com/wellyshen/react-cool-form/edit/master/website",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
