@@ -38,6 +38,8 @@ If you're not using a module bundler or package manager. We also provide a [UMD]
 
 Here's the basic example of how does it works:
 
+[![Edit RCF - Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-basic-jq93g?fontsize=14&hidenavigation=1&theme=dark)
+
 ```js
 import { useForm } from "react-cool-form";
 
