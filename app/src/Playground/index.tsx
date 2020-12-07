@@ -9,7 +9,7 @@ const Playground = (): JSX.Element => {
     defaultValues: { text: "" },
   });
   const value = getState({ text: "text" }, { target: "values" });
-  // console.log("LOG ===> ", value);
+  console.log("LOG ===> ", value);
 
   return (
     <form ref={form} noValidate>
