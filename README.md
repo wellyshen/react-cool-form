@@ -43,19 +43,15 @@ import { useForm } from "react-cool-form";
 
 const App = () => {
   const { form, getState } = useForm({
-    // Provide the default values of the form state
-    // just like we use "React.useState" or "React.useReducer"
+    // Provide the default values just like we use "React.useState" or "React.useReducer"
     defaultValues: { name: "", email: "", password: "" },
     // The event only triggered when the form is valid
     onSubmit: (values, actions) => console.log("onSubmit: ", values),
   });
 
-  const errors = getState(
-    "errors",
-    // react-cool-form auto filters the errors before a field is blurred
-    // Which helps the user focus on typing without being annoying
-    { filterUntouchedErrors: true }
-  );
+  // react-cool-form filters the error of a un-blurred field by default (via the "filterUntouchedErrors" option)
+  // Which helps the user focus on typing without being annoying
+  const errors = getState("errors", { filterUntouchedErrors: true });
 
   return (
     <form ref={form} noValidate>
