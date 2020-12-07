@@ -1,6 +1,6 @@
 {
   "name": "rcf-basic",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "The basic example of RCF.",
   "main": "index.tsx",
   "dependencies": {

@@ -10,6 +10,26 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  background: #2b3137;
+  color: #fff;
+}
+
+.heroTitle {
+  color: var(--ifm-color-primary);
+}
+
+.heroSubtitle {
+  color: #fff;
+}
+
+.getStarted {
+  border: 2px solid var(--ifm-color-primary);
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.getStarted:hover {
+  color: var(--ifm-color-primary);
 }
 
 @media screen and (max-width: 966px) {
