@@ -33,3 +33,55 @@ If you're not using a module bundler or package manager. We also provide a [UMD]
 <script crossorigin src="https://unpkg.com/react-cool-form/dist/index.umd.production.min.js"></script>
 ```
 <!-- prettier-ignore-end -->
+
+## Example
+
+Here's the basic example of how does it works:
+
+```js
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const { form, getState } = useForm({
+    // Provide the default values just like we use "React.useState" or "React.useReducer"
+    defaultValues: { name: "", email: "", password: "" },
+    // The event only triggered when the form is valid
+    onSubmit: (values, actions) => console.log("onSubmit: ", values),
+  });
+
+  // react-cool-form filters the error of a un-blurred field by default (via the "filterUntouchedErrors" option)
+  // Which helps the user focus on typing without being annoying
+  const errors = getState("errors", { filterUntouchedErrors: true });
+
+  return (
+    <form ref={form} noValidate>
+      <div>
+        {/* Support built-in validation */}
+        <input name="name" placeholder="Name" required />
+        {errors.name && <p>{errors.name}</p>}
+      </div>
+
+      <div>
+        <input name="email" type="email" placeholder="Email" required />
+        {errors.email && <p>{errors.email}</p>}
+      </div>
+
+      <div>
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          minLength={8}
+        />
+        {errors.password && <p>{errors.password}</p>}
+      </div>
+
+      <input type="submit" />
+      <input type="reset" />
+    </form>
+  );
+};
+```
+
+✨ Pretty easy right? `react-cool-form` is more powerful than you think. Let's keep exploring!
