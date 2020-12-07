@@ -1,18 +1,11 @@
 import React from "react";
 import { render } from "react-dom";
-
 import { useForm } from "react-cool-form";
 
 import "./styles.scss";
 
-interface FormValues {
-  name: string;
-  email: string;
-  password: string;
-}
-
 function App() {
-  const { form, getState } = useForm<FormValues>({
+  const { form, getState } = useForm({
     defaultValues: { name: "", email: "", password: "" },
     onSubmit: (values) => alert(JSON.stringify(values))
   });
