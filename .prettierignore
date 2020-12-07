@@ -2,7 +2,7 @@ dist
 coverage
 app
 examples
-docs
+website
 
 *.log
 .size-snapshot.json
