@@ -38,7 +38,7 @@ Here's the basic example of how does it works, full documentation will be provid
 
 [![Edit RCF - Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-basic-jq93g?fontsize=14&hidenavigation=1&theme=dark)
 
-```jsx
+```js
 import { useForm } from "react-cool-form";
 
 const App = () => {
