@@ -1,10 +1,7 @@
-# testing
-coverage
-
-# production
+# Production
 build
 
-# misc
+# Misc
 .env.local
 .env.development.local
 .env.test.local
