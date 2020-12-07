@@ -25,11 +25,11 @@
 .getStarted {
   border: 2px solid var(--ifm-color-primary);
   text-transform: uppercase;
-  color: #fff;
+  color: var(--ifm-color-primary);
 }
 
 .getStarted:hover {
-  color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary);
 }
 
 @media screen and (max-width: 966px) {

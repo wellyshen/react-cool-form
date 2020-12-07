@@ -1,3 +1,5 @@
+const github = "https://github.com/wellyshen/react-cool-form";
+
 module.exports = {
   title: "React Cool Form",
   tagline:
@@ -13,8 +15,7 @@ module.exports = {
     colorMode: { defaultMode: "dark" },
     announcementBar: {
       id: "start_us",
-      content:
-        '🤩 If you like React Cool Form, give it a star on <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a>!',
+      content: `🤩 If you like React Cool Form, give it a star on <a href=${github} target="_blank" rel="noopener noreferrer">GitHub</a>!`,
     },
     navbar: {
       title: "React Cool Form",
@@ -30,7 +31,7 @@ module.exports = {
           position: "left",
         },
         {
-          href: "https://github.com/wellyshen/react-cool-form",
+          href: github,
           label: "GitHub",
           position: "right",
         },
@@ -65,12 +66,7 @@ module.exports = {
         },
         {
           title: "Social",
-          items: [
-            {
-              label: "GitHub",
-              href: "https://github.com/wellyshen/react-cool-form",
-            },
-          ],
+          items: [{ label: "GitHub", href: github }],
         },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Welly Shen.`,
@@ -83,8 +79,7 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
-          editUrl:
-            "https://github.com/wellyshen/react-cool-form/edit/master/website",
+          editUrl: `${github}/edit/master/website`,
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
