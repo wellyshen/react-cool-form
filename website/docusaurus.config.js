@@ -2,8 +2,6 @@ const github = "https://github.com/wellyshen/react-cool-form";
 
 module.exports = {
   title: "React Cool Form",
-  tagline:
-    "React hooks for forms state and validation, less code more performant",
   url: "https://react-cool-form.netlify.app",
   baseUrl: "/",
   onBrokenLinks: "throw",

@@ -11,15 +11,16 @@
   position: relative;
   overflow: hidden;
   background: #2b3137;
-  color: #fff;
 }
 
 .heroTitle {
-  color: var(--ifm-color-primary);
+  margin-bottom: 2rem;
+  font-size: 3.75rem;
+  color: #fff;
 }
 
-.heroSubtitle {
-  color: #fff;
+.heroTitle b {
+  color: var(--ifm-color-primary);
 }
 
 .getStarted {

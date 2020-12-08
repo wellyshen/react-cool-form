@@ -13,28 +13,68 @@ const features = [
     imageUrl: "img/undraw_docusaurus_mountain.svg",
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        React Cool Form is a React{" "}
+        <Link to="https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook">
+          hook
+        </Link>
+        , it's designed to be a plug-and-play. You can plug it into any forms
+        you want easily.
       </>
     ),
   },
   {
-    title: "Focus on What Matters",
+    title: "Manage Complex Data",
     imageUrl: "img/undraw_docusaurus_tree.svg",
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Struggling with form structures? With React Cool Form{" "}
+        <Link to="#">nested fields</Link> API, you can create complex form
+        structures without hassle.
       </>
     ),
   },
   {
-    title: "Powered by React",
+    title: "Validate by Your Way",
     imageUrl: "img/undraw_docusaurus_react.svg",
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Supports <Link to="#">built-in</Link>, <Link to="#">field-level</Link>,
+        any <Link to="#">form-level</Link> validations, trying to cover all of
+        your cases.
+      </>
+    ),
+  },
+  {
+    title: "Highly Performant",
+    imageUrl: "img/undraw_docusaurus_mountain.svg",
+    description: (
+      <>
+        <Link to="#">Minimizes the number of re-renders</Link> for you. Building
+        forms with great user experience can be a natural thing.
+      </>
+    ),
+  },
+  {
+    title: "Developer Experience",
+    imageUrl: "img/undraw_docusaurus_tree.svg",
+    description: (
+      <>
+        Intuitive and flexible <Link to="#">API</Link> design, providing a
+        seamless way to integration with <Link to="#">custom components</Link>{" "}
+        or <Link to="#">UI libraries</Link>.
+      </>
+    ),
+  },
+  {
+    title: "Super Lightweight",
+    imageUrl: "img/undraw_docusaurus_react.svg",
+    description: (
+      <>
+        The lower size the faster speed. React Cool Form is a tiny (
+        <Link to="https://bundlephobia.com/result?p=react-cool-form">
+          ~ 4.7KB gzipped
+        </Link>
+        ) but powerful library.
       </>
     ),
   },
@@ -63,11 +103,9 @@ function Home() {
       <header className={clsx("hero", styles.heroBanner)}>
         <div className="container">
           <h1 className={clsx("hero__title", styles.heroTitle)}>
-            {siteConfig.title}
+            React hooks for forms <b>state</b> and <b>validation</b>, less code
+            more <b>performant</b>
           </h1>
-          <p className={clsx("hero__subtitle", styles.heroSubtitle)}>
-            {siteConfig.tagline}
-          </p>
           <div className={styles.buttons}>
             <Link
               className={clsx("button button--lg", styles.getStarted)}
