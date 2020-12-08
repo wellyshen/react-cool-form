@@ -13,7 +13,7 @@ To use `react-cool-form`, you must use `react@16.8.0` or greater which includes 
 
 ## Installation
 
-This package is distributed via [npm package](https://www.npmjs.com/package/react-cool-form).
+This package is distributed via [npm](https://www.npmjs.com/package/react-cool-form).
 
 ```sh
 $ yarn add react-cool-form
