@@ -72,7 +72,7 @@ const features = [
       <>
         The lower size the faster speed. React Cool Form is a tiny (
         <Link to="https://bundlephobia.com/result?p=react-cool-form">
-          ~ 4.7KB gzipped
+          ~ 4.8KB gzipped
         </Link>
         ) but powerful library.
       </>

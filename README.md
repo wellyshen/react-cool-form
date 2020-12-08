@@ -20,7 +20,7 @@ React hooks for forms state and validation, less code more performant.
 - 🔩 Provides useful utility functions to boost forms development.
 - 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
 - ☁️ Server-side rendering compatibility.
-- 🦔 Tiny size ([~ 4.7KB gzipped](https://bundlephobia.com/result?p=react-cool-form)) but powerful.
+- 🦔 Tiny size ([~ 4.8KB gzipped](https://bundlephobia.com/result?p=react-cool-form)) but powerful.
 
 ## [Docs](https://react-cool-form.netlify.app)
 
