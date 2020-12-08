@@ -14,7 +14,7 @@ module.exports = {
     announcementBar: {
       id: "start_us",
       content: `⭐ If you like React Cool Form, give it a star on <a href=${github} target="_blank" rel="noopener noreferrer">GitHub</a>!`,
-      backgroundColor: "#faa627",
+      backgroundColor: "#fbb243",
     },
     navbar: {
       title: "React Cool Form",
