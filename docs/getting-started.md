@@ -53,7 +53,7 @@ const App = () => {
     onSubmit: (values, actions) => console.log("onSubmit: ", values),
   });
 
-  // react-cool-form filters the error of a un-blurred field by default (via the "filterUntouchedErrors" option)
+  // react-cool-form filters the error of an un-blurred field by default (via the "filterUntouchedErrors" option)
   // Which helps the user focus on typing without being annoying
   const errors = getState("errors", { filterUntouchedErrors: true });
 
