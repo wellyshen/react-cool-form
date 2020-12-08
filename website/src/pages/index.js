@@ -59,7 +59,7 @@ function Home() {
   const context = useDocusaurusContext();
   const { siteConfig = {} } = context;
   return (
-    <Layout description="React hooks for forms state and validation, less code more performant">
+    <Layout description="React hooks for forms state and validation, less code more performant.">
       <header className={clsx("hero", styles.heroBanner)}>
         <div className="container">
           <h1 className={clsx("hero__title", styles.heroTitle)}>
