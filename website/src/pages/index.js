@@ -10,15 +10,15 @@ import styles from "./styles.module.css";
 const features = [
   {
     title: "Easy to Use",
-    imageUrl: "img/fishing.svg",
+    imageUrl: "img/plug.svg",
     description: (
       <>
         React Cool Form is a React{" "}
         <Link to="https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook">
           hook
         </Link>
-        , it's designed to be a plug-and-play. You can plug it into any forms
-        you want easily.
+        , it's designed to be a <b>plug-and-play</b>. You can easily plug it
+        into any forms you that want.
       </>
     ),
   },
@@ -39,8 +39,8 @@ const features = [
     description: (
       <>
         Supports <Link to="#">built-in</Link>, <Link to="#">field-level</Link>,
-        any <Link to="#">form-level</Link> validations, trying to cover all of
-        your cases.
+        any <Link to="#">form-level</Link> validations, which can cover all the
+        cases that you need.
       </>
     ),
   },
