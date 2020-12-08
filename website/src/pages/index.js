@@ -10,7 +10,7 @@ import styles from "./styles.module.css";
 const features = [
   {
     title: "Easy to Use",
-    imageUrl: "img/undraw_docusaurus_mountain.svg",
+    imageUrl: "img/fishing.svg",
     description: (
       <>
         React Cool Form is a React{" "}
@@ -24,7 +24,7 @@ const features = [
   },
   {
     title: "Manage Complex Data",
-    imageUrl: "img/undraw_docusaurus_tree.svg",
+    imageUrl: "img/layout.svg",
     description: (
       <>
         Struggling with form structures? With React Cool Form{" "}
@@ -35,7 +35,7 @@ const features = [
   },
   {
     title: "Validate by Your Way",
-    imageUrl: "img/undraw_docusaurus_react.svg",
+    imageUrl: "img/checklist.svg",
     description: (
       <>
         Supports <Link to="#">built-in</Link>, <Link to="#">field-level</Link>,
@@ -46,7 +46,7 @@ const features = [
   },
   {
     title: "Highly Performant",
-    imageUrl: "img/undraw_docusaurus_mountain.svg",
+    imageUrl: "img/superhero.svg",
     description: (
       <>
         <Link to="#">Minimizes the number of re-renders</Link> for you. Building
@@ -56,10 +56,10 @@ const features = [
   },
   {
     title: "Developer Experience",
-    imageUrl: "img/undraw_docusaurus_tree.svg",
+    imageUrl: "img/coding.svg",
     description: (
       <>
-        Intuitive and flexible <Link to="#">API</Link> design, providing a
+        Intuitive and flexible <Link to="#">API</Link> design, also provides a
         seamless way to integration with <Link to="#">custom components</Link>{" "}
         or <Link to="#">UI libraries</Link>.
       </>
@@ -67,7 +67,7 @@ const features = [
   },
   {
     title: "Super Lightweight",
-    imageUrl: "img/undraw_docusaurus_react.svg",
+    imageUrl: "img/loading.svg",
     description: (
       <>
         The lower size the faster speed. React Cool Form is a tiny (
