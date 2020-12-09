@@ -1,19 +1,23 @@
 import { useForm } from "react-cool-form";
 
 interface FormValues {
-  text: "";
+  text: string;
+  color: string[];
 }
 
 const Playground = (): JSX.Element => {
-  const { form, getState } = useForm<FormValues>({
-    defaultValues: { text: "" },
+  const { form } = useForm<FormValues>({
+    defaultValues: { text: "", color: ["red"] },
+    onSubmit: (values) => console.log(values),
   });
-  const value = getState({ text: "text" }, { target: "values" });
-  console.log("LOG ===> ", value);
 
   return (
     <form ref={form} noValidate>
       <input name="text" />
+      <select name="color">
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+      </select>
       <input type="submit" />
     </form>
   );
