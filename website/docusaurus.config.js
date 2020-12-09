@@ -7,8 +7,8 @@ module.exports = {
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
-  organizationName: "wellyshen", // Usually your GitHub org/user name.
-  projectName: "react-cool-form", // Usually your repo name.
+  organizationName: "wellyshen",
+  projectName: "react-cool-form",
   themeConfig: {
     colorMode: { defaultMode: "dark" },
     announcementBar: {
@@ -24,9 +24,13 @@ module.exports = {
       }, */
       items: [
         {
-          to: "docs/",
-          activeBasePath: "docs",
+          to: "/docs",
           label: "Docs",
+          position: "right",
+        },
+        {
+          to: "/docs/use-form",
+          label: "API",
           position: "right",
         },
         {
@@ -87,7 +91,6 @@ module.exports = {
         docs: {
           path: "../docs",
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
           editUrl: `${github}/edit/master/website`,
         },
         theme: {

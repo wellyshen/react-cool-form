@@ -1,11 +1,14 @@
 ---
 id: getting-started
 title: Getting Started
-sidebar_label: Getting Started
 slug: /
 ---
 
-TODO: Introduction...
+Building forms in [React](https://reactjs.org) might be a challenge. We have to face many tedious things like form data, validation, submission, and more 🤯
+
+As a React developer, there're two strategies of implementing forms, the [controlled components](https://reactjs.org/docs/forms.html#controlled-components) and [uncontrolled components](https://reactjs.org/docs/uncontrolled-components.html), each has its advantages and timing of use. When using controlled components, form state is served as [the single source of truth](https://en.wikipedia.org/wiki/Single_source_of_truth). However, the uncontrolled components make our code more concise and performant.
+
+`react-cool-form` combines these advantages and references the [UX theory](https://www.nngroup.com/articles/errors-forms-design-guidelines) of [Nielsen Norman Group](https://www.nngroup.com) as the basis for [API](./docs/use-form) design to help you beat the forms 👊🏻
 
 ## Requirement
 

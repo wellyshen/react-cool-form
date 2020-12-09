@@ -59,9 +59,10 @@ const features = [
     imageUrl: "img/coding.svg",
     description: (
       <>
-        Intuitive and flexible <Link to="#">API</Link> design, also provides a
-        seamless way to integration with <Link to="#">custom components</Link>{" "}
-        or <Link to="#">UI libraries</Link>.
+        Intuitive and flexible <Link to="/docs/use-form">API</Link> design, also
+        provides a seamless way to integration with{" "}
+        <Link to="#">custom components</Link> or{" "}
+        <Link to="#">UI libraries</Link>.
       </>
     ),
   },

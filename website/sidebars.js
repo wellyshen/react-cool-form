@@ -1,5 +1,6 @@
 module.exports = {
-  someSidebar: {
+  docs: {
     "Getting Started": ["getting-started"],
+    "API Reference": ["use-form"],
   },
 };
