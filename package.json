@@ -3,7 +3,7 @@
   "version": "0.0.70",
   "description": "React hooks for forms state and validation, less code more performant.",
   "license": "MIT",
-  "homepage": "https://github.com/wellyshen/react-cool-form#readme",
+  "homepage": "https://react-cool-form.netlify.app",
   "repository": "https://github.com/wellyshen/react-cool-form",
   "bugs": "https://github.com/wellyshen/react-cool-form/issues",
   "keywords": [
