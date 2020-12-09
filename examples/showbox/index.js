@@ -9,17 +9,17 @@ let count = 0;
 function App() {
   count++;
   const { form, getState } = useForm({
-    defaultValues: { account: "", password: "" },
+    defaultValues: { name: "", password: "" },
     onSubmit: (values) => alert(JSON.stringify(values))
   });
   const errors = getState("errors");
 
   return (
     <form ref={form} noValidate>
-      <p className="count">Renders: {count}</p>
+      <div className="count">Render {count} times</div>
       <div>
-        <input name="account" placeholder="Account" required />
-        {errors.account && <p>{errors.account}</p>}
+        <input name="name" placeholder="Name" required />
+        {errors.name && <p>{errors.name}</p>}
       </div>
       <div>
         <input
@@ -29,6 +29,13 @@ function App() {
           required
         />
         {errors.password && <p>{errors.password}</p>}
+      </div>
+      <div>
+        <select name="plan">
+          <option value="freemium">Freemium</option>
+          <option value="standard">Standard</option>
+          <option value="premium">Premium</option>
+        </select>
       </div>
       <input type="submit" />
     </form>
