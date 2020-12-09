@@ -48,7 +48,11 @@ module.exports = {
           items: [
             {
               label: "Getting Started",
-              to: "docs/",
+              to: "/docs",
+            },
+            {
+              label: "API Reference",
+              to: "/docs/use-form",
             },
           ],
         },
