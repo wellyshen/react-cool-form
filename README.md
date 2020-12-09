@@ -29,7 +29,7 @@ See the documentation at [react-cool-form.netlify.app](https://react-cool-form.n
 Frequently viewed docs:
 
 - [Getting Started](https://react-cool-form.netlify.app/docs)
-- API Reference
+- [API Reference](https://react-cool-form.netlify.app/docs/use-form)
 
 ## Quick Start
 
