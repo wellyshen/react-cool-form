@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.70
+
+### Patch Changes
+
+- [`6dca6ab`](https://github.com/wellyshen/react-cool-form/commit/6dca6ab47b62533d097463c25a818102a4be7623) Thanks [@wellyshen](https://github.com/wellyshen)! - docs: update getting-started & the API url of README.md & add "API Reference" page
+
 ## 0.0.69
 
 ### Patch Changes
