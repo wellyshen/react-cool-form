@@ -7,6 +7,10 @@ form {
   margin: 5rem auto 0;
   width: 24rem;
 
+  .count {
+    color: white;
+  }
+
   div {
     width: inherit;
     margin-bottom: 1.5rem;
@@ -24,11 +28,6 @@ form {
   input[type="submit"] {
     margin-bottom: 0.75rem;
     background: #faa627;
-    cursor: pointer;
-  }
-
-  input[type="reset"] {
-    background: #ccc;
     cursor: pointer;
   }
 

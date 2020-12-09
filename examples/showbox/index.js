@@ -4,28 +4,33 @@ import { useForm } from "react-cool-form";
 
 import "./styles.scss";
 
-function App() {
-  const { form, getState } = useForm({
-    defaultValues: { name: "", email: "" },
-    onSubmit: (values) => alert(JSON.stringify(values)),
-  });
+let count = 0;
 
+function App() {
+  count++;
+  const { form, getState } = useForm({
+    defaultValues: { account: "", password: "" },
+    onSubmit: (values) => alert(JSON.stringify(values))
+  });
   const errors = getState("errors");
 
   return (
     <form ref={form} noValidate>
+      <p className="count">Renders: {count}</p>
       <div>
-        <input name="name" placeholder="Name" required />
-        {errors.name && <p>{errors.name}</p>}
+        <input name="account" placeholder="Account" required />
+        {errors.account && <p>{errors.account}</p>}
       </div>
-
       <div>
-        <input name="email" type="email" placeholder="Email" required />
-        {errors.email && <p>{errors.email}</p>}
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+        />
+        {errors.password && <p>{errors.password}</p>}
       </div>
-
       <input type="submit" />
-      <input type="reset" />
     </form>
   );
 }
