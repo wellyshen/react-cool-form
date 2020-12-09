@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.71
+
+### Patch Changes
+
+- [`f702cc8`](https://github.com/wellyshen/react-cool-form/commit/f702cc8c25d0aa0c1dc7ac731add2fe80fe3e741) Thanks [@wellyshen](https://github.com/wellyshen)! - chore(package): change homepage URL
+
 ## 0.0.70
 
 ### Patch Changes
