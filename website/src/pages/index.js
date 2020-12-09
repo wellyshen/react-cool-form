@@ -5,7 +5,7 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 
 const features = [
   {
@@ -129,6 +129,15 @@ function Home() {
             </div>
           </section>
         )}
+        <section className={styles.showbox}>
+          <iframe
+            className={styles.iframe}
+            src="https://codesandbox.io/embed/rcf-showbox-8b0qn?fontsize=14&hidenavigation=1&theme=dark"
+            title="RCF - Showbox"
+            allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+            sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+          ></iframe>
+        </section>
       </main>
     </Layout>
   );
