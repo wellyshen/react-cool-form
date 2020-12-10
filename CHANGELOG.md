@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.72
+
+### Patch Changes
+
+- [`11a779e`](https://github.com/wellyshen/react-cool-form/commit/11a779e270c07a8e6eb19e76081d6d389f82d201) [#222](https://github.com/wellyshen/react-cool-form/pull/222) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): reduce unnecessary renders for `getState`
+
 ## 0.0.71
 
 ### Patch Changes
