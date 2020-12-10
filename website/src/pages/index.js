@@ -130,6 +130,11 @@ function Home() {
           </section>
         )}
         <section className={styles.showbox}>
+          <h2>Performance Matters</h2>
+          <p>
+            Less code more performant. React Cool Form eliminates unnecessary
+            re-renders throughout the whole process. All you need to do is to focus on coding 🎯.
+          </p>
           <iframe
             className={styles.iframe}
             src="https://codesandbox.io/embed/rcf-showbox-8b0qn?fontsize=14&hidenavigation=1&theme=dark"

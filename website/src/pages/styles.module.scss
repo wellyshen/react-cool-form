@@ -59,9 +59,16 @@
 }
 
 .showbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 4.5rem 0;
   text-align: center;
   background: var(--ifm-color-emphasis-100);
+
+  p {
+    width: 50%;
+  }
 
   .iframe {
     width: 80%;
@@ -83,7 +90,13 @@
     padding: 2rem;
   }
 
-  .showbox .iframe {
-    width: 100%;
+  .showbox {
+    p {
+      width: 90%;
+    }
+
+    .iframe {
+      width: 100%;
+    }
   }
 }
