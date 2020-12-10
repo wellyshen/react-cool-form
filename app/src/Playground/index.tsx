@@ -2,22 +2,20 @@ import { useForm } from "react-cool-form";
 
 interface FormValues {
   text: string;
-  color: string[];
 }
 
 const Playground = (): JSX.Element => {
-  const { form } = useForm<FormValues>({
-    defaultValues: { text: "", color: ["red"] },
+  const { form, getState } = useForm<FormValues>({
+    defaultValues: { text: "" },
     onSubmit: (values) => console.log(values),
   });
+  const errors = getState("errors");
+  console.log("LOG ===> Render!");
 
   return (
     <form ref={form} noValidate>
-      <input name="text" />
-      <select name="color">
-        <option value="red">Red</option>
-        <option value="blue">Blue</option>
-      </select>
+      <input name="text" required />
+      {errors.text && <p>{errors.text}</p>}
       <input type="submit" />
     </form>
   );

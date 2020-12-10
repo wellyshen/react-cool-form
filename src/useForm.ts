@@ -306,7 +306,13 @@ export default <V extends FormValues = FormValues>({
         return target ? `${target}.${path}` : path;
       };
       const errorsEnhancer = (path: string, state: any) => {
-        if (!watch || !filterUntouchedErrors || !path.startsWith("errors"))
+        if (
+          !watch ||
+          !filterUntouchedErrors ||
+          !path.startsWith("errors") ||
+          !state ||
+          isEmptyObject(state)
+        )
           return state;
 
         path = path.replace("errors", "touched");
