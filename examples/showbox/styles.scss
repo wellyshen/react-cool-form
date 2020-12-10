@@ -15,13 +15,10 @@ form {
     border-radius: 4px;
   }
 
-  div {
-    width: inherit;
-    margin-bottom: 1.5rem;
-  }
-
+  div,
   input,
   select {
+    margin-bottom: 1.5rem;
     padding: 0 0.5rem;
     width: inherit;
     height: 2rem;
@@ -33,10 +30,5 @@ form {
   input[type="submit"] {
     background: #faa627;
     cursor: pointer;
-  }
-
-  p {
-    margin-top: 0.5rem;
-    color: orangered;
   }
 }
