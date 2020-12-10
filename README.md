@@ -16,7 +16,7 @@ React hooks for forms state and validation, less code more performant.
 - 🚦 Supports built-in, field-level, and form-level validations.
 - 🚀 Highly performant, minimizes the number of re-renders for you.
 - 🧱 Seamless integration with custom components or UI libraries.
-- 🎛 Super flexible API design, built with DX in mind.
+- 🎛 Super flexible [API](https://react-cool-form.netlify.app/docs/use-form) design, built with DX in mind.
 - 🔩 Provides useful utility functions to boost forms development.
 - 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
 - ☁️ Server-side rendering compatibility.
