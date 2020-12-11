@@ -76,7 +76,7 @@ const App = () => {
           type="password"
           placeholder="Password"
           required
-          minLength={8}
+          minLength={6}
         />
         {errors.password && <p>{errors.password}</p>}
       </div>
