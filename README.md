@@ -53,9 +53,8 @@ const App = () => {
     // Provide the default values just like we use "React.useState" or "React.useReducer"
     defaultValues: { name: "", email: "", password: "" },
     // The event only triggered when the form is valid
-    onSubmit: (values, actions) => console.log("onSubmit: ", values),
+    onSubmit: (values) => console.log("onSubmit: ", values),
   });
-
   // react-cool-form filters the error of an un-blurred field by default (via the "filterUntouchedErrors" option)
   // Which helps the user focus on typing without being annoying
   const errors = getState("errors", { filterUntouchedErrors: true });
@@ -67,12 +66,10 @@ const App = () => {
         <input name="name" placeholder="Name" required />
         {errors.name && <p>{errors.name}</p>}
       </div>
-
       <div>
         <input name="email" type="email" placeholder="Email" required />
         {errors.email && <p>{errors.email}</p>}
       </div>
-
       <div>
         <input
           name="password"
@@ -83,7 +80,6 @@ const App = () => {
         />
         {errors.password && <p>{errors.password}</p>}
       </div>
-
       <input type="submit" />
       <input type="reset" />
     </form>
