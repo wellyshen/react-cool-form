@@ -81,7 +81,6 @@ const App = () => {
         {errors.password && <p>{errors.password}</p>}
       </div>
       <input type="submit" />
-      <input type="reset" />
     </form>
   );
 };
