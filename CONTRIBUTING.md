@@ -1,4 +1,4 @@
-# Contributing to react-cool-form
+# Contributing to React Cool Form
 
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
 
@@ -56,4 +56,4 @@ However, there are still some styles that the linter cannot pick up. If you are 
 
 ## License
 
-By contributing to react-cool-form, you agree that your contributions will be licensed under its MIT license.
+By contributing to React Cool Form, you agree that your contributions will be licensed under its MIT license.

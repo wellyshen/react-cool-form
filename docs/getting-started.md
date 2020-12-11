@@ -8,11 +8,11 @@ Building forms in [React](https://reactjs.org) might be a challenge. We have to 
 
 As a React developer, there're two strategies of implementing forms, the [controlled components](https://reactjs.org/docs/forms.html#controlled-components) and [uncontrolled components](https://reactjs.org/docs/uncontrolled-components.html), each has its advantages and timing of use. The controlled components serve form state as [the single source of truth](https://en.wikipedia.org/wiki/Single_source_of_truth). However, the uncontrolled components make our code more **concise** and **performant**.
 
-`react-cool-form` combines these advantages and references the [UX theory](https://www.nngroup.com/articles/errors-forms-design-guidelines) of [Nielsen Norman Group](https://www.nngroup.com) as the basis for our [API](./docs/use-form) design to help you beat all kinds of forms 👊🏻.
+React Cool Form combines these advantages and references the [UX theory](https://www.nngroup.com/articles/errors-forms-design-guidelines) of [Nielsen Norman Group](https://www.nngroup.com) as the basis for our [API](./docs/use-form) design to help you beat all kinds of forms 👊🏻.
 
 ## Requirement
 
-To use `react-cool-form`, you must use `react@16.8.0` or greater which includes hooks.
+To use React Cool Form, you must use `react@16.8.0` or greater which includes hooks.
 
 ## Installation
 
@@ -55,7 +55,7 @@ const App = () => {
     // The event only triggered when the form is valid
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  // react-cool-form filters the error of an un-blurred field by default (via the "filterUntouchedErrors" option)
+  // React Cool Form filters the error of an un-blurred field by default (via the "filterUntouchedErrors" option)
   // Which helps the user focus on typing without being annoying
   const errors = getState("errors", { filterUntouchedErrors: true });
 
@@ -86,4 +86,4 @@ const App = () => {
 };
 ```
 
-✨ Pretty easy right? `react-cool-form` is more powerful than you think. Let's keep exploring!
+✨ Pretty easy right? React Cool Form is more powerful than you think. Let's keep exploring!

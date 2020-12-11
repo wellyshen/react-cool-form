@@ -3,7 +3,7 @@ id: validation-guide
 title: Validation Guide
 ---
 
-`react-cool-form` supports a wide range of synchronous and asynchronous validation strategies for [built-in](#built-in-validation), [field-level](#field-level-validation), and [form-level](#form-level-validation) validations to cover all the cases that you need.
+React Cool Form supports a wide range of synchronous and asynchronous validation strategies for [built-in](#built-in-validation), [field-level](#field-level-validation), and [form-level](#form-level-validation) validations to cover all the cases that you need.
 
 ## Built-in Validation
 

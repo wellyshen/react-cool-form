@@ -24,7 +24,7 @@ React hooks for forms state and validation, less code more performant.
 
 ## [Docs](https://react-cool-form.netlify.app)
 
-See the documentation at [react-cool-form.netlify.app](https://react-cool-form.netlify.app) for more information about using `react-cool-form`!
+See the documentation at [react-cool-form.netlify.app](https://react-cool-form.netlify.app) for more information about using React Cool Form!
 
 Frequently viewed docs:
 
@@ -33,7 +33,7 @@ Frequently viewed docs:
 
 ## Quick Start
 
-To use `react-cool-form`, you must use `react@16.8.0` or greater which includes hooks. This package is distributed via [npm](https://www.npmjs.com/package/react-cool-form).
+To use React Cool Form, you must use `react@16.8.0` or greater which includes hooks. This package is distributed via [npm](https://www.npmjs.com/package/react-cool-form).
 
 ```sh
 $ yarn add react-cool-form
@@ -55,7 +55,7 @@ const App = () => {
     // The event only triggered when the form is valid
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  // react-cool-form filters the error of an un-blurred field by default (via the "filterUntouchedErrors" option)
+  // React Cool Form filters the error of an un-blurred field by default (via the "filterUntouchedErrors" option)
   // Which helps the user focus on typing without being annoying
   const errors = getState("errors", { filterUntouchedErrors: true });
 
@@ -86,7 +86,7 @@ const App = () => {
 };
 ```
 
-✨ Pretty easy right? `react-cool-form` is more powerful than you think. Let's [explore it](https://react-cool-form.netlify.app)!
+✨ Pretty easy right? React Cool Form is more powerful than you think. Let's [explore it](https://react-cool-form.netlify.app)!
 
 ## Milestone
 
