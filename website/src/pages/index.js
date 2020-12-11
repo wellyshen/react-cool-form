@@ -132,8 +132,9 @@ function Home() {
         <section className={styles.showbox}>
           <h2>Performance Matters</h2>
           <p>
-            Less code more performant. React Cool Form eliminates unnecessary
-            re-renders throughout the whole process. All you need to do is to focus on coding 🎯.
+            Building forms in React can be simple and performant. React Cool
+            Form eliminates unnecessary re-renders throughout the development
+            process. Now dive into the following example to learn more.
           </p>
           <iframe
             className={styles.iframe}
