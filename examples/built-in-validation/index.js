@@ -5,10 +5,10 @@ import { useForm } from "react-cool-form";
 import "./styles.scss";
 
 function App() {
-  const { form, getState } = useForm({
+  const { form } = useForm({
     defaultValues: { name: "", email: "", password: "" },
     onSubmit: (values) => alert(JSON.stringify(values)),
-    onError: (errors) => console.log("onError: ", errors),
+    onError: (errors) => console.log("onError: ", errors)
   });
 
   return (
