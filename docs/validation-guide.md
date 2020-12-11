@@ -56,4 +56,15 @@ Coming soon...
 
 ## When Does Validation Run?
 
-Coming soon...
+By default, React Cool Form runs validation methods as below, you can tell React Cool Form when to run validation by the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
+
+| Event/method                  | Timing                                                                                                                     |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`                    | Whenever the value of a field has been changed.                                                                            |
+| [`setFieldValue`](./use-form) | Whenever the value of a field has been set.                                                                                |
+| [`setValues`](./use-form)     | Whenever the `values` of the [formState](#) as been set.                                                                   |
+| `onBlur`                      | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
+| `onSubmit`                    | Whenever a submission attempt is made.                                                                                     |
+| [`submit`](./use-form)        | Whenever a submission attempt is made manually.                                                                            |
+| [`validateField`](./use-form) | Manually run field-level validation.                                                                                       |
+| [`validateForm`](./use-form)  | Manually run form-level validation.                                                                                        |
