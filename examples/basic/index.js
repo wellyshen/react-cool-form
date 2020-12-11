@@ -9,7 +9,6 @@ function App() {
     defaultValues: { name: "", email: "", password: "" },
     onSubmit: (values) => alert(JSON.stringify(values))
   });
-
   const errors = getState("errors");
 
   return (
@@ -18,12 +17,10 @@ function App() {
         <input name="name" placeholder="Name" required />
         {errors.name && <p>{errors.name}</p>}
       </div>
-
       <div>
         <input name="email" type="email" placeholder="Email" required />
         {errors.email && <p>{errors.email}</p>}
       </div>
-
       <div>
         <input
           name="password"
@@ -34,7 +31,6 @@ function App() {
         />
         {errors.password && <p>{errors.password}</p>}
       </div>
-
       <input type="submit" />
       <input type="reset" />
     </form>
