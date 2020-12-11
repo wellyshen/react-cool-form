@@ -34,13 +34,20 @@ const features = [
     ),
   },
   {
-    title: "Validate by Your Way",
+    title: "Validate by Your Favor",
     imageUrl: "img/checklist.svg",
     description: (
       <>
-        Supports <Link to="#">built-in</Link>, <Link to="#">field-level</Link>,
-        any <Link to="#">form-level</Link> validations, which can cover all the
-        cases that you need.
+        Supports{" "}
+        <Link to="/docs/validation-guide#built-in-validation">built-in</Link>,{" "}
+        <Link to="/docs/validation-guide#field-level-validation">
+          field-level
+        </Link>
+        , any{" "}
+        <Link to="/docs/validation-guide#form-level-validation">
+          form-level
+        </Link>{" "}
+        validations, which can cover all the cases that you need.
       </>
     ),
   },
