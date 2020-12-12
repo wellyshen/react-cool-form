@@ -38,7 +38,7 @@ const App = () => {
 };
 ```
 
-Some validation attributes like [minLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/minlength), [maxLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/maxlength), [min](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/min), and [max](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/max) are designed to validate a field once it has been edited by the user. If your validation relies on the [related methods](#manually-triggering-validation), use the [pattern](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern) attribute or custom validation instead.
+Some validation attributes such as [minLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/minlength), [maxLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/maxlength), [min](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/min), and [max](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/max) are designed to validate a field once it has been edited by the user. If your validation relies on the [related methods](#manually-triggering-validation), use the [pattern](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern) attribute or custom validation instead.
 
 ```js
 <input name="password" required pattern=".{6,}" /> // 6 characters minimum
@@ -46,7 +46,7 @@ Some validation attributes like [minLength](https://developer.mozilla.org/en-US/
 
 ## Form-level Validation
 
-It provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](#)), which is useful to validate dependent fields at the same time.
+It provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state)), which is useful to validate dependent fields at the same time.
 
 [![Edit RCF - Form-level validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-form-level-validation-2if7r?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -92,6 +92,35 @@ const App = () => {
     <form ref={form} noValidate>
       <input name="name" placeholder="Name" />
       <input name="email" type="email" placeholder="Email" />
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
+In addition to write your own logic, it's also possible to use a 3rd-party library such as [Yup](https://github.com/jquense/yup), [Joi](https://github.com/sideway/joi), and many others with form-level validation. Let's take a look at the following example:
+
+```js
+import { useForm } from "react-cool-form";
+import * as yup from "yup";
+
+const validate = (values) => {
+  // TODO: convert Yup errors to field errors
+};
+
+const App = () => {
+  const { form } = useForm({
+    defaultValues: { name: "", email: "", password: "" },
+    validate,
+    onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (errors) => console.log("onError: ", errors),
+  });
+
+  return (
+    <form ref={form} noValidate>
+      <input name="name" placeholder="Name" />
+      <input name="email" type="email" placeholder="Email" />
+      <input name="password" type="password" placeholder="Password" />
       <input type="submit" />
     </form>
   );
