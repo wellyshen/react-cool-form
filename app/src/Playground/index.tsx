@@ -2,26 +2,27 @@ import { useForm } from "react-cool-form";
 
 interface FormValues {
   t1: string;
-  t2: string;
 }
 
 let count = -1;
 
 const Playground = (): JSX.Element => {
   count += 1;
-  const { form, getState } = useForm<FormValues>({
-    defaultValues: { t1: "", t2: "" },
+  const { form, getState, validateField } = useForm<FormValues>({
+    defaultValues: { t1: "" },
     onSubmit: (values) => console.log(values),
   });
-  const errors = getState("errors");
+  const errors = getState("errors", { filterUntouchedErrors: false });
+  console.log("LOG ===> ", errors);
 
   return (
     <form ref={form} noValidate>
+      <button type="button" onClick={() => validateField("t1")}>
+        Validate
+      </button>
       <p>{count}</p>
-      <input name="t1" required />
+      <input name="t1" minLength={5} />
       {errors.t1 && <p>{errors.t1}</p>}
-      <input name="t2" required />
-      {errors.t2 && <p>{errors.t2}</p>}
       <input type="submit" />
     </form>
   );

@@ -40,14 +40,14 @@ const features = [
       <>
         Supports{" "}
         <Link to="/docs/validation-guide#built-in-validation">built-in</Link>,{" "}
-        <Link to="/docs/validation-guide#field-level-validation">
-          field-level
-        </Link>
-        , any{" "}
         <Link to="/docs/validation-guide#form-level-validation">
           form-level
+        </Link>
+        , and{" "}
+        <Link to="/docs/validation-guide#field-level-validation">
+          field-level
         </Link>{" "}
-        validations, which can cover all the cases that you need.
+        validation, which can cover all the cases that you need.
       </>
     ),
   },

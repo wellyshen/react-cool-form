@@ -3,7 +3,7 @@ id: validation-guide
 title: Validation Guide
 ---
 
-React Cool Form supports a wide range of synchronous and asynchronous validation strategies for [built-in](#built-in-validation), [field-level](#field-level-validation), and [form-level](#form-level-validation) validations to cover all the cases that you need.
+React Cool Form supports a wide range of **synchronous** and **asynchronous** validation strategies for [built-in](#built-in-validation), [form-level](#form-level-validation), and [field-level](#field-level-validation) validation to cover all the cases that you need.
 
 ## Built-in Validation
 
@@ -38,13 +38,82 @@ const App = () => {
 };
 ```
 
+Some validation attributes like [minLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/minlength), [maxLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/maxlength), [min](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/min), and [max](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/max) are designed to validate a field once it has been edited by the user. If your validation relies on the [related methods](#manually-triggering-validation), use the [pattern](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern) attribute or custom validation instead.
+
+```js
+<input name="password" required pattern=".{6,}" /> // 6 characters minimum
+```
+
+## Form-level Validation
+
+Runs validation by accessing the complete `values` of the form (a.k.a [formState.values](#)). It's useful to validate dependent fields at the same time.
+
+```js
+import { useForm } from "react-cool-form";
+
+// Synchronous validation
+const validate = (values, actions) => {
+  const errors = {};
+
+  if (!values.email.length) {
+    errors.email = "Required";
+  } else if (!/^[A-Z0-9._-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = "Invalid email address";
+  }
+
+  // ...
+
+  return errors;
+};
+
+// Asynchronous validation
+const validate = async (values, actions) => {
+  const errors = {};
+  const hasUser = await validateOnServer(values.name);
+
+  if (!hasUser) errors.name = "User doesn't exist";
+
+  // ...
+
+  return errors;
+};
+
+const App = () => {
+  const { form } = useForm({
+    defaultValues: { name: "", email: "" },
+    validate,
+    onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (errors) => console.log("onError: ", errors),
+  });
+
+  return (
+    <form ref={form} noValidate>
+      <input name="name" placeholder="Name" />
+      <input name="email" type="email" placeholder="Email" />
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
 ## Field-level Validation
 
 Coming soon...
 
-## Form-level Validation
+## When Does Validation Run?
 
-Coming soon...
+By default, React Cool Form runs the above validation methods as below, you can tell React Cool Form when to run validation by the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
+
+| Event/method                  | Timing                                                                                                                     |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`                    | Whenever the value of a field has been changed.                                                                            |
+| [`setFieldValue`](./use-form) | Whenever the value of a field has been set.                                                                                |
+| [`setValues`](./use-form)     | Whenever the `values` of the [formState](#) has been set.                                                                  |
+| `onBlur`                      | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
+| `onSubmit`                    | Whenever a submission attempt is made.                                                                                     |
+| [`submit`](./use-form)        | Whenever a submission attempt is made manually.                                                                            |
+| [`validateField`](./use-form) | Manually run field-level validation.                                                                                       |
+| [`validateForm`](./use-form)  | Manually run form-level validation.                                                                                        |
 
 ## Manually Triggering Validation
 
@@ -53,18 +122,3 @@ Coming soon...
 ## Displaying Error Messages
 
 Coming soon...
-
-## When Does Validation Run?
-
-By default, React Cool Form runs validation methods as below, you can tell React Cool Form when to run validation by the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
-
-| Event/method                  | Timing                                                                                                                     |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `onChange`                    | Whenever the value of a field has been changed.                                                                            |
-| [`setFieldValue`](./use-form) | Whenever the value of a field has been set.                                                                                |
-| [`setValues`](./use-form)     | Whenever the `values` of the [formState](#) has been set.                                                                   |
-| `onBlur`                      | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
-| `onSubmit`                    | Whenever a submission attempt is made.                                                                                     |
-| [`submit`](./use-form)        | Whenever a submission attempt is made manually.                                                                            |
-| [`validateField`](./use-form) | Manually run field-level validation.                                                                                       |
-| [`validateForm`](./use-form)  | Manually run form-level validation.                                                                                        |
