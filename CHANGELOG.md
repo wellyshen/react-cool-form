@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.75
+
+### Patch Changes
+
+- [`acc5b4e`](https://github.com/wellyshen/react-cool-form/commit/acc5b4e185bee53055292fbf22fb5deeb5b1081b) Thanks [@wellyshen](https://github.com/wellyshen)! - docs: add form-level validation
+
 ## 0.0.74
 
 ### Patch Changes
