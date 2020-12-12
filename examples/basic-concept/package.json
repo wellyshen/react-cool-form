@@ -1,7 +1,7 @@
 {
-  "name": "rcf-basic",
+  "name": "rcf-basic-concept",
   "version": "0.0.0",
-  "description": "The basic example of RCF.",
+  "description": "The basic concept of RCF.",
   "main": "index.js",
   "dependencies": {
     "react": "^17.0.1",
