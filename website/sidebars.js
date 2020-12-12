@@ -6,6 +6,6 @@ module.exports = {
       "form-submission",
       "typescript-support",
     ],
-    "API Reference": ["use-form"],
+    "API Reference": ["use-form", "utility-functions"],
   },
 };
