@@ -41,9 +41,9 @@ $ yarn add react-cool-form
 $ npm install --save react-cool-form
 ```
 
-Here's the basic example of how does it works:
+Here's the basic concept of how does it rocks:
 
-[![Edit RCF - Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-basic-jq93g?fontsize=14&hidenavigation=1&theme=dark)
+[![Edit RCF - Basic concept](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-basic-concept-sv7mg?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
 import { useForm } from "react-cool-form";

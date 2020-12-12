@@ -7,7 +7,7 @@ React Cool Form supports a wide range of **synchronous** and **asynchronous** va
 
 ## Built-in Validation
 
-We support [HTML5 form validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#Using_built-in_form_validation) out of the box, a quick and easy way for form validation.
+We support [HTML form validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#Using_built-in_form_validation) out of the box, a quick and easy way for form validation.
 
 [![Edit RCF - Built-in validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-built-in-validation-1h28u?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -46,7 +46,7 @@ Some validation attributes like [minLength](https://developer.mozilla.org/en-US/
 
 ## Form-level Validation
 
-Runs validation by accessing the complete `values` of the form (a.k.a [formState.values](#)). It's useful to validate dependent fields at the same time.
+It provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](#)), which is useful to validate dependent fields at the same time.
 
 [![Edit RCF - Form-level validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-form-level-validation-2if7r?fontsize=14&hidenavigation=1&theme=dark)
 
