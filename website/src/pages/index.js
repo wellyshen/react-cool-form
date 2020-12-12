@@ -28,8 +28,8 @@ const features = [
     description: (
       <>
         Struggling with form structures? With React Cool Form{" "}
-        <Link to="#">nested fields</Link> API, you can create complex form
-        structures without hassle.
+        <Link to="/docs/complex-form-data">nested fields</Link> API, you can
+        create complex form structures without hassle.
       </>
     ),
   },
@@ -56,8 +56,9 @@ const features = [
     imageUrl: "img/superhero.svg",
     description: (
       <>
-        <Link to="#">Minimizes the number of re-renders</Link> for you. Building
-        forms with great user experience can be a natural thing.
+        <Link to="/docs/form-state">Minimizes the number of re-renders</Link>{" "}
+        for you. Building forms with great user experience can be a natural
+        thing.
       </>
     ),
   },
@@ -66,10 +67,9 @@ const features = [
     imageUrl: "img/coding.svg",
     description: (
       <>
-        Intuitive and flexible <Link to="/docs/use-form">API</Link> design, also
-        provides a seamless way to integration with{" "}
-        <Link to="#">custom components</Link> or{" "}
-        <Link to="#">UI libraries</Link>.
+        Intuitive and flexible <Link to="/docs/use-form">API</Link> design,
+        provides a seamless way to integration with existing HTML form fields or{" "}
+        <Link to="/docs/3rd-party-ui-libraries">3rd-party UI libraries</Link>.
       </>
     ),
   },

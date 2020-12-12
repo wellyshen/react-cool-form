@@ -12,12 +12,12 @@ React hooks for forms state and validation, less code more performant.
 ## Features
 
 - 🎣 Easy to use, just a React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook).
-- 🗃 Manages complex form data without hassle.
+- 🗃 Manages [complex form data](https://react-cool-form.netlify.app/docs/complex-form-data) without hassle.
 - 🚦 Supports [built-in](https://react-cool-form.netlify.app/docs/validation#built-in-validation), [form-level](https://react-cool-form.netlify.app/docs/validation#form-level-validation), and [field-level](https://react-cool-form.netlify.app/docs/validation#field-level-validation) validation.
-- 🚀 Highly performant, minimizes the number of re-renders for you.
-- 🧱 Seamless integration with custom components or UI libraries.
+- 🚀 Highly performant, [minimizes the number of re-renders](https://react-cool-form.netlify.app/docs/form-state) for you.
+- 🧱 Seamless integration with existing HTML form fields or [3rd-party UI libraries](https://react-cool-form.netlify.app/docs/3rd-party-ui-libraries).
 - 🎛 Super flexible [API](https://react-cool-form.netlify.app/docs/use-form) design, built with [DX and UX](https://react-cool-form.netlify.app/docs) in mind.
-- 🔩 Provides useful utility functions to boost forms development.
+- 🔩 Provides useful [utility functions](https://react-cool-form.netlify.app/docs/utility-functions) to boost forms development.
 - 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
 - ☁️ Server-side rendering compatibility.
 - 🦔 Tiny size ([~ 4.8KB gzipped](https://bundlephobia.com/result?p=react-cool-form)) but powerful.
