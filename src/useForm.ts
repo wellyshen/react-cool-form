@@ -300,7 +300,7 @@ export default <V extends FormValues = FormValues>({
       const getPath = (path: string) => {
         if (path === "values" && !target && watch)
           warn(
-            '💡 react-cool-form > getState: Get the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning.'
+            '💡 react-cool-form > getState: Get the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/form-state'
           );
 
         return target ? `${target}.${path}` : path;
