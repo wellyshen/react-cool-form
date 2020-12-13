@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.77
+
+### Patch Changes
+
+- [`9f40af2`](https://github.com/wellyshen/react-cool-form/commit/9f40af21806db37f1f4f6254459cb38f92e145ab) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update features and example
+
+* [`155a140`](https://github.com/wellyshen/react-cool-form/commit/155a14079079ad16ab5228fc606c9cac4764512e) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): add more information link for `getState`
+
+- [`d23eef5`](https://github.com/wellyshen/react-cool-form/commit/d23eef5550868e9cb580b6a0e2c0ea9355444bdf) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update the demo link of example
+
 ## 0.0.76
 
 ### Patch Changes
