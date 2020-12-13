@@ -296,7 +296,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const getState = useCallback<GetState>(
-    (path, { target, watch = true, filterUntouchedErrors = true } = {}) => {
+    (path, { target, watch = true, filterUntouchedError = true } = {}) => {
       const getPath = (path: string) => {
         if (path === "values" && !target && watch)
           warn(
@@ -308,7 +308,7 @@ export default <V extends FormValues = FormValues>({
       const errorsEnhancer = (path: string, state: any) => {
         if (
           !watch ||
-          !filterUntouchedErrors ||
+          !filterUntouchedError ||
           !path.startsWith("errors") ||
           !state ||
           isEmptyObject(state)

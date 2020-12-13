@@ -12,7 +12,7 @@ const Playground = (): JSX.Element => {
     defaultValues: { t1: "" },
     onSubmit: (values) => console.log(values),
   });
-  const errors = getState("errors", { filterUntouchedErrors: false });
+  const errors = getState("errors", { filterUntouchedError: false });
   console.log("LOG ===> ", errors);
 
   return (

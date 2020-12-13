@@ -119,7 +119,7 @@ export interface GetState {
     options?: {
       target?: string;
       watch?: boolean;
-      filterUntouchedErrors?: boolean;
+      filterUntouchedError?: boolean;
     }
   ): any;
 }

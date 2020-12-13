@@ -81,7 +81,7 @@ declare module "react-cool-form" {
       options?: {
         target?: string;
         watch?: boolean;
-        filterUntouchedErrors?: boolean;
+        filterUntouchedError?: boolean;
       }
     ): any;
   }
