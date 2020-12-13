@@ -1,7 +1,7 @@
 {
-  "name": "rcf-form-level-validation",
+  "name": "rcf-schema-validation",
   "version": "0.0.0",
-  "description": "The form-level validation of RCF.",
+  "description": "The schema validation of RCF.",
   "main": "index.js",
   "dependencies": {
     "react": "^17.0.1",
