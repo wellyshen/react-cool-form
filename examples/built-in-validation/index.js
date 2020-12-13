@@ -6,14 +6,14 @@ import "./styles.scss";
 
 function App() {
   const { form } = useForm({
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: { username: "", email: "", password: "" },
     onSubmit: (values) => alert(JSON.stringify(values)),
     onError: (errors) => console.log("onError: ", errors)
   });
 
   return (
     <form ref={form} noValidate>
-      <input name="name" placeholder="Name" required />
+      <input name="username" placeholder="Username" required />
       <input name="email" type="email" placeholder="Email" required />
       <input
         name="password"
