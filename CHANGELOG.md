@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.78
+
+### Patch Changes
+
+- [`167fcb6`](https://github.com/wellyshen/react-cool-form/commit/167fcb652bf6c2ee12fe140c2b3ea8cf548aebc8) [#232](https://github.com/wellyshen/react-cool-form/pull/232) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): change `getState`'s option name from `filterUntouchedErrors` to `filterUntouchedError`
+
 ## 0.0.77
 
 ### Patch Changes
