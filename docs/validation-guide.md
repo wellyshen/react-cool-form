@@ -16,14 +16,14 @@ import { useForm } from "react-cool-form";
 
 const App = () => {
   const { form } = useForm({
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: { username: "", email: "", password: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
 
   return (
     <form ref={form} noValidate>
-      <input name="name" placeholder="Name" required />
+      <input name="username" placeholder="Username" required />
       <input name="email" type="email" placeholder="Email" required />
       <input
         name="password"
@@ -71,9 +71,9 @@ const validate = (values, actions) => {
 // Asynchronous validation
 const validate = async (values, actions) => {
   const errors = {};
-  const hasUser = await validateOnServer(values.name);
+  const hasUser = await validateOnServer(values.username);
 
-  if (!hasUser) errors.name = "User doesn't exist";
+  if (!hasUser) errors.username = "User doesn't exist";
 
   // ...
 
@@ -82,7 +82,7 @@ const validate = async (values, actions) => {
 
 const App = () => {
   const { form } = useForm({
-    defaultValues: { name: "", email: "" },
+    defaultValues: { username: "", email: "" },
     validate,
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
@@ -90,7 +90,7 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="name" placeholder="Name" />
+      <input name="username" placeholder="Name" />
       <input name="email" type="email" placeholder="Email" />
       <input type="submit" />
     </form>
@@ -110,7 +110,7 @@ const validate = (values) => {
 
 const App = () => {
   const { form } = useForm({
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: { username: "", email: "", password: "" },
     validate,
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
@@ -118,7 +118,7 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="name" placeholder="Name" />
+      <input name="username" placeholder="Username" />
       <input name="email" type="email" placeholder="Email" />
       <input name="password" type="password" placeholder="Password" />
       <input type="submit" />

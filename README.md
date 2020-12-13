@@ -14,7 +14,7 @@ React hooks for forms state and validation, less code more performant.
 - 🎣 Easy to use, just a React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook).
 - 🗃 Manages [complex form data](https://react-cool-form.netlify.app/docs/complex-form-data) without hassle.
 - 🚦 Supports [built-in](https://react-cool-form.netlify.app/docs/validation#built-in-validation), [form-level](https://react-cool-form.netlify.app/docs/validation#form-level-validation), and [field-level](https://react-cool-form.netlify.app/docs/validation#field-level-validation) validation.
-- 🚀 Highly performant, [minimizes the number of re-renders](https://react-cool-form.netlify.app/docs/form-state) for you.
+- 🚀 Highly performant, [minimizes the number of re-renders](https://react-cool-form.netlify.app#performance-matters) for you.
 - 🧱 Seamless integration with existing HTML form fields or [3rd-party UI libraries](https://react-cool-form.netlify.app/docs/3rd-party-ui-libraries).
 - 🎛 Super flexible [API](https://react-cool-form.netlify.app/docs/use-form) design, built with [DX and UX](https://react-cool-form.netlify.app/docs) in mind.
 - 🔩 Provides useful [utility functions](https://react-cool-form.netlify.app/docs/utility-functions) to boost forms development.
@@ -51,7 +51,7 @@ import { useForm } from "react-cool-form";
 const App = () => {
   const { form, getState } = useForm({
     // Provide the default values just like we use "React.useState" or "React.useReducer"
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: { username: "", email: "", password: "" },
     // The event only triggered when the form is valid
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
@@ -63,8 +63,8 @@ const App = () => {
     <form ref={form} noValidate>
       <div>
         {/* Support built-in validation */}
-        <input name="name" placeholder="Name" required />
-        {errors.name && <p>{errors.name}</p>}
+        <input name="username" placeholder="Username" required />
+        {errors.username && <p>{errors.username}</p>}
       </div>
       <div>
         <input name="email" type="email" placeholder="Email" required />

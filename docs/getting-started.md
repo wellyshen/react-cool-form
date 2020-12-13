@@ -53,7 +53,7 @@ import { useForm } from "react-cool-form";
 const App = () => {
   const { form, getState } = useForm({
     // Provide the default values just like we use "React.useState" or "React.useReducer"
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: { username: "", email: "", password: "" },
     // The event only triggered when the form is valid
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
@@ -65,8 +65,8 @@ const App = () => {
     <form ref={form} noValidate>
       <div>
         {/* Support built-in validation */}
-        <input name="name" placeholder="Name" required />
-        {errors.name && <p>{errors.name}</p>}
+        <input name="username" placeholder="Username" required />
+        {errors.username && <p>{errors.username}</p>}
       </div>
       <div>
         <input name="email" type="email" placeholder="Email" required />

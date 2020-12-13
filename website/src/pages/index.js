@@ -56,7 +56,9 @@ const features = [
     imageUrl: "img/superhero.svg",
     description: (
       <>
-        <Link to="/docs/form-state">Minimizes the number of re-renders</Link>{" "}
+        <Link to="#performance-matters">
+          Minimizes the number of re-renders
+        </Link>{" "}
         for you. Building forms with great user experience can be a natural
         thing.
       </>
@@ -137,7 +139,7 @@ function Home() {
           </section>
         )}
         <section className={styles.showbox}>
-          <h2>Performance Matters</h2>
+          <h2 id="performance-matters">Performance Matters</h2>
           <p>
             Building forms in React can be simple and performant. React Cool
             Form eliminates unnecessary re-renders throughout the development
