@@ -6,7 +6,7 @@ import "./styles.scss";
 
 function App() {
   const { form, getState } = useForm({
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: { username: "", email: "", password: "" },
     onSubmit: (values) => alert(JSON.stringify(values))
   });
   const errors = getState("errors");
@@ -14,8 +14,8 @@ function App() {
   return (
     <form ref={form} noValidate>
       <div>
-        <input name="name" placeholder="Name" required />
-        {errors.name && <p>{errors.name}</p>}
+        <input name="username" placeholder="Username" required />
+        {errors.username && <p>{errors.username}</p>}
       </div>
       <div>
         <input name="email" type="email" placeholder="Email" required />
