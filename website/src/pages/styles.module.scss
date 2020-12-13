@@ -62,9 +62,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4.5rem 0;
+  padding-bottom: 4.5rem;
   text-align: center;
   background: var(--ifm-color-emphasis-100);
+
+  h2 {
+    padding-top: 4.5rem;
+  }
 
   p {
     width: 50%;

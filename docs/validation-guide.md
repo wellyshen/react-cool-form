@@ -48,6 +48,8 @@ Some validation attributes such as [minLength](https://developer.mozilla.org/en-
 
 It provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state)), which is useful to validate dependent fields at the same time.
 
+> 💡 Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex form data](./complex-form-data), we've provided a set of [utility functions](./utility-functions) to help you get shit done 💩.
+
 [![Edit RCF - Form-level validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-form-level-validation-2if7r?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
@@ -100,12 +102,30 @@ const App = () => {
 
 In addition to write your own logic, it's also possible to use a 3rd-party library such as [Yup](https://github.com/jquense/yup), [Joi](https://github.com/sideway/joi), and many others with form-level validation. Let's take a look at the following example:
 
+[![Edit RCF - Schema validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-schema-validation-h38bk?fontsize=14&hidenavigation=1&theme=dark)
+
 ```js
-import { useForm } from "react-cool-form";
+import { useForm, set } from "react-cool-form";
 import * as yup from "yup";
 
-const validate = (values) => {
-  // TODO: convert Yup errors to field errors
+const schema = yup.object().shape({
+  username: yup.string().required(),
+  email: yup.string().email().required(),
+  password: yup.string().required().min(6),
+});
+
+const validate = async (values) => {
+  let errors = {};
+
+  try {
+    await schema.validate(values, { abortEarly: false });
+  } catch (yupErrors) {
+    // Convert the yup errors to field errors
+    // Use the "set" helper to assign properties for both "shallow" and "deep" (nested fields) object
+    yupErrors.inner.forEach(({ path, message }) => set(errors, path, message));
+  }
+
+  return errors;
 };
 
 const App = () => {

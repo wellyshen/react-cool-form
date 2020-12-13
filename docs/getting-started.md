@@ -45,7 +45,7 @@ Then you can access it via the `window.ReactCoolForm.<moduleName>` variables.
 
 Here's the basic concept of how does it rocks:
 
-[![Edit RCF - Basic concept](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-basic-concept-sv7mg?fontsize=14&hidenavigation=1&theme=dark)
+[![Edit RCF - Quick start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-quick-start-j8p1l?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
 import { useForm } from "react-cool-form";
