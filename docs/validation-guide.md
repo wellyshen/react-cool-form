@@ -46,7 +46,7 @@ Some validation attributes such as [minLength](https://developer.mozilla.org/en-
 
 ## Form-level Validation
 
-It provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state)), which is useful to validate dependent fields at the same time.
+The [validate](./use-form) provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state)), which is useful to validate dependent fields at the same time.
 
 > 💡 Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex form data](./complex-form-data), we've provided a set of [utility functions](./utility-functions) to help you get shit done 💩.
 
@@ -102,7 +102,7 @@ const App = () => {
 
 In addition to write your own logic, it's also possible to use a 3rd-party library such as [Yup](https://github.com/jquense/yup), [Joi](https://github.com/sideway/joi), and many others with form-level validation. Let's take a look at the following example:
 
-[![Edit RCF - Schema validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-schema-validation-h38bk?fontsize=14&hidenavigation=1&theme=dark)
+[![Edit RCF - Yup](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-yup-lsk6f?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
 import { useForm, set } from "react-cool-form";
@@ -146,6 +146,8 @@ const App = () => {
   );
 };
 ```
+
+Looking for the example of Joi? [Right here](https://codesandbox.io/s/rcf-joi-yjbus).
 
 ## Field-level Validation
 
