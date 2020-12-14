@@ -26,16 +26,13 @@ function App() {
         <input name="lastName" placeholder="Last name" required />
         {errors.lastName && <p>{errors.lastName}</p>}
       </div>
-      <div>
-        <select name="framework" required>
-          <option value="">I'm interesting in...</option>
-          <option value="react">React</option>
-          <option value="vue">Vue</option>
-          <option value="angular">Angular</option>
-          <option value="svelte">Svelte</option>
-        </select>
-        {errors.framework && <p>{errors.framework}</p>}
-      </div>
+      <select name="framework">
+        <option value="">I'm interesting in...</option>
+        <option value="react">React</option>
+        <option value="vue">Vue</option>
+        <option value="angular">Angular</option>
+        <option value="svelte">Svelte</option>
+      </select>
       <input type="submit" />
     </form>
   );
