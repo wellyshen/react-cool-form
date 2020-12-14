@@ -4,6 +4,7 @@
   "description": "The Joi example of RCF.",
   "main": "index.js",
   "dependencies": {
+    "joi": "^17.3.0",
     "react": "^17.0.1",
     "react-cool-form": "latest",
     "react-dom": "^17.0.1",
@@ -14,10 +15,5 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
 }

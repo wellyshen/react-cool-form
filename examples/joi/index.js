@@ -1,12 +1,33 @@
 import React from "react";
 import { render } from "react-dom";
-import { useForm } from "react-cool-form";
+import { useForm, set } from "react-cool-form";
+import Joi from "joi";
 
 import "./styles.scss";
+
+const schema = Joi.object({
+  username: Joi.string().required(),
+  email: Joi.string().email({ tlds: false }).required(),
+  password: Joi.string().required().min(6)
+});
+
+const validate = (values) => {
+  let errors = {};
+
+  const { error: joiError } = schema.validate(values, { abortEarly: false });
+
+  if (joiError)
+    joiError.details.forEach(({ path, message }) => {
+      set(errors, path, message);
+    });
+
+  return errors;
+};
 
 function App() {
   const { form } = useForm({
     defaultValues: { username: "", email: "", password: "" },
+    validate,
     onSubmit: (values) => alert(JSON.stringify(values)),
     onError: (errors) => console.log("onError: ", errors)
   });
