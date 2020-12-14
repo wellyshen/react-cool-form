@@ -56,6 +56,12 @@ export type Fields = Record<
   {
     field: FieldElement;
     options?: FieldElement[];
+  }
+>;
+
+export type FieldParsers = Record<
+  string,
+  {
     valueAsNumber?: boolean;
     valueAsDate?: boolean;
     parse?: Parse;
