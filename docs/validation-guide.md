@@ -46,7 +46,7 @@ Some validation attributes such as [minLength](https://developer.mozilla.org/en-
 
 ## Form-level Validation
 
-The [validate](./use-form) provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state)), which is useful to validate dependent fields at the same time.
+The [validate](./use-form) option provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state)), which is useful to validate dependent fields at the same time.
 
 > 💡 Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex form data](./complex-form-data), we've provided a set of [utility functions](./utility-functions) to help you get shit done 💩.
 
@@ -151,11 +151,17 @@ Looking for the example of Joi? [Right here](https://codesandbox.io/s/rcf-joi-yj
 
 ## Field-level Validation
 
+React Cool Form provides the [field](./use-form) method for field-level validation (and data type conversion). Simply register your validator via the `ref` prop of a field like the following example:
+
+```js
 Coming soon...
+```
 
-## When Does Validation Run?
+## When/How Does Validation Run?
 
-By default, React Cool Form runs the above validation methods as below, you can tell React Cool Form when to run validation by the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
+By default, React Cool Form runs the above validation methods as below. You can tell React Cool Form when to run validation by changing the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
+
+In order to make the validation result of each field works correctly via the `onChange`, `onBlur`, `setFieldValue`, and `validateField`. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
 
 | Event/method                  | Timing                                                                                                                     |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
