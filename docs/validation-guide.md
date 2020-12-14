@@ -119,10 +119,10 @@ const validate = async (values) => {
 
   try {
     await schema.validate(values, { abortEarly: false });
-  } catch (yupErrors) {
+  } catch (yupError) {
     // Convert the yup errors to field errors
     // Use the "set" helper to assign properties for both "shallow" and "deep" (nested fields) object
-    yupErrors.inner.forEach(({ path, message }) => set(errors, path, message));
+    yupError.inner.forEach(({ path, message }) => set(errors, path, message));
   }
 
   return errors;
