@@ -147,7 +147,7 @@ const App = () => {
 };
 ```
 
-Looking for the example of Joi? [Right here](https://codesandbox.io/s/rcf-joi-yjbus).
+👀 Looking for the example of Joi? Right [here](https://codesandbox.io/s/rcf-joi-yjbus).
 
 ## Field-level Validation
 
