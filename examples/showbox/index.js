@@ -27,13 +27,14 @@ function App() {
         {errors.lastName && <p>{errors.lastName}</p>}
       </div>
       <div>
-        <select name="framework">
+        <select name="framework" required>
           <option value="">I'm interesting in...</option>
           <option value="react">React</option>
           <option value="vue">Vue</option>
           <option value="angular">Angular</option>
           <option value="svelte">Svelte</option>
         </select>
+        {errors.framework && <p>{errors.framework}</p>}
       </div>
       <input type="submit" />
     </form>
