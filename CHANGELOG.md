@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.79
+
+### Patch Changes
+
+- [`0125f87`](https://github.com/wellyshen/react-cool-form/commit/0125f87fd5187c67d066ebf6ca6f2f89b07eafd6) [#237](https://github.com/wellyshen/react-cool-form/pull/237) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): add `removeUnmountedField` config
+
+* [`02a759e`](https://github.com/wellyshen/react-cool-form/commit/02a759e8e785373ec45f27f10d62db7722d7859f) [#236](https://github.com/wellyshen/react-cool-form/pull/236) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): crash due to undefined field parsers
+
+- [`43bc612`](https://github.com/wellyshen/react-cool-form/commit/43bc6127bbdcc71fed1616c042eeddf50d2a1ddd) [#234](https://github.com/wellyshen/react-cool-form/pull/234) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): dynamic fields not working
+
 ## 0.0.78
 
 ### Patch Changes
