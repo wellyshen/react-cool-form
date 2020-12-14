@@ -16,8 +16,8 @@ const validate = async (values) => {
 
   try {
     await schema.validate(values, { abortEarly: false });
-  } catch (yupErrors) {
-    yupErrors.inner.forEach(({ path, message }) => set(errors, path, message));
+  } catch (yupError) {
+    yupError.inner.forEach(({ path, message }) => set(errors, path, message));
   }
 
   return errors;
