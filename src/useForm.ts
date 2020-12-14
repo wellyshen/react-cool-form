@@ -50,10 +50,11 @@ import {
 } from "./utils";
 
 export default <V extends FormValues = FormValues>({
-  defaultValues,
+  defaultValues = {} as V,
   validate,
   validateOnChange = true,
   validateOnBlur = true,
+  removeUnmountedField = true,
   ignoreFields = [],
   onReset,
   onSubmit,
@@ -72,7 +73,7 @@ export default <V extends FormValues = FormValues>({
   const onResetRef = useLatest(onReset || (() => undefined));
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
-  const defaultValuesRef = useRef(defaultValues || {});
+  const defaultValuesRef = useRef(defaultValues);
   const initialStateRef = useRef<FormState<V>>({
     values: defaultValuesRef.current,
     touched: {},
@@ -807,34 +808,45 @@ export default <V extends FormValues = FormValues>({
       const fields = getFields(form);
       let { values } = stateRef.current;
 
-      Object.keys(fieldsRef.current).forEach((name) => {
-        if (fields[name]) return;
+      if (removeUnmountedField)
+        Object.keys(fieldsRef.current).forEach((name) => {
+          if (fields[name]) return;
 
-        handleUnset("values", `values.${name}`, stateRef.current.values, name);
-        handleUnset(
-          "touched",
-          `touched.${name}`,
-          stateRef.current.touched,
-          name
-        );
-        handleUnset(
-          "dirtyFields",
-          `dirtyFields.${name}`,
-          stateRef.current.dirtyFields,
-          name
-        );
-        handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
+          handleUnset(
+            "values",
+            `values.${name}`,
+            stateRef.current.values,
+            name
+          );
+          handleUnset(
+            "touched",
+            `touched.${name}`,
+            stateRef.current.touched,
+            name
+          );
+          handleUnset(
+            "dirtyFields",
+            `dirtyFields.${name}`,
+            stateRef.current.dirtyFields,
+            name
+          );
+          handleUnset(
+            "errors",
+            `errors.${name}`,
+            stateRef.current.errors,
+            name
+          );
 
-        initialStateRef.current.values = unset(
-          initialStateRef.current.values,
-          name,
-          true
-        );
+          initialStateRef.current.values = unset(
+            initialStateRef.current.values,
+            name,
+            true
+          );
 
-        delete fieldParsersRef.current[name];
-        delete fieldValidatorsRef.current[name];
-        delete controllersRef.current[name];
-      });
+          delete fieldParsersRef.current[name];
+          delete fieldValidatorsRef.current[name];
+          delete controllersRef.current[name];
+        });
 
       let isAdd = false;
 
@@ -866,6 +878,7 @@ export default <V extends FormValues = FormValues>({
     getNodeValue,
     handleChangeEvent,
     handleUnset,
+    removeUnmountedField,
     reset,
     setAllNodesOrStateValue,
     setFieldTouchedMaybeValidate,

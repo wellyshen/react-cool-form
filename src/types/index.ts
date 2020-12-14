@@ -214,6 +214,7 @@ export interface Config<V> {
   validate?: FormValidator<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
+  removeUnmountedField?: boolean;
   ignoreFields?: string[];
   onReset?: OnReset<V>;
   onSubmit?: OnSubmit<V>;
