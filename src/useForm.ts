@@ -5,6 +5,7 @@ import {
   Controller,
   Errors,
   FieldElement,
+  FieldParsers,
   FieldRef,
   Fields,
   FieldValidator,
@@ -62,6 +63,7 @@ export default <V extends FormValues = FormValues>({
   const isInitRef = useRef(true);
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
+  const fieldParsersRef = useRef<FieldParsers>({});
   const controllersRef = useRef<Map>({});
   const ignoreFieldsRef = useRef<Map>(arrayToMap(ignoreFields));
   const changedFieldRef = useRef<string>();
@@ -118,7 +120,7 @@ export default <V extends FormValues = FormValues>({
               : [cur];
 
           return acc;
-        }, fieldsRef.current),
+        }, {}),
     []
   );
 
@@ -143,22 +145,18 @@ export default <V extends FormValues = FormValues>({
         return;
       }
 
-      const { validate, ...rest } = validateOrOptions;
+      const { validate, ...parsers } = validateOrOptions;
 
       if (validate) fieldValidatorsRef.current[field.name] = validate;
-      fieldsRef.current[field.name] = {
-        ...fieldsRef.current[field.name],
-        ...rest,
-      };
+      fieldParsersRef.current[field.name] = parsers;
     },
     []
   );
 
   const getNodeValue = useCallback(
     (name: string) => {
-      const { field, options, valueAsNumber, valueAsDate } = fieldsRef.current[
-        name
-      ];
+      const { field, options } = fieldsRef.current[name];
+      const { valueAsNumber, valueAsDate } = fieldParsersRef.current[name];
 
       let value = field.value as any;
 
@@ -698,23 +696,13 @@ export default <V extends FormValues = FormValues>({
   );
 
   const handleChangeEvent = useCallback(
-    (name: string, value?: any) => {
-      const { parse } = fieldsRef.current[name];
-      value = value || getNodeValue(name);
-      value = parse ? parse(value) : value;
-
+    (name: string, value: any) => {
       setStateRef(`values.${name}`, value);
       setFieldDirty(name);
 
       if (validateOnChange) validateFieldWithLowPriority(name);
     },
-    [
-      getNodeValue,
-      setFieldDirty,
-      setStateRef,
-      validateFieldWithLowPriority,
-      validateOnChange,
-    ]
+    [setFieldDirty, setStateRef, validateFieldWithLowPriority, validateOnChange]
   );
 
   const controller = useCallback<Controller<V>>(
@@ -728,7 +716,6 @@ export default <V extends FormValues = FormValues>({
       }
 
       controllersRef.current[name] = true;
-      fieldsRef.current[name] = { ...fieldsRef.current[name], parse };
       if (validate) fieldValidatorsRef.current[name] = validate;
 
       const val = get(defaultValuesRef.current, name);
@@ -747,7 +734,7 @@ export default <V extends FormValues = FormValues>({
               ? getNodeValue(name)
               : e;
 
-          handleChangeEvent(name, value);
+          handleChangeEvent(name, parse ? parse(value) : value);
           if (onChange) onChange(e, value);
           changedFieldRef.current = name;
         },
@@ -787,7 +774,10 @@ export default <V extends FormValues = FormValues>({
       }
 
       if (fieldsRef.current[name] && !controllersRef.current[name]) {
-        handleChangeEvent(name);
+        const { parse } = fieldParsersRef.current[name];
+        const value = getNodeValue(name);
+
+        handleChangeEvent(name, parse ? parse(value) : value);
         changedFieldRef.current = name;
       }
     };
@@ -874,6 +864,7 @@ export default <V extends FormValues = FormValues>({
     };
   }, [
     getFields,
+    getNodeValue,
     handleChangeEvent,
     handleUnset,
     reset,
