@@ -156,16 +156,14 @@ export default <V extends FormValues = FormValues>({
   const getNodeValue = useCallback(
     (name: string) => {
       const { field, options } = fieldsRef.current[name];
-      const { valueAsNumber, valueAsDate } = fieldParsersRef.current[name];
-
       let value = field.value as any;
 
       if (isInputElement(field)) {
-        if (valueAsNumber) {
+        if (fieldParsersRef.current[name]?.valueAsNumber) {
           value = field.valueAsNumber;
           return value;
         }
-        if (valueAsDate) {
+        if (fieldParsersRef.current[name]?.valueAsDate) {
           value = field.valueAsDate;
           return value;
         }
@@ -774,7 +772,7 @@ export default <V extends FormValues = FormValues>({
       }
 
       if (fieldsRef.current[name] && !controllersRef.current[name]) {
-        const { parse } = fieldParsersRef.current[name];
+        const parse = fieldParsersRef.current[name]?.parse;
         const value = getNodeValue(name);
 
         handleChangeEvent(name, parse ? parse(value) : value);
@@ -833,6 +831,7 @@ export default <V extends FormValues = FormValues>({
           true
         );
 
+        delete fieldParsersRef.current[name];
         delete fieldValidatorsRef.current[name];
         delete controllersRef.current[name];
       });

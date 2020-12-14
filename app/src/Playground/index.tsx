@@ -13,12 +13,12 @@ const defaultValues = {
 
 const Playground = (): JSX.Element => {
   const [show1, setShow1] = useState(true);
-  const [show2, setShow2] = useState(true);
+  // const [show2, setShow2] = useState(true);
   const { form, field, getState, controller } = useForm<FormValues>({
     defaultValues,
     onSubmit: (values) => console.log(values),
   });
-  /* const state = getState(
+  const state = getState(
     {
       values: "values",
       errors: "errors",
@@ -26,28 +26,27 @@ const Playground = (): JSX.Element => {
       dirtyFields: "dirtyFields",
     },
     { filterUntouchedError: false }
-  ); */
-  // console.log("LOG ===> ", state);
+  );
+  console.log("LOG ===> ", state);
 
   return (
     <form ref={form} noValidate>
       {show1 && (
         <input
           name="t1"
-          // type="date"
           ref={field({
-            valueAsNumber: true,
+            // valueAsNumber: true,
             parse: (value) => `Parsed ${value}`,
           })}
-          defaultValue="1"
+          defaultValue="field value"
           minLength={5}
         />
       )}
-      {show2 && (
+      {!show1 && (
         <input
           {...controller("t2", {
-            // parse: (value) => `Parsed ${value}`,
-            defaultValue: "1",
+            parse: (value) => `Parsed ${value}`,
+            defaultValue: "field value",
           })}
           minLength={5}
         />
@@ -56,9 +55,9 @@ const Playground = (): JSX.Element => {
       <button type="button" onClick={() => setShow1(!show1)}>
         Toggle1
       </button>
-      <button type="button" onClick={() => setShow2(!show2)}>
+      {/* <button type="button" onClick={() => setShow2(!show2)}>
         Toggle2
-      </button>
+      </button> */}
     </form>
   );
 };
