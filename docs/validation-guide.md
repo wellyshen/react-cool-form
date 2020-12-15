@@ -176,11 +176,13 @@ By default, React Cool Form runs the above validation methods as follows. You ca
 
 ### How to Run
 
-When validating with mixed ways, the result of each field will be deeply merged according to the following priority:
+When validating with mixed ways, the result of each field will be deeply merged according to the following order:
 
-Coming soon...
+1. [Built-in validation](#built-in-validation) <!-- omit in toc -->
+2. [Field-level validation](#field-level-validation)
+3. [Form-level validation](#form-level-validation)
 
-> 💡 In order to make the validation results of each field works correctly via the `individual` target event or method. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
+> 💡 In order to make the validation results are working correctly via the `individual` target event or method. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
 
 ## Manually Triggering Validation
 
