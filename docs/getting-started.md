@@ -43,7 +43,7 @@ Then you can access it via the `window.ReactCoolForm.<moduleName>` variables.
 
 ## Example
 
-Here's the basic concept of how does it rocks:
+Here's the basic concept of how does it rock:
 
 [![Edit RCF - Quick start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-quick-start-j8p1l?fontsize=14&hidenavigation=1&theme=dark)
 
