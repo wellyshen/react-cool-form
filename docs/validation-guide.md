@@ -159,20 +159,28 @@ Coming soon...
 
 ## When/How Does Validation Run?
 
-By default, React Cool Form runs the above validation methods as below. You can tell React Cool Form when to run validation by changing the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
+By default, React Cool Form runs the above validation methods as follows. You can tell React Cool Form when to run validation by changing the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
 
-In order to make the validation result of each field works correctly via the `onChange`, `onBlur`, `setFieldValue`, and `validateField`. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
+### When to Run
 
-| Event/method                  | Timing                                                                                                                     |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `onChange`                    | Whenever the value of a field has been changed.                                                                            |
-| [`setFieldValue`](./use-form) | Whenever the value of a field has been set.                                                                                |
-| [`setValues`](./use-form)     | Whenever the `values` of the [formState](#) has been set.                                                                  |
-| `onBlur`                      | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
-| `onSubmit`                    | Whenever a submission attempt is made.                                                                                     |
-| [`submit`](./use-form)        | Whenever a submission attempt is made manually.                                                                            |
-| [`validateField`](./use-form) | Manually run field-level validation.                                                                                       |
-| [`validateForm`](./use-form)  | Manually run form-level validation.                                                                                        |
+| Event/method                  | Target     | Timing                                                                                                                     |
+| ----------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`                    | Individual | Whenever the value of a field has been changed.                                                                            |
+| [`setFieldValue`](./use-form) | Individual | Whenever the value of a field has been set.                                                                                |
+| [`setValues`](./use-form)     | All        | Whenever the `values` of the [formState](./form-state) has been set.                                                       |
+| `onBlur`                      | Individual | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
+| `onSubmit`                    | All        | Whenever a submission attempt is made.                                                                                     |
+| [`submit`](./use-form)        | All        | Whenever a submission attempt is made manually.                                                                            |
+| [`validateField`](./use-form) | Individual | Manually run field-level validation.                                                                                       |
+| [`validateForm`](./use-form)  | All        | Manually run form-level validation.                                                                                        |
+
+### How to Run
+
+When validating with mixed ways, the result of each field will be deeply merged according to the following priority:
+
+Coming soon...
+
+> 💡 In order to make the validation results of each field works correctly via the `individual` target event or method. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
 
 ## Manually Triggering Validation
 
