@@ -1,4 +1,4 @@
-> ⚠️ This library is not stable yet, API may be changed frequently, **DON'T USE IT IN PRODUCTION**. Please note any changes via [release](https://github.com/wellyshen/react-cool-form/releases). Here's the [milestone](#milestone). By the way, suggestions or ideas are always [welcome](https://github.com/wellyshen/react-cool-form/blob/master/CONTRIBUTING.md) 🙏🏻.
+> ⚠️ This library is not stable yet, API may be changed frequently, **DON'T USE IT IN PRODUCTION**. Please note any changes via [release](https://github.com/wellyshen/react-cool-form/releases). Suggestions or ideas are always [welcome](https://github.com/wellyshen/react-cool-form/blob/master/CONTRIBUTING.md) 🙏🏻. BTW, here's the [milestone](#milestone).
 
 # <b>REACT COOL FORM</b>
 
