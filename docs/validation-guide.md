@@ -199,7 +199,7 @@ const App = () => {
 };
 ```
 
-The `field` method can not only be used for validating but also for converting data type. When they're used together, just tweak the code as below:
+The `field` method can not only be used for validating but also for converting data type. When they are used together, just tweak the code as below:
 
 ```js
 <input
@@ -214,7 +214,7 @@ The `field` method can not only be used for validating but also for converting d
 
 ## Manually Triggering Validation
 
-We can manually trigger both field and form validation with the [`validateField`](./use-form) and [`validateForm`](./use-form) methods respectively.
+We can manually trigger both field (include built-in) and form validation with the [`validateField`](./use-form) and [`validateForm`](./use-form) methods respectively. Here I take form-level as an example:
 
 ```js
 import { useForm } from "react-cool-form";
@@ -222,7 +222,7 @@ import { useForm } from "react-cool-form";
 const validate = (values) => {
   const errors = {};
 
-  // The structure of "errors" should correspond to the related input's name
+  // For single field validation, the property of the "errors" should reflect the name of the relative field
   if (!values.username.length) errors.username = "Required";
 
   if (!values.email.length) {
@@ -246,12 +246,25 @@ const App = () => {
     <form ref={form} noValidate>
       <input name="username" placeholder="Name" />
       <input name="email" type="email" placeholder="Email" />
-      {/* Validate the "username" field only */}
+      {/* Validate a single field */}
       <button onClick={() => validateField("username")}>
         Validate Username
       </button>
-      {/* Validate all the fields */}
+      {/* Validate the form */}
       <button onClick={() => validateForm()}>Validate All</button>
+      {/* Check validate results */}
+      <button
+        onClick={async () => {
+          const errors = await validateForm();
+          if (errors) {
+            console.log("🙅🏻‍♀ Invalid");
+          } else {
+            console.log("🙆🏻‍♀️ Valid");
+          }
+        }}
+      >
+        Validate Results
+      </button>
       <input type="submit" />
     </form>
   );
@@ -272,8 +285,8 @@ By default, React Cool Form runs the above validation methods as follows. You ca
 | `onBlur`                      | Individual | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
 | `onSubmit`                    | All        | Whenever a submission attempt is made.                                                                                     |
 | [`submit`](./use-form)        | All        | Whenever a submission attempt is made manually.                                                                            |
-| [`validateField`](./use-form) | Individual | Manually run field-level validation.                                                                                       |
-| [`validateForm`](./use-form)  | All        | Manually run form-level validation.                                                                                        |
+| [`validateField`](./use-form) | Individual | Manually run field (include built-in) validation.                                                                          |
+| [`validateForm`](./use-form)  | All        | Manually run form validation.                                                                                              |
 
 ### How to Run
 
