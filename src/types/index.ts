@@ -167,8 +167,8 @@ export interface ValidateForm<V> {
   (): Promise<Errors<V>>;
 }
 
-export interface ValidateField<V> {
-  (name: string): Promise<Errors<V>>;
+export interface ValidateField {
+  (name: string): Promise<any>;
 }
 
 export interface Reset<V> {
@@ -231,7 +231,7 @@ export interface Return<V> {
   setValues: SetValues<V>;
   setFieldValue: SetFieldValue;
   validateForm: ValidateForm<V>;
-  validateField: ValidateField<V>;
+  validateField: ValidateField;
   reset: Reset<V>;
   submit: Submit<V>;
   controller: Controller<V>;

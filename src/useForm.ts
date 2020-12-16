@@ -434,7 +434,7 @@ export default <V extends FormValues = FormValues>({
     [formValidatorRef, stateRef]
   );
 
-  const validateField = useCallback<ValidateField<V>>(
+  const validateField = useCallback<ValidateField>(
     async (name) => {
       setStateRef("isValidating", true);
 
@@ -461,7 +461,7 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const validateFieldWithLowPriority = useCallback<ValidateField<V>>(
+  const validateFieldWithLowPriority = useCallback<ValidateField>(
     (name) => runWithLowPriority(() => validateField(name)),
     [validateField]
   );

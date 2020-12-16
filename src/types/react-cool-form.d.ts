@@ -125,8 +125,8 @@ declare module "react-cool-form" {
     (): Promise<Errors<V>>;
   }
 
-  interface ValidateField<V> {
-    (name: string): Promise<Errors<V>>;
+  interface ValidateField {
+    (name: string): Promise<any>;
   }
 
   interface Reset<V> {
@@ -197,7 +197,7 @@ declare module "react-cool-form" {
     setValues: SetValues<V>;
     setFieldValue: SetFieldValue;
     validateForm: ValidateForm<V>;
-    validateField: ValidateField<V>;
+    validateField: ValidateField;
     reset: Reset<V>;
     submit: Submit<V>;
     controller: Controller<V>;
