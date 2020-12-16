@@ -6,13 +6,13 @@ const filterErrors = (error: unknown, touched: unknown): any => {
     return touched ? error : undefined;
 
   return Object.keys(error).reduce((obj: Record<string, any>, key) => {
-    const nextError = filterErrors(
+    const nextErrors = filterErrors(
       (error as Record<string, any>)[key],
       (touched as Record<string, any>)[key] || false
     );
 
-    if (!isUndefined(nextError)) {
-      obj[key] = nextError;
+    if (!isUndefined(nextErrors)) {
+      obj[key] = nextErrors;
     } else {
       delete obj[key];
     }
