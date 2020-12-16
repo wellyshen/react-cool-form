@@ -41,7 +41,7 @@ const App = () => {
 Some validation attributes such as [minLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/minlength), [maxLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/maxlength), [min](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/min), and [max](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/max) are designed to validate a field once it has been edited by the user. Therefore when [manually trigger](#manually-triggering-validation) these validations, use the [pattern](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern) attribute or custom validation instead.
 
 ```js
-<input name="password" required pattern=".{6,}" /> // 6 characters minimum
+<input name="password" type="password" required pattern=".{6,}" /> // 6 characters minimum
 ```
 
 ## Form-level Validation
@@ -56,7 +56,7 @@ The [validate](./use-form) option provides a convenient way to access the comple
 import { useForm } from "react-cool-form";
 
 // Synchronous validation
-const validate = (values, actions) => {
+const validate = (values, actions /* Useful methods */) => {
   const errors = {};
 
   if (!values.email.length) {
@@ -71,7 +71,7 @@ const validate = (values, actions) => {
 };
 
 // Asynchronous validation
-const validate = async (values, actions) => {
+const validate = async (values, actions /* Useful methods */) => {
   const errors = {};
   const hasUser = await validateOnServer(values.username);
 
@@ -151,10 +151,61 @@ const App = () => {
 
 ## Field-level Validation
 
-React Cool Form provides the [field](./use-form) method for field-level validation (and data type conversion). Simply register your validator via the `ref` prop of a field like the following example:
+React Cool Form provides the [field](./use-form) method for field-level validation. Simply register your validator via the `ref` attribute of a field like the following example:
+
+[![Edit RCF - Field-level validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-field-level-validation-dbklg?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
-Coming soon...
+import { useForm } from "react-cool-form";
+
+// Synchronous validation
+const validateEmail = (value, values /* Form values */) => {
+  if (!value) {
+    return "Required";
+  } else if (!/^[A-Z0-9._-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+    return "Invalid email address";
+  }
+};
+
+// Asynchronous validation
+const validateName = async (values, values /* Form values */) => {
+  const hasUser = await validateOnServer(values);
+  if (!hasUser) return "User doesn't exist";
+};
+
+const App = () => {
+  const { form, field } = useForm({
+    defaultValues: { username: "", email: "" },
+    onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (errors) => console.log("onError: ", errors),
+  });
+
+  return (
+    <form ref={form} noValidate>
+      <input name="username" placeholder="Name" ref={field(validateName)} />
+      <input
+        name="email"
+        type="email"
+        placeholder="Email"
+        ref={field(validateEmail)}
+      />
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
+The `field` method can not only be used for validating but also for converting data type. When they're used together, just tweak the code as below:
+
+```js
+<input
+  name="username"
+  ref={field({
+    validate: validateName,
+    valueAsNumber: true,
+    // More options...
+  })}
+/>
 ```
 
 ## When/How Does Validation Run?
