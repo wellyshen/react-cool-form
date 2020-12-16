@@ -37,7 +37,7 @@ import {
   isFileList,
   isFunction,
   isInputElement,
-  isMultipleSelectInput,
+  isMultipleSelect,
   isNumberInput,
   isPlainObject,
   isRadioInput,
@@ -208,7 +208,7 @@ export default <V extends FormValues = FormValues>({
           (options as HTMLInputElement[]).find((radio) => radio.checked)
             ?.value || "";
 
-      if (isMultipleSelectInput(field) && !options)
+      if (isMultipleSelect(field) && !options)
         value = Array.from(field.options)
           .filter((option) => option.selected)
           .map((option) => option.value);
@@ -241,7 +241,7 @@ export default <V extends FormValues = FormValues>({
       (options as HTMLInputElement[]).forEach((radio) => {
         radio.checked = radio.value === value;
       });
-    } else if (isMultipleSelectInput(field) && isArray(value)) {
+    } else if (isMultipleSelect(field) && isArray(value)) {
       Array.from(field.options).forEach((option) => {
         option.selected = !!value.includes(option.value);
       });

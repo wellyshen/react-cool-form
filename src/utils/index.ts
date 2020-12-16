@@ -12,7 +12,7 @@ export { default as isFileInput } from "./isFileInput";
 export { default as isFileList } from "./isFileList";
 export { default as isFunction } from "./isFunction";
 export { default as isInputElement } from "./isInputElement";
-export { default as isMultipleSelectInput } from "./isMultipleSelectInput";
+export { default as isMultipleSelect } from "./isMultipleSelect";
 export { default as isNumberInput } from "./isNumberInput";
 export { default as isObject } from "./isObject";
 export { default as isPlainObject } from "./isPlainObject";
