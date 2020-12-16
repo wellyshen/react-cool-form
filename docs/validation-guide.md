@@ -83,12 +83,14 @@ const validate = async (values, actions /* Useful methods */) => {
 };
 
 const App = () => {
-  const { form } = useForm({
+  const { form, getState } = useForm({
     defaultValues: { username: "", email: "" },
     validate,
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
+
+  console.log("Form is validating: ", getState("isValidating"));
 
   return (
     <form ref={form} noValidate>
@@ -174,11 +176,13 @@ const validateName = async (values, values /* Form values */) => {
 };
 
 const App = () => {
-  const { form, field } = useForm({
+  const { form, field, getState } = useForm({
     defaultValues: { username: "", email: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
+
+  console.log("Form is validating: ", getState("isValidating"));
 
   return (
     <form ref={form} noValidate>
