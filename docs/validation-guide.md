@@ -170,7 +170,7 @@ const validateEmail = (value, values /* Form values */) => {
 };
 
 // Asynchronous validation
-const validateName = async (values, values /* Form values */) => {
+const validateUsername = async (values, values /* Form values */) => {
   const hasUser = await validateOnServer(values);
   if (!hasUser) return "User doesn't exist";
 };
@@ -186,7 +186,7 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="username" placeholder="Name" ref={field(validateName)} />
+      <input name="username" placeholder="Name" ref={field(validateUsername)} />
       <input
         name="email"
         type="email"
@@ -205,11 +205,57 @@ The `field` method can not only be used for validating but also for converting d
 <input
   name="username"
   ref={field({
-    validate: validateName,
+    validate: validateUsername,
     valueAsNumber: true,
     // More options...
   })}
 />
+```
+
+## Manually Triggering Validation
+
+We can manually trigger both field and form validation with the [`validateField`](./use-form) and [`validateForm`](./use-form) methods respectively.
+
+```js
+import { useForm } from "react-cool-form";
+
+const validate = (values) => {
+  const errors = {};
+
+  // The structure of "errors" should correspond to the related input's name
+  if (!values.username.length) errors.username = "Required";
+
+  if (!values.email.length) {
+    errors.email = "Required";
+  } else if (!/^[A-Z0-9._-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = "Invalid email address";
+  }
+
+  return errors;
+};
+
+const App = () => {
+  const { form, validateField, validateForm } = useForm({
+    defaultValues: { username: "", email: "" },
+    validate,
+    onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (errors) => console.log("onError: ", errors),
+  });
+
+  return (
+    <form ref={form} noValidate>
+      <input name="username" placeholder="Name" />
+      <input name="email" type="email" placeholder="Email" />
+      {/* Validate the "username" field only */}
+      <button onClick={() => validateField("username")}>
+        Validate Username
+      </button>
+      {/* Validate all the fields */}
+      <button onClick={() => validateForm()}>Validate All</button>
+      <input type="submit" />
+    </form>
+  );
+};
 ```
 
 ## When/How Does Validation Run?
@@ -233,15 +279,11 @@ By default, React Cool Form runs the above validation methods as follows. You ca
 
 When validating with mixed ways, the results are deeply merged according to the following order:
 
-1. Built-in validation <!-- omit in toc -->
+1. Built-in validation
 2. Field-level validation
 3. Form-level validation
 
 > 💡 To make the validation result of each field works correctly via the `individual` target event or method. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
-
-## Manually Triggering Validation
-
-Coming soon...
 
 ## Displaying Error Messages
 
