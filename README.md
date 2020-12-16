@@ -96,6 +96,6 @@ const App = () => {
 - [x] CI/CD
 - [ ] Unit testing (in-progress...)
 - [ ] Documentation (in-progress...)
+- [ ] Examples (in-progress...)
 - [ ] Logo design
-- [ ] Examples
 - [ ] End to end testing
