@@ -50,7 +50,7 @@ import { useForm } from "react-cool-form";
 
 const App = () => {
   const { form, getState } = useForm({
-    // Provide the default values just like we use "React.useState" or "React.useReducer"
+    // (Strongly advise) Provide the default values just like we use React state
     defaultValues: { username: "", email: "", password: "" },
     // The event only triggered when the form is valid
     onSubmit: (values) => console.log("onSubmit: ", values),
