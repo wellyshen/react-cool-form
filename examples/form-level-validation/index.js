@@ -4,12 +4,20 @@ import { useForm } from "react-cool-form";
 
 import "./styles.scss";
 
+const validateOnServer = async (username) => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  return username !== "joker";
+};
+
 const validate = async ({ username, email }) => {
   const errors = {};
+  const hasUser = await validateOnServer(username);
 
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  if (!username.length) errors.username = "Required";
+  if (!username.length) {
+    errors.username = "Required";
+  } else if (!hasUser) {
+    errors.username = "User doesn't exist";
+  }
 
   if (!email.length) {
     errors.email = "Required";
