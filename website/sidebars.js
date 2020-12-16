@@ -7,6 +7,7 @@ module.exports = {
       "form-state",
       "complex-form-data",
       "3rd-party-ui-libraries",
+      "conditional-fields",
       "typescript-support",
     ],
     "API Reference": ["use-form", "utility-functions"],
