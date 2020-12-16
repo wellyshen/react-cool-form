@@ -11,12 +11,12 @@ const validateOnServer = async (username) => {
 
 const validate = async ({ username, email }) => {
   const errors = {};
-  const hasUser = await validateOnServer(username);
 
-  if (!username.length) {
+  if (!username) {
     errors.username = "Required";
-  } else if (!hasUser) {
-    errors.username = "User doesn't exist";
+  } else {
+    const hasUser = await validateOnServer(username);
+    if (!hasUser) errors.username = "User doesn't exist";
   }
 
   if (!email.length) {
