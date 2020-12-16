@@ -1,6 +1,6 @@
 {
   "name": "react-cool-form",
-  "version": "0.0.81",
+  "version": "0.0.82",
   "description": "React hooks for forms state and validation, less code more performant.",
   "license": "MIT",
   "homepage": "https://react-cool-form.netlify.app",

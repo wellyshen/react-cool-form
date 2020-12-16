@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.82
+
+### Patch Changes
+
+- [`476890f`](https://github.com/wellyshen/react-cool-form/commit/476890f9e361a1ea165ee047df94bb1d48b27045) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(type): correct the type of `validateField`
+
+* [`8398e39`](https://github.com/wellyshen/react-cool-form/commit/8398e396c3b834f340bda706d746c7509759b5f1) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): update example
+
 ## 0.0.81
 
 ### Patch Changes
