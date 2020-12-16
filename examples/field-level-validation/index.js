@@ -21,7 +21,7 @@ const validateName = async (value) => {
   if (!value) {
     return "Required";
   } else {
-    const hasUser = await validateOnServer(username);
+    const hasUser = await validateOnServer(value);
     if (!hasUser) return "User doesn't exist";
   }
 };
@@ -30,7 +30,7 @@ function App() {
   const { form, field } = useForm({
     defaultValues: { username: "", email: "" },
     onSubmit: (values) => alert(JSON.stringify(values)),
-    onError: (errors) => console.log("onError: ", errors),
+    onError: (errors) => console.log("onError: ", errors)
   });
 
   return (
