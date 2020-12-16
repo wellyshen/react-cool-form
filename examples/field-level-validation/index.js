@@ -17,7 +17,7 @@ const validateEmail = (value) => {
   }
 };
 
-const validateName = async (value) => {
+const validateUsername = async (value) => {
   if (!value) {
     return "Required";
   } else {
@@ -37,7 +37,11 @@ function App() {
 
   return (
     <form ref={form} noValidate>
-      <input name="username" placeholder="Username" ref={field(validateName)} />
+      <input
+        name="username"
+        placeholder="Username"
+        ref={field(validateUsername)}
+      />
       <input
         name="email"
         type="email"
