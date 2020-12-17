@@ -29,7 +29,6 @@ import {
   deepMerge,
   filterErrors,
   get,
-  isArray,
   isCheckboxInput,
   isEmptyObject,
   isFieldElement,
@@ -187,7 +186,7 @@ export default <V extends FormValues = FormValues>({
         } else {
           let checkValues = get(stateRef.current.values, field.name);
 
-          if (isArray(checkValues)) {
+          if (Array.isArray(checkValues)) {
             checkValues = new Set(checkValues);
 
             if (field.checked) {
@@ -230,7 +229,7 @@ export default <V extends FormValues = FormValues>({
 
       if (checkboxs.length > 1) {
         checkboxs.forEach((checkbox) => {
-          checkbox.checked = isArray(value)
+          checkbox.checked = Array.isArray(value)
             ? value.includes(checkbox.value)
             : !!value;
         });
@@ -241,7 +240,7 @@ export default <V extends FormValues = FormValues>({
       (options as HTMLInputElement[]).forEach((radio) => {
         radio.checked = radio.value === value;
       });
-    } else if (isMultipleSelect(field) && isArray(value)) {
+    } else if (isMultipleSelect(field) && Array.isArray(value)) {
       Array.from(field.options).forEach((option) => {
         option.selected = !!value.includes(option.value);
       });
@@ -319,7 +318,7 @@ export default <V extends FormValues = FormValues>({
       };
       let state;
 
-      if (isArray(path)) {
+      if (Array.isArray(path)) {
         state = path.map((path) => {
           path = getPath(path);
           if (watch) setUsedStateRef(path);

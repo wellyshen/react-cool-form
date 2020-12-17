@@ -4,7 +4,6 @@ export { default as deepMerge } from "./deepMerge";
 export { default as filterErrors } from "./filterErrors";
 export { default as get } from "./get";
 export { default as getIsDirty } from "./getIsDirty";
-export { default as isArray } from "./isArray";
 export { default as isCheckboxInput } from "./isCheckboxInput";
 export { default as isEmptyObject } from "./isEmptyObject";
 export { default as isFieldElement } from "./isFieldElement";

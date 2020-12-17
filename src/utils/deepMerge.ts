@@ -1,4 +1,3 @@
-import isArray from "./isArray";
 import isObject from "./isObject";
 
 const deepMerge = (...objects: any[]): any =>
@@ -7,7 +6,7 @@ const deepMerge = (...objects: any[]): any =>
       const prevValue = prev[key];
       const currValue = obj[key];
 
-      if (isArray(prevValue) && isArray(currValue)) {
+      if (Array.isArray(prevValue) && Array.isArray(currValue)) {
         prev[key] = [...prevValue, ...currValue];
       } else if (isObject(prevValue) && isObject(currValue)) {
         prev[key] = deepMerge(prevValue, currValue);
