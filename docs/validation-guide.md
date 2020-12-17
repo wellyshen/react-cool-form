@@ -222,7 +222,7 @@ import { useForm } from "react-cool-form";
 const validate = (values) => {
   const errors = {};
 
-  // To validate a single field, the property of the "errors" should reflect the name of the relative field
+  // To validate a single field, the property of the "errors" should reflect the name of the dependent field
   if (!values.username.length) errors.username = "Required";
 
   if (!values.email.length) {
@@ -300,4 +300,44 @@ When validating with mixed ways, the results are deeply merged according to the 
 
 ## Displaying Error Messages
 
-Coming soon...
+All errors are store in the [formState.errors](./form-state), we can display error messages by accessing the `errors` object via the [getState](./use-form) method. The `getState` method is designed to filter the errors of untouched fields by default, which based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can disable the feature by setting the `filterUntouchedError` option to `false`.
+
+[![Edit RCF - Quick start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-quick-start-j8p1l?fontsize=14&hidenavigation=1&theme=dark)
+
+```js
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const { form, getState } = useForm({
+    defaultValues: { username: "", email: "", password: "" },
+    onSubmit: (values) => console.log("onSubmit: ", values),
+  });
+  // By default, the errors of untouched fields are filtered out, which helps the user focus on typing without being annoying
+  // You can disable this feature by setting the "filterUntouchedError" option to false
+  const errors = getState("errors", { filterUntouchedError: true });
+
+  return (
+    <form ref={form} noValidate>
+      <div>
+        <input name="username" placeholder="Username" required />
+        {errors.username && <p>{errors.username}</p>}
+      </div>
+      <div>
+        <input name="email" type="email" placeholder="Email" required />
+        {errors.email && <p>{errors.email}</p>}
+      </div>
+      <div>
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          minLength={6}
+        />
+        {errors.password && <p>{errors.password}</p>}
+      </div>
+      <input type="submit" />
+    </form>
+  );
+};
+```
