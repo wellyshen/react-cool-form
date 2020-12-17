@@ -214,7 +214,7 @@ The `field` method can not only be used for validating but also for converting d
 
 ## Manually Triggering Validation
 
-We can manually trigger both field (include built-in) and form validation with the [`validateField`](./use-form) and [`validateForm`](./use-form) methods respectively. Here I take form-level as an example:
+We can manually trigger built-in, field-level, and form-level validation with the [`validateField`](./use-form) and [`validateForm`](./use-form) methods respectively. Here I take form-level as an example:
 
 ```js
 import { useForm } from "react-cool-form";
@@ -222,7 +222,7 @@ import { useForm } from "react-cool-form";
 const validate = (values) => {
   const errors = {};
 
-  // For single field validation, the property of the "errors" should reflect the name of the relative field
+  // To validate a single field, the property of the "errors" should reflect the name of the relative field
   if (!values.username.length) errors.username = "Required";
 
   if (!values.email.length) {
@@ -273,7 +273,7 @@ const App = () => {
 
 ## When/How Does Validation Run?
 
-By default, React Cool Form runs the above validation methods as follows. You can tell React Cool Form when to run validation by changing the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
+By default, React Cool Form runs all the validation methods as follows. You can tell React Cool Form when to run validation by changing the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
 
 ### When to Run
 
@@ -285,8 +285,8 @@ By default, React Cool Form runs the above validation methods as follows. You ca
 | `onBlur`                      | Individual | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
 | `onSubmit`                    | All        | Whenever a submission attempt is made.                                                                                     |
 | [`submit`](./use-form)        | All        | Whenever a submission attempt is made manually.                                                                            |
-| [`validateField`](./use-form) | Individual | Manually run field (include built-in) validation.                                                                          |
-| [`validateForm`](./use-form)  | All        | Manually run form validation.                                                                                              |
+| [`validateField`](./use-form) | Individual | Manually run validation for a single field.                                                                                |
+| [`validateForm`](./use-form)  | All        | Manually run validation for the form.                                                                                      |
 
 ### How to Run
 
