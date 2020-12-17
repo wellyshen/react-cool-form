@@ -300,7 +300,7 @@ When validating with mixed ways, the results are deeply merged according to the 
 
 ## Displaying Error Messages
 
-All errors are store in the [formState.errors](./form-state), we can display error messages by accessing the `errors` object via the [getState](./use-form) method. The `getState` method is designed to filter the errors of untouched fields by default, which based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can disable the feature by setting the `filterUntouchedError` option to `false`.
+All errors are stored in the [formState.errors](./form-state), we can display error messages by accessing the `errors` object via the [getState](./use-form) method. The `getState` method is designed to filter the errors of untouched fields by default, which based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can disable the feature by setting the `filterUntouchedError` option to `false`.
 
 [![Edit RCF - Quick start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-quick-start-j8p1l?fontsize=14&hidenavigation=1&theme=dark)
 
