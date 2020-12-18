@@ -37,4 +37,4 @@ const App = () => {
 };
 ```
 
-🤿 You can dive into the [type definition](https://github.com/wellyshen/react-cool-form/blob/master/src/types/react-cool-form.d.ts) of the library to build a strongly typed form.
+🧐 You can dig more useful [types](https://github.com/wellyshen/react-cool-form/blob/master/src/types/react-cool-form.d.ts) of this library to build a strongly typed form.
