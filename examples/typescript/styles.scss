@@ -7,12 +7,8 @@ form {
   margin: 5rem auto 0;
   width: 24rem;
 
-  div {
-    width: inherit;
-    margin-bottom: 1.5rem;
-  }
-
   input {
+    margin-bottom: 1.5rem;
     padding: 0 0.5rem;
     width: inherit;
     height: 2rem;
@@ -24,10 +20,5 @@ form {
   input[type="submit"] {
     background: #faa627;
     cursor: pointer;
-  }
-
-  p {
-    margin-top: 0.5rem;
-    color: orangered;
   }
 }
