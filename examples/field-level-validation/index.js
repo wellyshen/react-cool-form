@@ -29,7 +29,7 @@ const validateUsername = async (value) => {
 function App() {
   const { form, field, getState } = useForm({
     defaultValues: { username: "", email: "" },
-    onSubmit: (values) => alert(JSON.stringify(values)),
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
     onError: (errors) => console.log("onError: ", errors)
   });
 
