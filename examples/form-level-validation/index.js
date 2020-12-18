@@ -32,7 +32,7 @@ function App() {
   const { form, getState } = useForm({
     defaultValues: { username: "", email: "" },
     validate,
-    onSubmit: (values) => alert(JSON.stringify(values)),
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
     onError: (errors) => console.log("onError: ", errors)
   });
 
