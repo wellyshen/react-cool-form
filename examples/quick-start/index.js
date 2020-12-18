@@ -7,7 +7,7 @@ import "./styles.scss";
 function App() {
   const { form, getState } = useForm({
     defaultValues: { username: "", email: "", password: "" },
-    onSubmit: (values) => alert(JSON.stringify(values))
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const errors = getState("errors");
 
