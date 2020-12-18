@@ -11,7 +11,7 @@ function App() {
 
   const { form, getState } = useForm({
     defaultValues: { firstName: "", lastName: "", framework: "" },
-    onSubmit: (values) => alert(JSON.stringify(values))
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const errors = getState("errors");
 
