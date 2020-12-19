@@ -94,8 +94,8 @@ const App = () => {
 - [x] Type definition
 - [x] Support server-side rendering
 - [x] CI/CD
-- [ ] Unit testing (in-progress...)
-- [ ] Documentation (in-progress...)
-- [ ] Examples (in-progress...)
+- [ ] Unit testing (work in progress...)
+- [ ] Documentation (work in progress...)
+- [ ] Examples (work in progress...)
 - [ ] Logo design
 - [ ] End to end testing
