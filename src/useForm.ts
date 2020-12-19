@@ -29,6 +29,7 @@ import {
   deepMerge,
   filterErrors,
   get,
+  getTrueMap,
   isCheckboxInput,
   isEmptyObject,
   isFieldElement,
@@ -544,14 +545,20 @@ export default <V extends FormValues = FormValues>({
       setStateRef("values", values);
       setAllNodesOrStateValue(values);
 
-      touchedFields.forEach((name) => setFieldTouched(name, false));
-      dirtyFields.forEach((name) => setFieldDirty(name));
+      if (touchedFields.length)
+        setStateRef(
+          "touched",
+          deepMerge(stateRef.current.touched, getTrueMap(touchedFields))
+        );
+      if (dirtyFields.length)
+        setStateRef(
+          "dirtyFields",
+          deepMerge(stateRef.current.dirtyFields, getTrueMap(dirtyFields))
+        );
       if (shouldValidate) validateFormWithLowPriority();
     },
     [
       setAllNodesOrStateValue,
-      setFieldDirty,
-      setFieldTouched,
       setStateRef,
       stateRef,
       validateFormWithLowPriority,
@@ -653,15 +660,16 @@ export default <V extends FormValues = FormValues>({
       e?.preventDefault();
       e?.stopPropagation();
 
-      const touched = Object.keys({
-        ...fieldsRef.current,
-        ...controllersRef.current,
-      }).reduce((acc: Map, key) => {
-        acc = set(acc, key, true);
-        return acc;
-      }, {});
-
-      setStateRef("touched", deepMerge(stateRef.current.touched, touched));
+      setStateRef(
+        "touched",
+        deepMerge(
+          stateRef.current.touched,
+          getTrueMap({
+            ...fieldsRef.current,
+            ...controllersRef.current,
+          })
+        )
+      );
       setStateRef("isSubmitting", true);
 
       try {
