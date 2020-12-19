@@ -21,10 +21,10 @@ const Playground = (): JSX.Element => {
 
   useEffect(() => {
     // setFieldValue("t2", "test");
-    setValues(
+    /* setValues(
       { t1: "test", t2: "test" },
       { touchedFields: ["t1", "t2"], dirtyFields: ["t1", "t2"] }
-    );
+    ); */
   }, [setFieldValue, setValues]);
 
   return (
