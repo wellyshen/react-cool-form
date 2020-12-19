@@ -29,7 +29,6 @@ import {
   deepMerge,
   filterErrors,
   get,
-  getTrueMap,
   isCheckboxInput,
   isEmptyObject,
   isFieldElement,
@@ -45,6 +44,7 @@ import {
   isUndefined,
   runWithLowPriority,
   set,
+  setTrueValues,
   unset,
   warn,
 } from "./utils";
@@ -548,12 +548,12 @@ export default <V extends FormValues = FormValues>({
       if (touchedFields.length)
         setStateRef(
           "touched",
-          deepMerge(stateRef.current.touched, getTrueMap(touchedFields))
+          setTrueValues(stateRef.current.touched, touchedFields)
         );
       if (dirtyFields.length)
         setStateRef(
           "dirtyFields",
-          deepMerge(stateRef.current.dirtyFields, getTrueMap(dirtyFields))
+          setTrueValues(stateRef.current.dirtyFields, dirtyFields)
         );
       if (shouldValidate) validateFormWithLowPriority();
     },
@@ -662,13 +662,10 @@ export default <V extends FormValues = FormValues>({
 
       setStateRef(
         "touched",
-        deepMerge(
-          stateRef.current.touched,
-          getTrueMap({
-            ...fieldsRef.current,
-            ...controllersRef.current,
-          })
-        )
+        setTrueValues(stateRef.current.touched, {
+          ...fieldsRef.current,
+          ...controllersRef.current,
+        })
       );
       setStateRef("isSubmitting", true);
 
