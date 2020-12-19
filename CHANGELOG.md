@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.84
+
+### Patch Changes
+
+- [`d87a6bf`](https://github.com/wellyshen/react-cool-form/commit/d87a6bf8d8265bb6b65a6eb4f5539a1cfb8f7930) [#247](https://github.com/wellyshen/react-cool-form/pull/247) Thanks [@wellyshen](https://github.com/wellyshen)! - perf(useForm): minimize the re-renders of `setValues`
+
+* [`099ac5c`](https://github.com/wellyshen/react-cool-form/commit/099ac5cea87d4946278163dbcd97d3670e4871b7) [#245](https://github.com/wellyshen/react-cool-form/pull/245) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): include non form input elements into the set all touched of `submit`
+
 ## 0.0.82
 
 ### Patch Changes
