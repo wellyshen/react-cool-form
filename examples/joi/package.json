@@ -6,7 +6,7 @@
   "dependencies": {
     "joi": "^17.3.0",
     "react": "^17.0.1",
-    "react-cool-form": "^0.0.84",
+    "react-cool-form": "^0.0.85",
     "react-dom": "^17.0.1",
     "react-scripts": "^4.0.1"
   },
