@@ -6,7 +6,7 @@ import "./styles.scss";
 
 const validateOnServer = async (username) => {
   await new Promise((resolve) => setTimeout(resolve, 2000));
-  return username !== "joker";
+  return username === "Welly";
 };
 
 const validate = async ({ username, email }) => {
