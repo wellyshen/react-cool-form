@@ -653,12 +653,15 @@ export default <V extends FormValues = FormValues>({
       e?.preventDefault();
       e?.stopPropagation();
 
-      const touched = Object.keys(fieldsRef.current).reduce((acc: Map, key) => {
+      const touched = Object.keys({
+        ...fieldsRef.current,
+        ...controllersRef.current,
+      }).reduce((acc: Map, key) => {
         acc = set(acc, key, true);
         return acc;
       }, {});
 
-      setStateRef("touched", touched);
+      setStateRef("touched", deepMerge(stateRef.current.touched, touched));
       setStateRef("isSubmitting", true);
 
       try {
