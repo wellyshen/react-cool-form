@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.85
+
+### Patch Changes
+
+- [`8da0654`](https://github.com/wellyshen/react-cool-form/commit/8da065490fdd845646c6b4823e17f7fb07ab44d6) [#248](https://github.com/wellyshen/react-cool-form/pull/248) Thanks [@wellyshen](https://github.com/wellyshen)! - perf(useForm): performance optimizing
+
 ## 0.0.84
 
 ### Patch Changes
