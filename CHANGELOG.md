@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.86
+
+### Patch Changes
+
+- [`8588512`](https://github.com/wellyshen/react-cool-form/commit/8588512713ff7e3bbfc026f55aa07ebb6ae65f9a) [#250](https://github.com/wellyshen/react-cool-form/pull/250) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): use `formState` instead of the `getState` method for event handlers
+
+* [`c09d541`](https://github.com/wellyshen/react-cool-form/commit/c09d541f3caf6517d557f4f817c832b458d43ef8) [#252](https://github.com/wellyshen/react-cool-form/pull/252) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(useForm): consist event's options
+
 ## 0.0.85
 
 ### Patch Changes
