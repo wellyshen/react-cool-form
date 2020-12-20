@@ -605,8 +605,7 @@ export default <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      getState: ((path, options = { watch: false }) =>
-        getState(path, options)) as GetState,
+      formState: stateRef.current,
       setErrors,
       setFieldError,
       setValues,
@@ -615,11 +614,11 @@ export default <V extends FormValues = FormValues>({
       validateField,
     }),
     [
-      getState,
       setErrors,
       setFieldError,
       setFieldValue,
       setValues,
+      stateRef,
       validateField,
       validateForm,
     ]

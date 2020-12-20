@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-cool-form";
 
 interface FormValues {
@@ -12,24 +11,19 @@ const defaultValues = {
 };
 
 const Playground = (): JSX.Element => {
-  const { form, getState, setFieldValue, setValues } = useForm<FormValues>({
+  const { form } = useForm<FormValues>({
     defaultValues,
-    onSubmit: (values) => console.log(values),
+    onSubmit: (values, { formState }) => {
+      console.log("LOG ===> onSubmit: ", formState);
+    },
+    onError: (errors, { formState }) => {
+      console.log("LOG ===> onError: ", formState);
+    },
   });
-  const state = getState({ touched: "touched", dirtyFields: "dirtyFields" });
-  console.log("LOG ===> state: ", state);
-
-  useEffect(() => {
-    // setFieldValue("t2", "test");
-    /* setValues(
-      { t1: "test", t2: "test" },
-      { touchedFields: ["t1", "t2"], dirtyFields: ["t1", "t2"] }
-    ); */
-  }, [setFieldValue, setValues]);
 
   return (
     <form ref={form} noValidate>
-      <input name="t1" />
+      <input name="t1" required />
       <input name="t2" />
       <input type="submit" />
     </form>
