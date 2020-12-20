@@ -56,7 +56,7 @@ The [validate](./use-form) option provides a convenient way to access the comple
 import { useForm } from "react-cool-form";
 
 // Synchronous validation
-const validate = (values, actions /* Useful methods */) => {
+const validate = (values) => {
   const errors = {};
 
   if (!values.email.length) {
@@ -71,7 +71,7 @@ const validate = (values, actions /* Useful methods */) => {
 };
 
 // Asynchronous validation
-const validate = async (values, actions /* Useful methods */) => {
+const validate = async (values) => {
   const errors = {};
   const hasUser = await validateOnServer(values.username);
 
