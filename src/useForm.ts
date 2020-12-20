@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
 import { useCallback, useEffect, useRef } from "react";
 
 import {
@@ -612,19 +614,25 @@ export default <V extends FormValues = FormValues>({
       setFieldValue,
       validateForm,
       validateField,
+      reset,
+      submit,
     }),
     [
+      // @ts-expect-error
+      reset,
       setErrors,
       setFieldError,
       setFieldValue,
       setValues,
       stateRef,
+      // @ts-expect-error
+      submit,
       validateField,
       validateForm,
     ]
   );
 
-  const reset = useCallback<Reset<V>>(
+  const reset: Reset<V> = useCallback(
     (values, exclude, e) => {
       e?.preventDefault();
       e?.stopPropagation();
@@ -654,7 +662,7 @@ export default <V extends FormValues = FormValues>({
     [getOptions, onResetRef, setAllNodesOrStateValue, setStateRef, stateRef]
   );
 
-  const submit = useCallback<Submit<V>>(
+  const submit: Submit<V> = useCallback(
     async (e) => {
       e?.preventDefault();
       e?.stopPropagation();
@@ -670,15 +678,14 @@ export default <V extends FormValues = FormValues>({
 
       try {
         const errors = await validateForm();
-        const options = { ...getOptions(), reset };
 
         if (!isEmptyObject(errors)) {
-          onErrorRef.current(errors, options, e);
+          onErrorRef.current(errors, getOptions(), e);
 
           return { errors };
         }
 
-        await onSubmitRef.current(stateRef.current.values, options, e);
+        await onSubmitRef.current(stateRef.current.values, getOptions(), e);
         setStateRef("isSubmitted", true);
 
         return { values: stateRef.current.values };
@@ -689,15 +696,7 @@ export default <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
-    [
-      getOptions,
-      onErrorRef,
-      onSubmitRef,
-      reset,
-      setStateRef,
-      stateRef,
-      validateForm,
-    ]
+    [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
   );
 
   const handleChangeEvent = useCallback(

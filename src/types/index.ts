@@ -77,14 +77,11 @@ interface Options<V> {
   validateForm: ValidateForm<V>;
   validateField: ValidateField;
   reset: Reset<V>;
+  submit: Submit<V>;
 }
 
 interface OnReset<V> {
-  (
-    values: V,
-    options: Omit<Options<V>, "reset">,
-    event?: Event | SyntheticEvent<any>
-  ): void;
+  (values: V, options: Options<V>, event?: Event | SyntheticEvent<any>): void;
 }
 
 interface OnSubmit<V> {

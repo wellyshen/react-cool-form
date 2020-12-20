@@ -11,15 +11,21 @@ const defaultValues = {
 };
 
 const Playground = (): JSX.Element => {
-  const { form } = useForm<FormValues>({
+  const { form, getState } = useForm<FormValues>({
     defaultValues,
-    onSubmit: (values, { formState }) => {
-      console.log("LOG ===> onSubmit: ", formState);
+    onSubmit: (values, { formState, submit }) => {
+      console.log("LOG ===> onSubmit", formState.submitCount);
+
+      if (formState.submitCount < 5) submit();
     },
     onError: (errors, { formState }) => {
-      console.log("LOG ===> onError: ", formState);
+      console.log(
+        "LOG ===> onError: ",
+        getState("isSubmitting", { watch: false })
+      );
     },
   });
+  // console.log("LOG ===> getState: ", getState("isSubmitting"));
 
   return (
     <form ref={form} noValidate>

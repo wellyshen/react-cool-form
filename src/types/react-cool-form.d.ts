@@ -31,14 +31,11 @@ declare module "react-cool-form" {
     validateForm: ValidateForm<V>;
     validateField: ValidateField;
     reset: Reset<V>;
+    submit: Submit<V>;
   }
 
   export interface OnReset<V = FormValues> {
-    (
-      values: V,
-      options: Omit<Options<V>, "reset">,
-      event?: Event | SyntheticEvent<any>
-    ): void;
+    (values: V, options: Options<V>, event?: Event | SyntheticEvent<any>): void;
   }
 
   export interface OnSubmit<V = FormValues> {
