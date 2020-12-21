@@ -106,13 +106,17 @@ declare module "react-cool-form" {
 
   type ValuesArg<V> = V | ((previousValues: V) => V);
 
+  export interface FieldNamesFn {
+    (fieldNames: string[]): string[];
+  }
+
   interface SetValues<V> {
     (
       values: ValuesArg<V>,
       options?: {
         shouldValidate?: boolean;
-        touchedFields?: string[];
-        dirtyFields?: string[];
+        touchedFields?: string[] | FieldNamesFn;
+        dirtyFields?: string[] | FieldNamesFn;
       }
     ): void;
   }

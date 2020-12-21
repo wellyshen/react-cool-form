@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-cool-form";
 
 interface FormValues {
@@ -11,21 +12,19 @@ const defaultValues = {
 };
 
 const Playground = (): JSX.Element => {
-  const { form, getState } = useForm<FormValues>({
+  const { form, setValues, getState } = useForm<FormValues>({
     defaultValues,
-    onSubmit: (values, { formState, submit }) => {
-      console.log("LOG ===> onSubmit", formState.submitCount);
-
-      if (formState.submitCount < 5) submit();
-    },
-    onError: (errors, { formState }) => {
-      console.log(
-        "LOG ===> onError: ",
-        getState("isSubmitting", { watch: false })
-      );
-    },
+    onSubmit: (values) => console.log("LOG ===> onSubmit: ", values),
   });
-  // console.log("LOG ===> getState: ", getState("isSubmitting"));
+  const state = getState({ touched: "touched", dirtyFields: "dirtyFields" });
+  console.log("LOG ===> ", state);
+
+  useEffect(() => {
+    setValues(
+      { t1: "test", t2: "test" },
+      { touchedFields: ["t1"], dirtyFields: ["t2"] }
+    );
+  }, [setValues]);
 
   return (
     <form ref={form} noValidate>

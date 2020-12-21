@@ -148,13 +148,17 @@ export interface SetFieldError {
 
 type ValuesArg<V> = V | ((previousValues: V) => V);
 
+interface FieldNamesFn {
+  (fieldNames: string[]): string[];
+}
+
 export interface SetValues<V> {
   (
     values: ValuesArg<V>,
     options?: {
       shouldValidate?: boolean;
-      touchedFields?: string[];
-      dirtyFields?: string[];
+      touchedFields?: string[] | FieldNamesFn;
+      dirtyFields?: string[] | FieldNamesFn;
     }
   ): void;
 }

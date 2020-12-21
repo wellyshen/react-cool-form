@@ -127,6 +127,11 @@ export default <V extends FormValues = FormValues>({
     []
   );
 
+  const getFieldNames = useCallback(
+    () => Object.keys({ ...fieldsRef.current, ...controllersRef.current }),
+    []
+  );
+
   const handleUnset = useCallback(
     (path: string, fieldPath: string, target: any, name: string) => {
       setStateRef(path, unset(target, name, true), { fieldPath });
@@ -550,16 +555,25 @@ export default <V extends FormValues = FormValues>({
       if (touchedFields.length)
         setStateRef(
           "touched",
-          setTrueValues(stateRef.current.touched, touchedFields)
+          setTrueValues(
+            stateRef.current.touched,
+            isFunction(touchedFields)
+              ? touchedFields(getFieldNames())
+              : touchedFields
+          )
         );
       if (dirtyFields.length)
         setStateRef(
           "dirtyFields",
-          setTrueValues(stateRef.current.dirtyFields, dirtyFields)
+          setTrueValues(
+            stateRef.current.dirtyFields,
+            isFunction(dirtyFields) ? dirtyFields(getFieldNames()) : dirtyFields
+          )
         );
       if (shouldValidate) validateFormWithLowPriority();
     },
     [
+      getFieldNames,
       setAllNodesOrStateValue,
       setStateRef,
       stateRef,
@@ -667,13 +681,9 @@ export default <V extends FormValues = FormValues>({
       e?.preventDefault();
       e?.stopPropagation();
 
-      setStateRef(
-        "touched",
-        setTrueValues(stateRef.current.touched, {
-          ...fieldsRef.current,
-          ...controllersRef.current,
-        })
-      );
+      const { touched, values } = stateRef.current;
+
+      setStateRef("touched", setTrueValues(touched, getFieldNames()));
       setStateRef("isSubmitting", true);
 
       try {
@@ -685,10 +695,10 @@ export default <V extends FormValues = FormValues>({
           return { errors };
         }
 
-        await onSubmitRef.current(stateRef.current.values, getOptions(), e);
+        await onSubmitRef.current(values, getOptions(), e);
         setStateRef("isSubmitted", true);
 
-        return { values: stateRef.current.values };
+        return { values };
       } catch (exception) {
         warn(`💡 react-cool-form > submit: `, exception);
         throw exception;
@@ -696,7 +706,15 @@ export default <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
-    [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
+    [
+      getFieldNames,
+      getOptions,
+      onErrorRef,
+      onSubmitRef,
+      setStateRef,
+      stateRef,
+      validateForm,
+    ]
   );
 
   const handleChangeEvent = useCallback(
