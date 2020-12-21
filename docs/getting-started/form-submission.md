@@ -64,18 +64,21 @@ You might be curious about what happened after clicking the submit button? Whene
 
 ### Check for Errors
 
-- There's an error: Runs the form's `onError` handler, jumps to the "End"
-- There's no error: Proceeds to the "Submission"
+Are there any errors?
+
+- Yes (invalid): Runs the form's `onError` handler, jumps to "End"
+- No (valid): Proceeds to "Submission"
 
 ### Submission
 
 - Runs the form's `onSubmit` handler
+- Sets `formState.isSubmitted` to `true`
 
 ### End
 
 - Sets `formState.isSubmitting` to `false`
 
-> 💡 TBD...
+> 💡 You can check the
 
 ## Manually Triggering Submission
 
