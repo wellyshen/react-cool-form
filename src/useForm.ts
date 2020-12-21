@@ -6,8 +6,8 @@ import {
   Config,
   Controller,
   Errors,
+  FieldArgs,
   FieldElement,
-  FieldParsers,
   FieldRef,
   Fields,
   FieldValidator,
@@ -66,7 +66,7 @@ export default <V extends FormValues = FormValues>({
   const isInitRef = useRef(true);
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});
-  const fieldParsersRef = useRef<FieldParsers>({});
+  const fieldArgsRef = useRef<FieldArgs>({});
   const controllersRef = useRef<Map>({});
   const ignoreFieldsRef = useRef<Map>(arrayToMap(ignoreFields));
   const changedFieldRef = useRef<string>();
@@ -156,7 +156,7 @@ export default <V extends FormValues = FormValues>({
       const { validate, ...parsers } = validateOrOptions;
 
       if (validate) fieldValidatorsRef.current[field.name] = validate;
-      fieldParsersRef.current[field.name] = parsers;
+      fieldArgsRef.current[field.name] = parsers;
     },
     []
   );
@@ -167,11 +167,11 @@ export default <V extends FormValues = FormValues>({
       let value = field.value as any;
 
       if (isInputElement(field)) {
-        if (fieldParsersRef.current[name]?.valueAsNumber) {
+        if (fieldArgsRef.current[name]?.valueAsNumber) {
           value = field.valueAsNumber;
           return value;
         }
-        if (fieldParsersRef.current[name]?.valueAsDate) {
+        if (fieldArgsRef.current[name]?.valueAsDate) {
           value = field.valueAsDate;
           return value;
         }
@@ -796,7 +796,7 @@ export default <V extends FormValues = FormValues>({
       }
 
       if (fieldsRef.current[name] && !controllersRef.current[name]) {
-        const parse = fieldParsersRef.current[name]?.parse;
+        const parse = fieldArgsRef.current[name]?.parse;
         const value = getNodeValue(name);
 
         handleChangeEvent(name, parse ? parse(value) : value);
@@ -866,7 +866,7 @@ export default <V extends FormValues = FormValues>({
             true
           );
 
-          delete fieldParsersRef.current[name];
+          delete fieldArgsRef.current[name];
           delete fieldValidatorsRef.current[name];
           delete controllersRef.current[name];
         });
