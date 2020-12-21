@@ -92,19 +92,25 @@ declare module "react-cool-form" {
     ): any;
   }
 
+  export interface PreviousErrorsFn {
+    (previousErrors: Errors<V>): Errors<V> | undefined;
+  }
+
   interface SetErrors<V> {
-    (
-      errors?:
-        | Errors<V>
-        | ((previousErrors: Errors<V>) => Errors<V> | undefined)
-    ): void;
+    (errors?: Errors<V> | PreviousErrorsFn): void;
+  }
+
+  export interface PreviousErrorFn {
+    (previousError?: any): any;
   }
 
   interface SetFieldError {
-    (name: string, error?: any | ((previousError?: any) => any)): void;
+    (name: string, error?: any | PreviousErrorFn): void;
   }
 
-  type ValuesArg<V> = V | ((previousValues: V) => V);
+  export interface PreviousValuesFn<V = any> {
+    (previousValues: V): V;
+  }
 
   export interface FieldNamesFn {
     (fieldNames: string[]): string[];
@@ -112,7 +118,7 @@ declare module "react-cool-form" {
 
   interface SetValues<V> {
     (
-      values: ValuesArg<V>,
+      values: V | PreviousValuesFn<V>,
       options?: {
         shouldValidate?: boolean;
         touchedFields?: string[] | FieldNamesFn;
@@ -121,10 +127,14 @@ declare module "react-cool-form" {
     ): void;
   }
 
+  export interface PreviousValueFn {
+    (previousValue: any): any;
+  }
+
   interface SetFieldValue {
     (
       name: string,
-      value: any | ((previousValue: any) => any),
+      value: any | PreviousValueFn,
       options?: {
         [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
       }
@@ -141,7 +151,7 @@ declare module "react-cool-form" {
 
   interface Reset<V> {
     (
-      values?: ValuesArg<V> | null,
+      values?: V | PreviousValuesFn<V> | null,
       exclude?: (keyof FormState<V>)[] | null,
       event?: SyntheticEvent<any>
     ): void;
