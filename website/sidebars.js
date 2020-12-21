@@ -1,14 +1,18 @@
 module.exports = {
   docs: {
     "Getting Started": [
-      "getting-started",
-      "typescript-support",
-      "validation-guide",
-      "form-submission",
-      "form-state",
-      "complex-form-data",
-      "3rd-party-ui-libraries",
+      "getting-started/getting-started",
+      "getting-started/typescript-support",
+      "getting-started/validation-guide",
+      "getting-started/form-submission",
+      "getting-started/form-state",
+      "getting-started/complex-form-data",
+      "getting-started/3rd-party-ui-libraries",
     ],
-    "API Reference": ["use-form", "utility-functions"],
+    Examples: ["examples/basic"],
+    "API Reference": [
+      "api-reference/use-form",
+      "api-reference/utility-functions",
+    ],
   },
 };

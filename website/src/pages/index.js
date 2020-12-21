@@ -17,8 +17,11 @@ const features = [
         <Link to="https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook">
           hook
         </Link>
-        , it's designed to be a <b>plug-and-play</b>. You can easily plug it
-        into any forms you that want.
+        , it's designed to be a <b>plug-and-play</b>. You can easily{" "}
+        <Link to="/docs/integration-an-existing-form">
+          hook it into any forms
+        </Link>{" "}
+        that you want.
       </>
     ),
   },

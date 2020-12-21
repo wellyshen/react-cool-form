@@ -1,6 +1,7 @@
 ---
 id: validation-guide
 title: Validation Guide
+slug: /validation-guide
 ---
 
 React Cool Form supports a wide range of **synchronous** and **asynchronous** validation strategies for [built-in](#built-in-validation), [form-level](#form-level-validation), and [field-level](#field-level-validation) validation to cover all the cases that you need.
@@ -46,9 +47,9 @@ Some validation attributes such as [minLength](https://developer.mozilla.org/en-
 
 ## Form-level Validation
 
-The [validate](./use-form) option provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state)), which is useful to validate dependent fields at the same time.
+The [validate](./api-reference/use-form) option provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./getting-started/form-state)), which is useful to validate dependent fields at the same time.
 
-> 💡 Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex form data](./complex-form-data), we've provided a set of [utility functions](./utility-functions) to help you get shit done 💩.
+> 💡 Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex form data](./getting-started/complex-form-data), we've provided a set of [utility functions](./api-reference/utility-functions) to help you get shit done 💩.
 
 [![Edit RCF - Form-level validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-form-level-validation-2if7r?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -153,7 +154,7 @@ const App = () => {
 
 ## Field-level Validation
 
-React Cool Form provides the [field](./use-form) method for field-level validation. Simply register your validator via the `ref` attribute of a field like the following example:
+React Cool Form provides the [field](./api-reference/use-form) method for field-level validation. Simply register your validator via the `ref` attribute of a field like the following example:
 
 [![Edit RCF - Field-level validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-field-level-validation-dbklg?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -214,7 +215,7 @@ The `field` method can not only be used for validating but also for converting d
 
 ## Manually Triggering Validation
 
-We can manually trigger built-in, field-level, and form-level validation with the [`validateField`](./use-form) and [`validateForm`](./use-form) methods respectively. Here I take form-level as an example:
+We can manually trigger built-in, field-level, and form-level validation with the [`validateField`](./api-reference/use-form) and [`validateForm`](./api-reference/use-form) methods respectively. Here I take form-level as an example:
 
 ```js
 import { useForm } from "react-cool-form";
@@ -273,20 +274,20 @@ const App = () => {
 
 ## When/How Does Validation Run?
 
-By default, React Cool Form runs all the validation methods as follows. You can tell React Cool Form when to run validation by changing the [validateOnChange](./use-form) and/or [validateOnBlur](./use-form) depends on your needs.
+By default, React Cool Form runs all the validation methods as follows. You can tell React Cool Form when to run validation by changing the [validateOnChange](./api-reference/use-form) and/or [validateOnBlur](./api-reference/use-form) depends on your needs.
 
 ### When to Run
 
 | Event/method                  | Target     | Timing                                                                                                                     |
 | ----------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `onChange`                    | Individual | Whenever the value of a field has been changed.                                                                            |
-| [`setFieldValue`](./use-form) | Individual | Whenever the value of a field has been set.                                                                                |
-| [`setValues`](./use-form)     | All        | Whenever the `values` of the [formState](./form-state) has been set.                                                       |
+| [`setFieldValue`](./api-reference/use-form) | Individual | Whenever the value of a field has been set.                                                                                |
+| [`setValues`](./api-reference/use-form)     | All        | Whenever the `values` of the [formState](./getting-started/form-state) has been set.                                                       |
 | `onBlur`                      | Individual | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
 | `onSubmit`                    | All        | Whenever a submission attempt is made.                                                                                     |
-| [`submit`](./use-form)        | All        | Whenever a submission attempt is made manually.                                                                            |
-| [`validateField`](./use-form) | Individual | Manually run validation for a single field.                                                                                |
-| [`validateForm`](./use-form)  | All        | Manually run validation for the form.                                                                                      |
+| [`submit`](./api-reference/use-form)        | All        | Whenever a submission attempt is made manually.                                                                            |
+| [`validateField`](./api-reference/use-form) | Individual | Manually run validation for a single field.                                                                                |
+| [`validateForm`](./api-reference/use-form)  | All        | Manually run validation for the form.                                                                                      |
 
 ### How to Run
 
@@ -300,7 +301,7 @@ When validating with mixed ways, the results are deeply merged according to the 
 
 ## Displaying Error Messages
 
-All errors are stored in the [formState.errors](./form-state), we can display error messages by accessing the `errors` object via the [getState](./use-form) method. The `getState` method is designed to filter the errors of untouched fields by default, which based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can disable the feature by setting the `filterUntouchedError` option to `false`.
+All errors are stored in the [formState.errors](./getting-started/form-state), we can display error messages by accessing the `errors` object via the [getState](./api-reference/use-form) method. The `getState` method is designed to filter the errors of untouched fields by default, which based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can disable the feature by setting the `filterUntouchedError` option to `false`.
 
 [![Edit RCF - Quick start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-quick-start-j8p1l?fontsize=14&hidenavigation=1&theme=dark)
 

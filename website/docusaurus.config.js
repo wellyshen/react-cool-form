@@ -29,6 +29,11 @@ module.exports = {
           position: "right",
         },
         {
+          to: "/docs/basic",
+          label: "Examples",
+          position: "right",
+        },
+        {
           to: "/docs/use-form",
           label: "API",
           position: "right",
@@ -49,6 +54,10 @@ module.exports = {
             {
               label: "Getting Started",
               to: "/docs",
+            },
+            {
+              label: "Examples",
+              to: "/docs/basic",
             },
             {
               label: "API Reference",

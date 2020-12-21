@@ -1,6 +1,7 @@
 ---
 id: typescript-support
 title: TypeScript Support
+slug: /typescript-support
 ---
 
 React Cool Form is written in [TypeScript](https://www.typescriptlang.org), so the library's types will always be up-to-date. When working with TypeScript, we can define a `FormValues` type to support the form's values.
