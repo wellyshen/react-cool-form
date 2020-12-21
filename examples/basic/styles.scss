@@ -7,9 +7,11 @@ form {
   margin: 5rem auto 0;
   width: 24rem;
 
-  input {
+  input,
+  select,
+  textarea {
     margin-bottom: 1.5rem;
-    padding: 0 0.5rem;
+    padding: 0.5rem;
     width: inherit;
     height: 2rem;
     border: none;
@@ -20,5 +22,9 @@ form {
   input[type="submit"] {
     background: #faa627;
     cursor: pointer;
+  }
+
+  textarea {
+    height: 5rem;
   }
 }
