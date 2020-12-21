@@ -282,7 +282,7 @@ By default, React Cool Form runs all the validation methods as follows. You can 
 | ------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `onChange`                                  | Individual | Whenever the value of a field has been changed.                                                                            |
 | [`setFieldValue`](./use-form#setFieldValue) | Individual | Whenever the value of a field has been set.                                                                                |
-| [`setValues`](./use-form#setValues)         | All        | Whenever the `values` of the [formState](./form-state) has been set.                                                       |
+| [`setValues`](./use-form#setValues)         | All        | Whenever the `values` of the form have been set.                                                                           |
 | `onBlur`                                    | Individual | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
 | `onSubmit`                                  | All        | Whenever a submission attempt is made.                                                                                     |
 | [`submit`](./use-form#submit)               | All        | Whenever a submission attempt is made manually.                                                                            |
