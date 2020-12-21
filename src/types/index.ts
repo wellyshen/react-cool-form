@@ -59,12 +59,12 @@ export type Fields = Record<
   }
 >;
 
-export type FieldParsers = Record<
+export type FieldArgs = Record<
   string,
   {
     valueAsNumber?: boolean;
     valueAsDate?: boolean;
-    parse?: Parse;
+    parse?: Parser;
   }
 >;
 
@@ -80,11 +80,11 @@ interface Options<V> {
   submit: Submit<V>;
 }
 
-interface OnReset<V> {
+interface ResetHandler<V> {
   (values: V, options: Options<V>, event?: Event | SyntheticEvent<any>): void;
 }
 
-interface OnSubmit<V> {
+interface SubmitHandler<V> {
   (
     values: V,
     options: Options<V>,
@@ -92,7 +92,7 @@ interface OnSubmit<V> {
   ): void | Promise<void>;
 }
 
-interface OnError<V> {
+interface ErrorHandler<V> {
   (
     errors: Errors<V>,
     options: Options<V>,
@@ -120,7 +120,7 @@ export interface FieldRef<V> {
           validate?: FieldValidator<V>;
           valueAsNumber?: boolean;
           valueAsDate?: boolean;
-          parse?: Parse;
+          parse?: Parser;
         }
   ): (field: FieldElement | null) => void;
 }
@@ -193,11 +193,11 @@ export interface Submit<V> {
   (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
 }
 
-interface Parse {
+interface Parser {
   (value: any): any;
 }
 
-type format = Parse;
+type Formatter = Parser;
 
 export interface Controller<V, E = any> {
   (
@@ -206,8 +206,8 @@ export interface Controller<V, E = any> {
       validate?: FieldValidator<V>;
       value?: any;
       defaultValue?: any;
-      parse?: Parse;
-      format?: format;
+      parse?: Parser;
+      format?: Formatter;
       onChange?: (event: E, value: any) => void;
       onBlur?: (event: FocusEvent<any>) => void;
     }
@@ -226,9 +226,9 @@ export interface Config<V> {
   validateOnBlur?: boolean;
   removeUnmountedField?: boolean;
   ignoreFields?: string[];
-  onReset?: OnReset<V>;
-  onSubmit?: OnSubmit<V>;
-  onError?: OnError<V>;
+  onReset?: ResetHandler<V>;
+  onSubmit?: SubmitHandler<V>;
+  onError?: ErrorHandler<V>;
   debug?: Debug<V>;
 }
 

@@ -34,11 +34,11 @@ declare module "react-cool-form" {
     submit: Submit<V>;
   }
 
-  export interface OnReset<V = FormValues> {
+  export interface ResetHandler<V = FormValues> {
     (values: V, options: Options<V>, event?: Event | SyntheticEvent<any>): void;
   }
 
-  export interface OnSubmit<V = FormValues> {
+  export interface SubmitHandler<V = FormValues> {
     (
       values: V,
       options: Options<V>,
@@ -46,7 +46,7 @@ declare module "react-cool-form" {
     ): void | Promise<void>;
   }
 
-  export interface OnError<V = FormValues> {
+  export interface ErrorHandler<V = FormValues> {
     (
       errors: Errors<V>,
       options: Options<V>,
@@ -74,7 +74,7 @@ declare module "react-cool-form" {
             validate?: FieldValidator<V>;
             valueAsNumber?: boolean;
             valueAsDate?: boolean;
-            parse?: Parse;
+            parse?: Parser;
           }
     ): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
@@ -161,17 +161,17 @@ declare module "react-cool-form" {
     (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
   }
 
-  export interface Parse<V = any, R = any> {
+  export interface Parser<V = any, R = any> {
     (value: V): R;
   }
 
-  export type Format<V = any, R = any> = Parse<V, R>;
+  export type Formatter<V = any, R = any> = Parser<V, R>;
 
-  export interface OnChange<E = any> {
+  export interface ChangeHandler<E = any> {
     (event: E, value: any): void;
   }
 
-  export interface OnBlur {
+  export interface BlurHandler {
     (event: FocusEvent<any>): void;
   }
 
@@ -182,16 +182,16 @@ declare module "react-cool-form" {
         validate?: FieldValidator<V>;
         value?: any;
         defaultValue?: any;
-        parse?: Parse;
-        format?: Format;
-        onChange?: OnChange<E>;
-        onBlur?: OnBlur;
+        parse?: Parser;
+        format?: Formatter;
+        onChange?: ChangeHandler<E>;
+        onBlur?: BlurHandler;
       }
     ): {
       name: string;
       value: any;
       onChange: (event: E) => void;
-      onBlur: OnBlur;
+      onBlur: BlurHandler;
     } | void;
   }
 
@@ -202,9 +202,9 @@ declare module "react-cool-form" {
     validateOnBlur?: boolean;
     removeUnmountedField?: boolean;
     ignoreFields?: string[];
-    onReset?: OnReset<V>;
-    onSubmit?: OnSubmit<V>;
-    onError?: OnError<V>;
+    onReset?: ResetHandler<V>;
+    onSubmit?: SubmitHandler<V>;
+    onError?: ErrorHandler<V>;
     debug?: Debug<V>;
   }
 
