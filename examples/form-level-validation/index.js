@@ -5,7 +5,7 @@ import { useForm } from "react-cool-form";
 import "./styles.scss";
 
 const validateOnServer = async (username) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((r) => setTimeout(r, 2000));
   return username === "Welly";
 };
 
