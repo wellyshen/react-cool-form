@@ -6,13 +6,14 @@ import "./styles.scss";
 
 function App() {
   const { form } = useForm({
-    defaultValues: { username: "", framework: "", message: "" },
+    defaultValues: { firstName: "", lastName: "", framework: "", message: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
 
   return (
     <form ref={form} noValidate>
-      <input name="username" placeholder="Username" />
+      <input name="firstName" placeholder="First Name" />
+      <input name="lastName" placeholder="Last Name" />
       <select name="framework">
         <option value="">I'm interesting in...</option>
         <option value="react">React</option>
