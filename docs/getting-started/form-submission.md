@@ -62,11 +62,14 @@ You might be curious about what happened after clicking the submit button? Whene
 - Runs all [built-in](./validation-guide#built-in-validation), [field-level](./validation-guide#field-level-validation), and [form-level](./validation-guide#form-level-validation) validations and [deeply merges the results](./validation-guide#how-to-run).
 - Sets `formState.isValidating` to `false`
 
+### Check for Errors
+
+- There's an error: Runs the form's `onError` handler, jumps to the "End"
+- There's no error: Proceeds to the "Submission"
+
 ### Submission
 
-- Check for errors
-  - There's an error: Triggers the form's `onError` handler
-  - There's no error: Triggers the form's `onSubmit` handler
+- Runs the form's `onSubmit` handler
 
 ### End
 
