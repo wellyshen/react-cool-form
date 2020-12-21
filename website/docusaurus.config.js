@@ -105,6 +105,9 @@ module.exports = {
           path: "../docs",
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: `${github}/edit/master/website`,
+          remarkPlugins: [
+            [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
+          ],
         },
         theme: {
           customCss: require.resolve("./src/css/custom.scss"),

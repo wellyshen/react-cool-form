@@ -18,9 +18,7 @@ To use React Cool Form, you must use `react@16.8.0` or greater which includes ho
 
 This package is distributed via [npm](https://www.npmjs.com/package/react-cool-form).
 
-```sh
-$ yarn add react-cool-form
-# or
+```sh npm2yarn
 $ npm install --save react-cool-form
 ```
 
