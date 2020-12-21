@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.87
+
+### Patch Changes
+
+- [`8af3145`](https://github.com/wellyshen/react-cool-form/commit/8af3145816707306ea2ec55a4ee0832b7e4a0693) [#255](https://github.com/wellyshen/react-cool-form/pull/255) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(types): export more types
+
+* [`c487230`](https://github.com/wellyshen/react-cool-form/commit/c48723020fa795b158e368be16dbd81f747fa822) [#253](https://github.com/wellyshen/react-cool-form/pull/253) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): add field-names callback for the option of `setValues`
+
+- [`8cde001`](https://github.com/wellyshen/react-cool-form/commit/8cde0013b486f8c9d10fd57da9c52b6a92b05934) [#256](https://github.com/wellyshen/react-cool-form/pull/256) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(types): enhance the readability of type
+
 ## 0.0.86
 
 ### Patch Changes
