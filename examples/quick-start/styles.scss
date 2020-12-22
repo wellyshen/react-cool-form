@@ -9,10 +9,16 @@ form {
 
   div {
     width: inherit;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  label {
+    display: block;
+    color: #fff;
   }
 
   input {
+    margin: 0.5rem 0;
     padding: 0 0.5rem;
     width: inherit;
     height: 2rem;
@@ -22,12 +28,13 @@ form {
   }
 
   input[type="submit"] {
+    height: 2.8rem;
     background: #faa627;
     cursor: pointer;
   }
 
   p {
-    margin-top: 0.5rem;
+    margin: 0;
     color: orangered;
   }
 }
