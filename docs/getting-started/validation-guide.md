@@ -308,18 +308,12 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <div>
-        <input name="username" required />
-        {errors.username && <p>{errors.username}</p>}
-      </div>
-      <div>
-        <input name="email" type="email" required />
-        {errors.email && <p>{errors.email}</p>}
-      </div>
-      <div>
-        <input name="password" type="password" required minLength={6} />
-        {errors.password && <p>{errors.password}</p>}
-      </div>
+      <input name="username" required />
+      {errors.username && <p>{errors.username}</p>}
+      <input name="email" type="email" required />
+      {errors.email && <p>{errors.email}</p>}
+      <input name="password" type="password" required minLength={6} />
+      {errors.password && <p>{errors.password}</p>}
       <input type="submit" />
     </form>
   );

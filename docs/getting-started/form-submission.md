@@ -4,7 +4,7 @@ title: Form Submission
 slug: /form-submission
 ---
 
-It's dead simple to submit a form in React Cool Form. All we need to do is use an `<input type="submit">` or `<button type="submit">` element to fire the form's `onSubmit` event. React Cool Form also provides the [submit](./use-form#submit) method to help us overcome [any kinds of design challenges](#manually-triggering-submission) easily.
+It's dead simple to submit a form in React Cool Form. All we need to do is use an `<input type="submit">` or `<button type="submit">` element to fire the form's `onSubmit` event. Moreover, we can also [manually trigger a submission](#manually-triggering-submission) via the [submit](./use-form#submit) method of React Cool Form, which can help us overcome any kinds of design challenges easily.
 
 ## Submit a Form
 
@@ -82,6 +82,39 @@ Are there any errors?
 
 ## Manually Triggering Submission
 
-```js
-Coming soon...
+For some reasons (e.g. design requirement, auto-retry etc.), we may need to trigger a submission manually. However, we can use the [submit](./use-form#submit) method to achieve it.
+
+```js {22}
+import { useForm } from "react-cool-form";
+
+const submitHandler = (values) => {
+  console.log("onSubmit: ", values);
+};
+
+const errorHandler = (errors) => {
+  console.log("onError: ", errors);
+};
+
+const App = () => {
+  const { form, getState, submit } = useForm({
+    defaultValues: { username: "", email: "" },
+    onSubmit: submitHandler,
+    onError: errorHandler,
+  });
+  const isSubmitting = getState("isSubmitting");
+
+  return (
+    <>
+      <ActionBar>
+        <button onClick={() => submit()} disabled={isSubmitting}>
+          Submit
+        </button>
+      </ActionBar>
+      <form ref={form} noValidate>
+        <input name="username" required />
+        <input name="email" required />
+      </form>
+    </>
+  );
+};
 ```
