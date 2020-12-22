@@ -4,7 +4,7 @@ body {
 }
 
 form {
-  margin: 5rem auto 0;
+  margin: 3rem auto 0;
   width: 24rem;
 
   div {
@@ -31,6 +31,7 @@ form {
 
   input[type="submit"] {
     height: 2.8rem;
+    font-size: 1rem;
     background: #faa627;
     cursor: pointer;
   }
