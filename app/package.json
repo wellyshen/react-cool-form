@@ -44,7 +44,7 @@
     ]
   },
   "dependencies": {
-    "@emotion/react": "^11.1.2",
+    "@emotion/react": "^11.1.4",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.6.0",
@@ -52,7 +52,6 @@
     "@types/node": "^14.14.14",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@types/yup": "^0.29.10",
     "normalize.css": "^8.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
