@@ -48,9 +48,9 @@ const App = () => {
 
 ## Submission Phases
 
-You might be curious about what happened after clicking the submit button? Whenever we submit a form, React Cool Form will execute the following procedures:
+You might be curious about what happened after we clicked the submit button? Whenever a form is attempting to be submitted, React Cool Form will execute the following procedures:
 
-### Start
+### Pre-submit
 
 - Touches all fields (for displaying errors)
 - Sets `formState.isSubmitting` to `true`
@@ -59,26 +59,26 @@ You might be curious about what happened after clicking the submit button? Whene
 ### Validation
 
 - Sets `formState.isValidating` to `true`
-- Runs all [built-in](./validation-guide#built-in-validation), [field-level](./validation-guide#field-level-validation), and [form-level](./validation-guide#form-level-validation) validations and [deeply merges the results](./validation-guide#how-to-run).
-- Sets `formState.isValidating` to `false`
+- Runs all [built-in](./validation-guide#built-in-validation), [field-level](./validation-guide#field-level-validation), and [form-level](./validation-guide#form-level-validation) validations asynchronously and [deeply merges the results](./validation-guide#how-to-run).
+- Once the validation is completed, sets `formState.isValidating` to `false`
 
 ### Check for Errors
 
 Are there any errors?
 
-- Yes (invalid): Runs the form's `onError` handler, jumps to "End"
-- No (valid): Proceeds to "Submission"
+- Yes (Invalid): Runs the form's `onError` handler, jumps to "Post-submit"
+- No (Valid): Proceeds to "Submission"
 
 ### Submission
 
 - Runs the form's `onSubmit` handler
-- Sets `formState.isSubmitted` to `true`
+- Once the submission is completed, sets `formState.isSubmitted` to `true`
 
-### End
+### Post-submit
 
 - Sets `formState.isSubmitting` to `false`
 
-> 💡 You can check the
+> 💡 You can check the [Form State](./form-state) to learn more about it.
 
 ## Manually Triggering Submission
 
