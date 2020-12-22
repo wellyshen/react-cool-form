@@ -48,6 +48,14 @@ Here's the basic concept of how does it rock:
 ```js
 import { useForm } from "react-cool-form";
 
+const Field = ({ label, id, error, ...rest }) => (
+  <div>
+    <label htmlFor={id}>{label}</label>
+    <input id={id} {...rest} />
+    {error && <p>{error}</p>}
+  </div>
+);
+
 const App = () => {
   const { form, getState } = useForm({
     // (Strongly advise) Provide the default values just like we use React state
@@ -61,25 +69,31 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <div>
-        {/* Support built-in validation */}
-        <input name="username" placeholder="Username" required />
-        {errors.username && <p>{errors.username}</p>}
-      </div>
-      <div>
-        <input name="email" type="email" placeholder="Email" required />
-        {errors.email && <p>{errors.email}</p>}
-      </div>
-      <div>
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          required
-          minLength={6}
-        />
-        {errors.password && <p>{errors.password}</p>}
-      </div>
+      <Field
+        label="Username"
+        id="username"
+        name="username"
+        // Support built-in validation
+        required
+        error={errors.username}
+      />
+      <Field
+        label="Email"
+        id="email"
+        name="email"
+        type="email"
+        required
+        error={errors.email}
+      />
+      <Field
+        label="Password"
+        id="password"
+        name="password"
+        type="password"
+        required
+        minLength={6}
+        error={errors.password}
+      />
       <input type="submit" />
     </form>
   );
