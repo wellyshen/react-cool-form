@@ -38,8 +38,8 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="username" placeholder="Username" required />
-      <input name="email" placeholder="Email" required />
+      <input name="username" required />
+      <input name="email" required />
       <input type="submit" disabled={isSubmitting} />
     </form>
   );

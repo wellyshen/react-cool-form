@@ -24,15 +24,9 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="username" placeholder="Username" required />
-      <input name="email" type="email" placeholder="Email" required />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        required
-        minLength={6}
-      />
+      <input name="username" required />
+      <input name="email" type="email" required />
+      <input name="password" type="password" required minLength={6} />
       <input type="submit" />
     </form>
   );
@@ -95,8 +89,8 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="username" placeholder="Name" />
-      <input name="email" type="email" placeholder="Email" />
+      <input name="username" />
+      <input name="email" type="email" />
       <input type="submit" />
     </form>
   );
@@ -141,9 +135,9 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="username" placeholder="Username" />
-      <input name="email" type="email" placeholder="Email" />
-      <input name="password" type="password" placeholder="Password" />
+      <input name="username" />
+      <input name="email" type="email" />
+      <input name="password" type="password" />
       <input type="submit" />
     </form>
   );
@@ -187,13 +181,8 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="username" placeholder="Name" ref={field(validateUsername)} />
-      <input
-        name="email"
-        type="email"
-        placeholder="Email"
-        ref={field(validateEmail)}
-      />
+      <input name="username" ref={field(validateUsername)} />
+      <input name="email" type="email" ref={field(validateEmail)} />
       <input type="submit" />
     </form>
   );
@@ -245,8 +234,8 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="username" placeholder="Name" />
-      <input name="email" type="email" placeholder="Email" />
+      <input name="username" />
+      <input name="email" type="email" />
       {/* Validate a single field */}
       <button onClick={() => validateField("username")}>
         Validate Username
@@ -320,21 +309,15 @@ const App = () => {
   return (
     <form ref={form} noValidate>
       <div>
-        <input name="username" placeholder="Username" required />
+        <input name="username" required />
         {errors.username && <p>{errors.username}</p>}
       </div>
       <div>
-        <input name="email" type="email" placeholder="Email" required />
+        <input name="email" type="email" required />
         {errors.email && <p>{errors.email}</p>}
       </div>
       <div>
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          required
-          minLength={6}
-        />
+        <input name="password" type="password" required minLength={6} />
         {errors.password && <p>{errors.password}</p>}
       </div>
       <input type="submit" />
