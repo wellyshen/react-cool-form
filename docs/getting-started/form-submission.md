@@ -8,7 +8,7 @@ It's dead simple to submit a form in React Cool Form. All we need to do is use a
 
 ## Submit a Form
 
-This is the most common case that we submit a form with React Cool Form.
+This is the most common case that we submit a form in React Cool Form.
 
 ```js
 import { useForm } from "react-cool-form";
