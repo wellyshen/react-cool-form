@@ -3,6 +3,7 @@ module.exports = {
     "Getting Started": [
       "getting-started/getting-started",
       "getting-started/typescript-support",
+      "getting-started/integration-an-existing-form",
       "getting-started/validation-guide",
       "getting-started/form-submission",
       "getting-started/form-state",
