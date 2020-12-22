@@ -11,7 +11,7 @@
     "isolatedModules": true,
     // Enable all strict type-checking options. Recommended by TS
     "strict": true,
-    // Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports.
+    // Enables emit interoperability between CommonJS and ES Modules by creation of namespace objects for all imports.
     // Implies "allowSyntheticDefaultImports". Recommended by TS
     "esModuleInterop": true,
     // Skip type checking of declaration files. Recommended by TS

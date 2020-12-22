@@ -4,11 +4,11 @@ title: Form Submission
 slug: /form-submission
 ---
 
-It's dead simple to submit a form in React Cool Form. All we need to do is use an `<input type="submit">` or `<button type="submit">` element to fire the form's `onSubmit` event. Moreover, we can also [manually trigger a submission](#manually-triggering-submission) via the [submit](./use-form#submit) method of React Cool Form, which can help us overcome any kinds of design challenges easily.
+It's dead simple to submit a form in React Cool Form. All we need to do is use an `<input type="submit">` or `<button type="submit">` element to fire the form's `onSubmit` event. Moreover, we can also [manually trigger a submission](#manually-triggering-submission) by the [submit](./use-form#submit) method of React Cool Form, which can help us overcome any kinds of design challenges easily.
 
 ## Submit a Form
 
-This is the most common case that we submit a form via React Cool Form.
+This is the most common case that we submit a form with React Cool Form.
 
 ```js
 import { useForm } from "react-cool-form";

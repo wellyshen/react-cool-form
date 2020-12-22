@@ -25,15 +25,15 @@ You can test new features or debug an issue by the way that I'm using.
 2. Run `yarn start` to create `ESM` builds and type definition file by `rollup` watch mode.
 3. Access the [app directory](https://github.com/wellyshen/react-cool-form/tree/master/app).
 4. In the **app directory**, run `yarn link-pkg` to link with the package then run `yarn start:dev` to start development.
-5. Try something cool via the [Playground](https://github.com/wellyshen/react-cool-form/tree/master/app/src/Playground).
+5. Try something cool in the [Playground](https://github.com/wellyshen/react-cool-form/tree/master/app/src/Playground).
 
 ## Useful Commands
 
 There're several useful commands that you can use during the development:
 
-- `yarn link-pkg` links the package into the [app directory](https://github.com/wellyshen/react-cool-form/tree/master/app). You can develop or debug it via the [Playground](https://github.com/wellyshen/react-cool-form/tree/master/app/src/Playground).
-- `yarn start` creates a `dist` folder with `ESM` builds and type definition file by `rollup` watch mode. You can test the package locally via `yarn link-pkg` or [yarn link](https://yarnpkg.com/lang/en/docs/cli/link).
-- `yarn build` creates a `dist` folder with package builds (`CJS`, `ESM`, and `UMD`) and type definition file. You can test the package locally via `yarn link-pkg` or [yarn link](https://yarnpkg.com/lang/en/docs/cli/link).
+- `yarn link-pkg` links the package into the [app directory](https://github.com/wellyshen/react-cool-form/tree/master/app). You can develop or debug it in the [Playground](https://github.com/wellyshen/react-cool-form/tree/master/app/src/Playground).
+- `yarn start` creates a `dist` folder with `ESM` builds and type definition file by `rollup` watch mode. You can test the package locally with `yarn link-pkg` or [yarn link](https://yarnpkg.com/lang/en/docs/cli/link).
+- `yarn build` creates a `dist` folder with package builds (`CJS`, `ESM`, and `UMD`) and type definition file. You can test the package locally with `yarn link-pkg` or [yarn link](https://yarnpkg.com/lang/en/docs/cli/link).
 - `yarn changeset` [adds a changeset](https://github.com/atlassian/changesets/blob/master/docs/adding-a-changeset.md).
 - `yarn lint:code` lints all `.js` and `.tsx?` files.
 - `yarn lint:type` runs the [TypeScript](https://www.typescriptlang.org) type-checks.
