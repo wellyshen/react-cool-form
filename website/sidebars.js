@@ -9,7 +9,12 @@ module.exports = {
       "getting-started/complex-form-data",
       "getting-started/3rd-party-ui-libraries",
     ],
-    Examples: ["examples/basic"],
+    Examples: [
+      "examples/basic",
+      "examples/built-in-validation",
+      "examples/form-level-validation",
+      "examples/field-level-validation",
+    ],
     "API Reference": [
       "api-reference/use-form",
       "api-reference/utility-functions",
