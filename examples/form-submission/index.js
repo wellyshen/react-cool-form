@@ -16,9 +16,8 @@ const errorHandler = (errors) => {
 function App() {
   const { form, getState } = useForm({
     defaultValues: { username: "", email: "" },
-    validate,
     onSubmit: submitHandler,
-    onError: errorHandler,
+    onError: errorHandler
   });
   const isSubmitting = getState("isSubmitting");
 
