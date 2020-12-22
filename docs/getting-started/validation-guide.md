@@ -286,7 +286,7 @@ When validating with mixed ways, the results are deeply merged according to the 
 2. Field-level validation
 3. Form-level validation
 
-> 💡 To make the validation result of each field works correctly with the [individual](#when-to-run) target events or methods. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
+> 💡 To make the validation result of each field works correctly via the [individual](#when-to-run) target events or methods. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
 
 ## Displaying Error Messages
 
