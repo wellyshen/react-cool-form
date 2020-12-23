@@ -1,31 +1,25 @@
 import { useForm } from "react-cool-form";
 
 interface FormValues {
-  t1?: string;
-  t2?: string;
+  t1: string;
 }
 
 const defaultValues = {
-  // t1: "",
-  // t2: "",
+  t1: "",
 };
 
 const Playground = (): JSX.Element => {
-  const { form, getState } = useForm<FormValues>({
+  const { form } = useForm<FormValues>({
     defaultValues,
-    onSubmit: async (values) => {
-      // eslint-disable-next-line compat/compat
-      await new Promise((r) => setTimeout(r, 3000));
-      console.log("LOG ===> onSubmit: ", values);
-    },
+    builtInValidationMode: "state",
+    onSubmit: (values) => console.log("LOG ===> onSubmit: ", values),
+    onError: (errors) => console.log("LOG ===> onError: ", errors),
   });
-  const isSubmitting = getState("isSubmitting");
 
   return (
     <form ref={form} noValidate>
-      <input name="t1" />
-      <input name="t2" />
-      <input type="submit" disabled={isSubmitting} />
+      <input name="t1" type="number" max="10" pattern=".{5,}" />
+      <input type="submit" />
     </form>
   );
 };
