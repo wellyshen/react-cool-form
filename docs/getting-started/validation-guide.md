@@ -319,3 +319,27 @@ const App = () => {
   );
 };
 ```
+
+The built-in validation is **turned on** by default. Which provides two forms of error reports: the `message` (refer to [validationMessage](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/validationMessage)) and the `state` (refer to [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState)). You can configure (or turn off) it via the [builtInValidationMode](./use-form#builtInValidationMode) option.
+
+```js {5}
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const { form } = useForm({
+    builtInValidationMode: "message" | "state" | false, // Default is "message"
+    // More options...
+  });
+  const errors = getState("errors");
+
+  console.log("Message mode: ", errors); // Returns a localized message that describes the validation constraints that the control does not satisfy (if any)
+  console.log("State mode: ", errors); // Returns the "key" of the invalid property of the ValidityState (if any)
+
+  return (
+    <form ref={form} noValidate>
+      <input name="username" required />
+      <input type="submit" />
+    </form>
+  );
+};
+```

@@ -224,6 +224,7 @@ export interface Config<V> {
   validate?: FormValidator<V>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
+  builtInValidationMode?: "message" | "state" | false;
   removeUnmountedField?: boolean;
   ignoreFields?: string[];
   onReset?: ResetHandler<V>;

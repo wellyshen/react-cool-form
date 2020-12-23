@@ -56,6 +56,7 @@ export default <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
+  builtInValidationMode = "message",
   removeUnmountedField = true,
   ignoreFields = [],
   onReset,
@@ -377,19 +378,32 @@ export default <V extends FormValues = FormValues>({
   );
 
   const runBuiltInValidation = useCallback(
-    (name: string) => fieldsRef.current[name]?.field.validationMessage,
-    []
+    (name: string) => {
+      if (builtInValidationMode === false || !fieldsRef.current[name])
+        return undefined;
+
+      const { field } = fieldsRef.current[name];
+
+      if (builtInValidationMode === "message") return field.validationMessage;
+
+      // @ts-expect-error
+      // eslint-disable-next-line no-restricted-syntax
+      for (const k in field.validity) if (field.validity[k]) return k;
+
+      return undefined;
+    },
+    [builtInValidationMode]
   );
 
-  const runAllBuiltInValidation = useCallback(
-    () =>
-      Object.keys(fieldsRef.current).reduce((errors, name) => {
-        const error = runBuiltInValidation(name);
-        errors = { ...errors, ...(error ? set({}, name, error) : {}) };
-        return errors;
-      }, {}),
-    [runBuiltInValidation]
-  );
+  const runAllBuiltInValidation = useCallback(() => {
+    if (builtInValidationMode === false) return {};
+
+    return Object.keys(fieldsRef.current).reduce((errors, name) => {
+      const error = runBuiltInValidation(name);
+      errors = { ...errors, ...(error ? set({}, name, error) : {}) };
+      return errors;
+    }, {});
+  }, [builtInValidationMode, runBuiltInValidation]);
 
   const runFieldValidation = useCallback(
     async (name: string): Promise<any> => {
