@@ -1,50 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
 
 import "./styles.scss";
 
-const Field = ({ label, id, error, ...rest }) => (
-  <div>
-    <label htmlFor={id}>{label}</label>
-    <input id={id} {...rest} />
-    {error && <p>{error}</p>}
-  </div>
-);
-
 function App() {
-  const { form, getState } = useForm({
-    defaultValues: { username: "", email: "", password: "" },
+  const { form } = useForm({
+    defaultValues: { username: "", email: "", option: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
-  const errors = getState("errors");
+  const [showOptions, setShowOptions] = useState(false);
 
   return (
     <form ref={form} noValidate>
-      <Field
-        label="Username"
-        id="username"
-        name="username"
-        required
-        error={errors.username}
+      <input name="username" />
+      <input name="email" type="email" />
+      <input
+        name="toggle"
+        type="checkbox"
+        onChange={() => setShowOptions(!showOptions)}
+        data-rcf-ignore
       />
-      <Field
-        label="Email"
-        id="email"
-        name="email"
-        type="email"
-        required
-        error={errors.email}
-      />
-      <Field
-        label="Password"
-        id="password"
-        name="password"
-        type="password"
-        required
-        minLength={6}
-        error={errors.password}
-      />
+      {showOptions && (
+        <>
+          <input name="option" type="radio" value="option-1" />
+          <input name="option" type="radio" value="option-2" />
+          <input name="option" type="radio" value="option-3" />
+        </>
+      )}
       <input type="submit" />
     </form>
   );
