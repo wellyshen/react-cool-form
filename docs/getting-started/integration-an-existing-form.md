@@ -8,7 +8,7 @@ slug: /integration-an-existing-form
 
 ## Hook into A Form
 
-To use React Cool Form, we just need to attach the [form](./use-form#form) to the target element via the `ref` attribute. It will take care of all the [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) for us.
+To use React Cool Form, we just need to attach the [form](./use-form#form) to the target element via the `ref` attribute. It acts as a **delegator** that will take care of all the [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) for us.
 
 [![Edit RCF - Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-basic-17fz0?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -64,6 +64,42 @@ const App = () => {
 };
 ```
 
-## How to Ignore Fields
+## Ignore Fields
 
-Coming soon...
+You can tell React Cool Form to ignore field(s) via the pre-defined `data-rcf-ignore` attribute or the [ignoreFields](./use-form#ignoreFields) option, depends on your case.
+
+[![Edit RCF - Ignore Fields](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/proud-dust-qcm95?fontsize=14&hidenavigation=1&theme=dark)
+
+```js {7,20}
+import { useState } from "react";
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const { from } = useForm({
+    defaultValues: { username: "", email: "", option: "" },
+    ignoreFields: ["toggle"],
+    onSubmit: (values) => console.log("onSubmit: ", values),
+  });
+  const [showOptions, setShowOptions] = useState(false);
+
+  return (
+    <form ref={form}>
+      <input name="username" />
+      <input name="email" type="email" />
+      <input
+        name="toggle"
+        type="checkbox"
+        onChange={() => setShowOptions(!showOptions)}
+        data-rcf-ignore // We don't need to set the "name" when ignore via custom data attribute
+      />
+      {showOptions && (
+        <>
+          <input name="option" type="radio" value="option-1" />
+          <input name="option" type="radio" value="option-2" />
+          <input name="option" type="radio" value="option-3" />
+        </>
+      )}
+    </form>
+  );
+};
+```
