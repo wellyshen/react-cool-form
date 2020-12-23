@@ -76,7 +76,7 @@ import { useForm } from "react-cool-form";
 
 const App = () => {
   const { from } = useForm({
-    defaultValues: { username: "", email: "", option: "" },
+    defaultValues: { username: "", email: "" },
     ignoreFields: ["toggle"],
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
