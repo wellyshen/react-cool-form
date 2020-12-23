@@ -1,5 +1,3 @@
-> ⚠️ This library is not stable yet, API may be changed frequently, **DON'T USE IT IN PRODUCTION**. Please note any changes via [release](https://github.com/wellyshen/react-cool-form/releases). Suggestions or ideas are always [welcome](https://github.com/wellyshen/react-cool-form/blob/master/CONTRIBUTING.md) 🙏🏻. BTW, here's the [milestone](#milestone).
-
 # <b>React Cool Form</b>
 
 React hooks for forms state and validation, less code more performant.
