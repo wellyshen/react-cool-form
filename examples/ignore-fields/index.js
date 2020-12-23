@@ -6,7 +6,7 @@ import "./styles.scss";
 
 function App() {
   const { form } = useForm({
-    defaultValues: { username: "", email: "", option: "" },
+    defaultValues: { username: "", email: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const [showOptions, setShowOptions] = useState(false);
