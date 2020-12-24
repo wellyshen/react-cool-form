@@ -7,11 +7,6 @@ form {
   margin: 5rem auto 0;
   width: 24rem;
 
-  div,
-  input[type="radio"] {
-    margin-bottom: 1.5rem;
-  }
-
   input:not([type="checkbox"]):not([type="radio"]) {
     margin-bottom: 1.5rem;
     padding: 0.5rem;
@@ -27,12 +22,17 @@ form {
     margin-right: 0.5rem;
   }
 
+  input[type="radio"] {
+    margin-top: 1rem;
+  }
+
   label {
     color: #fff;
     margin-right: 1rem;
   }
 
   input[type="submit"] {
+    margin-top: 1.5rem;
     height: 2.5rem !important;
     font-size: 1rem;
     background: #faa627;
