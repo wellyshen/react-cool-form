@@ -25,7 +25,7 @@ function App() {
           onChange={() => setToggle(!toggle)}
           data-rcf-ignore // Ignore the fields via the pre-defined data attribute
         />
-        <label htmlForm="more">More</label>
+        <label htmlFor="more">More</label>
       </div>
       {toggle && (
         <>
@@ -34,13 +34,13 @@ function App() {
             name="option"
             type="radio"
             value="🍎"
-            defaultChecked
+            defaultChecked // Set default check (or value)
           />
-          <label htmlForm="apple">🍎</label>
+          <label htmlFor="apple">🍎</label>
           <input id="kiwi" name="option" type="radio" value="🥝" />
-          <label htmlForm="kiwi">🥝</label>
+          <label htmlFor="kiwi">🥝</label>
           <input id="lemon" name="option" type="radio" value="🍋" />
-          <label htmlForm="lemon">🍋</label>
+          <label htmlFor="lemon">🍋</label>
         </>
       )}
       <input type="submit" />

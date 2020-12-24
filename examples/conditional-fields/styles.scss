@@ -7,8 +7,9 @@ form {
   margin: 5rem auto 0;
   width: 24rem;
 
-  div {
-    margin-bottom: 0.75rem;
+  div,
+  input[type="radio"] {
+    margin-bottom: 1.5rem;
   }
 
   input:not([type="checkbox"]):not([type="radio"]) {
@@ -24,10 +25,6 @@ form {
   input[type="checkbox"],
   input[type="radio"] {
     margin-right: 0.5rem;
-  }
-
-  input[type="radio"] {
-    margin-bottom: 1.5rem;
   }
 
   label {
