@@ -92,9 +92,9 @@ const App = () => {
       />
       {toggle && (
         <>
-          <input name="option" type="radio" value="option-1" />
-          <input name="option" type="radio" value="option-2" />
-          <input name="option" type="radio" value="option-3" />
+          <input name="option" type="radio" value="🍎" />
+          <input name="option" type="radio" value="🥝" />
+          <input name="option" type="radio" value="🍋" />
         </>
       )}
     </form>
