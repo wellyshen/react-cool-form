@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.89
+
+### Patch Changes
+
+- [`74c6bd5`](https://github.com/wellyshen/react-cool-form/commit/74c6bd55a6fa80af24721d1d007cfe78181c7509) [#260](https://github.com/wellyshen/react-cool-form/pull/260) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): add `builtInValidationMode` option
+
+* [`42e3844`](https://github.com/wellyshen/react-cool-form/commit/42e384444732296194d9e165231976d06f835d72) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): remove warning
+
 ## 0.0.88
 
 ### Patch Changes
