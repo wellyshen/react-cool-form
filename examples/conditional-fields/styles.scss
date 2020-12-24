@@ -4,23 +4,15 @@ body {
 }
 
 form {
-  margin: 3rem auto 0;
+  margin: 5rem auto 0;
   width: 24rem;
 
   div {
-    width: inherit;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
 
-  label {
-    display: block;
-    color: #fff;
-  }
-
-  input,
-  select,
-  textarea {
-    margin: 0.5rem 0;
+  input:not([type="checkbox"]):not([type="radio"]) {
+    margin-bottom: 1.5rem;
     padding: 0.5rem;
     width: inherit;
     height: 2rem;
@@ -29,14 +21,24 @@ form {
     box-sizing: border-box;
   }
 
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin-right: 0.5rem;
+  }
+
+  input[type="radio"] {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    color: #fff;
+    margin-right: 1rem;
+  }
+
   input[type="submit"] {
-    height: 2.8rem;
+    height: 2.5rem !important;
     font-size: 1rem;
     background: #faa627;
     cursor: pointer;
-  }
-
-  textarea {
-    height: 5rem;
   }
 }
