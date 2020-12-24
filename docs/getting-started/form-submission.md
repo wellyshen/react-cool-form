@@ -87,26 +87,33 @@ For some reasons (e.g. design requirement, auto-retry etc.), we may need to trig
 ```js {22}
 import { useForm } from "react-cool-form";
 
-const submitHandler = (values) => {
-  console.log("onSubmit: ", values);
-};
-
-const errorHandler = (errors) => {
-  console.log("onError: ", errors);
-};
-
 const App = () => {
   const { form, getState, submit } = useForm({
     defaultValues: { username: "", email: "" },
-    onSubmit: submitHandler,
-    onError: errorHandler,
+    onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (errors) => console.log("onError: ", errors),
   });
   const isSubmitting = getState("isSubmitting");
+
+  const handleSubmit = () => {
+    submit();
+  };
+
+  // Handle submit with result, so we don't have to rely on the event handlers
+  const handleSubmit = async () => {
+    const { errors, values } = await submit();
+
+    if (errors) {
+      // Do something for invalid case
+    } else {
+      // Do something for valid case
+    }
+  };
 
   return (
     <>
       <ActionBar>
-        <button onClick={() => submit()} disabled={isSubmitting}>
+        <button onClick={handleSubmit} disabled={isSubmitting}>
           Submit
         </button>
       </ActionBar>
