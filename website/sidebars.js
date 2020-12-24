@@ -16,6 +16,7 @@ module.exports = {
       "examples/form-level-validation",
       "examples/field-level-validation",
       "examples/form-submission",
+      "examples/conditional-fields",
     ],
     "API Reference": [
       "api-reference/use-form",
