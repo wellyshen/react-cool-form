@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.90
+
+### Patch Changes
+
+- [`6c73fb0`](https://github.com/wellyshen/react-cool-form/commit/6c73fb046077120726ea84fb5743f6e96fa71e53) [#262](https://github.com/wellyshen/react-cool-form/pull/262) Thanks [@wellyshen](https://github.com/wellyshen)! - fix(useForm): field updating laggy due to conditional fields
+
+* [`f8fe312`](https://github.com/wellyshen/react-cool-form/commit/f8fe31269b7846464f00475da938a3b809f2ce39) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): remove badge
+
 ## 0.0.89
 
 ### Patch Changes
