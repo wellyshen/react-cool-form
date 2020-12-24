@@ -77,7 +77,7 @@ import { useForm } from "react-cool-form";
 const App = () => {
   const { from } = useForm({
     defaultValues: { username: "", email: "" },
-    ignoreFields: ["more"],
+    // ignoreFields: ["more"], // You can also ignore the fields via the option
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
   const [toggle, setToggle] = useState(false);
@@ -90,7 +90,7 @@ const App = () => {
         name="more" // We don't need to set it when the fields are ignored via data attribute
         type="checkbox"
         onChange={() => setToggle(!toggle)}
-        data-rcf-ignore
+        data-rcf-ignore // Ignore the fields via the pre-defined data attribute
       />
       {toggle && (
         <>
