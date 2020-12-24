@@ -51,13 +51,12 @@ export type FieldElement =
   | HTMLTextAreaElement
   | HTMLSelectElement;
 
-export type Fields = Record<
-  string,
-  {
-    field: FieldElement;
-    options?: FieldElement[];
-  }
->;
+export interface FieldsValue {
+  field: FieldElement;
+  options?: FieldElement[];
+}
+
+export type Fields = Record<string, FieldsValue>;
 
 export type FieldArgs = Record<
   string,
