@@ -1,7 +1,6 @@
 ---
 id: basic
 title: Basic
-slug: /basic
 hide_table_of_contents: true
 ---
 

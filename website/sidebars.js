@@ -16,6 +16,8 @@ module.exports = {
       "examples/built-in-validation",
       "examples/form-level-validation",
       "examples/field-level-validation",
+      "examples/validation-with-yup",
+      "examples/validation-with-joi",
       "examples/form-submission",
       "examples/conditional-fields",
     ],

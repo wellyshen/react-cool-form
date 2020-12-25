@@ -1,7 +1,6 @@
 ---
 id: conditional-fields
 title: Conditional Fields
-slug: /conditional-fields
 hide_table_of_contents: true
 ---
 

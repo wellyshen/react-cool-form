@@ -1,7 +1,6 @@
 ---
 id: form-submission
 title: Form Submission
-slug: /form-submission
 hide_table_of_contents: true
 ---
 

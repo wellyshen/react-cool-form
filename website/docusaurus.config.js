@@ -29,12 +29,12 @@ module.exports = {
           position: "right",
         },
         {
-          to: "/docs/basic",
+          to: "/docs/examples/basic",
           label: "Examples",
           position: "right",
         },
         {
-          to: "/docs/use-form",
+          to: "/docs/api-reference/use-form",
           label: "API",
           position: "right",
         },
@@ -57,11 +57,11 @@ module.exports = {
             },
             {
               label: "Examples",
-              to: "/docs/basic",
+              to: "/docs/examples/basic",
             },
             {
               label: "API Reference",
-              to: "/docs/use-form",
+              to: "/docs/api-reference/use-form",
             },
           ],
         },

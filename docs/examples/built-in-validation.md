@@ -1,7 +1,6 @@
 ---
 id: built-in-validation
 title: Built-in Validation
-slug: /built-in-validation
 hide_table_of_contents: true
 ---
 

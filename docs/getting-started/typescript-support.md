@@ -1,7 +1,6 @@
 ---
 id: typescript-support
 title: TypeScript Support
-slug: /typescript-support
 hide_table_of_contents: true
 ---
 

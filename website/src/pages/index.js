@@ -18,7 +18,7 @@ const features = [
           hook
         </Link>
         , it's designed to be a <b>plug-and-play</b>. You can easily{" "}
-        <Link to="/docs/integration-an-existing-form">
+        <Link to="/docs/getting-started/integration-an-existing-form">
           hook it into any forms
         </Link>{" "}
         that you want.
@@ -31,7 +31,7 @@ const features = [
     description: (
       <>
         Struggling with form structures? With React Cool Form{" "}
-        <Link to="/docs/complex-form-data">nested fields</Link> API, you can
+        <Link to="/docs/getting-started/complex-form-data">nested fields</Link> API, you can
         create complex form structures without hassle.
       </>
     ),
@@ -42,12 +42,12 @@ const features = [
     description: (
       <>
         Supports{" "}
-        <Link to="/docs/validation-guide#built-in-validation">built-in</Link>,{" "}
-        <Link to="/docs/validation-guide#form-level-validation">
+        <Link to="/docs/getting-started/validation-guide#built-in-validation">built-in</Link>,{" "}
+        <Link to="/docs/getting-started/validation-guide#form-level-validation">
           form-level
         </Link>
         , and{" "}
-        <Link to="/docs/validation-guide#field-level-validation">
+        <Link to="/docs/getting-started/validation-guide#field-level-validation">
           field-level
         </Link>{" "}
         validation, which can cover all the cases that you need.
@@ -72,9 +72,9 @@ const features = [
     imageUrl: "img/coding.svg",
     description: (
       <>
-        Intuitive and flexible <Link to="/docs/use-form">API</Link> design,
+        Intuitive and flexible <Link to="/docs/api-reference/use-form">API</Link> design,
         provides a seamless way to integration with existing HTML form fields or{" "}
-        <Link to="/docs/3rd-party-ui-libraries">3rd-party UI libraries</Link>.
+        <Link to="/docs/getting-started/3rd-party-ui-libraries">3rd-party UI libraries</Link>.
       </>
     ),
   },
