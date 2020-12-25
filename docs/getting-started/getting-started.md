@@ -22,7 +22,7 @@ This package is distributed via [npm](https://www.npmjs.com/package/react-cool-f
 $ npm install --save react-cool-form
 ```
 
-> ⚠️ React Cool Form supports all major browsers. For older browsers (e.g. IE11) without the `async/await`, `Promise`, and ES6+ features, you'll need to include a polyfill such as [core-js](https://github.com/zloirock/core-js).
+> 💡 React Cool Form supports all major browsers. For older browsers (e.g. IE11) without the `async/await`, `Promise`, and ES6+ features, you'll need to include a polyfill such as [core-js](https://github.com/zloirock/core-js).
 
 ## CDN
 

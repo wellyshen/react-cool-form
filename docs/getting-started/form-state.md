@@ -16,16 +16,20 @@ Here we will explore the form state and some [best practices for using it](#use-
 
 Form state is an `object` containing the following values:
 
-| Name         | Type      | Description                                                                                                                   |
-| ------------ | --------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| values       | `object`  | The current values of the form.                                                                                               |
-| errors       | `object`  | The current validation errors. [The shape will (should) match the shape of the form's values](./validation-guide#how-to-run). |
-| touched      | `object`  | An object containing all the fields the user has touched/visited.                                                             |
-| isDirty      | `boolean` | Returns `true` if the user modifies any of the fields, `false` otherwise.                                                     |
-| dirtyFields  | `object`  | An object containing all the fields the user has modified.                                                                    |
-| isValidating | `boolean` | Returns `true` if the form is currently being validated, `false` otherwise.                                                   |
+| Name         | Type      | Description                                                                                                                       |
+| ------------ | --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| values       | `object`  | The current values of the form.                                                                                                   |
+| errors       | `object`  | The current validation errors. [The shape will (should) match the shape of the form's values](./validation-guide#how-to-run).     |
+| touched      | `object`  | An object containing all the fields the user has touched/visited.                                                                 |
+| isDirty      | `boolean` | Returns `true` if the user modifies any of the fields. `false` otherwise.                                                         |
+| dirtyFields  | `object`  | An object containing all the fields the user has modified.                                                                        |
+| isValidating | `boolean` | Returns `true` if the form is currently being validated. `false` otherwise.                                                       |
+| isValid      | `boolean` | Returns `true` if the form doesn't have any errors (the `errors` object is empty). `false` otherwise.                             |
+| isSubmitting | `boolean` | Returns `true` if the form is currently being submitted. `false` if otherwise.                                                    |
+| isSubmitted  | `boolean` | Returns `true` if the form has been submitted successfully. `false` if otherwise. Resets after calling [reset](./use-form#reset). |
+| submitCount  | `number`  | Number of times the user tried to submit the form. Resets after calling [reset](./use-form#reset).                                |
 
-> ⚠️ The values of form state are readonly properties and should not be mutated directly.
+> 💡 The values of form state are readonly properties and should not be mutated directly.
 
 ## Use Form State
 
