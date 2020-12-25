@@ -76,7 +76,7 @@ import { useForm } from "react-cool-form";
 const App = () => {
   const { from } = useForm({
     defaultValues: { username: "", email: "" },
-    // ignoreFields: ["more"], // You can also ignore the fields via the option
+    // ignoreFields: ["more"], // You can also ignore the fields via this option
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
   const [toggle, setToggle] = useState(false);
