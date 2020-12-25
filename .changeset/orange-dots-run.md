@@ -2,4 +2,4 @@
 "react-cool-form": patch
 ---
 
-perf(useForm): do not trigger re-rendering when set the same values
+Perf(useForm): do not trigger re-rendering when imperatively setting the same values
