@@ -35,7 +35,10 @@ export default <V>(
         return;
       }
 
-      if (key === "values" || !dequal(get(stateRef.current, path), value)) {
+      if (
+        (path !== "values" && key === "values") ||
+        !dequal(get(stateRef.current, path), value)
+      ) {
         const state = set(stateRef.current, path, value, true);
         const {
           errors,
