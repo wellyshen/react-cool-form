@@ -24,7 +24,7 @@ const Playground = (): JSX.Element => {
     onSubmit: (values) => console.log("LOG ===> onSubmit: ", values),
     onError: (errors) => console.log("LOG ===> onError: ", errors),
   });
-  console.log("LOG ===> ", getState("dirtyFields"));
+  console.log("LOG ===> ", getState(["isDirty", "dirtyFields"]));
 
   useEffect(() => {
     reset({
