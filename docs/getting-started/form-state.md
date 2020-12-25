@@ -29,7 +29,7 @@ Form state is an `object` containing the following values:
 | isSubmitted  | `boolean` | Returns `true` if the form has been submitted successfully. `false` if otherwise. Resets after calling [reset](./use-form#reset). |
 | submitCount  | `number`  | Number of times the user tried to submit the form. Resets after calling [reset](./use-form#reset).                                |
 
-> 💡 The values of form state are readonly properties and should not be mutated directly.
+> 🚨 The values of form state are readonly properties and should not be mutated directly.
 
 ## Use Form State
 
