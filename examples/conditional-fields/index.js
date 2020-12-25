@@ -7,8 +7,8 @@ import "./styles.scss";
 function App() {
   const { form } = useForm({
     defaultValues: { username: "", email: "" },
-    // ignoreFields: ["more"], // You can also ignore the fields via the option
-    // removeUnmountedField: false // To preserve the data of the unmouned fields (default = true)
+    // ignoreFields: ["more"], // You can also ignore the fields via this option
+    // removeUnmountedField: false, // To preserve the data of the unmouned fields (default = true)
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const [toggle, setToggle] = useState(false);
