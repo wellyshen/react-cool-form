@@ -32,6 +32,7 @@ import {
   deepMerge,
   filterErrors,
   get,
+  isAsyncFunction,
   isCheckboxInput,
   isEmptyObject,
   isFieldElement,
@@ -466,7 +467,11 @@ export default <V extends FormValues = FormValues>({
 
   const validateField = useCallback<ValidateField>(
     async (name) => {
-      setStateRef("isValidating", true);
+      const hasAsyncValidation =
+        isAsyncFunction(formValidatorRef.current) ||
+        isAsyncFunction(fieldValidatorsRef.current[name]);
+
+      if (hasAsyncValidation) setStateRef("isValidating", true);
 
       try {
         const error =
@@ -475,7 +480,7 @@ export default <V extends FormValues = FormValues>({
           runBuiltInValidation(name);
 
         setFieldError(name, error);
-        setStateRef("isValidating", false);
+        if (hasAsyncValidation) setStateRef("isValidating", false);
 
         return error;
       } catch (exception) {
@@ -483,6 +488,7 @@ export default <V extends FormValues = FormValues>({
       }
     },
     [
+      formValidatorRef,
       runBuiltInValidation,
       runFieldValidation,
       runFormValidation,
