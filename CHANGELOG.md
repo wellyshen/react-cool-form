@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.91
+
+### Patch Changes
+
+- [`028b95e`](https://github.com/wellyshen/react-cool-form/commit/028b95e77ff7d683c98a74423ae05efe0409265d) [#265](https://github.com/wellyshen/react-cool-form/pull/265) Thanks [@wellyshen](https://github.com/wellyshen)! - Perf(useForm): do not trigger re-rendering when imperatively setting the same values
+
+* [`f6b97a2`](https://github.com/wellyshen/react-cool-form/commit/f6b97a28f91946900fb2c8c0139367c48ef47d4d) [#266](https://github.com/wellyshen/react-cool-form/pull/266) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): update `defaultValues` by `reset(nextValues)`
+
+- [`2d25b4a`](https://github.com/wellyshen/react-cool-form/commit/2d25b4a4e0f27a5db2890b75c605aff883bc924f) [#267](https://github.com/wellyshen/react-cool-form/pull/267) Thanks [@wellyshen](https://github.com/wellyshen)! - Perf(useForm): do not trigger `isValidating` when running field-level validation
+
 ## 0.0.90
 
 ### Patch Changes
