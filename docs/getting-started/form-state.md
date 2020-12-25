@@ -16,13 +16,14 @@ Here we will explore the form state and some [best practices for using it](#use-
 
 Form state is an `object` containing the following values:
 
-| Name        | Type      | Description                                                                                                                   |
-| ----------- | --------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| values      | `object`  | The current values of the form.                                                                                               |
-| errors      | `object`  | The current validation errors. [The shape will (should) match the shape of the form's values](./validation-guide#how-to-run). |
-| touched     | `object`  | An object containing all the fields the user has touched/visited.                                                             |
-| isDirty     | `boolean` | Returns `true` if the user modifies any of the fields, `false` otherwise.                                                     |
-| dirtyFields | `object`  | An object containing all the fields the user has modified.                                                                    |
+| Name         | Type      | Description                                                                                                                   |
+| ------------ | --------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| values       | `object`  | The current values of the form.                                                                                               |
+| errors       | `object`  | The current validation errors. [The shape will (should) match the shape of the form's values](./validation-guide#how-to-run). |
+| touched      | `object`  | An object containing all the fields the user has touched/visited.                                                             |
+| isDirty      | `boolean` | Returns `true` if the user modifies any of the fields, `false` otherwise.                                                     |
+| dirtyFields  | `object`  | An object containing all the fields the user has modified.                                                                    |
+| isValidating | `boolean` | Returns `true` if there are any fields validating, `false` otherwise.                                                         |
 
 > ⚠️ The values of form state are readonly properties and should not be mutated directly.
 
