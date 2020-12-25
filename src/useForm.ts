@@ -315,7 +315,7 @@ export default <V extends FormValues = FormValues>({
       const getPath = (path: string) => {
         if (path === "values" && !target && watch)
           warn(
-            '💡 react-cool-form > getState: Get the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/form-state'
+            '💡 react-cool-form > getState: Get the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
           );
 
         return target ? `${target}.${path}` : path;
@@ -687,12 +687,12 @@ export default <V extends FormValues = FormValues>({
         if (skip[key]) return;
 
         if (key === "values") {
-          const nextValue =
+          const nextValues =
             (isFunction(values) ? values(stateRef.current.values) : values) ||
             initialStateRef.current.values;
 
-          state[key] = nextValue;
-          initialStateRef.current.values = nextValue;
+          state[key] = nextValues;
+          initialStateRef.current.values = nextValues;
           setNodesOrStateValue(initialStateRef.current.values, !!values);
         } else {
           // @ts-expect-error
