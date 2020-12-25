@@ -23,7 +23,7 @@ Form state is an `object` containing the following values:
 | touched      | `object`  | An object containing all the fields the user has touched/visited.                                                             |
 | isDirty      | `boolean` | Returns `true` if the user modifies any of the fields, `false` otherwise.                                                     |
 | dirtyFields  | `object`  | An object containing all the fields the user has modified.                                                                    |
-| isValidating | `boolean` | Returns `true` if there are any fields validating, `false` otherwise.                                                         |
+| isValidating | `boolean` | Returns `true` if the form is currently being validated, `false` otherwise.                                                   |
 
 > ⚠️ The values of form state are readonly properties and should not be mutated directly.
 
