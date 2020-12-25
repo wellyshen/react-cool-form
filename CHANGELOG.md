@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.92
+
+### Patch Changes
+
+- [`cf8d06e`](https://github.com/wellyshen/react-cool-form/commit/cf8d06e4e10002fa75af15e2ec2bc406c3d128ad) [#269](https://github.com/wellyshen/react-cool-form/pull/269) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): default value attribute not working when reset form
+
+* [`46bad87`](https://github.com/wellyshen/react-cool-form/commit/46bad87c459c1fdbf86c31e19c556bc3e76a39fe) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): narrow down warning link URL
+
+- [`f6a8ed5`](https://github.com/wellyshen/react-cool-form/commit/f6a8ed5a14e36c761bc7afd662b256bb987eb483) Thanks [@wellyshen](https://github.com/wellyshen)! - Docs: update links
+
 ## 0.0.91
 
 ### Patch Changes
