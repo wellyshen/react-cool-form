@@ -6,6 +6,7 @@ module.exports = {
       "getting-started/integration-an-existing-form",
       "getting-started/validation-guide",
       "getting-started/form-submission",
+      "getting-started/reset-form",
       "getting-started/form-state",
       "getting-started/complex-form-data",
       "getting-started/3rd-party-ui-libraries",
