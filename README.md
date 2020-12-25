@@ -9,13 +9,13 @@ React hooks for forms state and validation, less code more performant.
 
 ## Features
 
-- 🎣 [Easy to use](https://react-cool-form.netlify.app/docs/integration-an-existing-form), just a React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook).
-- 🗃 Manages [complex form data](https://react-cool-form.netlify.app/docs/complex-form-data) without hassle.
-- 🚦 Supports [built-in](https://react-cool-form.netlify.app/docs/validation-guide#built-in-validation), [form-level](https://react-cool-form.netlify.app/docs/validation-guide#form-level-validation), and [field-level](https://react-cool-form.netlify.app/docs/validation-guide#field-level-validation) validation.
+- 🎣 [Easy to use](https://react-cool-form.netlify.app/docs/getting-started/integration-an-existing-form), just a React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook).
+- 🗃 Manages [complex form data](https://react-cool-form.netlify.app/docs/getting-started/complex-form-data) without hassle.
+- 🚦 Supports [built-in](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#built-in-validation), [form-level](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#form-level-validation), and [field-level](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#field-level-validation) validation.
 - 🚀 Highly performant, [minimizes the number of re-renders](https://react-cool-form.netlify.app#performance-matters) for you.
-- 🧱 Seamless integration with existing HTML form fields or [3rd-party UI libraries](https://react-cool-form.netlify.app/docs/3rd-party-ui-libraries).
-- 🎛 Super flexible [API](https://react-cool-form.netlify.app/docs/use-form) design, built with [DX and UX](https://react-cool-form.netlify.app/docs) in mind.
-- 🔩 Provides useful [utility functions](https://react-cool-form.netlify.app/docs/utility-functions) to boost forms development.
+- 🧱 Seamless integration with existing HTML form fields or [3rd-party UI libraries](https://react-cool-form.netlify.app/docs/getting-started/3rd-party-ui-libraries).
+- 🎛 Super flexible [API](https://react-cool-form.netlify.app/docs/api-reference/use-form) design, built with [DX and UX](https://react-cool-form.netlify.app/docs) in mind.
+- 🔩 Provides useful [utility functions](https://react-cool-form.netlify.app/docs/api-reference/utility-functions) to boost forms development.
 - 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
 - ☁️ Server-side rendering compatibility.
 - 🦔 Tiny size ([< 5KB gzipped](https://bundlephobia.com/result?p=react-cool-form)) but powerful.
@@ -27,8 +27,8 @@ See the documentation at [react-cool-form.netlify.app](https://react-cool-form.n
 Frequently viewed docs:
 
 - [Getting Started](https://react-cool-form.netlify.app/docs)
-- [Examples](https://react-cool-form.netlify.app/docs/basic)
-- [API Reference](https://react-cool-form.netlify.app/docs/use-form)
+- [Examples](https://react-cool-form.netlify.app/docs/examples/basic)
+- [API Reference](https://react-cool-form.netlify.app/docs/api-reference/use-form)
 
 ## Quick Start
 
