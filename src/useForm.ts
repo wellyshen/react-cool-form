@@ -687,17 +687,13 @@ export default <V extends FormValues = FormValues>({
         if (skip[key]) return;
 
         if (key === "values") {
-          if (!values) {
-            values = initialStateRef.current.values;
-          } else {
-            values = isFunction(values)
-              ? values(stateRef.current.values)
-              : values;
-            initialStateRef.current.values = values;
-          }
+          const nextValue =
+            (isFunction(values) ? values(stateRef.current.values) : values) ||
+            initialStateRef.current.values;
 
-          state[key] = values;
-          setNodesOrStateValue(values);
+          state[key] = nextValue;
+          initialStateRef.current.values = nextValue;
+          setNodesOrStateValue(initialStateRef.current.values, !!values);
         } else {
           // @ts-expect-error
           state[key] = initialStateRef.current[key];
