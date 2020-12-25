@@ -33,19 +33,34 @@ Form state is an `object` containing the following values:
 
 ## Using the Form State
 
-React Cool Form provides the [getState](../api-reference/use-form#getstate) method to help us avoid unnecessary re-renders when using the form state.
+React Cool Form provides a powerful method: [getState](../api-reference/use-form#getstate) to help us avoid unnecessary re-renders when using the form state.
 
 ### Accessing State
 
-When accessing the form state we can tell the `getState` method to get/construct the values as below:
+Due to the support of [complex form data](./complex-form-data), the `getState` method allows us to use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation) and [bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation to get the form state.
 
 ```js
 import { useForm } from "react-cool-form";
 
 const { getState } = useForm();
 
-// Value pick, re-renders the component when "values.foo" changes
-const foo = getState("values.foo");
+// Returns { name: "Welly", orders: ["🍕", "🥤"] }
+// Re-renders the component when either "values.user" or "values.user.<property>" changes
+const user = getState("values.user");
+
+// Returns "Welly", re-renders the component when "values.user.name" changes
+const name = getState("values.user.name");
+
+// Returns "🍕", re-renders the component when "values.user.orders" changes
+const pizza = getState("values.user.orders[0]");
+```
+
+We can construct an array/object with multiple state-picks inside like the following example:
+
+```js
+import { useForm } from "react-cool-form";
+
+const { getState } = useForm();
 
 // Array pick, re-renders the component when either "values.foo" or "values.bar" changes
 const [foo, bar] = getState(["values.foo", "values.bar"]);
@@ -54,15 +69,17 @@ const [foo, bar] = getState(["values.foo", "values.bar"]);
 const { foo, bar } = getState({ foo: "values.foo", bar: "values.bar" });
 ```
 
-From the example above, you can see we are getting the values of a specific target, it's kind of verbose. We can reduce it by using the `target` option.
+From the code above, you can see we are getting the values of a specific target, it's kind of verbose. We can reduce it via the `target` option.
 
+<!-- prettier-ignore-start -->
 ```js
+// { values: { foo: "🍎", bar: "🥝", baz: "🍋" } }
 const [foo, bar, baz] = getState(["foo", "bar", "baz"], { target: "values" });
+
+// { values: { nest: { foo: "🍎", bar: "🥝", baz: "🍋" } } }
+const [foo, bar, baz] = getState(["foo", "bar", "baz"], { target: "values.nest" });
 ```
-
-### Filters Untouched Field Errors
-
-Coming soon...
+<!-- prettier-ignore-end -->
 
 ### Best Practices
 
@@ -71,3 +88,7 @@ Every time we access a value from the form state via the `getState` method, it w
 ```js
 Coming soon...
 ```
+
+### Filters Untouched Field Errors
+
+Coming soon...
