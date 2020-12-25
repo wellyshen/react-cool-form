@@ -681,9 +681,14 @@ export default <V extends FormValues = FormValues>({
         if (skip[key]) return;
 
         if (key === "values") {
-          values =
-            (isFunction(values) ? values(stateRef.current.values) : values) ||
-            initialStateRef.current.values;
+          if (!values) {
+            values = initialStateRef.current.values;
+          } else {
+            values = isFunction(values)
+              ? values(stateRef.current.values)
+              : values;
+            initialStateRef.current.values = values;
+          }
 
           state[key] = values;
           setNodesOrStateValue(values);
