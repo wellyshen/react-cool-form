@@ -35,7 +35,7 @@ Form state is an `object` containing the following values:
 
 React Cool Form provides a powerful method: [getState](../api-reference/use-form#getstate) to help us avoid unnecessary re-renders when using the form state.
 
-### Accessing State
+### Accessing the State
 
 Due to the support of [complex form data](./complex-form-data), the `getState` method allows us to use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation) and [bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation to get the form state.
 
