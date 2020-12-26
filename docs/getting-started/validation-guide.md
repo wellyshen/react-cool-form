@@ -285,11 +285,11 @@ When validating with mixed ways, the results are deeply merged according to the 
 2. Field-level validation
 3. Form-level validation
 
-> 💡 To make the validation result of each field works correctly via the [individual](#when-to-run) target events or methods. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
+> 💡 To make the validation result of each field works correctly with the [individual](#when-to-run) target events or methods. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
 
 ## Displaying Error Messages
 
-All errors are stored in the [formState.errors](./form-state#about-the-form-state), we can display error messages by accessing the `errors` object via the [getState](../api-reference/use-form#getstate) method. The `getState` method is designed to filter the errors of untouched fields by default, which based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can disable the feature by setting the `filterUntouchedError` option to `false`.
+All errors are stored in the [formState.errors](./form-state#about-the-form-state), we can display error messages by accessing the `errors` object via the [getState](../api-reference/use-form#getstate) method. The `getState` method is designed to filter the errors of untouched fields by default, which based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can disable the feature by setting the `filterUntouchedError` option to `false` (see [related doc](./form-state#filters-untouched-field-errors)).
 
 [![Edit RCF - Quick start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-quick-start-j8p1l?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -301,7 +301,7 @@ const App = () => {
     defaultValues: { username: "", email: "", password: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  // By default, the errors of untouched fields are filtered out, which helps the user focus on typing without being annoying
+  // By default, the errors of untouched fields are filtered out, which helps the user focus on typing without being annoyed
   // You can disable this feature by setting the "filterUntouchedError" option to false
   const errors = getState("errors", { filterUntouchedError: true });
 
@@ -319,7 +319,7 @@ const App = () => {
 };
 ```
 
-The built-in validation is **turned on** by default. Which provides two forms of error reports: the `message` (refer to [validationMessage](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/validationMessage)) and the `state` (refer to [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState)). You can configure (or turn off) it via the [builtInValidationMode](../api-reference/use-form#builtonvalidationmode) option.
+The built-in validation is **turned on** by default. Which provides two forms of error reports: the `message` (refer to [validationMessage](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/validationMessage)) and the `state` (refer to [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState)). You can configure (or turn off) it by the [builtInValidationMode](../api-reference/use-form#builtonvalidationmode) option.
 
 ```js {5}
 import { useForm } from "react-cool-form";

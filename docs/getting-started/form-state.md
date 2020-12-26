@@ -107,4 +107,23 @@ const SomeHandler = () => {
 
 ### Filters Untouched Field Errors
 
-Coming soon...
+Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, React Cool Form auto filters the errors of untouched fields for you. However, you can disable this feature by setting the `filterUntouchedError` option to `false`.
+
+> 💡 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
+
+```js
+import { useForm } from "react-cool-form";
+
+const { getState } = useForm();
+
+// Current form state: { errors: { foo: "Required" }, touched: { foo: true } }
+
+// Returns {}
+const errors = getState("errors");
+
+// Returns { foo: "Required" }
+const errors = getState("errors", { filterUntouchedError: false });
+
+// Returns { foo: "Required" }, the feature only available in watch mode
+const errors = getState("errors", { watch: false });
+```
