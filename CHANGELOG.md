@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.93
+
+### Patch Changes
+
+- [`89a0647`](https://github.com/wellyshen/react-cool-form/commit/89a06477b97c6ac9a66694c88cad0afdb45112a1) Thanks [@wellyshen](https://github.com/wellyshen)! - Docs(readme): update bundle size
+
+* [`a3b7228`](https://github.com/wellyshen/react-cool-form/commit/a3b7228e4693fad0df80b117aa8899850a959bc2) [#271](https://github.com/wellyshen/react-cool-form/pull/271) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(types): adjust .d.ts
+
 ## 0.0.92
 
 ### Patch Changes
