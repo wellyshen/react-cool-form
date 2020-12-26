@@ -1,26 +1,11 @@
 declare module "react-cool-form" {
   import { FocusEvent, RefObject, SyntheticEvent } from "react";
 
-  export type FormValues = Record<string, any>;
-
   type DeepProps<V, T = any> = {
     [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
   };
 
   type Errors<V> = DeepProps<V>;
-
-  export type FormState<V = FormValues> = Readonly<{
-    values: V;
-    touched: DeepProps<V, boolean>;
-    errors: Errors<V>;
-    isDirty: boolean;
-    dirtyFields: DeepProps<V, boolean>;
-    isValidating: boolean;
-    isValid: boolean;
-    isSubmitting: boolean;
-    isSubmitted: boolean;
-    submitCount: number;
-  }>;
 
   interface Options<V> {
     formState: FormState<V>;
@@ -34,36 +19,44 @@ declare module "react-cool-form" {
     submit: Submit<V>;
   }
 
-  export interface ResetHandler<V = FormValues> {
-    (values: V, options: Options<V>, event?: Event | SyntheticEvent<any>): void;
+  interface GetState {
+    (
+      path: string | string[] | Record<string, string>,
+      options?: {
+        target?: string;
+        watch?: boolean;
+        filterUntouchedError?: boolean;
+      }
+    ): any;
   }
 
-  export interface SubmitHandler<V = FormValues> {
+  interface SetValues<V> {
     (
-      values: V,
-      options: Options<V>,
-      event?: Event | SyntheticEvent<any>
-    ): void | Promise<void>;
-  }
-
-  export interface ErrorHandler<V = FormValues> {
-    (
-      errors: Errors<V>,
-      options: Options<V>,
-      event?: Event | SyntheticEvent<any>
+      values: V | PreviousValuesFn<V>,
+      options?: {
+        shouldValidate?: boolean;
+        touchedFields?: string[] | FieldNamesFn;
+        dirtyFields?: string[] | FieldNamesFn;
+      }
     ): void;
   }
 
-  export interface Debug<V> {
-    (formState: FormState<V>): void;
+  interface SetFieldValue {
+    (
+      name: string,
+      value: any | PreviousValueFn,
+      options?: {
+        [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
+      }
+    ): void;
   }
 
-  export interface FormValidator<V = FormValues> {
-    (values: V): Errors<V> | void | Promise<Errors<V> | void>;
+  interface SetErrors<V> {
+    (errors?: Errors<V> | PreviousErrorsFn): void;
   }
 
-  export interface FieldValidator<V = FormValues> {
-    (value: any, values: V): any | Promise<any>;
+  interface SetFieldError {
+    (name: string, error?: any | PreviousErrorFn): void;
   }
 
   interface FieldRef<V> {
@@ -79,66 +72,6 @@ declare module "react-cool-form" {
     ): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
     ) => void;
-  }
-
-  interface GetState {
-    (
-      path: string | string[] | Record<string, string>,
-      options?: {
-        target?: string;
-        watch?: boolean;
-        filterUntouchedError?: boolean;
-      }
-    ): any;
-  }
-
-  export interface PreviousErrorsFn {
-    (previousErrors: Errors<V>): Errors<V> | undefined;
-  }
-
-  interface SetErrors<V> {
-    (errors?: Errors<V> | PreviousErrorsFn): void;
-  }
-
-  export interface PreviousErrorFn {
-    (previousError?: any): any;
-  }
-
-  interface SetFieldError {
-    (name: string, error?: any | PreviousErrorFn): void;
-  }
-
-  export interface PreviousValuesFn<V = any> {
-    (previousValues: V): V;
-  }
-
-  export interface FieldNamesFn {
-    (fieldNames: string[]): string[];
-  }
-
-  interface SetValues<V> {
-    (
-      values: V | PreviousValuesFn<V>,
-      options?: {
-        shouldValidate?: boolean;
-        touchedFields?: string[] | FieldNamesFn;
-        dirtyFields?: string[] | FieldNamesFn;
-      }
-    ): void;
-  }
-
-  export interface PreviousValueFn {
-    (previousValue: any): any;
-  }
-
-  interface SetFieldValue {
-    (
-      name: string,
-      value: any | PreviousValueFn,
-      options?: {
-        [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
-      }
-    ): void;
   }
 
   interface ValidateForm<V> {
@@ -161,11 +94,62 @@ declare module "react-cool-form" {
     (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
   }
 
+  export type FormValues = Record<string, any>;
+
+  export type FormState<V = FormValues> = Readonly<{
+    values: V;
+    touched: DeepProps<V, boolean>;
+    errors: Errors<V>;
+    isDirty: boolean;
+    dirtyFields: DeepProps<V, boolean>;
+    isValidating: boolean;
+    isValid: boolean;
+    isSubmitting: boolean;
+    isSubmitted: boolean;
+    submitCount: number;
+  }>;
+
   export interface Parser<V = any, R = any> {
     (value: V): R;
   }
 
   export type Formatter<V = any, R = any> = Parser<V, R>;
+
+  export interface FieldNamesFn {
+    (fieldNames: string[]): string[];
+  }
+
+  export interface PreviousValuesFn<V = any> {
+    (previousValues: V): V;
+  }
+
+  export interface PreviousValueFn {
+    (previousValue: any): any;
+  }
+
+  export interface PreviousErrorsFn {
+    (previousErrors: Errors<V>): Errors<V> | undefined;
+  }
+
+  export interface PreviousErrorFn {
+    (previousError?: any): any;
+  }
+
+  export interface FormValidator<V = FormValues> {
+    (values: V): Errors<V> | void | Promise<Errors<V> | void>;
+  }
+
+  export interface FieldValidator<V = FormValues> {
+    (value: any, values: V): any | Promise<any>;
+  }
+
+  export interface ErrorHandler<V = FormValues> {
+    (
+      errors: Errors<V>,
+      options: Options<V>,
+      event?: Event | SyntheticEvent<any>
+    ): void;
+  }
 
   export interface ChangeHandler<E = any> {
     (event: E, value: any): void;
@@ -173,6 +157,18 @@ declare module "react-cool-form" {
 
   export interface BlurHandler {
     (event: FocusEvent<any>): void;
+  }
+
+  export interface ResetHandler<V = FormValues> {
+    (values: V, options: Options<V>, event?: Event | SyntheticEvent<any>): void;
+  }
+
+  export interface SubmitHandler<V = FormValues> {
+    (
+      values: V,
+      options: Options<V>,
+      event?: Event | SyntheticEvent<any>
+    ): void | Promise<void>;
   }
 
   export interface Controller<V = FormValues, E = any> {
@@ -193,6 +189,10 @@ declare module "react-cool-form" {
       onChange: (event: E) => void;
       onBlur: BlurHandler;
     } | void;
+  }
+
+  export interface Debug<V> {
+    (formState: FormState<V>): void;
   }
 
   export interface Config<V = FormValues> {
@@ -224,18 +224,18 @@ declare module "react-cool-form" {
     controller: Controller<V>;
   }
 
-  export const useForm: <V extends FormValues = FormValues>(
+  export function useForm<V extends FormValues = FormValues>(
     config: Config<V>
-  ) => Return<V>;
+  ): Return<V>;
 
-  export const get: (object: any, path: string, defaultValue?: unknown) => any;
+  export function get(object: any, path: string, defaultValue?: unknown): any;
 
-  export const set: (
+  export function set(
     object: any,
     path: string,
     value: unknown,
     immutable?: boolean
-  ) => any;
+  ): any;
 
-  export const unset: (object: any, path: string, immutable?: boolean) => any;
+  export function unset(object: any, path: string, immutable?: boolean): any;
 }
