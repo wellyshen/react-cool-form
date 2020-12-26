@@ -69,7 +69,7 @@ const [foo, bar] = getState(["values.foo", "values.bar"]);
 const { foo, bar } = getState({ foo: "values.foo", bar: "values.bar" });
 ```
 
-From the code above, you can see we are getting the values of a specific target, it's kind of verbose. We can reduce it via the `target` option.
+From the code above, you can see we are getting the values of a specific target, it's kind of verbose. We can reduce it by the `target` option.
 
 <!-- prettier-ignore-start -->
 ```js
@@ -83,10 +83,26 @@ const [foo, bar, baz] = getState(["foo", "bar", "baz"], { target: "values.nest" 
 
 ### Best Practices
 
-Every time we access a value from the form state via the `getState` method, it will watch the changes of the value and trigger re-rendering only when necessary. Thus, there are some guidelines for us to use the form state.
+Every time we access a value from the form state via the `getState` method, it will watch the changes of the value and trigger re-renders only when necessary. Thus, there are some guidelines for us to use the form state.
 
 ```js
 Coming soon...
+```
+
+### Reading the State
+
+If you just want to read the state's values without triggering re-renders, you can turn the **watch mode** off by setting the `watch` option to `false`.
+
+```js {6}
+import { useForm } from "react-cool-form";
+
+const { getState } = useForm();
+
+const SomeHandler = () => {
+  const [isValid, values] = getState(["isValid", "values"] { watch: false });
+
+  if (isValid) createRecordOnServer(values);
+};
 ```
 
 ### Filters Untouched Field Errors
