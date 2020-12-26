@@ -83,10 +83,25 @@ const [foo, bar, baz] = getState(["foo", "bar", "baz"], { target: "values.nest" 
 
 ### Best Practices
 
-Every time we access a value from the form state via the `getState` method, it will watch the changes of the value and trigger re-renders only when necessary. Thus, there are some guidelines for us to use the form state.
+Every time we access a value from the form state via the `getState` method, it will watch the changes of the value and trigger re-renders only when necessary. Thus, there are some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
 
 ```js
-Coming soon...
+import { useForm } from "react-cool-form";
+
+const { getState } = useForm();
+
+// 🙅🏻‍♀️ You can, but not recommended because it will cause the component to update on every value change
+const values = getState("values");
+// 🙆🏻‍♀️ For the form's values, we always recommended getting the target value as specific as possible
+const fooValue = getState("values.foo");
+
+// 🙆🏻‍♀️ It's OK, in most case the form's validation will be triggered less frequently
+const errors = getState("errors");
+// 🙆🏻‍♀️ But if there's a frequently triggered validation, get the target error instead
+const fooError = getState("errors.foo");
+
+// 🙆🏻‍♀️ It's OK, they are triggered less frequently
+const [touched, dirtyFields] = getState(["touched", "dirtyFields"]);
 ```
 
 ### Reading the State
