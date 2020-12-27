@@ -20,6 +20,7 @@ module.exports = {
       "examples/validation-with-joi",
       "examples/form-submission",
       "examples/conditional-fields",
+      "examples/lazy-default-values",
     ],
     "API Reference": [
       "api-reference/use-form",
