@@ -6,12 +6,12 @@ title: useForm
 This is a custom React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook) that helps you with building forms. It takes a `config` arguments and returns useful methods as follows.
 
 ```js
-const methods = useForm(config);
+const returnValues = useForm(config);
 ```
 
 ## Config
 
-Description...
+An `object` with the following options:
 
 ### `defaultValues`
 
@@ -57,13 +57,13 @@ Coming soon...
 
 Coming soon...
 
-## Methods
+## Return Values
 
 An `object` with the following methods:
 
 ### `form`
 
-Coming soon...
+A React [ref](https://reactjs.org/docs/hooks-reference.html#useref) that allows you to [register the form into React Cool Form](./../getting-started/integration-an-existing-form#hook-into-the-form).
 
 ### `field`
 
