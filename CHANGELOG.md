@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.94
+
+### Patch Changes
+
+- [`e267f75`](https://github.com/wellyshen/react-cool-form/commit/e267f75437001c8959257613e2d0aa3e64cfaff3) [#272](https://github.com/wellyshen/react-cool-form/pull/272) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): change `config` from required to optional
+
 ## 0.0.93
 
 ### Patch Changes
