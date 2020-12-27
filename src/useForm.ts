@@ -65,7 +65,7 @@ export default <V extends FormValues = FormValues>({
   onSubmit,
   onError,
   debug,
-}: Config<V>): Return<V> => {
+}: Config<V> = {}): Return<V> => {
   const isInitRef = useRef(true);
   const formRef = useRef<HTMLFormElement>(null);
   const fieldsRef = useRef<Fields>({});

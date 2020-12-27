@@ -12,10 +12,7 @@ const defaultValues = {
 };
 
 const Playground = (): JSX.Element => {
-  const { form, reset, getState } = useForm<FormValues>({
-    defaultValues,
-    onSubmit: (values) => console.log("LOG ===> onSubmit: ", values),
-  });
+  const { form, reset, getState } = useForm<FormValues>();
   console.log(
     "LOG ===> ",
     getState({ isDirty: "isDirty", dirtyFields: "dirtyFields" })
