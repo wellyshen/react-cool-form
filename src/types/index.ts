@@ -218,19 +218,19 @@ export interface Controller<V, E = any> {
   } | void;
 }
 
-export interface Config<V> {
+export type Config<V> = Partial<{
   defaultValues: V;
-  validate?: FormValidator<V>;
-  validateOnChange?: boolean;
-  validateOnBlur?: boolean;
-  builtInValidationMode?: "message" | "state" | false;
-  removeUnmountedField?: boolean;
-  ignoreFields?: string[];
-  onReset?: ResetHandler<V>;
-  onSubmit?: SubmitHandler<V>;
-  onError?: ErrorHandler<V>;
-  debug?: Debug<V>;
-}
+  validate: FormValidator<V>;
+  validateOnChange: boolean;
+  validateOnBlur: boolean;
+  builtInValidationMode: "message" | "state" | false;
+  removeUnmountedField: boolean;
+  ignoreFields: string[];
+  onReset: ResetHandler<V>;
+  onSubmit: SubmitHandler<V>;
+  onError: ErrorHandler<V>;
+  debug: Debug<V>;
+}>;
 
 export interface Return<V> {
   form: RefObject<HTMLFormElement>;

@@ -5,9 +5,9 @@ title: Integration an Existing Form
 
 "Easy to use" is one of the core design principles of React Cool Form, the library is built on top of React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook). So it's easy to be integrated with an existing form without too much effort.
 
-## Hook into A Form
+## Hook Into the Form
 
-To use React Cool Form, we just need to attach the [form](../api-reference/use-form#form) to the target element via the `ref` attribute. It acts as a **delegator** that will take care of all the [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) for us.
+To use React Cool Form, we just need to attach the [form](../api-reference/use-form#form) to the target element via the `ref` attribute. It acts as a **delegator** that will take care of all the values of [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) for us.
 
 [![Edit RCF - Basic](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-basic-17fz0?fontsize=14&hidenavigation=1&theme=dark)
 

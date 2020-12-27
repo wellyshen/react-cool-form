@@ -195,19 +195,19 @@ declare module "react-cool-form" {
     (formState: FormState<V>): void;
   }
 
-  export interface Config<V = FormValues> {
+  export type Config<V = FormValues> = Partial<{
     defaultValues: V;
-    validate?: FormValidator<V>;
-    validateOnChange?: boolean;
-    validateOnBlur?: boolean;
-    builtInValidationMode?: "message" | "state" | false;
-    removeUnmountedField?: boolean;
-    ignoreFields?: string[];
-    onReset?: ResetHandler<V>;
-    onSubmit?: SubmitHandler<V>;
-    onError?: ErrorHandler<V>;
-    debug?: Debug<V>;
-  }
+    validate: FormValidator<V>;
+    validateOnChange: boolean;
+    validateOnBlur: boolean;
+    builtInValidationMode: "message" | "state" | false;
+    removeUnmountedField: boolean;
+    ignoreFields: string[];
+    onReset: ResetHandler<V>;
+    onSubmit: SubmitHandler<V>;
+    onError: ErrorHandler<V>;
+    debug: Debug<V>;
+  }>;
 
   export interface Return<V = FormValues> {
     form: RefObject<HTMLFormElement>;
@@ -225,7 +225,7 @@ declare module "react-cool-form" {
   }
 
   export function useForm<V extends FormValues = FormValues>(
-    config: Config<V>
+    config?: Config<V>
   ): Return<V>;
 
   export function get(object: any, path: string, defaultValue?: unknown): any;
