@@ -185,14 +185,14 @@ export default <V extends FormValues = FormValues>({
 
       if (isCheckboxInput(field)) {
         if (options) {
-          const checkboxs = options as HTMLInputElement[];
+          const checkboxes = options as HTMLInputElement[];
 
           if (options.length > 1) {
-            value = checkboxs
+            value = checkboxes
               .filter((checkbox) => checkbox.checked)
               .map((checkbox) => checkbox.value);
           } else {
-            value = checkboxs[0].checked;
+            value = checkboxes[0].checked;
           }
         } else {
           let checkValues = get(stateRef.current.values, field.name);
@@ -236,16 +236,16 @@ export default <V extends FormValues = FormValues>({
     const { field, options } = fieldsRef.current[name];
 
     if (isCheckboxInput(field)) {
-      const checkboxs = options as HTMLInputElement[];
+      const checkboxes = options as HTMLInputElement[];
 
-      if (checkboxs.length > 1) {
-        checkboxs.forEach((checkbox) => {
+      if (checkboxes.length > 1) {
+        checkboxes.forEach((checkbox) => {
           checkbox.checked = Array.isArray(value)
             ? value.includes(checkbox.value)
             : !!value;
         });
       } else {
-        checkboxs[0].checked = !!value;
+        checkboxes[0].checked = !!value;
       }
     } else if (isRadioInput(field)) {
       (options as HTMLInputElement[]).forEach((radio) => {
