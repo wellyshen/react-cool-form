@@ -14,7 +14,7 @@ function App() {
   const [toggle, setToggle] = useState(false);
 
   return (
-    <form ref={form} noValidate>
+    <form ref={form}>
       <input name="username" placeholder="Username" />
       <input name="email" type="email" placeholder="Email" />
       <div>
