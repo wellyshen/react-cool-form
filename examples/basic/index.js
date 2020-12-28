@@ -34,7 +34,7 @@ function App() {
   });
 
   return (
-    <form ref={form} noValidate>
+    <form ref={form}>
       <Field label="First Name" id="first-name" name="firstName" />
       <Field label="Last Name" id="last-name" name="lastName" />
       <Select label="Framework" id="framework" name="framework">

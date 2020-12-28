@@ -21,7 +21,7 @@ function App() {
   }, [reset]);
 
   return (
-    <form ref={form} noValidate>
+    <form ref={form}>
       <Field label="First Name" id="first-name" name="firstName" />
       <Field label="Last Name" id="last-name" name="lastName" />
       <input type="submit" />
