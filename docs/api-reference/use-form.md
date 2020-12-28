@@ -25,13 +25,13 @@ Default field values of the form. In most case (especially working with TypeScri
 
 `string[]`
 
-Coming soon...
+Tell React Cool Form to ignore field(s) by passing in the `name` of the field. You can also ignore a field via the pre-defined `data-rcf-ignore` attribute. Check the [Ignore Fields](../getting-started/integration-an-existing-form#ignore-fields) to learn more.
 
 ### removeUnmountedField
 
 `boolean`
 
-By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirtyFields`) of an unmounted field for us. However, we can set the `removeUnmountedField` to `false` to maintain the state. See the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
+By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirtyFields`) of an unmounted field for us. However, we can set the `removeUnmountedField` to `false` to maintain the state. Check the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
 
 ### builtInValidationMode
 
