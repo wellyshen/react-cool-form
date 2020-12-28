@@ -3,7 +3,7 @@ id: use-form
 title: useForm
 ---
 
-This is a custom React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook) that helps you with building forms. It takes a `config` arguments and returns useful methods as follows.
+This is a custom React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook) that helps you with building forms. It takes `config` arguments and returns useful methods as follows.
 
 ```js
 const returnValues = useForm(config);
