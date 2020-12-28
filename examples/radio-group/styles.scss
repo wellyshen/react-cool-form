@@ -8,11 +8,8 @@ form {
   width: 24rem;
   color: #fff;
 
-  div {
-    margin-bottom: 2rem;
-  }
-
   fieldset {
+    margin-bottom: 2rem;
     border-radius: 4px;
     border-color: #555;
   }
@@ -33,10 +30,5 @@ form {
     font-size: 1rem;
     background: #faa627;
     cursor: pointer;
-  }
-
-  p {
-    margin-top: 0.5rem;
-    color: orangered;
   }
 }
