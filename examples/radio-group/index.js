@@ -13,8 +13,8 @@ const Field = ({ label, id, ...rest }) => (
 
 function App() {
   const { form } = useForm({
-    defaultValues: { race: "human" },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+    defaultValues: { race: "🦸🏻‍♂️" },
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
 
   return (
