@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.95
+
+### Patch Changes
+
+- [`3a24549`](https://github.com/wellyshen/react-cool-form/commit/3a245496a5b70c6e1bb77b9081d98aa24b056865) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): fix variable typo
+
+* [`531aa74`](https://github.com/wellyshen/react-cool-form/commit/531aa74d096771b0abb875a066d0bc5ef5394090) Thanks [@wellyshen](https://github.com/wellyshen)! - docs(readme): change milestone to to-do
+
 ## 0.0.94
 
 ### Patch Changes
