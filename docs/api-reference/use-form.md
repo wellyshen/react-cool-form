@@ -21,6 +21,22 @@ Default field values of the form. In most case (especially working with TypeScri
 
 > 💡 The `defaultValues` is cached **at the first render** within the custom hook. If you want to reset it or [lazily set it](../examples/lazy-default-values), you can use the [reset](#reset) method.
 
+### ignoreFields
+
+`string[]`
+
+Coming soon...
+
+### removeUnmountedField
+
+`boolean`
+
+By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirtyFields`) of an unmounted field for us. However, we can set the `removeUnmountedField` to `false` to maintain the state. See the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
+
+### builtInValidationMode
+
+Coming soon...
+
 ### validateOnChange
 
 `boolean`
@@ -32,18 +48,6 @@ Tell React Cool Form to run validations on `change` events as well as the [setFi
 `boolean`
 
 Tell React Cool Form to run validations on `blur` events. Default is `true`.
-
-### builtInValidationMode
-
-Coming soon...
-
-### removeUnmountedField
-
-Coming soon...
-
-### ignoreFields
-
-Coming soon...
 
 ### validate
 
