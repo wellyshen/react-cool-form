@@ -37,26 +37,20 @@ function App() {
       </Group>
       <Group title="Multitple" error={getState("errors.multiple")}>
         <Field
-          label="🍎"
-          id="apple"
+          label="🦸🏻‍♂️"
+          id="human"
           name="multiple"
-          value="🍎"
+          value="🦸🏻‍♂️"
           type="checkbox"
         />
         <Field
-          label="🥝"
-          id="kiwi"
+          label="🧛🏻‍♂️"
+          id="vampire"
           name="multiple"
-          value="🥝"
+          value="🧛🏻‍♂️"
           type="checkbox"
         />
-        <Field
-          label="🍋"
-          id="lemon"
-          name="multiple"
-          value="🍋"
-          type="checkbox"
-        />
+        <Field label="🧝🏻‍♂️" id="elf" name="multiple" value="🧝🏻‍♂️" type="checkbox" />
       </Group>
       <input type="submit" />
     </form>

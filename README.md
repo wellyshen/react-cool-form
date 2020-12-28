@@ -101,7 +101,7 @@ const App = () => {
 
 ✨ Pretty easy right? React Cool Form is more powerful than you think. Let's [explore it](https://react-cool-form.netlify.app)!
 
-## Milestone
+## To Do
 
 - [x] Core features
 - [x] Type definition
