@@ -13,47 +13,51 @@ const returnValues = useForm(config);
 
 An `object` with the following options:
 
-### `defaultValues`
+### defaultValues
+
+`Record<string, any> = {}`
+
+Default field values of the form. In most case (especially working with TypeScript), we should use it to initialize a field's value and use the [defaultValue/defaultChecked](https://reactjs.org/docs/uncontrolled-components.html#default-values) attribute for the case of [conditional fields](../examples/conditional-fields). The `defaultValues` also used to compare against the current values to calculate `isDirty` and `dirtyFields`.
+
+> 💡 The `defaultValues` is cached **at the first render** within the custom hook. If you want to [set it lazily](../examples/lazy-default-values) or reset it, you can use the [reset](#reset) API.
+
+### validateOnChange
 
 Coming soon...
 
-### `validateOnChange`
+### validateOnBlur
 
 Coming soon...
 
-### `validateOnBlur`
+### builtInValidationMode
 
 Coming soon...
 
-### `builtInValidationMode`
+### removeUnmountedField
 
 Coming soon...
 
-### `removeUnmountedField`
+### ignoreFields
 
 Coming soon...
 
-### `ignoreFields`
+### validate
 
 Coming soon...
 
-### `validate`
+### onSubmit
 
 Coming soon...
 
-### `onSubmit`
+### onError
 
 Coming soon...
 
-### `onError`
+### onReset
 
 Coming soon...
 
-### `onReset`
-
-Coming soon...
-
-### `debug`
+### debug
 
 Coming soon...
 
@@ -61,50 +65,54 @@ Coming soon...
 
 An `object` with the following methods:
 
-### `form`
+### form
+
+`React.MutableRefObject`
 
 A React [ref](https://reactjs.org/docs/hooks-reference.html#useref) that allows you to [integrate a form with React Cool Form](./../getting-started/integration-an-existing-form).
 
-### `field`
+### field
 
 Coming soon...
 
-### `getState`
+### getState
 
 Coming soon...
 
-### `setValues`
+### setValues
 
 Coming soon...
 
-### `setFieldValue`
+### setFieldValue
 
 Coming soon...
 
-### `setErrors`
+### setErrors
 
 Coming soon...
 
-### `setFieldError`
+### setFieldError
 
 Coming soon...
 
-### `validateForm`
+### validateForm
 
 Coming soon...
 
-### `validateField`
+### validateField
 
 Coming soon...
 
-### `submit`
+### submit
 
 Coming soon...
 
-### `reset`
+### reset
+
+`(values?: FormValues | PreviousValuesFn<FormValues> | null, exclude?: string[] | null, e?: Event) => void`
 
 Coming soon...
 
-### `controller`
+### controller
 
 Coming soon...
