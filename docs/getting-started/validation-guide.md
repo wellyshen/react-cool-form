@@ -32,7 +32,7 @@ const App = () => {
 };
 ```
 
-Some validation attributes such as [minLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/minlength), [maxLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/maxlength), [min](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/min), and [max](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/max) are designed to validate a field once it has been edited by the user. Therefore when [manually triggering](#manually-triggering-validation) these validations, use the [pattern](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern) attribute or custom validation instead.
+Some validation attributes such as [minLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/minlength), [maxLength](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/maxlength), [min](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/min), and [max](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/max) are designed to validate a field once it has been edited by the user. Therefore when [manually triggering](#manually-trigger-validation) these validations, use the [pattern](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern) attribute or custom validation instead.
 
 ```js
 <input name="password" type="password" required pattern=".{6,}" /> // 6 characters minimum
@@ -201,7 +201,7 @@ The `field` method can not only be used for validating but also for converting d
 />
 ```
 
-## Manually Triggering Validation
+## Manually Trigger Validation
 
 We can manually trigger built-in, field-level, and form-level validation with the [`validateField`](../api-reference/use-form#validatefield) and [`validateForm`](../api-reference/use-form#validateForm) methods respectively. Here I take form-level as an example:
 
@@ -262,7 +262,7 @@ const App = () => {
 
 ## When/How Does Validation Run?
 
-By default, React Cool Form runs all the validation methods as follows. You can tell React Cool Form when to run validation by changing the [validateOnChange](../api-reference/use-form#validateonchange) and/or [validateOnBlur](../api-reference/use-form#validateonblur) depends on your needs.
+By default, React Cool Form runs all the validation methods as follows. You can tell React Cool Form when to run them by changing the [validateOnChange](../api-reference/use-form#validateonchange) and/or [validateOnBlur](../api-reference/use-form#validateonblur) depends on your needs.
 
 ### When to Run
 
@@ -274,8 +274,8 @@ By default, React Cool Form runs all the validation methods as follows. You can 
 | `onBlur`                                                   | Individual | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
 | `onSubmit`                                                 | All        | Whenever a submission attempt is made.                                                                                     |
 | [`submit`](../api-reference/use-form#submit)               | All        | Whenever a submission attempt is made manually.                                                                            |
-| [`validateField`](../api-reference/use-form#validatefield) | Individual | Manually run validation for a single field.                                                                                |
-| [`validateForm`](../api-reference/use-form#validateform)   | All        | Manually run validation for the form.                                                                                      |
+| [`validateField`](../api-reference/use-form#validatefield) | Individual | Manually run validation for a single field.                                                                            |
+| [`validateForm`](../api-reference/use-form#validateform)   | All        | Manually run validation for the form.                                                                                  |
 
 ### How to Run
 
