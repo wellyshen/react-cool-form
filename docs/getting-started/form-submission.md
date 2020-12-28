@@ -79,7 +79,7 @@ Are there any errors?
 
 > 💡 Check the [Form State](./form-state#about-the-form-state) to learn more about it.
 
-## Manually Trigger Submission
+## Manually Triggering Submission
 
 For some reasons (e.g. design requirement, auto-retry etc.), we may need to trigger a submission manually. However, we can use the [submit](../api-reference/use-form#submit) method to achieve it.
 
