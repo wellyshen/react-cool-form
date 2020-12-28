@@ -33,7 +33,7 @@ function App() {
   return (
     <form ref={form} noValidate>
       <Group title="Single">
-        <Field label="RCF" id="single" name="single" type="checkbox" />
+        <Field label="😎" id="single" name="single" type="checkbox" />
       </Group>
       <Group title="Multitple" error={getState("errors.multiple")}>
         <Field
