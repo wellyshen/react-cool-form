@@ -5,13 +5,13 @@ import { useCallback, useEffect, useRef } from "react";
 import {
   Config,
   Controller,
-  Errors,
   FieldArgs,
   FieldElement,
   FieldRef,
   Fields,
   FieldValidator,
   FieldsValue,
+  FormErrors,
   FormState,
   FormValues,
   GetState,
@@ -437,7 +437,7 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const runAllFieldsValidation = useCallback((): Promise<Errors<V>> => {
+  const runAllFieldsValidation = useCallback((): Promise<FormErrors<V>> => {
     const promises = Object.keys(fieldValidatorsRef.current).map((name) =>
       runFieldValidation(name)
     );

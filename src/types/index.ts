@@ -8,12 +8,12 @@ type DeepProps<V, T = any> = {
   [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
 };
 
-export type Errors<V> = DeepProps<V>;
+export type FormErrors<V> = DeepProps<V>;
 
 export interface FormState<V> {
   values: V;
   touched: DeepProps<V, boolean>;
-  errors: Errors<V>;
+  errors: FormErrors<V>;
   isDirty: boolean;
   dirtyFields: DeepProps<V, boolean>;
   isValidating: boolean;
@@ -93,7 +93,7 @@ interface SubmitHandler<V> {
 
 interface ErrorHandler<V> {
   (
-    errors: Errors<V>,
+    errors: FormErrors<V>,
     options: Options<V>,
     event?: Event | SyntheticEvent<any>
   ): void;
@@ -104,7 +104,7 @@ export interface Debug<V> {
 }
 
 interface FormValidator<V> {
-  (values: V): Errors<V> | void | Promise<Errors<V> | void>;
+  (values: V): FormErrors<V> | void | Promise<FormErrors<V> | void>;
 }
 
 export interface FieldValidator<V> {
@@ -137,7 +137,9 @@ export interface GetState {
 
 export interface SetErrors<V> {
   (
-    errors?: Errors<V> | ((previousErrors: Errors<V>) => Errors<V> | undefined)
+    errors?:
+      | FormErrors<V>
+      | ((previousErrors: FormErrors<V>) => FormErrors<V> | undefined)
   ): void;
 }
 
@@ -173,7 +175,7 @@ export interface SetFieldValue {
 }
 
 export interface ValidateForm<V> {
-  (): Promise<Errors<V>>;
+  (): Promise<FormErrors<V>>;
 }
 
 export interface ValidateField {
@@ -189,7 +191,10 @@ export interface Reset<V> {
 }
 
 export interface Submit<V> {
-  (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
+  (event?: SyntheticEvent<any>): Promise<{
+    values?: V;
+    errors?: FormErrors<V>;
+  }>;
 }
 
 interface Parser {
