@@ -5,13 +5,13 @@ import { useCallback, useEffect, useRef } from "react";
 import {
   Config,
   Controller,
-  Errors,
   FieldArgs,
   FieldElement,
   FieldRef,
   Fields,
   FieldValidator,
   FieldsValue,
+  FormErrors,
   FormState,
   FormValues,
   GetState,
@@ -312,13 +312,19 @@ export default <V extends FormValues = FormValues>({
 
   const getState = useCallback<GetState>(
     (path, { target, watch = true, filterUntouchedError = true } = {}) => {
+      if (!path) return undefined;
+
       const getPath = (path: string) => {
         if (path === "values" && !target && watch)
           warn(
             '💡 react-cool-form > getState: Get the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
           );
 
-        return target ? `${target}.${path}` : path;
+        path = target ? `${target}.${path}` : path;
+
+        if (watch) setUsedStateRef(path);
+
+        return path;
       };
       const errorsEnhancer = (path: string, state: any) => {
         if (
@@ -340,20 +346,17 @@ export default <V extends FormValues = FormValues>({
       if (Array.isArray(path)) {
         state = path.map((path) => {
           path = getPath(path);
-          if (watch) setUsedStateRef(path);
           return errorsEnhancer(path, get(stateRef.current, path));
         });
       } else if (isPlainObject(path)) {
         const paths = path as Record<string, string>;
         state = Object.keys(paths).reduce((state: Record<string, any>, key) => {
           path = getPath(paths[key]);
-          if (watch) setUsedStateRef(path);
           state[key] = errorsEnhancer(path, get(stateRef.current, path));
           return state;
         }, {});
       } else {
         path = getPath(path);
-        if (watch) setUsedStateRef(path);
         state = errorsEnhancer(path, get(stateRef.current, path));
       }
 
@@ -434,7 +437,7 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const runAllFieldsValidation = useCallback((): Promise<Errors<V>> => {
+  const runAllFieldsValidation = useCallback((): Promise<FormErrors<V>> => {
     const promises = Object.keys(fieldValidatorsRef.current).map((name) =>
       runFieldValidation(name)
     );

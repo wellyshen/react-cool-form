@@ -2,4 +2,4 @@
 "react-cool-form": patch
 ---
 
-Fix(useForm): fix variable typo
+Refactor(types): re-order types

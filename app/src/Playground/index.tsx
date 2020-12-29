@@ -5,17 +5,20 @@ interface FormValues {
 }
 
 const defaultValues = {
-  t1: "form test",
+  t1: "",
 };
 
 const Playground = (): JSX.Element => {
-  const { form } = useForm<FormValues>({
+  const { form, getState } = useForm<FormValues>({
+    defaultValues,
     onSubmit: (values) => console.log("LOG ===> onSubmit", values),
   });
 
+  console.log("LOG ===> ", getState(""));
+
   return (
     <form ref={form} noValidate>
-      <input name="t1" defaultValue="field test" />
+      <input name="t1" />
       <input type="submit" />
     </form>
   );

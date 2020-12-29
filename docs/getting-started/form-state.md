@@ -38,8 +38,6 @@ React Cool Form provides a powerful method: [getState](../api-reference/use-form
 Due to the support of [complex form data](./complex-form-data), the `getState` method allows us to use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation) and [bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation to get the form state.
 
 ```js
-import { useForm } from "react-cool-form";
-
 const { getState } = useForm();
 
 // Returns { name: "Welly", orders: ["🍕", "🥤"] }
@@ -56,8 +54,6 @@ const pizza = getState("values.user.orders[0]");
 We can construct an array/object with multiple state-picks inside like the following example:
 
 ```js
-import { useForm } from "react-cool-form";
-
 const { getState } = useForm();
 
 // Array pick, re-renders the component when either "values.foo" or "values.bar" changes
@@ -81,11 +77,9 @@ const [foo, bar, baz] = getState(["foo", "bar", "baz"], { target: "values.nest" 
 
 ### Best Practices
 
-Every time we access a value from the form state via the `getState` method, it will watch the changes of the value and trigger re-renders only when necessary. Thus, there are some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
+Every time we access a value from the form state via the `getState` method, it will watch the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
 
 ```js
-import { useForm } from "react-cool-form";
-
 const { getState } = useForm();
 
 // 🙅🏻‍♀️ You can, but not recommended because it will cause the component to update on every value change
@@ -104,11 +98,9 @@ const [touched, dirtyFields] = getState(["touched", "dirtyFields"]);
 
 ### Reading the State
 
-If you just want to read the state's values without triggering re-renders, you can turn the **watch mode** off by setting the `watch` option to `false`.
+If you just want to read the state's values without triggering re-renders, you can disable the **watch mode** by setting the `watch` option to `false`.
 
 ```js {6}
-import { useForm } from "react-cool-form";
-
 const { getState } = useForm();
 
 const SomeHandler = () => {
@@ -125,8 +117,6 @@ Error messages are dependent on the form's validation (i.e. the `errors` object)
 > 💡 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
 
 ```js
-import { useForm } from "react-cool-form";
-
 const { getState } = useForm();
 
 // Current form state: { errors: { foo: "Required" }, touched: { foo: true } }

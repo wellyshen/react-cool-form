@@ -45,7 +45,7 @@ const App = () => {
   });
 
   return (
-    // We can use "noValidate" to turn off browser's interactive validation
+    // We can use "noValidate" to disable browser's interactive validation
     <form ref={form} noValidate>
       <Field label="First Name" id="first-name" name="firstName" />
       <Field label="Last Name" id="last-name" name="lastName" />
