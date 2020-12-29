@@ -312,6 +312,8 @@ export default <V extends FormValues = FormValues>({
 
   const getState = useCallback<GetState>(
     (path, { target, watch = true, filterUntouchedError = true } = {}) => {
+      if (!path) return undefined;
+
       const getPath = (path: string) => {
         if (path === "values" && !target && watch)
           warn(
@@ -320,7 +322,7 @@ export default <V extends FormValues = FormValues>({
 
         path = target ? `${target}.${path}` : path;
 
-        if (watch && path) setUsedStateRef(path);
+        if (watch) setUsedStateRef(path);
 
         return path;
       };
