@@ -117,7 +117,7 @@ Coming soon...
 
 ### reset
 
-`(values?: FormValues | PreviousValuesFn<FormValues> | null, exclude?: string[] | null, e?: Event) => void`
+`(values?: FormValues | ((prevValues: FormValues) => FormValues) | null, exclude?: string[] | null, e?: Event) => void`
 
 Coming soon...
 
