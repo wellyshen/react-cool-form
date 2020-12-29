@@ -59,25 +59,103 @@ Tell React Cool Form to run validations on `blur` events. Default is `true`.
 
 ### validate
 
-``
+`(values: FormValues) => FormErrors<FormValues> | void | Promise<FormErrors<FormValues> | void>`
 
-Coming soon...
+A synchronous/asynchronous function that is used for the [form-level validation](../getting-started/validation-guide#form-level-validation). It takes all the `values` of the form and returns any validation errors (or returns `undefined` if there's no error). The validation errors must be in the same shape as the values of the form.
 
 ### onSubmit
 
-Coming soon...
+`(values: FormValues, options: Options<FormValues>, e?: Event) => void | Promise<void>`
+
+The form submission handler that is called when the form is submitted (or when the [submit](#submit) method is called) and validated successfully. It takes the following arguments:
+
+```js
+const returnValues = useForm({
+  onSubmit: async (values, options, e) => {
+    const {
+      formState, // The current form state, don't mutate it directly
+      setValues,
+      setFieldValue,
+      setErrors,
+      setFieldError,
+      validateForm,
+      validateField,
+      submit,
+      reset,
+    } = options;
+
+    // ...
+  },
+});
+```
+
+Check the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### onError
 
-Coming soon...
+`(errors: FormErrors<FormValues>, options: Options<FormValues>, e?: Event) => void`
+
+The form error handler that is called when the form is submitted (or when the [submit](#submit) method is called) and validated failed. It takes the following arguments:
+
+```js
+const returnValues = useForm({
+  onError: (errors, options, e) => {
+    const {
+      formState, // The current form state, don't mutate it directly
+      setValues,
+      setFieldValue,
+      setErrors,
+      setFieldError,
+      validateForm,
+      validateField,
+      submit,
+      reset,
+    } = options;
+
+    // ...
+  },
+});
+```
+
+Check the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### onReset
 
-Coming soon...
+`(values: FormValues, options: Options<FormValues>, e?: Event) => void`
+
+The form reset handler that is called when the form is reset (or when the [reset](#reset) method is called). It takes the following arguments:
+
+```js
+const returnValues = useForm({
+  onReset: (values, options, e) => {
+    const {
+      formState, // The current form state, don't mutate it directly
+      setValues,
+      setFieldValue,
+      setErrors,
+      setFieldError,
+      validateForm,
+      validateField,
+      submit,
+      reset,
+    } = options;
+
+    // ...
+  },
+});
+```
+
+Check the [Reset Form](../getting-started/reset-form) to learn more.
 
 ### debug
 
-Coming soon...
+A callback for debugging that receives the form state. It's called on every state change.
+
+```js
+const returnValues = useForm({
+  debug: (formState) => console.log("Form State: ", formState),
+});
+```
 
 ## Return Values
 
