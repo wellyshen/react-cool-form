@@ -146,14 +146,6 @@ declare module "react-cool-form" {
     (value: any, values: V): any | Promise<any>;
   }
 
-  export interface ErrorHandler<V = FormValues> {
-    (
-      errors: FormErrors<V>,
-      options: Options<V>,
-      event?: Event | SyntheticEvent<any>
-    ): void;
-  }
-
   export interface ChangeHandler<E = any> {
     (event: E, value: any): void;
   }
@@ -172,6 +164,14 @@ declare module "react-cool-form" {
       options: Options<V>,
       event?: Event | SyntheticEvent<any>
     ): void | Promise<void>;
+  }
+
+  export interface ErrorHandler<V = FormValues> {
+    (
+      errors: FormErrors<V>,
+      options: Options<V>,
+      event?: Event | SyntheticEvent<any>
+    ): void;
   }
 
   export interface Controller<V = FormValues, E = any> {
