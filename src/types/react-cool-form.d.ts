@@ -5,7 +5,7 @@ declare module "react-cool-form" {
     [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
   };
 
-  type Errors<V> = DeepProps<V>;
+  type FormErrors<V> = DeepProps<V>;
 
   interface Options<V> {
     formState: FormState<V>;
@@ -52,7 +52,7 @@ declare module "react-cool-form" {
   }
 
   interface SetErrors<V> {
-    (errors?: Errors<V> | PreviousErrorsFn): void;
+    (errors?: FormErrors<V> | PreviousErrorsFn): void;
   }
 
   interface SetFieldError {
@@ -75,7 +75,7 @@ declare module "react-cool-form" {
   }
 
   interface ValidateForm<V> {
-    (): Promise<Errors<V>>;
+    (): Promise<FormErrors<V>>;
   }
 
   interface ValidateField {
@@ -91,7 +91,10 @@ declare module "react-cool-form" {
   }
 
   interface Submit<V> {
-    (event?: SyntheticEvent<any>): Promise<{ values?: V; errors?: Errors<V> }>;
+    (event?: SyntheticEvent<any>): Promise<{
+      values?: V;
+      errors?: FormErrors<V>;
+    }>;
   }
 
   export type FormValues = Record<string, any>;
@@ -99,7 +102,7 @@ declare module "react-cool-form" {
   export type FormState<V = FormValues> = Readonly<{
     values: V;
     touched: DeepProps<V, boolean>;
-    errors: Errors<V>;
+    errors: FormErrors<V>;
     isDirty: boolean;
     dirtyFields: DeepProps<V, boolean>;
     isValidating: boolean;
@@ -128,7 +131,7 @@ declare module "react-cool-form" {
   }
 
   export interface PreviousErrorsFn {
-    (previousErrors: Errors<V>): Errors<V> | undefined;
+    (previousErrors: FormErrors<V>): FormErrors<V> | undefined;
   }
 
   export interface PreviousErrorFn {
@@ -136,7 +139,7 @@ declare module "react-cool-form" {
   }
 
   export interface FormValidator<V = FormValues> {
-    (values: V): Errors<V> | void | Promise<Errors<V> | void>;
+    (values: V): FormErrors<V> | void | Promise<FormErrors<V> | void>;
   }
 
   export interface FieldValidator<V = FormValues> {
@@ -145,7 +148,7 @@ declare module "react-cool-form" {
 
   export interface ErrorHandler<V = FormValues> {
     (
-      errors: Errors<V>,
+      errors: FormErrors<V>,
       options: Options<V>,
       event?: Event | SyntheticEvent<any>
     ): void;
