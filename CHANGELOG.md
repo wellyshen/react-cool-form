@@ -1,5 +1,17 @@
 # react-cool-form
 
+## 0.0.96
+
+### Patch Changes
+
+- [`b3e2257`](https://github.com/wellyshen/react-cool-form/commit/b3e2257b494d0a626680711fe45ab7e99a1e4eb8) [#278](https://github.com/wellyshen/react-cool-form/pull/278) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(types): change `Errors` to `FormErrors`
+
+* [`cf0dc60`](https://github.com/wellyshen/react-cool-form/commit/cf0dc605645be5755840e4aa268a020b1394ff4a) [#276](https://github.com/wellyshen/react-cool-form/pull/276) Thanks [@wellyshen](https://github.com/wellyshen)! - Perf(useForm): avoid unnecessary re-renders when getting empty state
+
+- [`1600d0a`](https://github.com/wellyshen/react-cool-form/commit/1600d0acbaef9877654dc481022c5bae1bd26448) [#277](https://github.com/wellyshen/react-cool-form/pull/277) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): handle `getState` exception
+
+* [`cf4b645`](https://github.com/wellyshen/react-cool-form/commit/cf4b6451c63ec8dfb8275dec5759701829b8aed2) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(types): re-order types
+
 ## 0.0.95
 
 ### Patch Changes
