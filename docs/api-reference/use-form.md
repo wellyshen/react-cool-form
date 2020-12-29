@@ -33,9 +33,17 @@ Tell React Cool Form to ignore field(s) by passing in the `name` of the field. Y
 
 By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirtyFields`) of an unmounted field for us. However, we can set the `removeUnmountedField` to `false` to maintain the state. Check the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
 
+> 💡 If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) or [controller](#controller)'s target. We need to clear the related state by ourselves via `set`-related methods.
+
 ### builtInValidationMode
 
-Coming soon...
+`"message" | "state" | false`
+
+We can configure the [mode of the built-in validation](../getting-started/validation-guide#displaying-error-messages) as follows:
+
+- `"message"` (default): Returns [a localized message](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/validationMessage) that describes the validation constraints that the field does not satisfy (if any)
+- `"state"`: Returns the "key" of the invalid property of the [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) (if any)
+- `false`: Disable the [built-in validation](../getting-started/validation-guide#built-in-validation)
 
 ### validateOnChange
 
@@ -50,6 +58,8 @@ Tell React Cool Form to run validations on `change` events as well as the [setFi
 Tell React Cool Form to run validations on `blur` events. Default is `true`.
 
 ### validate
+
+``
 
 Coming soon...
 

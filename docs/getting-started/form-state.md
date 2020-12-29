@@ -104,7 +104,7 @@ const [touched, dirtyFields] = getState(["touched", "dirtyFields"]);
 
 ### Reading the State
 
-If you just want to read the state's values without triggering re-renders, you can turn the **watch mode** off by setting the `watch` option to `false`.
+If you just want to read the state's values without triggering re-renders, you can disable the **watch mode** by setting the `watch` option to `false`.
 
 ```js {6}
 import { useForm } from "react-cool-form";
