@@ -173,7 +173,9 @@ Coming soon...
 
 ### getState
 
-Coming soon...
+`(path: string | string[] | Record<string, string>, options?: { target?: string; watch?: boolean; filterUntouchedError?: boolean; }) => any`
+
+This method provides us a permanent way to use the [form state](../getting-started/form-state).
 
 ### setValues
 
