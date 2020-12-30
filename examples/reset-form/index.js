@@ -12,13 +12,10 @@ const Field = ({ label, id, ...rest }) => (
 );
 
 function App() {
-  const { form, reset } = useForm({
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
+  const { form } = useForm({
+    defaultValues: { firstName: "Welly", lastName: "Shen" },
+    onSubmit: (values, { reset }) => reset()
   });
-
-  React.useEffect(() => {
-    reset({ firstName: "Welly", lastName: "Shen" });
-  }, [reset]);
 
   return (
     <form ref={form}>
