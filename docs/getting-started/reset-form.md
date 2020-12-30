@@ -7,7 +7,7 @@ There're two common ways to reset all form data: [reset after form submission](#
 
 ## Reset After Form Submission
 
-We can use the [reset](../api-reference/use-form#reset) helper of the [onSubmit](../api-reference/use-form#onsubmit) handler to restores the form to its default values and clear/reset all the [related state](./form-state#about-the-form-state).
+We can use React Cool Form's [reset](../api-reference/use-form#reset) method (also available from the [onSubmit](../api-reference/use-form#onsubmit) handler) to restore the form to its default values and clear/reset all the [related state](./form-state#about-the-form-state) as well.
 
 [![Edit RCF - Reset Form](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-reset-form-uikxg?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -22,7 +22,7 @@ const Field = ({ label, id, ...rest }) => (
 );
 
 const App = () => {
-  const { form, reset } = useForm({
+  const { form } = useForm({
     defaultValues: { firstName: "Welly", lastName: "Shen" },
     onSubmit: (values, { reset }) => reset(),
   });
@@ -39,7 +39,24 @@ const App = () => {
 
 ## Reset Form Manually
 
-Coming soon...
+We can also lazily set (or update) the form's default values by the `reset` method.
+
+[![Edit RCF - Lazy Default Values](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-lazy-default-values-qxvlz?fontsize=14&hidenavigation=1&theme=dark)
+
+```js {8}
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const { form, reset } = useForm();
+
+  const someHandler = async () => {
+    const data = await fetchData();
+    reset(data);
+  };
+
+  return <form ref={form}>{/* ... */}</form>;
+};
+```
 
 ## Reset Button (not recommended)
 
