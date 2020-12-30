@@ -13,7 +13,7 @@ This is the most common case that we submit a form in React Cool Form.
 import { useForm } from "react-cool-form";
 
 // Synchronous submission
-const submitHandler = (values, options /* Useful state and methods */, e) => {
+const submitHandler = (values, options /* Useful helpers */, e) => {
   console.log("onSubmit: ", values);
 };
 
@@ -117,8 +117,7 @@ const App = () => {
         </button>
       </ActionBar>
       <form ref={form} noValidate>
-        <input name="username" required />
-        <input name="email" required />
+        {/* ... */}
       </form>
     </>
   );

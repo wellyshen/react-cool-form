@@ -19,6 +19,7 @@ module.exports = {
       "examples/validation-with-yup",
       "examples/validation-with-joi",
       "examples/form-submission",
+      "examples/reset-form",
       "examples/checkboxes",
       "examples/radio-group",
       "examples/conditional-fields",
