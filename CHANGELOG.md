@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.97
+
+### Patch Changes
+
+- [`fdd269c`](https://github.com/wellyshen/react-cool-form/commit/fdd269ca3e4caf91aea54cac708d0d8ab6bb8088) [#279](https://github.com/wellyshen/react-cool-form/pull/279) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): correc the type of `setFieldValue`
+
 ## 0.0.96
 
 ### Patch Changes
