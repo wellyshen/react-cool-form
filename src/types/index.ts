@@ -167,7 +167,7 @@ export interface SetValues<V> {
 export interface SetFieldValue {
   (
     name: string,
-    value: any | ((previousValue: any) => any),
+    value?: any | ((previousValue: any) => any),
     options?: {
       [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
     }

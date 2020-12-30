@@ -100,7 +100,7 @@ const [touched, dirtyFields] = getState(["touched", "dirtyFields"]);
 
 If you just want to read the state's values without triggering re-renders, you can disable the **watch mode** by setting the `watch` option to `false`.
 
-```js {6}
+```js {4}
 const { getState } = useForm();
 
 const SomeHandler = () => {

@@ -3,7 +3,7 @@ id: use-form
 title: useForm
 ---
 
-This is a custom React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook) that helps you with building forms. It takes `config` arguments and returns useful methods as follows.
+This is a custom React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook) that helps you with building forms. It takes `config` parameters and returns useful methods as follows.
 
 ```js
 const returnValues = useForm(config);
@@ -59,15 +59,15 @@ Tell React Cool Form to run validations on `blur` events. Default is `true`.
 
 ### validate
 
-`(values: FormValues) => FormErrors<FormValues> | void | Promise<FormErrors<FormValues> | void>`
+`(values: FormValues) => FormErrors | void | Promise<FormErrors | void>`
 
 A synchronous/asynchronous function that is used for the [form-level validation](../getting-started/validation-guide#form-level-validation). It takes all the `values` of the form and returns any validation errors (or returns `undefined` if there's no error). The validation errors must be in the same shape as the values of the form.
 
 ### onSubmit
 
-`(values: FormValues, options: Options<FormValues>, e?: Event) => void | Promise<void>`
+`(values: FormValues, options: Object, e?: Event) => void | Promise<void>`
 
-The form submission handler that is called when the form is submitted (or when the [submit](#submit) method is called) and validated successfully. It takes the following arguments:
+The form submission handler that is called when the form is submitted (or when the [submit](#submit) method is called) and validated successfully. It takes the following parameters:
 
 ```js
 const returnValues = useForm({
@@ -93,9 +93,9 @@ Check the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### onError
 
-`(errors: FormErrors<FormValues>, options: Options<FormValues>, e?: Event) => void`
+`(errors: FormErrors, options: Object, e?: Event) => void`
 
-The form error handler that is called when the form is submitted (or when the [submit](#submit) method is called) and validated failed. It takes the following arguments:
+The form error handler that is called when the form is submitted (or when the [submit](#submit) method is called) and validated failed. It takes the following parameters:
 
 ```js
 const returnValues = useForm({
@@ -121,9 +121,9 @@ Check the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### onReset
 
-`(values: FormValues, options: Options<FormValues>, e?: Event) => void`
+`(values: FormValues, options: Object, e?: Event) => void`
 
-The form reset handler that is called when the form is reset (or when the [reset](#reset) method is called). It takes the following arguments:
+The form reset handler that is called when the form is reset (or when the [reset](#reset) method is called). It takes the following parameters:
 
 ```js
 const returnValues = useForm({
@@ -163,35 +163,143 @@ An `object` with the following methods:
 
 ### form
 
-`React.MutableRefObject`
+`React.RefObject`
 
 A React [ref](https://reactjs.org/docs/hooks-reference.html#useref) that allows you to [integrate a form with React Cool Form](./../getting-started/integration-an-existing-form).
 
 ### field
 
-Coming soon...
+`(validateOrOptions: Function | Object) => Function`
+
+This method allows us to do [field-level validation](../getting-started/validation-guide#field-level-validation) and data type conversion via the `ref` attribute. For the data type conversion, React Cool Form supports the [valueAsNumber](https://www.w3.org/TR/2011/WD-html5-20110405/common-input-element-attributes.html#dom-input-valueasnumber), [valueAsDate](https://www.w3.org/TR/2011/WD-html5-20110405/common-input-element-attributes.html#dom-input-valueasdate), and custom parser.
+
+> 💡 For your convenience, the values of `<input type="number">` and `<input type="radio">` are converted to `number` by default.
+
+```js
+const { field } = useForm();
+
+<input
+  name="rcf"
+  type="date"
+  ref={field({
+    validate: (value, values /* Form values */) => !value.length && "Required",
+    valueAsNumber: true, // (Default = false) Returns a number representing the field's value if applicable, otherwise, returns "NaN"
+    valueAsDate: true, // (Default = false) Returns a Date object representing the field's value if applicable, otherwise, returns "null"
+    parse: (value) => customParser(value), // Returns whatever value you want through the callback
+  })}
+/>;
+```
+
+If you just want to validate the field, there's a shortcut for it:
+
+```js
+<input nam="rcf" ref={field((value) => !value.length && "Required")} />
+```
 
 ### getState
 
-`(path: string | string[] | Record<string, string>, options?: { target?: string; watch?: boolean; filterUntouchedError?: boolean; }) => any`
+`(path: string | string[] | Record<string, string>, options?: Object) => any`
 
-This method provides us a permanent way to use the [form state](../getting-started/form-state).
+This method provides us a performant way to use/read the form state. Check the [Form State](../getting-started/form-state) document to learn more.
 
 ### setValues
 
-Coming soon...
+`(values: FormValues | Function, options?: Object) => void`
+
+This method allows us to manually set the `values` of the [form state](../getting-started/form-state).
+
+```js
+const { setValues } = useForm();
+
+setValues(
+  { firstName: "Welly", lastName: "Shen" }, // It will replace the entire values object
+  {
+    shouldValidate: true, // (Default = "validateOnChange" option) Triggers form validation
+    touchedFields: ["firstName"], // Sets fields as touched by passing their names
+    // touchedFields: (allFieldNames) => allFieldNames, // A reverse way to set touched fields
+    dirtyFields: ["firstName"], // Sets fields as dirty by passing their names
+    // dirtyFields: (allFieldNames) => allFieldNames, // A reverse way to set dirty fields
+  }
+);
+
+// We can also pass a callback as the "values" parameter, similar to React's setState callback style
+setValues((prevValues) => ({ ...prevValues, firstName: "Bella" }));
+```
 
 ### setFieldValue
 
-Coming soon...
+`(name: string, value?: any | Function, options?: Object) => void`
+
+This method allows us to manually set/clear the value of a field. Useful for creating custom field change handlers.
+
+```js
+const { setFieldValue } = useForm();
+
+setFieldValue("fieldName", "value", {
+  shouldValidate: true, // (Default = "validateOnChange" option) Triggers field validation
+  shouldTouched: true, // (Default = true) Sets the field as touched
+  shouldDirty: true, // (Default = true) Sets the field as dirty
+});
+
+// We can also pass a callback as the "value" parameter, similar to React's setState callback style
+setFieldValue("fieldName", (prevValue) => prevValue++);
+```
+
+We can clear the value of a field by the following way:
+
+```js
+setFieldValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
+// or
+setFieldValue("fieldName", undefined);
+```
 
 ### setErrors
 
-Coming soon...
+`(errors?: FormErrors | Function) => void`
+
+This method allows us to manually set/clear the `errors` of the [form state](../getting-started/form-state).
+
+```js
+const { setErrors } = useForm();
+
+setErrors({ firstName: "Required", lastName: "Required" });
+
+// We can also pass a callback as the "errors" parameter, similar to React's setState callback style
+setErrors((prevErrors) => ({ ...prevErrors, firstName: "Required" }));
+```
+
+We can clear the `errors` of the form state by the following way:
+
+```js
+setErrors();
+// or
+setErrors(undefined); // Works with any falsy values
+```
 
 ### setFieldError
 
-Coming soon...
+`(name: string, error?: any | Function) => void`
+
+This method allows us to manually set/clear the error of a field. Useful for creating custom field error handlers.
+
+```js
+const { setFieldError } = useForm();
+
+setFieldError("fieldName", "Required");
+
+// We can also pass a callback as the "error" parameter, similar to React's setState callback style
+setFieldError("fieldName", (prevError) =>
+  prevError ? "Too short" : "Required"
+);
+```
+
+We can clear the error of a field by the following way:
+
+```js
+setFieldError("fieldName"); // The error will be unset: { fieldName: "Required" } → {}
+// or
+setFieldError("fieldName", undefined); // Works with any falsy values
+```
 
 ### validateForm
 
@@ -207,7 +315,7 @@ Coming soon...
 
 ### reset
 
-`(values?: FormValues | ((prevValues: FormValues) => FormValues) | null, exclude?: string[] | null, e?: Event) => void`
+`(values?: FormValues | Function | null, exclude?: string[] | null, e?: Event) => void`
 
 Coming soon...
 

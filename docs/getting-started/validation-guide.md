@@ -188,7 +188,7 @@ const App = () => {
 };
 ```
 
-The `field` method can not only be used for validating but also for converting data type. When they are used together, just tweak the code as below:
+The `field` method can not only be used for validating but also converting data type. When they are used together, just tweak the code as below:
 
 ```js
 <input

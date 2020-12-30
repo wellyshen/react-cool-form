@@ -44,7 +44,7 @@ declare module "react-cool-form" {
   interface SetFieldValue {
     (
       name: string,
-      value: any | PreviousValueFn,
+      value?: any | PreviousValueFn,
       options?: {
         [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
       }

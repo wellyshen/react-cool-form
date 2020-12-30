@@ -9,16 +9,14 @@ const defaultValues = {
 };
 
 const Playground = (): JSX.Element => {
-  const { form, getState } = useForm<FormValues>({
+  const { form, field } = useForm<FormValues>({
     defaultValues,
     onSubmit: (values) => console.log("LOG ===> onSubmit", values),
   });
 
-  console.log("LOG ===> ", getState(""));
-
   return (
     <form ref={form} noValidate>
-      <input name="t1" />
+      <input name="t1" type="date" ref={field({ valueAsDate: true })} />
       <input type="submit" />
     </form>
   );
