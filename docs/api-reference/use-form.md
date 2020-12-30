@@ -245,7 +245,7 @@ setFieldValue("fieldName", "value", {
 setFieldValue("fieldName", (prevValue) => prevValue++);
 ```
 
-We can clear the value of a field by the following way:
+We can clear the value of a field as the following way:
 
 ```js
 setFieldValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
@@ -268,7 +268,7 @@ setErrors({ firstName: "Required", lastName: "Required" });
 setErrors((prevErrors) => ({ ...prevErrors, firstName: "Required" }));
 ```
 
-We can clear the `errors` of the form state by the following way:
+We can clear the `errors` of the form state as the following way:
 
 ```js
 setErrors();
@@ -293,7 +293,7 @@ setFieldError("fieldName", (prevError) =>
 );
 ```
 
-We can clear the error of a field by the following way:
+We can clear the error of a field as the following way:
 
 ```js
 setFieldError("fieldName"); // The error will be unset: { fieldName: "Required" } → {}
