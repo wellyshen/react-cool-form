@@ -200,7 +200,7 @@ If you just want to validate the field, there's a shortcut for it:
 
 `(path: string | string[] | Record<string, string>, options?: Object) => any`
 
-This method provides us a performant way to use the form state. Check the [Form State](../getting-started/form-state) document to learn more.
+This method provides us a performant way to use/read the form state. Check the [Form State](../getting-started/form-state) document to learn more.
 
 ### setValues
 
@@ -230,7 +230,7 @@ setValues((prevValues) => ({ ...prevValues, firstName: "Bella" }));
 
 `(name: string, value?: any | Function, options?: Object) => void`
 
-This method allows us to manually set/unset the value of a field. Useful for creating custom field change handlers.
+This method allows us to manually set/clear the value of a field. Useful for creating custom field change handlers.
 
 ```js
 const { setFieldValue } = useForm();
@@ -245,13 +245,61 @@ setFieldValue("fieldName", "value", {
 setFieldValue("fieldName", (prevValue) => prevValue++);
 ```
 
+We can clear the value of a field by the following way:
+
+```js
+setFieldValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
+// or
+setFieldValue("fieldName", undefined);
+```
+
 ### setErrors
 
-Coming soon...
+`(errors?: FormErrors | Function) => void`
+
+This method allows us to manually set/clear the `errors` of the [form state](../getting-started/form-state).
+
+```js
+const { setErrors } = useForm();
+
+setErrors({ firstName: "Required", lastName: "Required" });
+
+// We can also pass a callback as the "errors" parameter, similar to React's setState callback style
+setErrors((prevErrors) => ({ ...prevErrors, firstName: "Required" }));
+```
+
+We can clear the `errors` of the form state by the following way:
+
+```js
+setErrors();
+// or
+setErrors(undefined); // Works with any falsy values
+```
 
 ### setFieldError
 
-Coming soon...
+`(name: string, error?: any | Function) => void`
+
+This method allows us to manually set/clear the error of a field. Useful for creating custom field error handlers.
+
+```js
+const { setFieldError } = useForm();
+
+setFieldError("fieldName", "Required");
+
+// We can also pass a callback as the "error" parameter, similar to React's setState callback style
+setFieldError("fieldName", (prevError) =>
+  prevError ? "Too short" : "Required"
+);
+```
+
+We can clear the error of a field by the following way:
+
+```js
+setFieldError("fieldName"); // The error will be unset: { fieldName: "Required" } → {}
+// or
+setFieldError("fieldName", undefined); // Works with any falsy values
+```
 
 ### validateForm
 
