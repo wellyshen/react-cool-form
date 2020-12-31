@@ -31,7 +31,7 @@ const features = [
     description: (
       <>
         Struggling with form structures? With React Cool Form{" "}
-        <Link to="/docs/getting-started/complex-form-data">nested fields</Link> API, you can
+        <Link to="/docs/getting-started/complex-structures">nested fields</Link> API, you can
         create complex form structures without hassle.
       </>
     ),

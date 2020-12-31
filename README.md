@@ -10,7 +10,7 @@ React hooks for forms state and validation, less code more performant.
 ## Features
 
 - 🎣 [Easy to use](https://react-cool-form.netlify.app/docs/getting-started/integration-an-existing-form), just a React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook).
-- 🗃 Manages [complex form data](https://react-cool-form.netlify.app/docs/getting-started/complex-form-data) without hassle.
+- 🗃 Manages [complex form data](https://react-cool-form.netlify.app/docs/getting-started/complex-structures) without hassle.
 - 🚦 Supports [built-in](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#built-in-validation), [form-level](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#form-level-validation), and [field-level](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#field-level-validation) validation.
 - 🚀 Highly performant, [minimizes the number of re-renders](https://react-cool-form.netlify.app#performance-matters) for you.
 - 🧱 Seamless integration with existing HTML form fields or [3rd-party UI libraries](https://react-cool-form.netlify.app/docs/getting-started/3rd-party-ui-libraries).
