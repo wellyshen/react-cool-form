@@ -13,7 +13,7 @@ const Field = ({ label, id, ...rest }) => (
 
 function App() {
   const { form, reset } = useForm({
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
+    onReset: (values) => console.log("onReset: ", values)
   });
 
   React.useEffect(() => {
