@@ -25,7 +25,8 @@ const App = () => {
   const { form } = useForm({
     defaultValues: { firstName: "Welly", lastName: "Shen" },
     onSubmit: (values, { reset }) => reset(),
-    onReset: (values) => console.log("onReset: ", values), // Triggered when the form is reset
+    onReset: (values, options /* Useful helpers */, e) =>
+      console.log("onReset: ", values), // Triggered on form reset
   });
 
   return (
@@ -50,7 +51,7 @@ import { useForm } from "react-cool-form";
 
 const App = () => {
   const { form, reset } = useForm({
-    onReset: (values) => console.log("onReset: ", values), // Triggered when the form is reset
+    onReset: (values, options, e) => console.log("onReset: ", values), // Triggered on form reset
   });
 
   useEffect(async () => {
@@ -82,7 +83,7 @@ import { useForm } from "react-cool-form";
 
 const App = () => {
   const { form, reset } = useForm({
-    onReset: (values) => console.log("onReset: ", values), // Triggered when the form is reset
+    onReset: (values, options, e) => console.log("onReset: ", values), // Triggered on form reset
   });
 
   return (
