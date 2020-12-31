@@ -1,0 +1,23 @@
+{
+  "name": "rcf-complex-structures",
+  "version": "0.0.0",
+  "description": "The complex structures example of RCF.",
+  "main": "index.js",
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-cool-form": "latest",
+    "react-dom": "^17.0.1",
+    "react-scripts": "^4.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
