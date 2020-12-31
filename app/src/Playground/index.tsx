@@ -1,4 +1,4 @@
-import { useForm } from "react-cool-form";
+import { useForm, unset } from "react-cool-form";
 
 interface FormValues {
   t1: string;
@@ -9,14 +9,13 @@ const defaultValues = {
 };
 
 const Playground = (): JSX.Element => {
-  const { form, field } = useForm<FormValues>({
-    defaultValues,
-    onSubmit: (values) => console.log("LOG ===> onSubmit", values),
-  });
+  const { form } = useForm<FormValues>();
+
+  console.log("LOG ===> ", unset({ a: { b: [1, 2, 3] } }, "a.b.2"));
 
   return (
     <form ref={form} noValidate>
-      <input name="t1" type="date" ref={field({ valueAsDate: true })} />
+      <input required data-rcf-ignore />
       <input type="submit" />
     </form>
   );

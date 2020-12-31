@@ -8,7 +8,7 @@ module.exports = {
       "getting-started/form-submission",
       "getting-started/reset-form",
       "getting-started/form-state",
-      "getting-started/complex-form-data",
+      "getting-started/complex-structures",
       "getting-started/3rd-party-ui-libraries",
     ],
     Examples: [

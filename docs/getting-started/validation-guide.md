@@ -42,7 +42,7 @@ Some validation attributes such as [minLength](https://developer.mozilla.org/en-
 
 The [validate](../api-reference/use-form#validate) option provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state#about-the-form-state)), which is useful to validate dependent fields at the same time.
 
-> 💡 Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex form data](./complex-form-data), we've provided a set of [utility functions](../api-reference/utility-functions) to help you get shit done 💩.
+> 💡 Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex structures](./complex-structures), we've provided a set of [utility functions](../api-reference/utility-functions) to help you get shit done 💩.
 
 [![Edit RCF - Form-level validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-form-level-validation-2if7r?fontsize=14&hidenavigation=1&theme=dark)
 

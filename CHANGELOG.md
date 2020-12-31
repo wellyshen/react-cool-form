@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.98
+
+### Patch Changes
+
+- [`abd1f39`](https://github.com/wellyshen/react-cool-form/commit/abd1f3979c8501af2d46bc89acca0402aa6acf35) [#285](https://github.com/wellyshen/react-cool-form/pull/285) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): skip warning for field with `data-rcf-ignore`
+
+* [`baf7fcf`](https://github.com/wellyshen/react-cool-form/commit/baf7fcf7a2ac238673dea27cc0508cfcd598b47d) [#284](https://github.com/wellyshen/react-cool-form/pull/284) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): unset nested array value
+
+- [`6bf0e46`](https://github.com/wellyshen/react-cool-form/commit/6bf0e46a7e19d9858a6ebd2788d40bfae08b88d3) [#283](https://github.com/wellyshen/react-cool-form/pull/283) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): do not count the `valid` key as error when use built-in validation with state mode
+
 ## 0.0.97
 
 ### Patch Changes

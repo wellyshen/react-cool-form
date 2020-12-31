@@ -1,6 +1,7 @@
 import cloneObject from "./cloneObject";
 import isObject from "./isObject";
 import isPlainObject from "./isPlainObject";
+import stringToPath from "./stringToPath";
 
 export default (
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -11,9 +12,7 @@ export default (
 ): any => {
   if (!isPlainObject(object)) throw new TypeError("Expected an object.");
 
-  const segs = String(path)
-    .split(/[.[\]]+/)
-    .filter(Boolean);
+  const segs = stringToPath(path);
   const newObject = immutable ? cloneObject(object) : object;
 
   segs.slice(0, -1).reduce((obj, key, idx) => {
