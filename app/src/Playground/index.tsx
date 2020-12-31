@@ -9,18 +9,13 @@ const defaultValues = {
 };
 
 const Playground = (): JSX.Element => {
-  const { form } = useForm<FormValues>({
-    defaultValues,
-    builtInValidationMode: "state",
-    onSubmit: (values) => console.log("LOG ===> onSubmit", values),
-    onError: (errors) => console.log("LOG ===> onError", errors),
-  });
+  const { form } = useForm<FormValues>();
 
   console.log("LOG ===> ", unset({ a: { b: [1, 2, 3] } }, "a.b.2"));
 
   return (
     <form ref={form} noValidate>
-      <input name="t1" required />
+      <input required data-rcf-ignore />
       <input type="submit" />
     </form>
   );
