@@ -22,6 +22,7 @@ module.exports = {
       "examples/reset-form",
       "examples/checkboxes",
       "examples/radio-group",
+      "examples/multi-select",
       "examples/conditional-fields",
       "examples/lazy-default-values",
     ],
