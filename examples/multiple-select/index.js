@@ -7,12 +7,12 @@ import "./styles.scss";
 function App() {
   const { form } = useForm({
     defaultValues: { frameworks: ["react"] },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
 
   return (
     <form ref={form}>
-      <label htmlFor="frameworks">{label}</label>
+      <label htmlFor="frameworks">Frameworks</label>
       <select id="frameworks" name="frameworks" multiple>
         <option value="react">React</option>
         <option value="vue">Vue</option>
