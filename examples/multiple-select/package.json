@@ -1,7 +1,7 @@
 {
-  "name": "rcf-multiple-select",
+  "name": "rcf-multi-select",
   "version": "0.0.0",
-  "description": "The multiple select example of RCF.",
+  "description": "The multi-select example of RCF.",
   "main": "index.js",
   "dependencies": {
     "react": "^17.0.1",
