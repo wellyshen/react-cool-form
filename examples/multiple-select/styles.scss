@@ -1,0 +1,31 @@
+body {
+  font-family: sans-serif;
+  background: #222;
+}
+
+form {
+  margin: 3rem auto 0;
+  width: 24rem;
+
+  label {
+    display: block;
+    color: #fff;
+  }
+
+  select {
+    margin: 0.5rem 0 1rem;
+    padding: 0.5rem;
+    width: inherit;
+    height: 2rem;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  input[type="submit"] {
+    height: 2.5rem;
+    font-size: 1rem;
+    background: #faa627;
+    cursor: pointer;
+  }
+}
