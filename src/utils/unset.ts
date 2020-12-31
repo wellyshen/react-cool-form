@@ -2,6 +2,7 @@ import cloneObject from "./cloneObject";
 import get from "./get";
 import isPlainObject from "./isPlainObject";
 import isUndefined from "./isUndefined";
+import stringToPath from "./stringToPath";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default (object: any, path: string, immutable = false): any => {
@@ -17,7 +18,7 @@ export default (object: any, path: string, immutable = false): any => {
   }
 
   if (!isUndefined(get(newObject, path))) {
-    const segs = path.split(".");
+    const segs = stringToPath(path);
     let last = segs.pop() as string;
 
     while (segs.length && segs[segs.length - 1].slice(-1) === "\\")

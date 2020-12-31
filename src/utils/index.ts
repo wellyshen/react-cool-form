@@ -22,5 +22,6 @@ export { default as isUndefined } from "./isUndefined";
 export { default as runWithLowPriority } from "./runWithLowPriority";
 export { default as set } from "./set";
 export { default as setTrueValues } from "./setTrueValues";
+export { default as stringToPath } from "./stringToPath";
 export { default as unset } from "./unset";
 export { default as warn } from "./warn";
