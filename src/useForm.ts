@@ -101,17 +101,21 @@ export default <V extends FormValues = FormValues>({
       Array.from(form.querySelectorAll("input,textarea,select"))
         .filter((element) => {
           const field = element as FieldElement;
-          const { type, name, dataset } = field;
+          const {
+            type,
+            name,
+            dataset: { rcfIgnore },
+          } = field;
 
           if (/image|submit|reset/.test(type)) return false;
-          if (!name) {
+          if (rcfIgnore && !name) {
             warn('💡 react-cool-form > field: Missing the "name" attribute.');
             return false;
           }
 
           return (
             controllersRef.current[name] ||
-            !(dataset.rcfIgnore || ignoreFieldsRef.current[name])
+            !(rcfIgnore || ignoreFieldsRef.current[name])
           );
         })
         .reduce((acc: Record<string, any>, cur) => {
