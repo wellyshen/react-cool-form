@@ -14,8 +14,8 @@ const Field = ({ label, id, ...rest }) => (
 function App() {
   const { form } = useForm({
     defaultValues: { firstName: "Welly", lastName: "Shen" },
-    onReset: (values) => console.log("onReset: ", values),
-    onSubmit: (values, { reset }) => reset()
+    onSubmit: (values, { reset }) => reset(),
+    onReset: (values) => console.log("onReset: ", values)
   });
 
   return (
