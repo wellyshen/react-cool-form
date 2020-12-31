@@ -317,7 +317,30 @@ Coming soon...
 
 `(values?: FormValues | Function | null, exclude?: string[] | null, e?: Event) => void`
 
-Coming soon...
+This method allows us to manually reset the form. It will restore the form to its default values as well as reset/clear all the [related state](../getting-started/form-state#about-the-form-state).
+
+- We can pass `values` as an optional parameter to update the default values.
+- We can pass `exclude` as an optional parameter to prevent specific state from reset.
+
+```js
+const { reset } = useForm({
+  defaultValues: { firstName: "", lastName: "" },
+  onReset: (values, options, e) => console.log("onReset: ", values), // Triggered when the form is reset
+});
+
+const handleFormReset = (e) => {
+  reset(
+    { firstName: "Welly", lastName: "Shen" }, // (Optional) Update the default values
+    ["isSubmitted", "submitCount"], // (Optional) Don't reset the "isSubmitted" and "submitCount" state
+    e // (Optional) Pass the event object to the "onReset" handler
+  );
+
+  // We can also pass a callback as the "values" parameter, similar to React's setState callback style
+  reset((prevValues) => ({ ...prevValues, firstName: "Bella" }));
+};
+```
+
+Check the [Reset Form](../getting-started/reset-form) to learn more.
 
 ### controller
 
