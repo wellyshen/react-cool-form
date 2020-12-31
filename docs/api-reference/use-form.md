@@ -153,7 +153,7 @@ A callback for debugging that receives the form state. It's called on every stat
 
 ```js
 const returnValues = useForm({
-  debug: (formState) => console.log("Form State: ", formState),
+  debug: (formState) => console.log("Debug: ", formState),
 });
 ```
 
@@ -303,15 +303,43 @@ setFieldError("fieldName", undefined); // Works with any falsy values
 
 ### validateForm
 
-Coming soon...
+`() => Promise<FormErrors>`
+
+This method allows us to manually run validation for the form, it returns the `errors` of the [form state](../getting-started/form-state#about-the-form-state). Check the [Validation Guide](../getting-started/validation-guide) document to learn more.
 
 ### validateField
 
-Coming soon...
+`(name: string) => Promise<any>`
+
+This method allows us to manually run validation for a single field, it returns an error if any. Check the [Validation Guide](../getting-started/validation-guide) document to learn more.
 
 ### submit
 
-Coming soon...
+`(e?: Event) => Promise<{ values?: FormValues, errors?: FormErrors }>`
+
+This method allows us to manually submit the form, it returns a promise with the following results. Useful for meeting the needs of custom design.
+
+- Returns `errors` if there're any validation errors
+- Returns `values` if the form is validated successfully
+
+```js
+const { submit } = useForm({
+  onSubmit: (values, options, e) => console.log("onSubmit: ", values), // Triggered on form submit + valid
+  onError: (errors, options, e) => console.log("onError: ", errors), // Triggered on form submit + invalid
+});
+
+const handleFormSubmit = async (e) => {
+  const {} = await submit(e); // Pass the event object to the event handlers
+
+  if (errors) {
+    // Do something for invalid case
+  } else {
+    // Do something for valid case
+  }
+};
+```
+
+Check the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### reset
 
@@ -325,14 +353,14 @@ This method allows us to manually reset the form. It will restore the form to it
 ```js
 const { reset } = useForm({
   defaultValues: { firstName: "", lastName: "" },
-  onReset: (values, options, e) => console.log("onReset: ", values), // Triggered when the form is reset
+  onReset: (values, options, e) => console.log("onReset: ", values), // Triggered on form reset
 });
 
 const handleFormReset = (e) => {
   reset(
-    { firstName: "Welly", lastName: "Shen" }, // (Optional) Update the default values
-    ["isSubmitted", "submitCount"], // (Optional) Don't reset the "isSubmitted" and "submitCount" state
-    e // (Optional) Pass the event object to the "onReset" handler
+    { firstName: "Welly", lastName: "Shen" }, // Update the default values
+    ["isSubmitted", "submitCount"], // Don't reset the "isSubmitted" and "submitCount" state
+    e // Pass the event object to the "onReset" handler
   );
 
   // We can also pass a callback as the "values" parameter, similar to React's setState callback style

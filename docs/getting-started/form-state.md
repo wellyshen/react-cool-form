@@ -89,7 +89,7 @@ const fooValue = getState("values.foo");
 
 // 🙆🏻‍♀️ It's OK, in most case the form's validation will be triggered less frequently
 const errors = getState("errors");
-// 🙆🏻‍♀️ But if there's a frequently triggered validation, get the target error instead
+// 🙆🏻‍♀️ But if a validation is triggered frequently, get the target error instead
 const fooError = getState("errors.foo");
 
 // 🙆🏻‍♀️ It's OK, they are triggered less frequently
