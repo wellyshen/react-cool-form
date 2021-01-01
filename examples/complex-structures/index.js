@@ -9,10 +9,10 @@ const FieldGroup = ({ name, onUpdate, onClear, ...rest }) => (
     <input name={name} placeholder={name} />
     <div>
       <button type="button" onClick={onUpdate}>
-        Update {name}
+        Update
       </button>
       <button type="button" onClick={onClear}>
-        Clear {name}
+        Clear
       </button>
     </div>
   </>
