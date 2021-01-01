@@ -1,21 +1,25 @@
-import { useForm, unset } from "react-cool-form";
+import { useForm } from "react-cool-form";
 
 interface FormValues {
-  t1: string;
+  foo: any;
 }
 
 const defaultValues = {
-  t1: "",
+  foo: [{ bar: "🍎" }],
 };
 
 const Playground = (): JSX.Element => {
-  const { form } = useForm<FormValues>();
-
-  console.log("LOG ===> ", unset({ a: { b: [1, 2, 3] } }, "a.b.2"));
+  const { form, setFieldValue } = useForm<FormValues>({
+    defaultValues,
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+  });
 
   return (
     <form ref={form} noValidate>
-      <input required data-rcf-ignore />
+      <input name="foo[0].bar" />
+      <button type="button" onClick={() => setFieldValue("foo[0].bar")}>
+        Clear
+      </button>
       <input type="submit" />
     </form>
   );
