@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.100
+
+### Patch Changes
+
+- [`f537695`](https://github.com/wellyshen/react-cool-form/commit/f53769513b8e221a379008d7b2c86f9e441682e8) [#288](https://github.com/wellyshen/react-cool-form/pull/288) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): can not clear field(s) due to the side-effect of caching paths
+
 ## 0.0.99
 
 ### Patch Changes
