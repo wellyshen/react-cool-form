@@ -22,6 +22,60 @@ With React Cool Form you can use [dot](https://developer.mozilla.org/en-US/docs/
 
 You can play around with the following example to get better understanding of how it works:
 
+[![Edit RCF - Complex Structures](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-complex-structures-4x4n1?fontsize=14&hidenavigation=1&theme=dark)
+
 ```js
-Coming soon...
+import { useForm } from "react-cool-form";
+
+const FieldGroup = ({ name, onUpdate, onClear, ...rest }) => (
+  <>
+    <input name={name} placeholder={name} />
+    <div>
+      <button type="button" onClick={onUpdate}>
+        Update
+      </button>
+      <button type="button" onClick={onClear}>
+        Clear
+      </button>
+    </div>
+  </>
+);
+
+const App = () => {
+  const { form, setFieldValue } = useForm({
+    defaultValues: {
+      foo: "",
+      bar: [],
+      baz: { nested: "" },
+      qux: [{ nested: "" }],
+    },
+    onSubmit: (values) => console.log("onSubmit: ", values),
+  });
+
+  return (
+    <form ref={form}>
+      <FieldGroup
+        name="foo"
+        onUpdate={() => setFieldValue("foo", "🍎")}
+        onClear={() => setFieldValue("foo")}
+      />
+      <FieldGroup
+        name="bar[0]"
+        onUpdate={() => setFieldValue("bar[0]", "🍋")}
+        onClear={() => setFieldValue("bar[0]")}
+      />
+      <FieldGroup
+        name="baz.nested"
+        onUpdate={() => setFieldValue("baz.nested", "🍉")}
+        onClear={() => setFieldValue("baz.nested")}
+      />
+      <FieldGroup
+        name="qux[0].nested"
+        onUpdate={() => setFieldValue("qux[0].nested", "🥝")}
+        onClear={() => setFieldValue("qux[0].nested")}
+      />
+      <input type="submit" />
+    </form>
+  );
+};
 ```
