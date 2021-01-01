@@ -242,7 +242,7 @@ setFieldValue("fieldName", "value", {
 });
 
 // We can also pass a callback as the "value" parameter, similar to React's setState callback style
-setFieldValue("fieldName", (prevValue) => prevValue++);
+setFieldValue("fieldName", (prevValue) => prevValue.splice(2, 0, "🍎"));
 ```
 
 We can clear the value of a field as the following way:
