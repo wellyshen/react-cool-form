@@ -3734,7 +3734,7 @@ eslint-config-prettier@^7.1.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-7.1.0.tgz#5402eb559aa94b894effd6bddfa0b1ca051c858f"
   integrity sha512-9sm5/PxaFG7qNJvJzTROMM1Bk1ozXVTKI0buKOyb0Bsr1hrwi0H/TzxF/COtf1uxikIK8SwhX7K6zg78jAzbeA==
 
-eslint-config-welly@^1.8.7:
+eslint-config-welly@^1.8.8:
   version "1.8.8"
   resolved "https://registry.yarnpkg.com/eslint-config-welly/-/eslint-config-welly-1.8.8.tgz#122685e4cad3ace65aec52e9f2623bae7ea8e712"
   integrity sha512-JgTs+rOuyEiiXVJF5WKsTv4eYu404Amqyqub1iQ9F1P2dJDUrd/1txMj7pT+5MidgYT6uBIgDgB4jrlUl5Hjuw==
