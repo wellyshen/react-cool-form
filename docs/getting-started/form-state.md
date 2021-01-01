@@ -8,7 +8,7 @@ Building highly performant forms is the duty of React Cool Form. It minimizes th
 - No unnecessary re-renders by leveraging the power of [uncontrolled components](https://reactjs.org/docs/uncontrolled-components.html)
 - No unnecessary re-renders when [using the form state](#using-the-form-state)
 - No unnecessary re-renders when receives the same form state (since last re-rendering)
-- [Filters the errors of untouched fields](#filters-untouched-field-errors) for better UX (refer the [theory](https://www.nngroup.com/articles/errors-forms-design-guidelines) at No.7)
+- [Filters the errors of untouched fields](#filters-untouched-field-errors) for better UX (refer to [theory](https://www.nngroup.com/articles/errors-forms-design-guidelines) at No.7)
 
 Here we will explore the form state and some [best practices for using it](#best-practices).
 
