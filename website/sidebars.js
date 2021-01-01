@@ -23,6 +23,7 @@ module.exports = {
       "examples/checkboxes",
       "examples/radio-group",
       "examples/multi-select",
+      "examples/complex-structures",
       "examples/conditional-fields",
       "examples/lazy-default-values",
     ],

@@ -4,26 +4,30 @@ body {
 }
 
 form {
-  margin: 5rem auto 0;
+  margin: 3rem auto 0;
   width: 24rem;
 
-  label {
-    display: block;
-    color: #fff;
-  }
-
   input,
-  select {
-    margin: 0.5rem 0 1rem;
+  button {
+    margin: 0.5rem 0;
     padding: 0.5rem;
     width: inherit;
+    height: 2rem;
     border: none;
     border-radius: 4px;
     box-sizing: border-box;
   }
 
-  select {
-    height: 6rem;
+  > div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    button {
+      width: 11.5rem;
+      background: #ccc;
+      cursor: pointer;
+    }
   }
 
   input[type="submit"] {
