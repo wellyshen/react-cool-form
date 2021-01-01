@@ -1,6 +1,6 @@
 {
   "name": "react-cool-form",
-  "version": "0.0.98",
+  "version": "0.0.99",
   "description": "React hooks for forms state and validation, less code more performant.",
   "license": "MIT",
   "homepage": "https://react-cool-form.netlify.app",
@@ -88,7 +88,7 @@
     "bundlesize2": "^0.0.26",
     "cpy-cli": "^3.1.1",
     "eslint": "^7.2.0",
-    "eslint-config-welly": "^1.8.7",
+    "eslint-config-welly": "^1.8.8",
     "husky": "^4.3.6",
     "jest": "^26.6.3",
     "lint-staged": "^10.5.3",

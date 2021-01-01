@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.99
+
+### Patch Changes
+
+- [`ad0fa46`](https://github.com/wellyshen/react-cool-form/commit/ad0fa462f0febe511416dee1f14cc77a3652001f) [#287](https://github.com/wellyshen/react-cool-form/pull/287) Thanks [@wellyshen](https://github.com/wellyshen)! - Perf(utils): cache converted pathes
+
 ## 0.0.98
 
 ### Patch Changes
