@@ -43,12 +43,12 @@ function App() {
       />
       <FieldGroup
         name="baz.a"
-        onUpdate={() => setFieldValue("baz.a", "🥝")}
+        onUpdate={() => setFieldValue("baz.a", "🍉")}
         onClear={() => setFieldValue("baz.a")}
       />
       <FieldGroup
         name="qux[0].a"
-        onUpdate={() => setFieldValue("qux[0].a", "🍉")}
+        onUpdate={() => setFieldValue("qux[0].a", "🥝")}
         onClear={() => setFieldValue("qux[0].a")}
       />
       <input type="submit" />
