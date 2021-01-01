@@ -3,19 +3,7 @@ import stringToPath from "../stringToPath";
 describe("stringToPath", () => {
   it("should throw error if input isn't a string", () => {
     // @ts-expect-error
-    expect(() => stringToPath(null)).toThrow(TypeError);
-    // @ts-expect-error
-    expect(() => stringToPath(true)).toThrow(TypeError);
-    // @ts-expect-error
-    expect(() => stringToPath(1)).toThrow(TypeError);
-    // @ts-expect-error
-    expect(() => stringToPath([])).toThrow(TypeError);
-    // @ts-expect-error
-    expect(() => stringToPath({})).toThrow(TypeError);
-    // @ts-expect-error
-    expect(() => stringToPath(() => null)).toThrow(TypeError);
-    // @ts-expect-error
-    expect(() => stringToPath(undefined)).toThrow(TypeError);
+    expect(() => stringToPath(["foo", "bar"])).toThrow(TypeError);
   });
 
   it("should return empty array when input is empty string", () => {

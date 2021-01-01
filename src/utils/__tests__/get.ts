@@ -1,28 +1,30 @@
 import get from "../get";
 
 describe("get", () => {
-  it("should work correctly", () => {
-    const obj = {
-      foo: "🍎",
-      bar: ["🍎", "🍎"],
-      baz: { nested: "🍎" },
-      qux: [{ nested: "🍎" }, { nested: "🍎" }],
-    };
-    expect(get(obj, "foo")).toBe(obj.foo);
-    expect(get(obj, "bar[0]")).toBe(obj.bar[0]);
-    expect(get(obj, "bar[1]")).toBe(obj.bar[1]);
-    expect(get(obj, "bar.0")).toBe(obj.bar[0]);
-    expect(get(obj, "bar.1")).toBe(obj.bar[1]);
-    expect(get(obj, "baz.nested")).toBe(obj.baz.nested);
-    expect(get(obj, "qux[0].nested")).toBe(obj.qux[0].nested);
-    expect(get(obj, "qux[1].nested")).toBe(obj.qux[1].nested);
-    expect(get(obj, "qux.0.nested")).toBe(obj.qux[0].nested);
-    expect(get(obj, "qux.1.nested")).toBe(obj.qux[1].nested);
-    expect(get(obj, "quux")).toBeUndefined();
-    expect(get(obj, "quux", "🍎")).toBe("🍎");
-    expect(get("", "foo")).toBeUndefined();
-    expect(get(0, "foo")).toBeUndefined();
+  it("should return default value when target isn't an object", () => {
     expect(get(null, "foo")).toBeUndefined();
+    expect(get(undefined, "foo")).toBeUndefined();
     expect(get(true, "foo")).toBeUndefined();
+    expect(get("", "foo")).toBeUndefined();
+    expect(get(1, "foo")).toBeUndefined();
+    expect(get([], "foo")).toBeUndefined();
+    expect(get(() => null, "foo")).toBeUndefined();
+  });
+
+  it("should return default value when path is invalid", () => {
+    // @ts-ignore
+    expect(get({}, null)).toBeUndefined();
+    // @ts-ignore
+    expect(get({}, undefined)).toBeUndefined();
+    expect(get({}, "")).toBeUndefined();
+  });
+
+  it("should get value by keys", () => {
+    expect(get({ foo: "🍎" }, "foo")).toBe("🍎");
+    expect(get({ foo: ["🍎"] }, "foo")).toEqual(["🍎"]);
+    expect(get({ foo: null }, "foo")).toBeNull();
+    expect(get({ foo: undefined }, "foo")).toBeUndefined();
+    expect(get({ foo: true }, "foo")).toBe(true);
+    expect(get({ foo: 1 }, "foo")).toBe(1);
   });
 });
