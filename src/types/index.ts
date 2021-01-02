@@ -80,14 +80,14 @@ interface Options<V> {
 }
 
 interface ResetHandler<V> {
-  (values: V, options: Options<V>, event?: Event | SyntheticEvent<any>): void;
+  (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
 }
 
 interface SubmitHandler<V> {
   (
     values: V,
     options: Options<V>,
-    event?: Event | SyntheticEvent<any>
+    event?: Event | SyntheticEvent
   ): void | Promise<void>;
 }
 
@@ -95,7 +95,7 @@ interface ErrorHandler<V> {
   (
     errors: FormErrors<V>,
     options: Options<V>,
-    event?: Event | SyntheticEvent<any>
+    event?: Event | SyntheticEvent
   ): void;
 }
 
@@ -186,12 +186,12 @@ export interface Reset<V> {
   (
     values?: ValuesArg<V> | null,
     exclude?: (keyof FormState<V>)[] | null,
-    event?: SyntheticEvent<any>
+    event?: SyntheticEvent
   ): void;
 }
 
 export interface Submit<V> {
-  (event?: SyntheticEvent<any>): Promise<{
+  (event?: SyntheticEvent): Promise<{
     values?: V;
     errors?: FormErrors<V>;
   }>;
@@ -215,13 +215,13 @@ export interface Controller<V, E = any> {
       parse?: Parser;
       format?: Formatter;
       onChange?: (event: E, value: any) => void;
-      onBlur?: (event: FocusEvent<any>) => void;
+      onBlur?: (event: FocusEvent) => void;
     }
   ): {
     name: string;
     value: any;
     onChange: (event: E) => void;
-    onBlur: (event: FocusEvent<any>) => void;
+    onBlur: (event: FocusEvent) => void;
   } | void;
 }
 

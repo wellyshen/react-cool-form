@@ -14,7 +14,7 @@ interface FormValues {
 const Playground = (): JSX.Element => {
   const { form, controller } = useForm<FormValues>({
     defaultValues: { age: "", slider: 0 },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+    onSubmit: (values, e) => alert(JSON.stringify(values, undefined, 2)),
   });
 
   const formatter: Formatter<number, number> = (value) => value / 2;
