@@ -206,7 +206,7 @@ declare module "react-cool-form" {
     validateOnChange: boolean;
     validateOnBlur: boolean;
     builtInValidationMode: "message" | "state" | false;
-    removeUnmountedField: boolean;
+    shouldRemoveField: boolean;
     ignoreFields: string[];
     onReset: ResetHandler<V>;
     onSubmit: SubmitHandler<V>;
