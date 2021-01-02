@@ -13,7 +13,7 @@ React hooks for forms state and validation, less code more performant.
 - 🗃 Manages [complex form data](https://react-cool-form.netlify.app/docs/getting-started/complex-structures) without hassle.
 - 🚦 Supports [built-in](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#built-in-validation), [form-level](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#form-level-validation), and [field-level](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#field-level-validation) validation.
 - 🚀 Highly performant, [minimizes the number of re-renders](https://react-cool-form.netlify.app#performance-matters) for you.
-- 🧱 Seamless integration with existing HTML form fields or [3rd-party UI libraries](https://react-cool-form.netlify.app/docs/getting-started/3rd-party-ui-libraries).
+- 🧱 Seamless integration with existing HTML form inputs or [3rd-party UI libraries](https://react-cool-form.netlify.app/docs/getting-started/3rd-party-ui-libraries).
 - 🎛 Super flexible [API](https://react-cool-form.netlify.app/docs/api-reference/use-form) design, built with [DX and UX](https://react-cool-form.netlify.app/docs) in mind.
 - 🔩 Provides useful [utility functions](https://react-cool-form.netlify.app/docs/api-reference/utility-functions) to boost forms development.
 - 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
