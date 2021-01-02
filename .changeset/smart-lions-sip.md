@@ -2,4 +2,4 @@
 "react-cool-form": patch
 ---
 
-Feat(useForm): rename `setValues`'s `touchedFelds` option to `touched`
+Feat(useForm): rename the option of `setValues` from `touchedFields` to `touched`
