@@ -1,21 +1,21 @@
 import isPlainObject from "./isPlainObject";
 
-const getIsDirty = (object: object): boolean => {
-  const search = (object: object, found: any[] = []) => {
+const getIsDirty = (dirty: object): boolean => {
+  const search = (dirty: object, found: any[] = []) => {
     // eslint-disable-next-line no-restricted-syntax
-    for (const obj of Object.values(object)) {
-      if (obj === true) {
-        found.push(obj);
+    for (const val of Object.values(dirty)) {
+      if (val === true) {
+        found.push(val);
         return found;
       }
 
-      if (isPlainObject(obj)) search(obj, found);
+      if (isPlainObject(val)) search(val, found);
     }
 
     return found;
   };
 
-  return !!search(object).length;
+  return !!search(dirty).length;
 };
 
 export default getIsDirty;
