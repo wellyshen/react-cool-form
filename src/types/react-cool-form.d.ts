@@ -34,7 +34,7 @@ declare module "react-cool-form" {
       options?: {
         shouldValidate?: boolean;
         touched?: string[] | FieldNamesFn;
-        dirtyFields?: string[] | FieldNamesFn;
+        dirty?: string[] | FieldNamesFn;
       }
     ): void;
   }
@@ -104,7 +104,7 @@ declare module "react-cool-form" {
     touched: DeepProps<V, boolean>;
     errors: FormErrors<V>;
     isDirty: boolean;
-    dirtyFields: DeepProps<V, boolean>;
+    dirty: DeepProps<V, boolean>;
     isValidating: boolean;
     isValid: boolean;
     isSubmitting: boolean;

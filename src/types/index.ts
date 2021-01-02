@@ -15,7 +15,7 @@ export interface FormState<V> {
   touched: DeepProps<V, boolean>;
   errors: FormErrors<V>;
   isDirty: boolean;
-  dirtyFields: DeepProps<V, boolean>;
+  dirty: DeepProps<V, boolean>;
   isValidating: boolean;
   isValid: boolean;
   isSubmitting: boolean;
@@ -159,7 +159,7 @@ export interface SetValues<V> {
     options?: {
       shouldValidate?: boolean;
       touched?: string[] | FieldNamesFn;
-      dirtyFields?: string[] | FieldNamesFn;
+      dirty?: string[] | FieldNamesFn;
     }
   ): void;
 }

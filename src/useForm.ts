@@ -84,7 +84,7 @@ export default <V extends FormValues = FormValues>({
     touched: {},
     errors: {},
     isDirty: false,
-    dirtyFields: {},
+    dirty: {},
     isValidating: false,
     isValid: true,
     isSubmitting: false,
@@ -545,12 +545,12 @@ export default <V extends FormValues = FormValues>({
         get(stateRef.current.values, name) !==
         get(initialStateRef.current.values, name)
       ) {
-        setStateRef(`dirtyFields.${name}`, true);
+        setStateRef(`dirty.${name}`, true);
       } else {
         handleUnset(
-          "dirtyFields",
-          `dirtyFields.${name}`,
-          stateRef.current.dirtyFields,
+          "dirty",
+          `dirty.${name}`,
+          stateRef.current.dirty,
           name
         );
       }
@@ -582,7 +582,7 @@ export default <V extends FormValues = FormValues>({
       {
         shouldValidate = validateOnChange,
         touched = [],
-        dirtyFields = [],
+        dirty = [],
       } = {}
     ) => {
       values = isFunction(values) ? values(stateRef.current.values) : values;
@@ -600,12 +600,12 @@ export default <V extends FormValues = FormValues>({
               : touched
           )
         );
-      if (dirtyFields.length)
+      if (dirty.length)
         setStateRef(
-          "dirtyFields",
+          "dirty",
           setTrueValues(
-            stateRef.current.dirtyFields,
-            isFunction(dirtyFields) ? dirtyFields(getFieldNames()) : dirtyFields
+            stateRef.current.dirty,
+            isFunction(dirty) ? dirty(getFieldNames()) : dirty
           )
         );
       if (shouldValidate) validateFormWithLowPriority();
@@ -894,9 +894,9 @@ export default <V extends FormValues = FormValues>({
             name
           );
           handleUnset(
-            "dirtyFields",
-            `dirtyFields.${name}`,
-            stateRef.current.dirtyFields,
+            "dirty",
+            `dirty.${name}`,
+            stateRef.current.dirty,
             name
           );
           handleUnset(

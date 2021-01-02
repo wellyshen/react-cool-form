@@ -22,7 +22,7 @@ Form state is an `object` containing the following values:
 | errors       | `object`  | The current validation errors. [The shape will (should) match the shape of the form's values](./validation-guide#how-to-run).                    |
 | touched      | `object`  | An object containing all the fields the user has touched/visited.                                                                                |
 | isDirty      | `boolean` | Returns `true` if the user modifies any of the fields. `false` otherwise.                                                                        |
-| dirtyFields  | `object`  | An object containing all the fields the user has modified.                                                                                       |
+| dirty  | `object`  | An object containing all the fields the user has modified.                                                                                       |
 | isValidating | `boolean` | Returns `true` if the form is currently being validated. `false` otherwise.                                                                      |
 | isValid      | `boolean` | Returns `true` if the form doesn't have any errors (i.e. the `errors` object is empty). `false` otherwise.                                       |
 | isSubmitting | `boolean` | Returns `true` if the form is currently being submitted. `false` if otherwise.                                                                   |
@@ -93,7 +93,7 @@ const errors = getState("errors");
 const fooError = getState("errors.foo");
 
 // 🙆🏻‍♀️ It's OK, they are triggered less frequently
-const [touched, dirtyFields] = getState(["touched", "dirtyFields"]);
+const [touched, dirty] = getState(["touched", "dirty"]);
 ```
 
 ### Reading the State
