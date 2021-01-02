@@ -198,10 +198,12 @@ export interface Submit<V> {
 }
 
 interface Parser {
-  (value: any): any;
+  (...args: any[]): any;
 }
 
-type Formatter = Parser;
+interface Formatter {
+  (value: any): any;
+}
 
 export interface Controller<V, E = any> {
   (

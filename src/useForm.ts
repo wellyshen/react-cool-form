@@ -789,13 +789,20 @@ export default <V extends FormValues = FormValues>({
       return {
         name,
         value,
-        onChange: (e) => {
-          const value =
-            e.nativeEvent instanceof Event && isFieldElement(e.target)
-              ? getNodeValue(name)
-              : e;
+        onChange: (...args) => {
+          const e = args[0];
+          let value;
 
-          handleChangeEvent(name, parse ? parse(value) : value);
+          if (parse) {
+            value = parse(...args);
+          } else {
+            value =
+              e.nativeEvent instanceof Event && isFieldElement(e.target)
+                ? getNodeValue(name)
+                : e;
+          }
+
+          handleChangeEvent(name, value);
           if (onChange) onChange(e, value);
           changedFieldRef.current = name;
         },
