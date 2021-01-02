@@ -581,7 +581,7 @@ export default <V extends FormValues = FormValues>({
       values,
       {
         shouldValidate = validateOnChange,
-        touchedFields = [],
+        touched = [],
         dirtyFields = [],
       } = {}
     ) => {
@@ -590,14 +590,14 @@ export default <V extends FormValues = FormValues>({
       setStateRef("values", values);
       setNodesOrStateValue(values);
 
-      if (touchedFields.length)
+      if (touched.length)
         setStateRef(
           "touched",
           setTrueValues(
             stateRef.current.touched,
-            isFunction(touchedFields)
-              ? touchedFields(getFieldNames())
-              : touchedFields
+            isFunction(touched)
+              ? touched(getFieldNames())
+              : touched
           )
         );
       if (dirtyFields.length)
