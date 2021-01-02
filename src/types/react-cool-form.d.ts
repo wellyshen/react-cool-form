@@ -5,8 +5,6 @@ declare module "react-cool-form" {
     [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
   };
 
-  type FormErrors<V> = DeepProps<V>;
-
   interface Options<V> {
     formState: FormState<V>;
     setErrors: SetErrors<V>;
@@ -52,7 +50,7 @@ declare module "react-cool-form" {
   }
 
   interface SetErrors<V> {
-    (errors?: FormErrors<V> | PreviousErrorsFn): void;
+    (errors?: FormErrors<V> | PreviousErrorsFn<FormErrors<V>>): void;
   }
 
   interface SetFieldError {
@@ -86,18 +84,20 @@ declare module "react-cool-form" {
     (
       values?: V | PreviousValuesFn<V> | null,
       exclude?: (keyof FormState<V>)[] | null,
-      event?: SyntheticEvent<any>
+      event?: SyntheticEvent
     ): void;
   }
 
   interface Submit<V> {
-    (event?: SyntheticEvent<any>): Promise<{
+    (event?: SyntheticEvent): Promise<{
       values?: V;
       errors?: FormErrors<V>;
     }>;
   }
 
   export type FormValues = Record<string, any>;
+
+  export type FormErrors<E = FormValues> = DeepProps<E>;
 
   export type FormState<V = FormValues> = Readonly<{
     values: V;
@@ -132,8 +132,8 @@ declare module "react-cool-form" {
     (previousValue: any): any;
   }
 
-  export interface PreviousErrorsFn {
-    (previousErrors: FormErrors<V>): FormErrors<V> | undefined;
+  export interface PreviousErrorsFn<E = FormErrors> {
+    (previousErrors: E): E | undefined;
   }
 
   export interface PreviousErrorFn {
@@ -153,18 +153,18 @@ declare module "react-cool-form" {
   }
 
   export interface BlurHandler {
-    (event: FocusEvent<any>): void;
+    (event: FocusEvent): void;
   }
 
   export interface ResetHandler<V = FormValues> {
-    (values: V, options: Options<V>, event?: Event | SyntheticEvent<any>): void;
+    (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
   }
 
   export interface SubmitHandler<V = FormValues> {
     (
       values: V,
       options: Options<V>,
-      event?: Event | SyntheticEvent<any>
+      event?: Event | SyntheticEvent
     ): void | Promise<void>;
   }
 
@@ -172,7 +172,7 @@ declare module "react-cool-form" {
     (
       errors: FormErrors<V>,
       options: Options<V>,
-      event?: Event | SyntheticEvent<any>
+      event?: Event | SyntheticEvent
     ): void;
   }
 
