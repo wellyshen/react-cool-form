@@ -217,8 +217,8 @@ setValues(
   { firstName: "Welly", lastName: "Shen" }, // It will replace the entire values object
   {
     shouldValidate: true, // (Default = "validateOnChange" option) Triggers form validation
-    touchedFields: ["firstName"], // Sets fields as touched by passing their names
-    // touchedFields: (allFieldNames) => allFieldNames, // A reverse way to set touched fields
+    touched: ["firstName"], // Sets fields as touched by passing their names
+    // touched: (allFieldNames) => allFieldNames, // A reverse way to set touched fields
     dirtyFields: ["firstName"], // Sets fields as dirty by passing their names
     // dirtyFields: (allFieldNames) => allFieldNames, // A reverse way to set dirty fields
   }

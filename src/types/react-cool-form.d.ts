@@ -33,7 +33,7 @@ declare module "react-cool-form" {
       values: V | PreviousValuesFn<V>,
       options?: {
         shouldValidate?: boolean;
-        touchedFields?: string[] | FieldNamesFn;
+        touched?: string[] | FieldNamesFn;
         dirtyFields?: string[] | FieldNamesFn;
       }
     ): void;
