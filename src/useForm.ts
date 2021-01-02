@@ -59,7 +59,7 @@ export default <V extends FormValues = FormValues>({
   validateOnChange = true,
   validateOnBlur = true,
   builtInValidationMode = "message",
-  removeUnmountedField = true,
+  shouldRemoveField = true,
   ignoreFields = [],
   onReset,
   onSubmit,
@@ -877,7 +877,7 @@ export default <V extends FormValues = FormValues>({
       const fields = getFields(form);
       let { values } = stateRef.current;
 
-      if (removeUnmountedField)
+      if (shouldRemoveField)
         Object.keys(fieldsRef.current).forEach((name) => {
           if (fields[name]) return;
 
@@ -947,7 +947,7 @@ export default <V extends FormValues = FormValues>({
     getNodeValue,
     handleChangeEvent,
     handleUnset,
-    removeUnmountedField,
+    shouldRemoveField,
     reset,
     setFieldTouchedMaybeValidate,
     setNodesOrStateValue,
