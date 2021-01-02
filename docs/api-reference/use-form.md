@@ -27,6 +27,8 @@ Default field values of the form. In most case (especially working with TypeScri
 
 Tell React Cool Form to ignore field(s) by passing in the `name` of the field. You can also ignore a field via the pre-defined `data-rcf-ignore` attribute. Check the [Ignore Fields](../getting-started/integration-an-existing-form#ignore-fields) to learn more.
 
+> 💡 The `ignoreFields` and `data-rcf-ignore` won't affect the operation of the [controller](#controller).
+
 ### removeUnmountedField
 
 `boolean`
