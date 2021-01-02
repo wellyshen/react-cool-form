@@ -1,4 +1,5 @@
-import { useForm, Parser, Formatter } from "react-cool-form";
+import { useForm, Parser } from "react-cool-form";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   FormControl,
   InputLabel,
@@ -11,17 +12,23 @@ interface FormValues {
   slider: any;
 }
 
+const useStyles = makeStyles({
+  root: {
+    width: 200,
+  },
+});
+
 const Playground = (): JSX.Element => {
+  const classes = useStyles();
   const { form, controller } = useForm<FormValues>({
     defaultValues: { age: "", slider: 0 },
     onSubmit: (values, e) => alert(JSON.stringify(values, undefined, 2)),
   });
 
-  const formatter: Formatter<number, number> = (value) => value / 2;
-  const parser: Parser<[Event, number], number> = (e, value) => value * 2;
+  const parser: Parser<[Event, number], number> = (e, value) => value;
 
   return (
-    <form ref={form} noValidate>
+    <form ref={form} noValidate className={classes.root}>
       {/* <div>
         <FormControl>
           <InputLabel id="age-native-helper">Age</InputLabel>
@@ -38,17 +45,15 @@ const Playground = (): JSX.Element => {
           </NativeSelect>
         </FormControl>
       </div> */}
-      {/* <div>
+      <div>
         <Slider
           {...controller("slider", {
-            format: formatter,
             parse: parser,
-            onChange: (e, value) => console.log("LOG ===> onChange: ", value),
+            // onChange: (e, value) => console.log("LOG ===> onChange: ", e),
           })}
           aria-labelledby="continuous-slider"
         />
-      </div> */}
-      <input type="range" {...controller("slider")} />
+      </div>
       <input type="submit" />
     </form>
   );
