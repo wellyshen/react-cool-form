@@ -73,7 +73,7 @@ const features = [
     description: (
       <>
         Intuitive and flexible <Link to="/docs/api-reference/use-form">API</Link> design,
-        provides a seamless way to integration with existing HTML form fields or{" "}
+        provides a seamless way to integration with existing HTML form inputs or{" "}
         <Link to="/docs/getting-started/3rd-party-ui-libraries">3rd-party UI libraries</Link>.
       </>
     ),
