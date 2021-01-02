@@ -15,7 +15,7 @@ export interface FormState<V> {
   touched: DeepProps<V, boolean>;
   errors: FormErrors<V>;
   isDirty: boolean;
-  dirtyFields: DeepProps<V, boolean>;
+  dirty: DeepProps<V, boolean>;
   isValidating: boolean;
   isValid: boolean;
   isSubmitting: boolean;
@@ -80,14 +80,14 @@ interface Options<V> {
 }
 
 interface ResetHandler<V> {
-  (values: V, options: Options<V>, event?: Event | SyntheticEvent<any>): void;
+  (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
 }
 
 interface SubmitHandler<V> {
   (
     values: V,
     options: Options<V>,
-    event?: Event | SyntheticEvent<any>
+    event?: Event | SyntheticEvent
   ): void | Promise<void>;
 }
 
@@ -95,7 +95,7 @@ interface ErrorHandler<V> {
   (
     errors: FormErrors<V>,
     options: Options<V>,
-    event?: Event | SyntheticEvent<any>
+    event?: Event | SyntheticEvent
   ): void;
 }
 
@@ -158,8 +158,8 @@ export interface SetValues<V> {
     values: ValuesArg<V>,
     options?: {
       shouldValidate?: boolean;
-      touchedFields?: string[] | FieldNamesFn;
-      dirtyFields?: string[] | FieldNamesFn;
+      touched?: string[] | FieldNamesFn;
+      dirty?: string[] | FieldNamesFn;
     }
   ): void;
 }
@@ -186,12 +186,12 @@ export interface Reset<V> {
   (
     values?: ValuesArg<V> | null,
     exclude?: (keyof FormState<V>)[] | null,
-    event?: SyntheticEvent<any>
+    event?: SyntheticEvent
   ): void;
 }
 
 export interface Submit<V> {
-  (event?: SyntheticEvent<any>): Promise<{
+  (event?: SyntheticEvent): Promise<{
     values?: V;
     errors?: FormErrors<V>;
   }>;
@@ -215,13 +215,13 @@ export interface Controller<V, E = any> {
       parse?: Parser;
       format?: Formatter;
       onChange?: (event: E, value: any) => void;
-      onBlur?: (event: FocusEvent<any>) => void;
+      onBlur?: (event: FocusEvent) => void;
     }
   ): {
     name: string;
     value: any;
     onChange: (event: E) => void;
-    onBlur: (event: FocusEvent<any>) => void;
+    onBlur: (event: FocusEvent) => void;
   } | void;
 }
 
@@ -231,7 +231,7 @@ export type Config<V> = Partial<{
   validateOnChange: boolean;
   validateOnBlur: boolean;
   builtInValidationMode: "message" | "state" | false;
-  removeUnmountedField: boolean;
+  shouldRemoveField: boolean;
   ignoreFields: string[];
   onReset: ResetHandler<V>;
   onSubmit: SubmitHandler<V>;

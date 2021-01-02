@@ -42,13 +42,13 @@ export default <V>(
         const state = set(stateRef.current, path, value, true);
         const {
           errors,
-          dirtyFields,
+          dirty,
           isDirty: prevIsDirty,
           isValid: prevIsValid,
         } = state;
         let { submitCount: prevSubmitCount } = state;
         const isDirty =
-          key === "dirtyFields" ? getIsDirty(dirtyFields) : prevIsDirty;
+          key === "dirty" ? getIsDirty(dirty) : prevIsDirty;
         const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
         const submitCount =
           key === "isSubmitting" && value

@@ -8,7 +8,7 @@ function App() {
   const { form } = useForm({
     defaultValues: { username: "", email: "" },
     // ignoreFields: ["more"], // You can also ignore the fields by this option
-    // removeUnmountedField: false, // To maintain the state of the unmouned fields (default = true)
+    // shouldRemoveField: false, // To maintain the state of the unmouned fields (default = true)
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const [toggle, setToggle] = useState(false);

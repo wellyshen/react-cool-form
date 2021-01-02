@@ -17,7 +17,7 @@ An `object` with the following options:
 
 `Record<string, any>`
 
-Default field values of the form. In most case (especially working with TypeScript), we should use it to initialize a field's value and use the [defaultValue/defaultChecked](https://reactjs.org/docs/uncontrolled-components.html#default-values) attribute for the case of [conditional fields](../examples/conditional-fields). The `defaultValues` also used to compare against the current values to calculate `isDirty` and `dirtyFields`.
+Default field values of the form. In most case (especially working with TypeScript), we should use it to initialize a field's value and use the [defaultValue/defaultChecked](https://reactjs.org/docs/uncontrolled-components.html#default-values) attribute for the case of [conditional fields](../examples/conditional-fields). The `defaultValues` also used to compare against the current values to calculate `isDirty` and `dirty`.
 
 > 💡 The `defaultValues` is cached **at the first render** within the custom hook. If you want to reset it or [lazily set it](../examples/lazy-default-values), you can use the [reset](#reset) method.
 
@@ -29,11 +29,11 @@ Tell React Cool Form to ignore field(s) by passing in the `name` of the field. Y
 
 > 💡 The `ignoreFields` and `data-rcf-ignore` won't affect the operation of the [controller](#controller).
 
-### removeUnmountedField
+### shouldRemoveField
 
 `boolean`
 
-By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirtyFields`) of an unmounted field for us. However, we can set the `removeUnmountedField` to `false` to maintain the state. Check the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
+By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirty`) of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. Check the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
 
 > 💡 If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) or [controller](#controller)'s target. We need to clear the related state by ourselves via `set`-related methods.
 
@@ -217,10 +217,10 @@ setValues(
   { firstName: "Welly", lastName: "Shen" }, // It will replace the entire values object
   {
     shouldValidate: true, // (Default = "validateOnChange" option) Triggers form validation
-    touchedFields: ["firstName"], // Sets fields as touched by passing their names
-    // touchedFields: (allFieldNames) => allFieldNames, // A reverse way to set touched fields
-    dirtyFields: ["firstName"], // Sets fields as dirty by passing their names
-    // dirtyFields: (allFieldNames) => allFieldNames, // A reverse way to set dirty fields
+    touched: ["firstName"], // Sets fields as touched by passing their names
+    // touched: (allFieldNames) => allFieldNames, // A reverse way to set touched fields
+    dirty: ["firstName"], // Sets fields as dirty by passing their names
+    // dirty: (allFieldNames) => allFieldNames, // A reverse way to set dirty fields
   }
 );
 

@@ -17,7 +17,7 @@ describe("useState", () => {
     values: { name: "Welly" },
     touched: {},
     errors: {},
-    dirtyFields: {},
+    dirty: {},
     isDirty: false,
     isValidating: false,
     isValid: true,
@@ -43,7 +43,7 @@ describe("useState", () => {
       touched: { name: true },
       errors: { name: "Required" },
       isDirty: true,
-      dirtyFields: { name: true },
+      dirty: { name: true },
       isValid: false,
       submitCount: 1,
     };
@@ -66,7 +66,7 @@ describe("useState", () => {
     setStateRef("values.name", name);
     setStateRef("touched.name", true);
     setStateRef("errors.name", error);
-    setStateRef("dirtyFields.name", true);
+    setStateRef("dirty.name", true);
     setStateRef("isValidating", isValidating);
     setStateRef("isSubmitting", isSubmitting);
     setStateRef("isSubmitted", isSubmitted);
@@ -76,7 +76,7 @@ describe("useState", () => {
       touched: { name: true },
       errors: { name: error },
       isDirty: true,
-      dirtyFields: { name: true },
+      dirty: { name: true },
       isValidating,
       isValid: false,
       isSubmitting,
@@ -105,9 +105,9 @@ describe("useState", () => {
     setStateRef("errors.name", error);
     expect(forceUpdate).toHaveBeenCalledTimes(4);
 
-    setUsedStateRef("dirtyFields.name");
-    setStateRef("dirtyFields.name", true);
-    setStateRef("dirtyFields.name", true);
+    setUsedStateRef("dirty.name");
+    setStateRef("dirty.name", true);
+    setStateRef("dirty.name", true);
     expect(forceUpdate).toHaveBeenCalledTimes(5);
 
     const isValidating = true;
@@ -133,7 +133,7 @@ describe("useState", () => {
       touched: { name: true },
       errors: { name: error },
       isDirty: true,
-      dirtyFields: { name: true },
+      dirty: { name: true },
       isValidating,
       isValid: false,
       isSubmitting,
@@ -145,7 +145,7 @@ describe("useState", () => {
   it("should set state.isValid and state.isDirty without re-render", () => {
     const { setStateRef } = renderHelper();
     setStateRef("errors", { name: "Required" });
-    setStateRef("dirtyFields", { name: true });
+    setStateRef("dirty", { name: true });
     expect(forceUpdate).not.toHaveBeenCalled();
   });
 
@@ -158,8 +158,8 @@ describe("useState", () => {
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
     setUsedStateRef("isDirty");
-    setStateRef("dirtyFields", { name: true });
-    setStateRef("dirtyFields", { name: true });
+    setStateRef("dirty", { name: true });
+    setStateRef("dirty", { name: true });
     expect(forceUpdate).toHaveBeenCalledTimes(2);
   });
 
@@ -178,8 +178,8 @@ describe("useState", () => {
     setStateRef("errors.name", "Required");
     expect(forceUpdate).toHaveBeenCalledTimes(3);
 
-    setUsedStateRef("dirtyFields");
-    setStateRef("dirtyFields.name", true);
+    setUsedStateRef("dirty");
+    setStateRef("dirty.name", true);
     expect(forceUpdate).toHaveBeenCalledTimes(4);
   });
 
@@ -198,8 +198,8 @@ describe("useState", () => {
     setStateRef("errors", { name: "Required" });
     expect(forceUpdate).toHaveBeenCalledTimes(3);
 
-    setUsedStateRef("dirtyFields.name");
-    setStateRef("dirtyFields", { name: true });
+    setUsedStateRef("dirty.name");
+    setStateRef("dirty", { name: true });
     expect(forceUpdate).toHaveBeenCalledTimes(4);
   });
 

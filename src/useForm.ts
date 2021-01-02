@@ -59,7 +59,7 @@ export default <V extends FormValues = FormValues>({
   validateOnChange = true,
   validateOnBlur = true,
   builtInValidationMode = "message",
-  removeUnmountedField = true,
+  shouldRemoveField = true,
   ignoreFields = [],
   onReset,
   onSubmit,
@@ -84,7 +84,7 @@ export default <V extends FormValues = FormValues>({
     touched: {},
     errors: {},
     isDirty: false,
-    dirtyFields: {},
+    dirty: {},
     isValidating: false,
     isValid: true,
     isSubmitting: false,
@@ -545,12 +545,12 @@ export default <V extends FormValues = FormValues>({
         get(stateRef.current.values, name) !==
         get(initialStateRef.current.values, name)
       ) {
-        setStateRef(`dirtyFields.${name}`, true);
+        setStateRef(`dirty.${name}`, true);
       } else {
         handleUnset(
-          "dirtyFields",
-          `dirtyFields.${name}`,
-          stateRef.current.dirtyFields,
+          "dirty",
+          `dirty.${name}`,
+          stateRef.current.dirty,
           name
         );
       }
@@ -581,8 +581,8 @@ export default <V extends FormValues = FormValues>({
       values,
       {
         shouldValidate = validateOnChange,
-        touchedFields = [],
-        dirtyFields = [],
+        touched = [],
+        dirty = [],
       } = {}
     ) => {
       values = isFunction(values) ? values(stateRef.current.values) : values;
@@ -590,22 +590,22 @@ export default <V extends FormValues = FormValues>({
       setStateRef("values", values);
       setNodesOrStateValue(values);
 
-      if (touchedFields.length)
+      if (touched.length)
         setStateRef(
           "touched",
           setTrueValues(
             stateRef.current.touched,
-            isFunction(touchedFields)
-              ? touchedFields(getFieldNames())
-              : touchedFields
+            isFunction(touched)
+              ? touched(getFieldNames())
+              : touched
           )
         );
-      if (dirtyFields.length)
+      if (dirty.length)
         setStateRef(
-          "dirtyFields",
+          "dirty",
           setTrueValues(
-            stateRef.current.dirtyFields,
-            isFunction(dirtyFields) ? dirtyFields(getFieldNames()) : dirtyFields
+            stateRef.current.dirty,
+            isFunction(dirty) ? dirty(getFieldNames()) : dirty
           )
         );
       if (shouldValidate) validateFormWithLowPriority();
@@ -877,7 +877,7 @@ export default <V extends FormValues = FormValues>({
       const fields = getFields(form);
       let { values } = stateRef.current;
 
-      if (removeUnmountedField)
+      if (shouldRemoveField)
         Object.keys(fieldsRef.current).forEach((name) => {
           if (fields[name]) return;
 
@@ -894,9 +894,9 @@ export default <V extends FormValues = FormValues>({
             name
           );
           handleUnset(
-            "dirtyFields",
-            `dirtyFields.${name}`,
-            stateRef.current.dirtyFields,
+            "dirty",
+            `dirty.${name}`,
+            stateRef.current.dirty,
             name
           );
           handleUnset(
@@ -947,7 +947,7 @@ export default <V extends FormValues = FormValues>({
     getNodeValue,
     handleChangeEvent,
     handleUnset,
-    removeUnmountedField,
+    shouldRemoveField,
     reset,
     setFieldTouchedMaybeValidate,
     setNodesOrStateValue,
