@@ -1,5 +1,23 @@
 # react-cool-form
 
+## 0.0.101
+
+### Patch Changes
+
+- [`9c1e7ce`](https://github.com/wellyshen/react-cool-form/commit/9c1e7ce72ba99bf7e3dc491034a346c1f35030c1) [#293](https://github.com/wellyshen/react-cool-form/pull/293) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(type): enhance types
+
+* [`569167b`](https://github.com/wellyshen/react-cool-form/commit/569167be2ffe61bacb5bf7c6d872db3b87f3d9f9) [#297](https://github.com/wellyshen/react-cool-form/pull/297) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(utils): `cloneObject` will not handle event object
+
+- [`e75aeb7`](https://github.com/wellyshen/react-cool-form/commit/e75aeb74c2a16b73fcbeb1e3486bf159776f5e5e) Thanks [@wellyshen](https://github.com/wellyshen)! - Docs(readme): update features
+
+* [`4399c18`](https://github.com/wellyshen/react-cool-form/commit/4399c1881f184af36cc163f22c12f014d668525b) [#296](https://github.com/wellyshen/react-cool-form/pull/296) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): rename `dirtyFields` state and option to `dirty`
+
+- [`0901fc3`](https://github.com/wellyshen/react-cool-form/commit/0901fc31482f8197b200c444fac18080946ef447) [#291](https://github.com/wellyshen/react-cool-form/pull/291) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): adjust the `parse` and `onChange` APIs of the `controller` method
+
+* [`5000470`](https://github.com/wellyshen/react-cool-form/commit/5000470f7ff57bf995cd121ee6c2614cb634ba11) [#295](https://github.com/wellyshen/react-cool-form/pull/295) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): rename the option of `setValues` from `touchedFields` to `touched`
+
+- [`e1cd135`](https://github.com/wellyshen/react-cool-form/commit/e1cd135ccc90fba025caf6bb49712c3afe5bc644) [#294](https://github.com/wellyshen/react-cool-form/pull/294) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): rename `removeUnmountedField` to `shouldRemoveField`
+
 ## 0.0.100
 
 ### Patch Changes
