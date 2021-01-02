@@ -112,11 +112,13 @@ declare module "react-cool-form" {
     submitCount: number;
   }>;
 
-  export interface Parser<V = any, R = any> {
-    (value: V): R;
+  export interface Parser<A = any[], R = any> {
+    (...args: A): R;
   }
 
-  export type Formatter<V = any, R = any> = Parser<V, R>;
+  export interface Formatter<V = any, R = any> {
+    (value: V): R;
+  }
 
   export interface FieldNamesFn {
     (fieldNames: string[]): string[];
