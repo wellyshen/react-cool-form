@@ -374,4 +374,6 @@ Check the [Reset Form](../getting-started/reset-form) to learn more.
 
 ### controller
 
+`(name: string, options?: Object) => { name: string, value: any, onChange: Function, onBlur: Function }`
+
 Coming soon...
