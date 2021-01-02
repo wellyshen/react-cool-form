@@ -1,4 +1,4 @@
-import { useForm } from "react-cool-form";
+import { useForm, Parser, Formatter } from "react-cool-form";
 import {
   FormControl,
   InputLabel,
@@ -17,9 +17,12 @@ const Playground = (): JSX.Element => {
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
   });
 
+  const formatter: Formatter<number, number> = (value) => value / 2;
+  const parser: Parser<[Event, number], number> = (e, value) => value * 2;
+
   return (
     <form ref={form} noValidate>
-      <div>
+      {/* <div>
         <FormControl>
           <InputLabel id="age-native-helper">Age</InputLabel>
           <NativeSelect
@@ -34,10 +37,18 @@ const Playground = (): JSX.Element => {
             <option value={30}>30</option>
           </NativeSelect>
         </FormControl>
-      </div>
-      <div>
-        <Slider {...controller("slider")} aria-labelledby="continuous-slider" />
-      </div>
+      </div> */}
+      {/* <div>
+        <Slider
+          {...controller("slider", {
+            format: formatter,
+            parse: parser,
+            onChange: (e, value) => console.log("LOG ===> onChange: ", value),
+          })}
+          aria-labelledby="continuous-slider"
+        />
+      </div> */}
+      <input type="range" {...controller("slider")} />
       <input type="submit" />
     </form>
   );
