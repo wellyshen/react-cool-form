@@ -1,50 +1,36 @@
 import React from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
+import Select from "react-select";
 
 import "./styles.scss";
 
-const Field = ({ label, id, ...rest }) => (
-  <div>
-    <label htmlFor={id}>{label}</label>
-    <input id={id} {...rest} />
-  </div>
-);
-
-const Select = ({ label, id, children, ...rest }) => (
-  <div>
-    <label htmlFor={id}>{label}</label>
-    <select id={id} {...rest}>
-      {children}
-    </select>
-  </div>
-);
-
-const Textarea = ({ label, id, ...rest }) => (
-  <div>
-    <label htmlFor={id}>{label}</label>
-    <textarea id={id} {...rest} />
-  </div>
-);
+const options = [
+  { label: "React", value: "react" },
+  { label: "Vue", value: "vue" },
+  { label: "Angular", value: "angular" },
+  { label: "Svelte", value: "svelte" }
+];
 
 function App() {
-  const { form } = useForm({
-    defaultValues: { firstName: "", lastName: "", framework: "", message: "" },
+  const { form, controller } = useForm({
+    defaultValues: { framework: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
 
   return (
     <form ref={form}>
-      <Field label="First Name" id="first-name" name="firstName" />
-      <Field label="Last Name" id="last-name" name="lastName" />
-      <Select label="Framework" id="framework" name="framework">
-        <option value="">I'm interesting in...</option>
-        <option value="react">React</option>
-        <option value="vue">Vue</option>
-        <option value="angular">Angular</option>
-        <option value="svelte">Svelte</option>
-      </Select>
-      <Textarea label="Message" id="message" name="message" />
+      <Select
+        {...controller("framework", {
+          // Parse the "option.value" and store it into the form's values
+          parse: ({ value }) => value,
+          // react-select's value prop receives the "option" object
+          // So we need to format it back
+          format: (val) => options.find(({ value }) => value === val)
+        })}
+        options={options}
+        placeholder="I'm interesting in..."
+      />
       <input type="submit" />
     </form>
   );

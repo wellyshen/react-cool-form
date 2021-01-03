@@ -4,39 +4,18 @@ body {
 }
 
 form {
-  margin: 3rem auto 0;
+  margin: 5rem auto 0;
   width: 24rem;
 
-  div {
+  input[type="submit"] {
+    margin-top: 1.5rem;
     width: inherit;
-    margin-bottom: 1rem;
-  }
-
-  label {
-    display: block;
-    color: #fff;
-  }
-
-  input,
-  select,
-  textarea {
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    width: inherit;
-    height: 2rem;
+    height: 2.5rem;
+    font-size: 1rem;
     border: none;
     border-radius: 4px;
     box-sizing: border-box;
-  }
-
-  input[type="submit"] {
-    height: 2.8rem;
-    font-size: 1rem;
     background: #faa627;
     cursor: pointer;
-  }
-
-  textarea {
-    height: 5rem;
   }
 }
