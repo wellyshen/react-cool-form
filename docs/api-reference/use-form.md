@@ -378,4 +378,6 @@ Check the [Reset Form](../getting-started/reset-form) to learn more.
 
 This method allows us to integrate with an existing [controlled component](https://reactjs.org/docs/forms.html#controlled-components) or 3rd-party UI library in React Cool Form.
 
+More content...
+
 Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries) to learn more.
