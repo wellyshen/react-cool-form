@@ -317,12 +317,12 @@ This method allows us to manually run validation for a single field, it returns 
 
 ### submit
 
-`(e?: Event) => Promise<{ values?: FormValues, errors?: FormErrors }>`
+`(e?: Event) => Promise<Result>`
 
 This method allows us to manually submit the form, it returns a promise with the following results. Useful for meeting the needs of custom design.
 
-- Returns `errors` if there're any validation errors
-- Returns `values` if the form is validated successfully
+- Returns a promise with `errors` when any validation errors
+- Returns a promise with `values` when the form is validated successfully
 
 ```js
 const { submit } = useForm({
@@ -331,7 +331,7 @@ const { submit } = useForm({
 });
 
 const handleFormSubmit = async (e) => {
-  const {} = await submit(e); // Pass the event object to the event handlers
+  const { errors, values } = await submit(e); // Pass the event object to the event handlers
 
   if (errors) {
     // Do something for invalid case
@@ -374,8 +374,10 @@ Check the [Reset Form](../getting-started/reset-form) to learn more.
 
 ### controller
 
-`(name: string, options?: Object) => { name: string, value: any, onChange: Function, onBlur: Function }`
+`(name: string, options?: Object) => Props`
 
-Coming soon...
+This method allows us to integrate with an existing [controlled component](https://reactjs.org/docs/forms.html#controlled-components) or 3rd-party UI library in React Cool Form.
+
+More content...
 
 Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries) to learn more.
