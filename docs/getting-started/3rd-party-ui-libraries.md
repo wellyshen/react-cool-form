@@ -143,7 +143,7 @@ const OptimizedSelect = memo(
           value: selectValue,
           parse: (option) => option.value,
           format: (value) => options.find((option) => option.value === value),
-          // The handler takes the field's value as the second parameter that can be used for setting the state
+          // The handler takes the field's value as the second parameter that can be used to set the state
           onChange: (e, value) => setSelectValue(value),
         })}
         options={options}
