@@ -37,24 +37,24 @@ function App() {
       </Group>
       <Group title="Multitple" error={getState("errors.multiple")}>
         <Field
-          label="🍎"
           id="apple"
           name="multiple"
           value="🍎"
+          label="🍎"
           type="checkbox"
         />
         <Field
-          label="🍋"
           id="lemon"
           name="multiple"
           value="🍋"
+          label="🍋"
           type="checkbox"
         />
         <Field
-          label="🥝"
           id="kiwi"
           name="multiple"
           value="🥝"
+          label="🥝"
           type="checkbox"
         />
       </Group>
