@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.102
+
+### Patch Changes
+
+- [`e331cde`](https://github.com/wellyshen/react-cool-form/commit/e331cde6b28dc931e7cb72310264cd283687b375) [#299](https://github.com/wellyshen/react-cool-form/pull/299) Thanks [@wellyshen](https://github.com/wellyshen)! - Perf(useState): delete used state when a field is removed
+
+* [`8237117`](https://github.com/wellyshen/react-cool-form/commit/8237117868530731b247c8fd10e1cb66f1fe5f1e) Thanks [@wellyshen](https://github.com/wellyshen)! - Docs(readme): update to-do
+
 ## 0.0.101
 
 ### Patch Changes
