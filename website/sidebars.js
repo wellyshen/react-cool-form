@@ -26,6 +26,7 @@ module.exports = {
       "examples/complex-structures",
       "examples/conditional-fields",
       "examples/lazy-default-values",
+      "examples/material-ui",
     ],
     "API Reference": [
       "api-reference/use-form",
