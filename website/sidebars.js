@@ -27,6 +27,7 @@ module.exports = {
       "examples/conditional-fields",
       "examples/lazy-default-values",
       "examples/material-ui",
+      "examples/react-select",
     ],
     "API Reference": [
       "api-reference/use-form",
