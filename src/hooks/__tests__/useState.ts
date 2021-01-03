@@ -39,7 +39,7 @@ describe("useState", () => {
     const { stateRef, setStateRef } = renderHelper();
     const nextState = {
       ...initialState,
-      values: { name: "Wei-Yu" },
+      values: { name: "🍎" },
       touched: { name: true },
       errors: { name: "Required" },
       isDirty: true,
@@ -58,7 +58,7 @@ describe("useState", () => {
 
   it("should set state's values without re-render", () => {
     const { stateRef, setStateRef } = renderHelper();
-    const name = "Wei-Yu";
+    const name = "🍎";
     const error = "Required";
     const isValidating = true;
     const isSubmitting = true;
@@ -88,7 +88,7 @@ describe("useState", () => {
   it("should set state's values and re-render correctly", () => {
     const { stateRef, setStateRef, setUsedStateRef } = renderHelper();
 
-    const name = "Wei-Yu";
+    const name = "🍎";
     setUsedStateRef("values.name");
     setStateRef("values.name", name);
     setStateRef("values.name", name);
@@ -167,7 +167,7 @@ describe("useState", () => {
     const { setStateRef, setUsedStateRef } = renderHelper();
 
     setUsedStateRef("values");
-    setStateRef("values.name", "Wei-Yu");
+    setStateRef("values.name", "🍎");
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
     setUsedStateRef("touched");
@@ -187,7 +187,7 @@ describe("useState", () => {
     const { setStateRef, setUsedStateRef } = renderHelper();
 
     setUsedStateRef("values.name");
-    setStateRef("values", { name: "Wei-Yu" });
+    setStateRef("values", { name: "🍎" });
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
     setUsedStateRef("touched.name");
@@ -206,7 +206,7 @@ describe("useState", () => {
   it("should skip re-render", () => {
     const { setStateRef, setUsedStateRef } = renderHelper();
     setUsedStateRef("values.name");
-    setStateRef("values.name", "Wei-Yu", { shouldUpdate: false });
+    setStateRef("values.name", "🍎", { shouldUpdate: false });
     expect(forceUpdate).not.toHaveBeenCalled();
   });
 
@@ -215,10 +215,10 @@ describe("useState", () => {
     const fieldPath = "values.some-value";
 
     setUsedStateRef(fieldPath);
-    setStateRef("values.name", "Wei-Yu");
+    setStateRef("values.name", "🍎");
     expect(forceUpdate).not.toHaveBeenCalled();
 
-    setStateRef("values.name", "Wei-Yu", { fieldPath });
+    setStateRef("values.name", "🍎", { fieldPath });
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 
@@ -227,7 +227,7 @@ describe("useState", () => {
     const { setStateRef } = renderHelper(debug);
     const state = {
       ...initialState,
-      values: { ...initialState.values, name: "Wei-Yu" },
+      values: { ...initialState.values, name: "🍎" },
     };
 
     setStateRef("", state);
@@ -252,5 +252,17 @@ describe("useState", () => {
 
     setStateRef("errors", errors);
     expect(debug).toHaveBeenCalledTimes(1);
+  });
+
+  it("should unset used state", () => {
+    const { setStateRef, setUsedStateRef } = renderHelper();
+
+    setUsedStateRef("values.name");
+    setStateRef("values.name", "🍎");
+    expect(forceUpdate).toHaveBeenCalledTimes(1);
+
+    setUsedStateRef("values.name", true);
+    setStateRef("values.name", "🍎");
+    expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 });
