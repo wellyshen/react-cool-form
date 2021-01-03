@@ -1,17 +1,5 @@
----
-id: 3rd-party-ui-libraries
-title: 3rd-Party UI Libraries
----
-
-Life is hard but coding can be easier. The reason we ❤️ open-source software (OSS) is because there're many awesome libraries that help us making a better world by software products. React Cool Form bears the faith in mind, it allows us integrate with any 3rd-party UI libraries easily. There're three ways to integrate with an UI library in React Cool Form.
-
-## Seamless Integration
-
-A component that can be [uncontrolled](https://reactjs.org/docs/uncontrolled-components.html) or relies on native input elements (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) to work under the hood, we need to do nothing 😂. For example: [Material-UI](https://material-ui.com)'s [TextField](https://material-ui.com/components/text-fields), [Checkbox](https://material-ui.com/components/checkboxes), and [Select](https://material-ui.com/components/selects) etc.
-
-[![Edit RCF - Material-UI](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-material-ui-xyi0b?fontsize=14&hidenavigation=1&theme=dark)
-
-```js
+import React from "react";
+import { render } from "react-dom";
 import { useForm } from "react-cool-form";
 import {
   FormControl,
@@ -21,13 +9,17 @@ import {
   TextField,
   Select,
   Checkbox,
-  Button,
+  RadioGroup,
+  Radio,
+  Button
 } from "@material-ui/core";
 
-const App = () => {
+import "./styles.scss";
+
+function App() {
   const { form, getState } = useForm({
-    defaultValues: { username: "", framework: "", fruit: [] },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+    defaultValues: { username: "", framework: "", fruit: [], race: "" },
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const errors = getState("errors");
 
@@ -73,10 +65,19 @@ const App = () => {
           label="🥝"
         />
       </div>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Race</FormLabel>
+        <RadioGroup name="race" aria-label="race" row>
+          <FormControlLabel control={<Radio />} value="🦸🏻‍♂️" label="🦸🏻‍♂️" />
+          <FormControlLabel control={<Radio />} value="🧛🏻‍♂️" label="🧛🏻‍♂️" />
+          <FormControlLabel control={<Radio />} value="🧝🏻‍♂️" label="🧝🏻‍♂️" />
+        </RadioGroup>
+      </FormControl>
       <Button type="submit" variant="contained" color="primary">
         Submit
       </Button>
     </form>
   );
-};
-```
+}
+
+render(<App />, document.getElementById("root"));
