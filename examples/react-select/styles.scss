@@ -1,0 +1,21 @@
+body {
+  font-family: sans-serif;
+  background: #222;
+}
+
+form {
+  margin: 5rem auto 0;
+  width: 24rem;
+
+  input[type="submit"] {
+    margin-top: 1.5rem;
+    width: inherit;
+    height: 2.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background: #faa627;
+    cursor: pointer;
+  }
+}

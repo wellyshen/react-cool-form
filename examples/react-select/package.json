@@ -1,14 +1,14 @@
 {
-  "name": "rcf-material-ui",
+  "name": "rcf-react-select",
   "version": "0.0.0",
-  "description": "The material-ui example of RCF.",
+  "description": "The react select example of RCF.",
   "main": "index.js",
   "dependencies": {
-    "@material-ui/core": "^4.11.2",
     "react": "^17.0.1",
     "react-cool-form": "latest",
     "react-dom": "^17.0.1",
-    "react-scripts": "^4.0.1"
+    "react-scripts": "^4.0.1",
+    "react-select": "^3.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

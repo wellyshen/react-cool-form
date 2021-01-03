@@ -5,9 +5,9 @@ title: 3rd-Party UI Libraries
 
 Life is hard but coding can be easier. The reason we ❤️ open-source software (OSS) is because there're many awesome libraries that help us making a better world by software products. React Cool Form bears the faith in mind, it allows us integrate with any 3rd-party UI libraries easily. There're three ways to integrate with an UI library in React Cool Form.
 
-## Seamless Integration
+## 1. Seamless Integration
 
-A component that can be [uncontrolled](https://reactjs.org/docs/uncontrolled-components.html) or relies on native input elements (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) to work under the hood, we need to do nothing 😂. For example: [Material-UI](https://material-ui.com)'s [TextField](https://material-ui.com/components/text-fields), [Checkbox](https://material-ui.com/components/checkboxes), and [Select](https://material-ui.com/components/selects) etc.
+[Uncontrolled components](https://reactjs.org/docs/uncontrolled-components.html) or components that rely on native input elements (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) to work under the hood, we need to do nothing 😂. For example: [Material-UI](https://material-ui.com)'s [TextField](https://material-ui.com/components/text-fields), [Checkbox](https://material-ui.com/components/checkboxes), and [Select](https://material-ui.com/components/selects) etc.
 
 [![Edit RCF - Material-UI](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-material-ui-xyi0b?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -27,7 +27,7 @@ import {
 const App = () => {
   const { form, getState } = useForm({
     defaultValues: { username: "", framework: "", fruit: [] },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+    onSubmit: (values) => console.log("onSubmit: ", values),
   });
   const errors = getState("errors");
 
@@ -80,3 +80,103 @@ const App = () => {
   );
 };
 ```
+
+## 2. [Controller API](../api-reference/use-form#controller)
+
+[Controlled components](https://reactjs.org/docs/forms.html#controlled-components) with highly customized and full features like [React Select](https://react-select.com) or [React Datepicker](https://reactdatepicker.com). We can use React Cool Form's [controller](../api-reference/use-form#controller) API for it.
+
+[![Edit RCF - React Select](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-react-select-djsl1?fontsize=14&hidenavigation=1&theme=dark)
+
+```js
+import { useForm } from "react-cool-form";
+import Select from "react-select";
+
+const options = [
+  { label: "React", value: "react" },
+  { label: "Vue", value: "vue" },
+  { label: "Angular", value: "angular" },
+  { label: "Svelte", value: "svelte" },
+];
+
+const App = () => {
+  const { form, controller } = useForm({
+    defaultValues: { framework: "" },
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+  });
+
+  return (
+    <form ref={form}>
+      <Select
+        {...controller("framework", {
+          // Parse the "option.value" and store it into the form's values
+          // So the values will be: { framework: "react" }
+          parse: ({ value }) => value,
+          // react-select's value prop receives the "option" object
+          // So we need to format it back
+          format: (value) => options.find((option) => option.value === value),
+        })}
+        options={options}
+        placeholder="I'm interesting in..."
+      />
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
+Whenever the value of the select component updated the `controller` API will trigger re-renders.
+
+```js
+import { memo, useCallback, useState } from "react";
+import { useForm } from "react-cool-form";
+import Select from "react-select";
+
+const OptimizedSelect = memo(
+  ({ name, controller, options, defaultValue, ...rest }) => {
+    const [selectValue, setSelectValue] = useState(defaultValue);
+
+    return (
+      <Select
+        {...controller(name, {
+          value: selectValue,
+          parse: (option) => option.value,
+          format: (value) => options.find((option) => option.value === value),
+          onChange: (e, value) => setSelectValue(value),
+        })}
+        options={options}
+        {...rest}
+      />
+    );
+  }
+);
+
+const options = [
+  { label: "React", value: "react" },
+  { label: "Vue", value: "vue" },
+  { label: "Angular", value: "angular" },
+  { label: "Svelte", value: "svelte" },
+];
+
+const App = () => {
+  const { form, controller } = useForm({
+    defaultValues: { framework: "" },
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+  });
+
+  return (
+    <form ref={form}>
+      <OptimizedSelect
+        name="framework"
+        controller={useCallback(controller, [controller])}
+        options={options}
+        defaultValue=""
+      />
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
+## 3. Do It Yourself
+
+Coming soon...
