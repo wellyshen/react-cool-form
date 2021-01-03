@@ -124,7 +124,7 @@ const App = () => {
 };
 ```
 
-The `controller` API will trigger re-renders whenever the value of the attached component updated. Re-renders are not bad but **slow re-renders** are. So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level for better performance as below:
+The `controller` will trigger re-renders whenever the value of the attached component updated. Re-renders are not bad but **slow re-renders** are. So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level for better performance as below:
 
 ```js
 import { memo, useCallback, useState } from "react";
