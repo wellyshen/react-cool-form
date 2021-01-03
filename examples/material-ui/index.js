@@ -34,6 +34,7 @@ function App() {
       />
       <FormControl>
         <InputLabel htmlFor="framework">Framework</InputLabel>
+        {/* When working with select, we need to enable the native select element. Or you can use the "NativeSelect" instead */}
         <Select inputProps={{ id: "framework", name: "framework" }} native>
           <option aria-label="None" value="I'm interesting in..." />
           <option value="react">React</option>
