@@ -124,15 +124,17 @@ const App = () => {
 };
 ```
 
-The `controller` API will trigger re-renders whenever the value of the attached component updated. Re-renders are not bad but **slow re-renders** are. So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level as below:
+The `controller` API will trigger re-renders whenever the value of the attached component updated. Re-renders are not bad but **slow re-renders** are. So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level for better performance as below:
 
 ```js
 import { memo, useCallback, useState } from "react";
 import { useForm } from "react-cool-form";
 import Select from "react-select";
 
+// Use React.memo to skip unnecessary re-renders due to the same props
 const OptimizedSelect = memo(
   ({ name, controller, options, defaultValue, ...rest }) => {
+    // Don't forget to assign the default value
     const [selectValue, setSelectValue] = useState(defaultValue);
 
     return (
@@ -141,6 +143,7 @@ const OptimizedSelect = memo(
           value: selectValue,
           parse: (option) => option.value,
           format: (value) => options.find((option) => option.value === value),
+          // The handler takes the field's value as the second parameter that can be used to set the state
           onChange: (e, value) => setSelectValue(value),
         })}
         options={options}
@@ -167,9 +170,9 @@ const App = () => {
     <form ref={form}>
       <OptimizedSelect
         name="framework"
-        controller={useCallback(controller, [controller])}
-        options={options}
         defaultValue=""
+        options={options}
+        controller={useCallback(controller, [controller])} // Memoize the "controller" method
       />
       <input type="submit" />
     </form>

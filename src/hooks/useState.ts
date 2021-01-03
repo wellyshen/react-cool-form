@@ -47,8 +47,7 @@ export default <V>(
           isValid: prevIsValid,
         } = state;
         let { submitCount: prevSubmitCount } = state;
-        const isDirty =
-          key === "dirty" ? getIsDirty(dirty) : prevIsDirty;
+        const isDirty = key === "dirty" ? getIsDirty(dirty) : prevIsDirty;
         const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
         const submitCount =
           key === "isSubmitting" && value
@@ -75,9 +74,16 @@ export default <V>(
     [onChangeRef]
   );
 
-  const setUsedStateRef = useCallback<SetUsedStateRef>((path) => {
-    usedStateRef.current[path] = true;
-  }, []);
+  const setUsedStateRef = useCallback<SetUsedStateRef>(
+    (path, unset = false) => {
+      if (unset) {
+        delete usedStateRef.current[path];
+      } else {
+        usedStateRef.current[path] = true;
+      }
+    },
+    []
+  );
 
   return { stateRef, setStateRef, setUsedStateRef };
 };
