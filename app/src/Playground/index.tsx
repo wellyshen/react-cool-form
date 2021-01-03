@@ -1,37 +1,54 @@
+import { memo, useCallback, useState } from "react";
 import { useForm } from "react-cool-form";
-import { makeStyles } from "@material-ui/core/styles";
-import { TextField } from "@material-ui/core";
+// @ts-expect-error
+import Select from "react-select";
 
 interface FormValues {
-  firstName: string;
-  lastName: string;
+  food: string;
 }
 
-const defaultValues = {
-  firstName: "",
-  lastName: "",
-};
+const IsolatedSelect = memo(
+  ({ name, defaultValue, controller, options, ...rest }: any) => {
+    const [value, setValue] = useState(defaultValue);
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > *": {
-      margin: theme.spacing(1),
-      width: "25ch",
-    },
-  },
-}));
+    return (
+      <Select
+        {...controller(name, {
+          value,
+          parse: (option: any) => option.value,
+          format: (val: any) =>
+            options.find((option: any) => option.value === val),
+          onChange: (e: any, val: any) => setValue(val),
+        })}
+        options={options}
+        {...rest}
+      />
+    );
+  }
+);
+
+const options = [
+  { value: "chocolate", label: "Chocolate" },
+  { value: "strawberry", label: "Strawberry" },
+  { value: "vanilla", label: "Vanilla" },
+];
 
 const Playground = (): JSX.Element => {
-  const classes = useStyles();
-  const { form } = useForm<FormValues>({
-    defaultValues,
+  const { form, controller } = useForm<FormValues>({
+    defaultValues: { food: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
+  console.log("LOG ===> Re-renders");
+
   return (
-    <form ref={form} className={classes.root} noValidate>
-      <TextField name="firstName" />
-      <TextField name="lastName" />
+    <form ref={form} noValidate>
+      <IsolatedSelect
+        name="food"
+        controller={useCallback(controller, [controller])}
+        defaultValue=""
+        options={options}
+      />
       <input type="submit" />
     </form>
   );
