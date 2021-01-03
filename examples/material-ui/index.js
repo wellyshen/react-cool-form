@@ -1,51 +1,80 @@
 import React from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
+import {
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  InputLabel,
+  TextField,
+  Select,
+  Checkbox,
+  RadioGroup,
+  Radio,
+  Button
+} from "@material-ui/core";
 
 import "./styles.scss";
 
-const Field = ({ label, id, ...rest }) => (
-  <div>
-    <label htmlFor={id}>{label}</label>
-    <input id={id} {...rest} />
-  </div>
-);
-
-const Select = ({ label, id, children, ...rest }) => (
-  <div>
-    <label htmlFor={id}>{label}</label>
-    <select id={id} {...rest}>
-      {children}
-    </select>
-  </div>
-);
-
-const Textarea = ({ label, id, ...rest }) => (
-  <div>
-    <label htmlFor={id}>{label}</label>
-    <textarea id={id} {...rest} />
-  </div>
-);
-
 function App() {
-  const { form } = useForm({
-    defaultValues: { firstName: "", lastName: "", framework: "", message: "" },
+  const { form, getState } = useForm({
+    defaultValues: { username: "", framework: "", fruit: [], race: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
+  const errors = getState("errors");
 
   return (
-    <form ref={form}>
-      <Field label="First Name" id="first-name" name="firstName" />
-      <Field label="Last Name" id="last-name" name="lastName" />
-      <Select label="Framework" id="framework" name="framework">
-        <option value="">I'm interesting in...</option>
-        <option value="react">React</option>
-        <option value="vue">Vue</option>
-        <option value="angular">Angular</option>
-        <option value="svelte">Svelte</option>
-      </Select>
-      <Textarea label="Message" id="message" name="message" />
-      <input type="submit" />
+    <form ref={form} noValidate>
+      <TextField
+        label="Username"
+        name="username"
+        required
+        error={!!errors.username}
+        helperText={errors.username}
+      />
+      <FormControl>
+        <InputLabel htmlFor="framework">Framework</InputLabel>
+        <Select inputProps={{ id: "framework", name: "framework" }} native>
+          <option aria-label="None" value="I'm interesting in..." />
+          <option value="react">React</option>
+          <option value="vue">Vue</option>
+          <option value="angular">Angular</option>
+          <option value="svelte">Svelte</option>
+        </Select>
+      </FormControl>
+      <FormControl component="fieldset"></FormControl>
+      <div>
+        <FormLabel component="legend">Fruit</FormLabel>
+        <FormControlLabel
+          control={<Checkbox />}
+          name="fruit"
+          value="🍎"
+          label="🍎"
+        />
+        <FormControlLabel
+          control={<Checkbox />}
+          name="fruit"
+          value="🍋"
+          label="🍋"
+        />
+        <FormControlLabel
+          control={<Checkbox />}
+          name="fruit"
+          value="🥝"
+          label="🥝"
+        />
+      </div>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Race</FormLabel>
+        <RadioGroup name="race" aria-label="race" row>
+          <FormControlLabel control={<Radio />} value="🦸🏻‍♂️" label="🦸🏻‍♂️" />
+          <FormControlLabel control={<Radio />} value="🧛🏻‍♂️" label="🧛🏻‍♂️" />
+          <FormControlLabel control={<Radio />} value="🧝🏻‍♂️" label="🧝🏻‍♂️" />
+        </RadioGroup>
+      </FormControl>
+      <Button type="submit" variant="contained" color="primary">
+        Submit
+      </Button>
     </form>
   );
 }
