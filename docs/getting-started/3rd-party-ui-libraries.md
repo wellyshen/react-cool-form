@@ -27,7 +27,7 @@ import {
 const App = () => {
   const { form, getState } = useForm({
     defaultValues: { username: "", framework: "", fruit: [] },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+    onSubmit: (values) => console.log("onSubmit: ", values),
   });
   const errors = getState("errors");
 

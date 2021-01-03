@@ -25,7 +25,7 @@ const Playground = (): JSX.Element => {
   const classes = useStyles();
   const { form } = useForm<FormValues>({
     defaultValues,
-    onSubmit: (values, e) => alert(JSON.stringify(values, undefined, 2)),
+    onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
   return (
