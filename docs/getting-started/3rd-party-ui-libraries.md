@@ -131,7 +131,7 @@ import { memo, useCallback, useState } from "react";
 import { useForm } from "react-cool-form";
 import Select from "react-select";
 
-// Use React.memo to skip unnecessary re-renders due to the same props
+// For a heavy-computational component, we can use React.memo to skip re-rendering caused by the same props
 const OptimizedSelect = memo(
   ({ name, controller, options, defaultValue, ...rest }) => {
     // Don't forget to assign the default value
