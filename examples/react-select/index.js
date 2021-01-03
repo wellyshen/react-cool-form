@@ -23,6 +23,7 @@ function App() {
       <Select
         {...controller("framework", {
           // Parse the "option.value" and store it into the form's values
+          // So the values will be: { framework: "react" }
           parse: ({ value }) => value,
           // react-select's value prop receives the "option" object
           // So we need to format it back
