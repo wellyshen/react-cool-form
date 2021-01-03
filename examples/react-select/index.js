@@ -27,7 +27,7 @@ function App() {
           parse: ({ value }) => value,
           // react-select's value prop receives the "option" object
           // So we need to format it back
-          format: (val) => options.find(({ value }) => value === val)
+          format: (value) => options.find((option) => option.value === value)
         })}
         options={options}
         placeholder="I'm interesting in..."
