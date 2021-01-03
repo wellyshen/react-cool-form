@@ -377,3 +377,5 @@ Check the [Reset Form](../getting-started/reset-form) to learn more.
 `(name: string, options?: Object) => { name: string, value: any, onChange: Function, onBlur: Function }`
 
 Coming soon...
+
+Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries) to learn more.
