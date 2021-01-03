@@ -547,12 +547,7 @@ export default <V extends FormValues = FormValues>({
       ) {
         setStateRef(`dirty.${name}`, true);
       } else {
-        handleUnset(
-          "dirty",
-          `dirty.${name}`,
-          stateRef.current.dirty,
-          name
-        );
+        handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
       }
     },
     [handleUnset, setStateRef, stateRef]
@@ -579,11 +574,7 @@ export default <V extends FormValues = FormValues>({
   const setValues = useCallback<SetValues<V>>(
     (
       values,
-      {
-        shouldValidate = validateOnChange,
-        touched = [],
-        dirty = [],
-      } = {}
+      { shouldValidate = validateOnChange, touched = [], dirty = [] } = {}
     ) => {
       values = isFunction(values) ? values(stateRef.current.values) : values;
 
@@ -595,9 +586,7 @@ export default <V extends FormValues = FormValues>({
           "touched",
           setTrueValues(
             stateRef.current.touched,
-            isFunction(touched)
-              ? touched(getFieldNames())
-              : touched
+            isFunction(touched) ? touched(getFieldNames()) : touched
           )
         );
       if (dirty.length)
@@ -893,25 +882,20 @@ export default <V extends FormValues = FormValues>({
             stateRef.current.touched,
             name
           );
-          handleUnset(
-            "dirty",
-            `dirty.${name}`,
-            stateRef.current.dirty,
-            name
-          );
+          handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
           handleUnset(
             "errors",
             `errors.${name}`,
             stateRef.current.errors,
             name
           );
+          setUsedStateRef(name, true);
 
           initialStateRef.current.values = unset(
             initialStateRef.current.values,
             name,
             true
           );
-
           delete fieldArgsRef.current[name];
           delete fieldValidatorsRef.current[name];
           delete controllersRef.current[name];
@@ -947,10 +931,11 @@ export default <V extends FormValues = FormValues>({
     getNodeValue,
     handleChangeEvent,
     handleUnset,
-    shouldRemoveField,
     reset,
     setFieldTouchedMaybeValidate,
     setNodesOrStateValue,
+    setUsedStateRef,
+    shouldRemoveField,
     stateRef,
     submit,
   ]);

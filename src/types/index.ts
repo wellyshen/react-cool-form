@@ -34,7 +34,7 @@ export interface SetStateRef {
 }
 
 export interface SetUsedStateRef {
-  (path: string): void;
+  (path: string, unset?: boolean): void;
 }
 
 export interface FormStateReturn<V> {
