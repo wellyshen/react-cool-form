@@ -91,7 +91,7 @@ const returnValues = useForm({
 });
 ```
 
-Check the [Form Submission](../getting-started/form-submission) to learn more.
+👉🏻 Check the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### onError
 
@@ -119,7 +119,7 @@ const returnValues = useForm({
 });
 ```
 
-Check the [Form Submission](../getting-started/form-submission) to learn more.
+👉🏻 Check the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### onReset
 
@@ -147,7 +147,7 @@ const returnValues = useForm({
 });
 ```
 
-Check the [Reset Form](../getting-started/reset-form) to learn more.
+👉🏻 Check the [Reset Form](../getting-started/reset-form) to learn more.
 
 ### debug
 
@@ -342,7 +342,7 @@ const handleFormSubmit = async (e) => {
 };
 ```
 
-Check the [Form Submission](../getting-started/form-submission) to learn more.
+👉🏻 Check the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### reset
 
@@ -371,13 +371,13 @@ const handleFormReset = (e) => {
 };
 ```
 
-Check the [Reset Form](../getting-started/reset-form) to learn more.
+👉🏻 Check the [Reset Form](../getting-started/reset-form) to learn more.
 
 ### controller
 
 `(name: string, options?: Object) => Props`
 
-This method allows us to integrate with an existing [controlled component](https://reactjs.org/docs/forms.html#controlled-components) or 3rd-party UI library in React Cool Form. The API as follows:
+This method allows us to integrate with an existing component (usually a [controlled component](https://reactjs.org/docs/forms.html#controlled-components)) or 3rd-party UI library in React Cool Form. The API as follows:
 
 #### Parameters
 
@@ -404,4 +404,12 @@ It returns the following props:
 | onChange | `Function` | Event handler called when the field's value changed. |
 | onChange | `Function` | Event handler called when the field loses focus.     |
 
-Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries#2-controller-api) to learn more.
+#### Basic Usage
+
+```js
+const { controller } = useForm();
+
+<Component {...controller("name")} required />;
+```
+
+👉🏻 Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries#2-controller-api) to learn more.
