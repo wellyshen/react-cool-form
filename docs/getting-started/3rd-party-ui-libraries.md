@@ -139,8 +139,8 @@ const Controller = memo(
     defaultValue,
     parse,
     format,
-    onChange,
-    onBlur,
+    onChange = () => null,
+    onBlur = () => null,
     controller,
     ...rest
   }) => {
@@ -154,10 +154,13 @@ const Controller = memo(
           value,
           parse,
           format,
-          onChange: (e, fieldValue) => {
-            // The handler takes the field's value as the last parameter that can be used to set the state
+          onChange: (...args) => {
+            // React Cool Form appends the field's value to the last parameter
+            // We can use it to set the state
+            const fieldValue = args.pop();
             setValue(fieldValue);
-            onChange(e);
+            // Pass the rest parameters to the callback
+            onChange(...args);
           },
           onBlur,
         })}
@@ -177,7 +180,7 @@ const options = [
 const App = () => {
   const { form, controller } = useForm({
     defaultValues: { framework: "" },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+    onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
   return (

@@ -383,20 +383,25 @@ This method allows us to integrate with an existing [controlled component](https
 
 To use the `controller`, you **must pass in the field's name** to the first argument. The `options` containing the following optional properties:
 
-| Name         | Type       | Description                                                                                                                                                                                                                                                                   |
-| ------------ | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| validate     | `Function` | A synchronous/asynchronous function that is used for the [field-level validation](../getting-started/validation-guide#field-level-validation).                                                                                                                                |
-| value        | `any`      | A given value of the field for UI rendering. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance.                                                                                   |
-| defaultValue | `any`      | The default value of the field. Useful for dealing with the case of [conditional fields](../examples/conditional-fields).                                                                                                                                                     |
-| parse        | `Function` | A function that takes all the arguments of the attached component's `onChange` handler and parses the value of the field that you want to store into the [form state](../getting-started/form-state). Useful for data type converting.                                        |
-| format       | `Function` | A function that takes the field's value from the [form state](../getting-started/form-state) and formats the value to give to the field. Usually used in conjunction with `parse`.                                                                                            |
-| onChange     | `Function` | The `onChange` handler of the attached component that takes the field's value as the last argument: `(e, fieldValue) => void`. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance. |
-| onBlur       | `Function` | The `onBlur` handler of the attached component.                                                                                                                                                                                                                               |
+| Name         | Type       | Description                                                                                                                                                                                                                                                                                            |
+| ------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| validate     | `Function` | A synchronous/asynchronous function that is used for the [field-level validation](../getting-started/validation-guide#field-level-validation).                                                                                                                                                         |
+| value        | `any`      | A given value of the field for UI rendering. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance.                                                                                                            |
+| defaultValue | `any`      | The default value of the field. Useful for dealing with the case of [conditional fields](../examples/conditional-fields).                                                                                                                                                                              |
+| parse        | `Function` | A function that takes all the arguments of the attached component's `onChange` handler and parses the value of the field that you want to store into the [form state](../getting-started/form-state). Useful for data type converting.                                                                 |
+| format       | `Function` | A function that takes the field's value from the [form state](../getting-started/form-state) and formats the value to give to the field. Usually used in conjunction with `parse`.                                                                                                                     |
+| onChange     | `Function` | The `onChange` handler of the attached component. React Cool Form appends the field's value to the last argument, i.e. `(...args, fieldValue) => void`. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance. |
+| onBlur       | `Function` | The `onBlur` handler of the attached component.                                                                                                                                                                                                                                                        |
 
 #### Return Props
 
 It returns the following props:
 
-Coming soon...
+| Name     | Type       | Description                                          |
+| -------- | ---------- | ---------------------------------------------------- |
+| name     | `string`   | The field's name.                                    |
+| value    | `any`      | The field's value.                                   |
+| onChange | `Function` | Event handler called when the field's value changed. |
+| onChange | `Function` | Event handler called when the field loses focus.     |
 
 Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries#2-controller-api) to learn more.
