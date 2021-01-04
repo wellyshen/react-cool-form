@@ -86,7 +86,7 @@ const App = () => {
       <input name="username" />
       <input name="email" type="email" />
       <input
-        name="more" // We don't need to set it when the fields are ignored via data attribute
+        name="more" // Used for the "ignoreFields" option
         type="checkbox"
         onChange={() => setToggle(!toggle)}
         data-rcf-ignore // Ignore the fields via the pre-defined data attribute

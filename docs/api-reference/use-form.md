@@ -406,10 +406,21 @@ It returns the following props:
 
 #### Basic Usage
 
+The following code demonstrates a basic use case:
+
 ```js
 const { controller } = useForm();
 
+// With built-in validation (if supported)
 <Component {...controller("name")} required />;
+
+// With custom validation
+<Component
+  {...controller("name", {
+    validate: (value, values /* Form's values */) => !value.length && "Required",
+  })}
+  required
+/>;
 ```
 
-👉🏻 Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries#2-controller-api) to learn more.
+👉🏻 Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries) to learn more.

@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.103
+
+### Patch Changes
+
+- [`d3c8247`](https://github.com/wellyshen/react-cool-form/commit/d3c824751eae453106ec1f0b0153a03730284744) [#301](https://github.com/wellyshen/react-cool-form/pull/301) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): pass all parameters back to the `onChange` handler of the `controller` API
+
 ## 0.0.102
 
 ### Patch Changes
