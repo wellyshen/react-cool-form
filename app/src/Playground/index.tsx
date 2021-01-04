@@ -1,14 +1,19 @@
 import { memo, useState } from "react";
 import { useForm } from "react-cool-form";
-// @ts-expect-error
 import Select from "react-select";
 
-interface FormValues {
-  food: string;
-}
-
-const Optimizer = memo(
-  ({ as, name, defaultValue, parse, format, controller, ...rest }: any) => {
+const Controller = memo(
+  ({
+    as,
+    name,
+    defaultValue,
+    parse,
+    format,
+    onChange = () => null,
+    onBlur = () => null,
+    controller,
+    ...rest
+  }: any) => {
     const Component = as;
     const [value, setValue] = useState(defaultValue);
 
@@ -18,7 +23,12 @@ const Optimizer = memo(
           value,
           parse,
           format,
-          onChange: (e: any, val: any) => setValue(val),
+          onChange: (...args: any[]) => {
+            const fieldValue = args.pop();
+            setValue(fieldValue);
+            onChange(...args);
+          },
+          onBlur,
         })}
         {...rest}
       />
@@ -27,29 +37,30 @@ const Optimizer = memo(
 );
 
 const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
+  { label: "React", value: "react" },
+  { label: "Vue", value: "vue" },
+  { label: "Angular", value: "angular" },
+  { label: "Svelte", value: "svelte" },
 ];
 
-const Playground = (): JSX.Element => {
-  const { form, controller } = useForm<FormValues>({
-    defaultValues: { food: "" },
+export default () => {
+  const { form, controller } = useForm({
+    defaultValues: { framework: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
-  console.log("LOG ===> Re-renders");
+  console.log("LOG ===> Re-render!");
 
   return (
-    <form ref={form} noValidate>
-      <Optimizer
+    <form ref={form}>
+      <Controller
         as={Select}
-        name="food"
+        name="framework"
         defaultValue=""
         options={options}
         parse={(option: any) => option.value}
         format={(value: any) =>
-          options.find((option: any) => option.value === value)
+          options.find((option) => option.value === value)
         }
         controller={controller}
       />
@@ -57,5 +68,3 @@ const Playground = (): JSX.Element => {
     </form>
   );
 };
-
-export default Playground;

@@ -112,14 +112,6 @@ declare module "react-cool-form" {
     submitCount: number;
   }>;
 
-  export interface Parser<A = any[], R = any> {
-    (...args: A): R;
-  }
-
-  export interface Formatter<V = any, R = any> {
-    (value: V): R;
-  }
-
   export interface FieldNamesFn {
     (fieldNames: string[]): string[];
   }
@@ -148,14 +140,6 @@ declare module "react-cool-form" {
     (value: any, values: V): any | Promise<any>;
   }
 
-  export interface ChangeHandler<E = any> {
-    (event: E, value: any): void;
-  }
-
-  export interface BlurHandler {
-    (event: FocusEvent): void;
-  }
-
   export interface ResetHandler<V = FormValues> {
     (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
   }
@@ -176,7 +160,23 @@ declare module "react-cool-form" {
     ): void;
   }
 
-  export interface Controller<V = FormValues, E = any> {
+  export interface ChangeHandler<A extends any[] = any[]> {
+    (...args: A): void;
+  }
+
+  export interface BlurHandler {
+    (event: FocusEvent): void;
+  }
+
+  export interface Parser<A extends any[] = any[], R = any> {
+    (...args: A): R;
+  }
+
+  export interface Formatter<V = any, R = any> {
+    (value: V): R;
+  }
+
+  export interface Controller<V = FormValues, E extends any[] = any[]> {
     (
       name: string,
       options?: {
@@ -185,13 +185,13 @@ declare module "react-cool-form" {
         defaultValue?: any;
         parse?: Parser;
         format?: Formatter;
-        onChange?: ChangeHandler<E>;
+        onChange?: ChangeHandler;
         onBlur?: BlurHandler;
       }
     ): {
       name: string;
       value: any;
-      onChange: (event: E) => void;
+      onChange: (...args: E) => void;
       onBlur: BlurHandler;
     } | void;
   }
