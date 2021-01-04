@@ -423,4 +423,4 @@ const { controller } = useForm();
 />;
 ```
 
-👉🏻 Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries#2-controller-api) to learn more.
+👉🏻 Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries) to learn more.

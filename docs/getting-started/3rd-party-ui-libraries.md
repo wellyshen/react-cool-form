@@ -137,10 +137,10 @@ const Controller = memo(
     as,
     name,
     defaultValue,
-    parse,
-    format,
-    onChange = () => null,
-    onBlur = () => null,
+    parse = () => {},
+    format = () => {},
+    onChange = () => {},
+    onBlur = () => {},
     controller,
     ...rest
   }) => {
@@ -202,4 +202,41 @@ const App = () => {
 
 ## 3. Do It Yourself
 
-Coming soon...
+If the above solutions can't meet your needs then you can set up a custom field via the [API](../api-reference/use-form) of React Cool Form.
+
+```js
+import { useForm } from "react-cool-form";
+import { TextField } from "@material-ui/core";
+
+const App = () => {
+  const { form, getState, setFieldValue, validateField } = useForm({
+    defaultValues: { username: "" },
+    // ignoreFields: ["username"], // You can also ignore the field by this option
+    validate: ({ username }) => {
+      const errors = {};
+      if (!username.length) errors.username = "Required";
+      return errors;
+    },
+    onSubmit: (values) => console.log("onSubmit: ", values),
+  });
+  const [value, errors] = getState(["values.username", "errors"], {
+    // Disable it to show the error at the right timing
+    // Because the field isn't be touched without changing its value
+    filterUntouchedError: false,
+  });
+
+  return (
+    <form ref={form}>
+      <TextField
+        name="username" // Used for the "ignoreFields" option
+        value={value}
+        onChange={(e) => setFieldValue("username", e.target.value)}
+        onBlur={() => validateField("username")}
+        error={!!errors.username}
+        helperText={errors.username}
+        inputProps={{ "data-rcf-ignore": true }} // Ignore the field via the pre-defined data attribute
+      />
+    </form>
+  );
+};
+```
