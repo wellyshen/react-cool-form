@@ -20,7 +20,7 @@ function App() {
       <div>
         <input
           id="more"
-          name="more" // We don't need to set it when the fields are ignored via data attribute
+          name="more" // Used by the "ignoreFields" option
           type="checkbox"
           onChange={() => setToggle(!toggle)}
           data-rcf-ignore // Ignore the fields via the pre-defined data attribute
