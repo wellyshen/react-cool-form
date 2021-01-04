@@ -1,19 +1,17 @@
-import { useState } from "react";
 import { useForm } from "react-cool-form";
 
 export default () => {
-  const [toggle, setToggle] = useState(true);
-  const { form, getState } = useForm({
+  const { form, controller } = useForm({
     defaultValues: { test: "123" },
   });
-  console.log("LOG ===> ", getState("dirty"));
 
   return (
     <form ref={form}>
-      {toggle && <input name="test" />}
-      <button type="button" onClick={() => setToggle(!toggle)}>
-        Toggle
-      </button>
+      <input
+        {...controller("test", {
+          onChange: (e, v) => console.log("LOG ===> ", e, v),
+        })}
+      />
     </form>
   );
 };
