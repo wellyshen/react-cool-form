@@ -124,16 +124,26 @@ const App = () => {
 };
 ```
 
-The `controller` will trigger re-renders whenever the value of the attached component updated. Re-renders are not bad but **slow re-renders** are. So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level for better performance as below:
+The `controller` will trigger re-renders whenever the value of the attached component updated. Re-renders are not bad but **slow re-renders** are. So, if you are building a complex form with large number of fields, you can create a reusable component to isolate re-rendering at the component level for better performance as below:
 
 ```js
 import { memo, useState } from "react";
 import { useForm } from "react-cool-form";
 import Select from "react-select";
 
-// For a heavy-computational component, we can use React.memo to skip re-rendering caused by the same props
-const Optimizer = memo(
-  ({ as, name, defaultValue, parse, format, controller, ...rest }) => {
+// We can use React.memo to skip re-rendering for the same props (especially for a heavy-computational component)
+const Controller = memo(
+  ({
+    as,
+    name,
+    defaultValue,
+    parse,
+    format,
+    onChange,
+    onBlur,
+    controller,
+    ...rest
+  }) => {
     const Component = as;
     // Don't forget to assign the default value
     const [value, setValue] = useState(defaultValue);
@@ -145,7 +155,11 @@ const Optimizer = memo(
           parse,
           format,
           // The handler takes the field's value as the second parameter that can be used to set the state
-          onChange: (e: any, val: any) => setValue(val),
+          onChange: (e: any, val: any) => {
+            setValue(val);
+            onChange(e);
+          },
+          onBlur,
         })}
         {...rest}
       />
@@ -168,7 +182,7 @@ const App = () => {
 
   return (
     <form ref={form}>
-      <Optimizer
+      <Controller
         as={Select}
         name="framework"
         defaultValue=""
