@@ -127,26 +127,26 @@ const App = () => {
 The `controller` will trigger re-renders whenever the value of the attached component updated. Re-renders are not bad but **slow re-renders** are. So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level for better performance as below:
 
 ```js
-import { memo, useCallback, useState } from "react";
+import { memo, useState } from "react";
 import { useForm } from "react-cool-form";
 import Select from "react-select";
 
 // For a heavy-computational component, we can use React.memo to skip re-rendering caused by the same props
-const OptimizedSelect = memo(
-  ({ name, controller, options, defaultValue, ...rest }) => {
+const Optimizer = memo(
+  ({ as, name, defaultValue, parse, format, controller, ...rest }) => {
+    const Component = as;
     // Don't forget to assign the default value
-    const [selectValue, setSelectValue] = useState(defaultValue);
+    const [value, setValue] = useState(defaultValue);
 
     return (
-      <Select
+      <Component
         {...controller(name, {
-          value: selectValue,
-          parse: (option) => option.value,
-          format: (value) => options.find((option) => option.value === value),
+          value,
+          parse,
+          format,
           // The handler takes the field's value as the second parameter that can be used to set the state
-          onChange: (e, value) => setSelectValue(value),
+          onChange: (e: any, val: any) => setValue(val),
         })}
-        options={options}
         {...rest}
       />
     );
@@ -168,11 +168,14 @@ const App = () => {
 
   return (
     <form ref={form}>
-      <OptimizedSelect
+      <Optimizer
+        as={Select}
         name="framework"
         defaultValue=""
         options={options}
-        controller={useCallback(controller, [controller])} // Memoize the "controller" method
+        parse={(option) => option.value}
+        format={(value) => options.find((option) => option.value === value)}
+        controller={controller}
       />
       <input type="submit" />
     </form>
