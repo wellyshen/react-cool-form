@@ -154,9 +154,9 @@ const Controller = memo(
           value,
           parse,
           format,
-          // The handler takes the field's value as the second parameter that can be used to set the state
-          onChange: (e: any, val: any) => {
-            setValue(val);
+          onChange: (e, fieldValue) => {
+            // The handler takes the field's value as the last parameter that can be used to set the state
+            setValue(fieldValue);
             onChange(e);
           },
           onBlur,

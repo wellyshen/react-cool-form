@@ -14,7 +14,7 @@ Here we will explore the form state and some [best practices for using it](#best
 
 ## About the Form State
 
-Form state is an `object` containing the following values:
+Form state is an `object` containing the following properties:
 
 | Name         | Type      | Description                                                                                                                                      |
 | ------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -22,7 +22,7 @@ Form state is an `object` containing the following values:
 | errors       | `object`  | The current validation errors. [The shape will (should) match the shape of the form's values](./validation-guide#how-to-run).                    |
 | touched      | `object`  | An object containing all the fields the user has touched/visited.                                                                                |
 | isDirty      | `boolean` | Returns `true` if the user modifies any of the fields. `false` otherwise.                                                                        |
-| dirty  | `object`  | An object containing all the fields the user has modified.                                                                                       |
+| dirty        | `object`  | An object containing all the fields the user has modified.                                                                                       |
 | isValidating | `boolean` | Returns `true` if the form is currently being validated. `false` otherwise.                                                                      |
 | isValid      | `boolean` | Returns `true` if the form doesn't have any errors (i.e. the `errors` object is empty). `false` otherwise.                                       |
 | isSubmitting | `boolean` | Returns `true` if the form is currently being submitted. `false` if otherwise.                                                                   |
