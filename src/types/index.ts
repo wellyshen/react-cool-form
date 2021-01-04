@@ -197,6 +197,14 @@ export interface Submit<V> {
   }>;
 }
 
+interface ChangeHandler {
+  (...args: any[]): void;
+}
+
+interface BlurHandler {
+  (event: FocusEvent): void;
+}
+
 interface Parser {
   (...args: any[]): any;
 }
@@ -205,7 +213,7 @@ interface Formatter {
   (value: any): any;
 }
 
-export interface Controller<V, E = any> {
+export interface Controller<V> {
   (
     name: string,
     options?: {
@@ -214,14 +222,14 @@ export interface Controller<V, E = any> {
       defaultValue?: any;
       parse?: Parser;
       format?: Formatter;
-      onChange?: (event: E, value: any) => void;
-      onBlur?: (event: FocusEvent) => void;
+      onChange?: ChangeHandler;
+      onBlur?: BlurHandler;
     }
   ): {
     name: string;
     value: any;
-    onChange: (event: E) => void;
-    onBlur: (event: FocusEvent) => void;
+    onChange: ChangeHandler;
+    onBlur: BlurHandler;
   } | void;
 }
 
