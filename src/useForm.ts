@@ -516,7 +516,7 @@ export default <V extends FormValues = FormValues>({
     setStateRef,
   ]);
 
-  const setFieldDirty = useCallback(
+  const setDirty = useCallback(
     (name: string) => {
       if (
         get(stateRef.current.values, name) !==
@@ -570,12 +570,12 @@ export default <V extends FormValues = FormValues>({
       setNodeValue(name, value);
 
       if (shouldTouched) setFieldTouched(name, false);
-      if (shouldDirty) setFieldDirty(name);
+      if (shouldDirty) setDirty(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
     [
       handleUnset,
-      setFieldDirty,
+      setDirty,
       setFieldTouched,
       setNodeValue,
       setStateRef,
@@ -681,11 +681,11 @@ export default <V extends FormValues = FormValues>({
   const handleChangeEvent = useCallback(
     (name: string, value: any) => {
       setStateRef(`values.${name}`, value);
-      setFieldDirty(name);
+      setDirty(name);
 
       if (validateOnChange) validateFieldWithLowPriority(name);
     },
-    [setFieldDirty, setStateRef, validateFieldWithLowPriority, validateOnChange]
+    [setDirty, setStateRef, validateFieldWithLowPriority, validateOnChange]
   );
 
   const controller = useCallback<Controller<V>>(
