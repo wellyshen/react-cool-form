@@ -19,6 +19,7 @@ import {
   Reset,
   Return,
   SetError,
+  SetTouched,
   SetValue,
   Submit,
   ValidateField,
@@ -530,22 +531,38 @@ export default <V extends FormValues = FormValues>({
     [handleUnset, setStateRef, stateRef]
   );
 
-  const setFieldTouched = useCallback(
-    (name: string, shouldValidate = validateOnBlur) => {
-      setStateRef(`touched.${name}`, true);
+  const setTouched = useCallback<SetTouched>(
+    (name, isTouched = true, shouldValidate = validateOnBlur) => {
+      if (isTouched) {
+        setStateRef(`touched.${name}`, isTouched);
+      } else {
+        handleUnset(
+          "touched",
+          `touched.${name}`,
+          stateRef.current.touched,
+          name
+        );
+      }
 
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
-    [setStateRef, validateFieldWithLowPriority, validateOnBlur]
+    [
+      handleUnset,
+      setStateRef,
+      stateRef,
+      validateFieldWithLowPriority,
+      validateOnBlur,
+    ]
   );
 
-  const setFieldTouchedMaybeValidate = useCallback(
+  const setTouchedMaybeValidate = useCallback(
     (name) =>
-      setFieldTouched(
+      setTouched(
         name,
+        true,
         validateOnChange ? name !== changedFieldRef.current : undefined
       ),
-    [setFieldTouched, validateOnChange]
+    [setTouched, validateOnChange]
   );
 
   const setValue = useCallback<SetValue>(
@@ -569,16 +586,16 @@ export default <V extends FormValues = FormValues>({
       }
       setNodeValue(name, value);
 
-      if (shouldTouched) setFieldTouched(name, false);
+      if (shouldTouched) setTouched(name, true, false);
       if (shouldDirty) setDirty(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
     [
       handleUnset,
       setDirty,
-      setFieldTouched,
       setNodeValue,
       setStateRef,
+      setTouched,
       stateRef,
       validateFieldWithLowPriority,
       validateOnChange,
@@ -589,6 +606,7 @@ export default <V extends FormValues = FormValues>({
     () => ({
       formState: stateRef.current,
       setValue,
+      setTouched,
       setError,
       validateForm,
       validateField,
@@ -599,6 +617,7 @@ export default <V extends FormValues = FormValues>({
       // @ts-expect-error
       reset,
       setError,
+      setTouched,
       setValue,
       stateRef,
       // @ts-expect-error
@@ -729,7 +748,7 @@ export default <V extends FormValues = FormValues>({
           changedFieldRef.current = name;
         },
         onBlur: (e) => {
-          setFieldTouchedMaybeValidate(name);
+          setTouchedMaybeValidate(name);
           if (onBlur) onBlur(e);
           changedFieldRef.current = undefined;
         },
@@ -740,7 +759,7 @@ export default <V extends FormValues = FormValues>({
       getState,
       handleChangeEvent,
       setDefaultValue,
-      setFieldTouchedMaybeValidate,
+      setTouchedMaybeValidate,
     ]
   );
 
@@ -778,7 +797,7 @@ export default <V extends FormValues = FormValues>({
       const { name } = target as FieldElement;
 
       if (fieldsRef.current[name] && !controllersRef.current[name]) {
-        setFieldTouchedMaybeValidate(name);
+        setTouchedMaybeValidate(name);
         changedFieldRef.current = undefined;
       }
     };
@@ -865,8 +884,8 @@ export default <V extends FormValues = FormValues>({
     handleChangeEvent,
     handleUnset,
     reset,
-    setFieldTouchedMaybeValidate,
     setNodesOrStateValue,
+    setTouchedMaybeValidate,
     setUsedStateRef,
     shouldRemoveField,
     stateRef,
@@ -878,6 +897,7 @@ export default <V extends FormValues = FormValues>({
     field: fieldRef,
     getState,
     setValue,
+    setTouched,
     setError,
     validateForm,
     validateField,

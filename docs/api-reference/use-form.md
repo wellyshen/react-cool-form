@@ -77,6 +77,7 @@ const returnValues = useForm({
     const {
       formState, // The current form state, don't mutate it directly
       setValue,
+      setTouched,
       setError,
       validateForm,
       validateField,
@@ -103,6 +104,7 @@ const returnValues = useForm({
     const {
       formState, // The current form state, don't mutate it directly
       setValue,
+      setTouched,
       setError,
       validateForm,
       validateField,
@@ -129,6 +131,7 @@ const returnValues = useForm({
     const {
       formState, // The current form state, don't mutate it directly
       setValue,
+      setTouched,
       setError,
       validateForm,
       validateField,
@@ -218,12 +221,38 @@ setValue("fieldName", "value", {
 setValue("fieldName", (prevValue) => prevValue.splice(2, 0, "🍎"));
 ```
 
-We can clear the value of a field as the following way:
+We can clear the value of a field by the following way:
 
 ```js
 setValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
 // or
 setValue("fieldName", undefined);
+```
+
+### setTouched
+
+`(name: string, isTouched?: boolean, shouldValidate?: boolean) => void`
+
+This method allows us to manually set/clear the touched of a field. Useful for creating custom field touched handlers.
+
+```js
+const { setTouched } = useForm();
+
+// Common use case
+setTouched("fieldName");
+
+// Full parameters
+setTouched(
+  "fieldName",
+  true, // (Default = true) Sets the field as touched
+  true // (Default = "validateOnBlur" option) Triggers field validation
+);
+```
+
+We can clear the touched of a field by the following way:
+
+```js
+setTouched("fieldName", false); // The field will be unset: { fieldName: true } → {}
 ```
 
 ### setError
@@ -241,7 +270,7 @@ setError("fieldName", "Required");
 setError("fieldName", (prevError) => (prevError ? "Too short" : "Required"));
 ```
 
-We can clear the error of a field as the following way:
+We can clear the error of a field by the following way:
 
 ```js
 setError("fieldName"); // The error will be unset: { fieldName: "Required" } → {}

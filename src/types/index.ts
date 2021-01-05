@@ -70,6 +70,7 @@ export type FieldArgs = Record<
 interface Options<V> {
   formState: FormState<V>;
   setValue: SetValue;
+  setTouched: SetTouched;
   setError: SetError;
   validateForm: ValidateForm<V>;
   validateField: ValidateField;
@@ -141,6 +142,10 @@ export interface SetValue {
       [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
     }
   ): void;
+}
+
+export interface SetTouched {
+  (name: string, isTouched?: boolean, shouldValidate?: boolean): void;
 }
 
 export interface SetError {
@@ -225,6 +230,7 @@ export interface Return<V> {
   field: FieldRef<V>;
   getState: GetState;
   setValue: SetValue;
+  setTouched: SetTouched;
   setError: SetError;
   validateForm: ValidateForm<V>;
   validateField: ValidateField;
