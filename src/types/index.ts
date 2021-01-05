@@ -73,8 +73,7 @@ interface Options<V> {
   setTouched: SetTouched;
   setError: SetError;
   clearErrors: ClearErrors;
-  validateForm: ValidateForm<V>;
-  validateField: ValidateField;
+  runValidation: RunValidation;
   reset: Reset<V>;
   submit: Submit<V>;
 }
@@ -157,12 +156,8 @@ export interface ClearErrors {
   (name?: string | string[]): void;
 }
 
-export interface ValidateForm<V> {
-  (): Promise<FormErrors<V>>;
-}
-
-export interface ValidateField {
-  (name: string): Promise<any>;
+export interface RunValidation {
+  (name?: string | string[]): Promise<boolean>;
 }
 
 export interface Reset<V> {
@@ -238,8 +233,7 @@ export interface Return<V> {
   setTouched: SetTouched;
   setError: SetError;
   clearErrors: ClearErrors;
-  validateForm: ValidateForm<V>;
-  validateField: ValidateField;
+  runValidation: RunValidation;
   reset: Reset<V>;
   submit: Submit<V>;
   controller: Controller<V>;
