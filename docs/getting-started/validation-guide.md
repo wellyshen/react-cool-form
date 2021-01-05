@@ -225,7 +225,7 @@ const validate = (values) => {
 
 const App = () => {
   const { form, runValidation } = useForm({
-    defaultValues: { username: "", email: "" },
+    defaultValues: { firstName: "", lastName: "", email: "" },
     validate,
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
@@ -233,11 +233,16 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <input name="username" />
-      <input name="email" type="email" />
+      <input name="firstName" required />
+      <input name="lastName" required />
+      <input name="email" type="email" required />
       {/* Validate a single field */}
-      <button onClick={() => runValidation("username")}>
-        Validate Username
+      <button onClick={() => runValidation("firstName")}>
+        Validate Single
+      </button>
+      {/* Validate multiple fields */}
+      <button onClick={() => runValidation(["firstName", "lastName"])}>
+        Validate Multiple
       </button>
       {/* Validate the form (i.e. all the fields) */}
       <button onClick={() => runValidation()}>Validate All</button>
