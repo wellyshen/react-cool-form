@@ -69,8 +69,8 @@ export type FieldArgs = Record<
 
 interface Options<V> {
   formState: FormState<V>;
-  setFieldError: SetFieldError;
-  setFieldValue: SetFieldValue;
+  setValue: SetValue;
+  setError: SetError;
   validateForm: ValidateForm<V>;
   validateField: ValidateField;
   reset: Reset<V>;
@@ -133,11 +133,7 @@ export interface GetState {
   ): any;
 }
 
-export interface SetFieldError {
-  (name: string, error?: any | ((previousError?: any) => any)): void;
-}
-
-export interface SetFieldValue {
+export interface SetValue {
   (
     name: string,
     value?: any | ((previousValue: any) => any),
@@ -145,6 +141,10 @@ export interface SetFieldValue {
       [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
     }
   ): void;
+}
+
+export interface SetError {
+  (name: string, error?: any | ((previousError?: any) => any)): void;
 }
 
 export interface ValidateForm<V> {
@@ -224,8 +224,8 @@ export interface Return<V> {
   form: RefObject<HTMLFormElement>;
   field: FieldRef<V>;
   getState: GetState;
-  setFieldError: SetFieldError;
-  setFieldValue: SetFieldValue;
+  setValue: SetValue;
+  setError: SetError;
   validateForm: ValidateForm<V>;
   validateField: ValidateField;
   reset: Reset<V>;

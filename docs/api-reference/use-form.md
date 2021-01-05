@@ -51,7 +51,7 @@ We can configure the [mode of the built-in validation](../getting-started/valida
 
 `boolean`
 
-Tell React Cool Form to run validations on `change` events as well as the [setFieldValue](#setfieldvalue) method. Default is `true`.
+Tell React Cool Form to run validations on `change` events as well as the [setValue](#setvalue) method. Default is `true`.
 
 ### validateOnBlur
 
@@ -76,8 +76,8 @@ const returnValues = useForm({
   onSubmit: async (values, options, e) => {
     const {
       formState, // The current form state, don't mutate it directly
-      setFieldValue,
-      setFieldError,
+      setValue,
+      setError,
       validateForm,
       validateField,
       submit,
@@ -102,8 +102,8 @@ const returnValues = useForm({
   onError: (errors, options, e) => {
     const {
       formState, // The current form state, don't mutate it directly
-      setFieldValue,
-      setFieldError,
+      setValue,
+      setError,
       validateForm,
       validateField,
       submit,
@@ -128,8 +128,8 @@ const returnValues = useForm({
   onReset: (values, options, e) => {
     const {
       formState, // The current form state, don't mutate it directly
-      setFieldValue,
-      setFieldError,
+      setValue,
+      setError,
       validateForm,
       validateField,
       submit,
@@ -199,56 +199,54 @@ If you just want to validate the field, there's a shortcut for it:
 
 This method provides us a performant way to use/read the form state. Check the [Form State](../getting-started/form-state) document to learn more.
 
-### setFieldValue
+### setValue
 
 `(name: string, value?: any | Function, options?: Object) => void`
 
 This method allows us to manually set/clear the value of a field. Useful for creating custom field change handlers.
 
 ```js
-const { setFieldValue } = useForm();
+const { setValue } = useForm();
 
-setFieldValue("fieldName", "value", {
+setValue("fieldName", "value", {
   shouldValidate: true, // (Default = "validateOnChange" option) Triggers field validation
   shouldTouched: true, // (Default = true) Sets the field as touched
   shouldDirty: true, // (Default = true) Sets the field as dirty
 });
 
 // We can also pass a callback as the "value" parameter, similar to React's setState callback style
-setFieldValue("fieldName", (prevValue) => prevValue.splice(2, 0, "🍎"));
+setValue("fieldName", (prevValue) => prevValue.splice(2, 0, "🍎"));
 ```
 
 We can clear the value of a field as the following way:
 
 ```js
-setFieldValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
+setValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
 // or
-setFieldValue("fieldName", undefined);
+setValue("fieldName", undefined);
 ```
 
-### setFieldError
+### setError
 
 `(name: string, error?: any | Function) => void`
 
 This method allows us to manually set/clear the error of a field. Useful for creating custom field error handlers.
 
 ```js
-const { setFieldError } = useForm();
+const { setError } = useForm();
 
-setFieldError("fieldName", "Required");
+setError("fieldName", "Required");
 
 // We can also pass a callback as the "error" parameter, similar to React's setState callback style
-setFieldError("fieldName", (prevError) =>
-  prevError ? "Too short" : "Required"
-);
+setError("fieldName", (prevError) => (prevError ? "Too short" : "Required"));
 ```
 
 We can clear the error of a field as the following way:
 
 ```js
-setFieldError("fieldName"); // The error will be unset: { fieldName: "Required" } → {}
+setError("fieldName"); // The error will be unset: { fieldName: "Required" } → {}
 // or
-setFieldError("fieldName", undefined); // Works with any falsy values
+setError("fieldName", undefined); // Works with any falsy values
 ```
 
 ### validateForm
@@ -359,11 +357,11 @@ The following code demonstrates a basic use case:
 const { controller } = useForm();
 
 // With built-in validation (if supported)
-<Component {...controller("name")} required />;
+<Component {...controller("fieldName")} required />;
 
 // With custom validation
 <Component
-  {...controller("name", {
+  {...controller("fieldName", {
     validate: (value, values /* Form's values */) =>
       !value.length && "Required",
   })}

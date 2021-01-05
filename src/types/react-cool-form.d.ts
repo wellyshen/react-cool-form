@@ -7,8 +7,8 @@ declare module "react-cool-form" {
 
   interface Options<V> {
     formState: FormState<V>;
-    setFieldError: SetFieldError;
-    setFieldValue: SetFieldValue;
+    setValue: SetValue;
+    setError: SetError;
     validateForm: ValidateForm<V>;
     validateField: ValidateField;
     reset: Reset<V>;
@@ -26,7 +26,7 @@ declare module "react-cool-form" {
     ): any;
   }
 
-  interface SetFieldValue {
+  interface SetValue {
     (
       name: string,
       value?: any | PreviousValueFn,
@@ -36,7 +36,7 @@ declare module "react-cool-form" {
     ): void;
   }
 
-  interface SetFieldError {
+  interface SetError {
     (name: string, error?: any | PreviousErrorFn): void;
   }
 
@@ -193,8 +193,8 @@ declare module "react-cool-form" {
     form: RefObject<HTMLFormElement>;
     field: FieldRef<V>;
     getState: GetState;
-    setFieldError: SetFieldError;
-    setFieldValue: SetFieldValue;
+    setValue: SetValue;
+    setError: SetError;
     validateForm: ValidateForm<V>;
     validateField: ValidateField;
     reset: Reset<V>;
