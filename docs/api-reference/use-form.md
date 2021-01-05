@@ -377,13 +377,13 @@ To use the `controller`, you **must pass in the field's name** to the first argu
 
 | Name         | Type       | Description                                                                                                                                                                                                                                                                                          |
 | ------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| validate     | `Function` | A synchronous/asynchronous function that is used for the [field-level validation](../getting-started/validation-guide#field-level-validation).                                                                                                                                                       |
+| validate     | `function` | A synchronous/asynchronous function that is used for the [field-level validation](../getting-started/validation-guide#field-level-validation).                                                                                                                                                       |
 | value        | `any`      | A given value of the field for UI rendering. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance.                                                                                                          |
 | defaultValue | `any`      | The default value of the field. Useful for dealing with the case of [conditional fields](../examples/conditional-fields).                                                                                                                                                                            |
-| parse        | `Function` | A function that takes all the arguments of the target component's `onChange` handler and parses the value of the field that you want to store into the [form state](../getting-started/form-state). Useful for data type converting.                                                                 |
-| format       | `Function` | A function that takes the field's value from the [form state](../getting-started/form-state) and formats the value to give to the field. Usually used in conjunction with `parse`.                                                                                                                   |
-| onChange     | `Function` | The `onChange` handler of the target component. React Cool Form appends the field's value to the last argument, i.e. `(...args, fieldValue) => void`. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance. |
-| onBlur       | `Function` | The `onBlur` handler of the target component.                                                                                                                                                                                                                                                        |
+| parse        | `function` | A function that takes all the arguments of the target component's `onChange` handler and parses the value of the field that you want to store into the [form state](../getting-started/form-state). Useful for data type converting.                                                                 |
+| format       | `function` | A function that takes the field's value from the [form state](../getting-started/form-state) and formats the value to give to the field. Usually used in conjunction with `parse`.                                                                                                                   |
+| onChange     | `function` | The `onChange` handler of the target component. React Cool Form appends the field's value to the last argument, i.e. `(...args, fieldValue) => void`. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance. |
+| onBlur       | `function` | The `onBlur` handler of the target component.                                                                                                                                                                                                                                                        |
 
 #### Return Props
 
@@ -393,8 +393,8 @@ It returns the following props:
 | -------- | ---------- | ---------------------------------------------------- |
 | name     | `string`   | The field's name.                                    |
 | value    | `any`      | The field's value.                                   |
-| onChange | `Function` | Event handler called when the field's value changed. |
-| onChange | `Function` | Event handler called when the field loses focus.     |
+| onChange | `function` | Event handler called when the field's value changed. |
+| onChange | `function` | Event handler called when the field loses focus.     |
 
 #### Basic Usage
 
