@@ -51,7 +51,7 @@ We can configure the [mode of the built-in validation](../getting-started/valida
 
 `boolean`
 
-Tell React Cool Form to run validations on `change` events as well as the [setFieldValue](#setfieldvalue) and [setValues](#setvalues) methods. Default is `true`.
+Tell React Cool Form to run validations on `change` events as well as the [setFieldValue](#setfieldvalue) method. Default is `true`.
 
 ### validateOnBlur
 
@@ -76,9 +76,7 @@ const returnValues = useForm({
   onSubmit: async (values, options, e) => {
     const {
       formState, // The current form state, don't mutate it directly
-      setValues,
       setFieldValue,
-      setErrors,
       setFieldError,
       validateForm,
       validateField,
@@ -104,9 +102,7 @@ const returnValues = useForm({
   onError: (errors, options, e) => {
     const {
       formState, // The current form state, don't mutate it directly
-      setValues,
       setFieldValue,
-      setErrors,
       setFieldError,
       validateForm,
       validateField,
@@ -132,9 +128,7 @@ const returnValues = useForm({
   onReset: (values, options, e) => {
     const {
       formState, // The current form state, don't mutate it directly
-      setValues,
       setFieldValue,
-      setErrors,
       setFieldError,
       validateForm,
       validateField,
@@ -205,30 +199,6 @@ If you just want to validate the field, there's a shortcut for it:
 
 This method provides us a performant way to use/read the form state. Check the [Form State](../getting-started/form-state) document to learn more.
 
-### setValues
-
-`(values: FormValues | Function, options?: Object) => void`
-
-This method allows us to manually set the `values` of the [form state](../getting-started/form-state).
-
-```js
-const { setValues } = useForm();
-
-setValues(
-  { firstName: "Welly", lastName: "Shen" }, // It will replace the entire values object
-  {
-    shouldValidate: true, // (Default = "validateOnChange" option) Triggers form validation
-    touched: ["firstName"], // Sets fields as touched by passing their names
-    // touched: (allFieldNames) => allFieldNames, // A reverse way to set touched fields
-    dirty: ["firstName"], // Sets fields as dirty by passing their names
-    // dirty: (allFieldNames) => allFieldNames, // A reverse way to set dirty fields
-  }
-);
-
-// We can also pass a callback as the "values" parameter, similar to React's setState callback style
-setValues((prevValues) => ({ ...prevValues, firstName: "Bella" }));
-```
-
 ### setFieldValue
 
 `(name: string, value?: any | Function, options?: Object) => void`
@@ -254,29 +224,6 @@ We can clear the value of a field as the following way:
 setFieldValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
 // or
 setFieldValue("fieldName", undefined);
-```
-
-### setErrors
-
-`(errors?: FormErrors | Function) => void`
-
-This method allows us to manually set/clear the `errors` of the [form state](../getting-started/form-state).
-
-```js
-const { setErrors } = useForm();
-
-setErrors({ firstName: "Required", lastName: "Required" });
-
-// We can also pass a callback as the "errors" parameter, similar to React's setState callback style
-setErrors((prevErrors) => ({ ...prevErrors, firstName: "Required" }));
-```
-
-We can clear the `errors` of the form state as the following way:
-
-```js
-setErrors();
-// or
-setErrors(undefined); // Works with any falsy values
 ```
 
 ### setFieldError
@@ -417,7 +364,8 @@ const { controller } = useForm();
 // With custom validation
 <Component
   {...controller("name", {
-    validate: (value, values /* Form's values */) => !value.length && "Required",
+    validate: (value, values /* Form's values */) =>
+      !value.length && "Required",
   })}
   required
 />;
