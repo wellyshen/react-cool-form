@@ -1,5 +1,6 @@
 export { default as arrayToMap } from "./arrayToMap";
 export { default as cloneObject } from "./cloneObject";
+export { default as compact } from "./compact";
 export { default as deepMerge } from "./deepMerge";
 export { default as filterErrors } from "./filterErrors";
 export { default as get } from "./get";

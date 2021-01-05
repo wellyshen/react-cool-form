@@ -203,7 +203,7 @@ The `field` method can not only be used for validating but also converting data 
 
 ## Manually Triggering Validation
 
-We can manually trigger built-in, field-level, and form-level validation with the [`validateField`](../api-reference/use-form#validatefield) and [`validateForm`](../api-reference/use-form#validateForm) methods respectively. Here I take form-level as an example:
+We can manually trigger built-in, field-level, and form-level validation with React Cool Form's [`runValidation`](../api-reference/use-form#runvalidation) method.
 
 ```js
 import { useForm } from "react-cool-form";
@@ -224,7 +224,7 @@ const validate = (values) => {
 };
 
 const App = () => {
-  const { form, validateField, validateForm } = useForm({
+  const { form, runValidation } = useForm({
     defaultValues: { username: "", email: "" },
     validate,
     onSubmit: (values) => console.log("onSubmit: ", values),
@@ -236,20 +236,16 @@ const App = () => {
       <input name="username" />
       <input name="email" type="email" />
       {/* Validate a single field */}
-      <button onClick={() => validateField("username")}>
+      <button onClick={() => runValidation("username")}>
         Validate Username
       </button>
-      {/* Validate the form */}
-      <button onClick={() => validateForm()}>Validate All</button>
-      {/* Check validate results */}
+      {/* Validate the form (i.e. all the fields) */}
+      <button onClick={() => runValidation()}>Validate All</button>
+      {/* With result */}
       <button
         onClick={async () => {
-          const errors = await validateForm();
-          if (errors) {
-            console.log("🙅🏻‍♀ Invalid");
-          } else {
-            console.log("🙆🏻‍♀️ Valid");
-          }
+          const valid = await runValidation();
+          console.log("The form is: ", valid ? "valid" : "invalid");
         }}
       >
         Validate Results
@@ -266,16 +262,14 @@ By default, React Cool Form runs all the validation methods as follows. You can 
 
 ### When to Run
 
-| Event/method                                               | Target     | Timing                                                                                                                     |
-| ---------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `onChange`                                                 | Individual | Whenever the value of a field has been changed.                                                                            |
-| [`setFieldValue`](../api-reference/use-form#setfieldvalue) | Individual | Whenever the value of a field has been set.                                                                                |
-| [`setValues`](../api-reference/use-form#setvalues)         | All        | Whenever the `values` of the form have been set.                                                                           |
-| `onBlur`                                                   | Individual | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
-| `onSubmit`                                                 | All        | Whenever a submission attempt is made.                                                                                     |
-| [`submit`](../api-reference/use-form#submit)               | All        | Whenever a submission attempt is made manually.                                                                            |
-| [`validateField`](../api-reference/use-form#validatefield) | Individual | Manually running validation for a single field.                                                                            |
-| [`validateForm`](../api-reference/use-form#validateform)   | All        | Manually running validation for the form.                                                                                  |
+| Event/method                                               | Target         | Timing                                                                                                                     |
+| ---------------------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`                                                 | Individual     | Whenever the value of a field has been changed.                                                                            |
+| [`setValue`](../api-reference/use-form#setvalue)           | Individual     | Whenever the value of a field has been set.                                                                                |
+| `onBlur`                                                   | Individual     | Whenever a field has been touched. **If a validation method has been run by the `onChange` event, it won't be run again**. |
+| `onSubmit`                                                 | All            | Whenever a submission attempt is made.                                                                                     |
+| [`submit`](../api-reference/use-form#submit)               | All            | Whenever a submission attempt is made manually.                                                                            |
+| [`runValidation`](../api-reference/use-form#runvalidation) | Individual/All | Manually running validation for the field(s) or form.                                                                      |
 
 ### How to Run
 

@@ -35,7 +35,7 @@ Tell React Cool Form to ignore field(s) by passing in the `name` of the field. Y
 
 By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirty`) of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. Check the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
 
-- If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) or [controller](#controller)'s target. We need to clear the related state by ourselves via `set`-related methods.
+- If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) or [controller](#controller)'s target. We need to clear the related state by ourselves.
 
 ### builtInValidationMode
 
@@ -51,7 +51,7 @@ We can configure the [mode of the built-in validation](../getting-started/valida
 
 `boolean`
 
-Tell React Cool Form to run validations on `change` events as well as the [setFieldValue](#setfieldvalue) and [setValues](#setvalues) methods. Default is `true`.
+Tell React Cool Form to run validations on `change` events as well as the [setValue](#setvalue) method. Default is `true`.
 
 ### validateOnBlur
 
@@ -76,12 +76,10 @@ const returnValues = useForm({
   onSubmit: async (values, options, e) => {
     const {
       formState, // The current form state, don't mutate it directly
-      setValues,
-      setFieldValue,
-      setErrors,
-      setFieldError,
-      validateForm,
-      validateField,
+      setValue,
+      setTouched,
+      setError,
+      runValidation,
       submit,
       reset,
     } = options;
@@ -104,12 +102,10 @@ const returnValues = useForm({
   onError: (errors, options, e) => {
     const {
       formState, // The current form state, don't mutate it directly
-      setValues,
-      setFieldValue,
-      setErrors,
-      setFieldError,
-      validateForm,
-      validateField,
+      setValue,
+      setTouched,
+      setError,
+      runValidation,
       submit,
       reset,
     } = options;
@@ -132,12 +128,10 @@ const returnValues = useForm({
   onReset: (values, options, e) => {
     const {
       formState, // The current form state, don't mutate it directly
-      setValues,
-      setFieldValue,
-      setErrors,
-      setFieldError,
-      validateForm,
-      validateField,
+      setValue,
+      setTouched,
+      setError,
+      runValidation,
       submit,
       reset,
     } = options;
@@ -205,116 +199,126 @@ If you just want to validate the field, there's a shortcut for it:
 
 This method provides us a performant way to use/read the form state. Check the [Form State](../getting-started/form-state) document to learn more.
 
-### setValues
-
-`(values: FormValues | Function, options?: Object) => void`
-
-This method allows us to manually set the `values` of the [form state](../getting-started/form-state).
-
-```js
-const { setValues } = useForm();
-
-setValues(
-  { firstName: "Welly", lastName: "Shen" }, // It will replace the entire values object
-  {
-    shouldValidate: true, // (Default = "validateOnChange" option) Triggers form validation
-    touched: ["firstName"], // Sets fields as touched by passing their names
-    // touched: (allFieldNames) => allFieldNames, // A reverse way to set touched fields
-    dirty: ["firstName"], // Sets fields as dirty by passing their names
-    // dirty: (allFieldNames) => allFieldNames, // A reverse way to set dirty fields
-  }
-);
-
-// We can also pass a callback as the "values" parameter, similar to React's setState callback style
-setValues((prevValues) => ({ ...prevValues, firstName: "Bella" }));
-```
-
-### setFieldValue
+### setValue
 
 `(name: string, value?: any | Function, options?: Object) => void`
 
 This method allows us to manually set/clear the value of a field. Useful for creating custom field change handlers.
 
 ```js
-const { setFieldValue } = useForm();
+const { setValue } = useForm();
 
-setFieldValue("fieldName", "value", {
+setValue("fieldName", "value", {
   shouldValidate: true, // (Default = "validateOnChange" option) Triggers field validation
   shouldTouched: true, // (Default = true) Sets the field as touched
   shouldDirty: true, // (Default = true) Sets the field as dirty
 });
 
 // We can also pass a callback as the "value" parameter, similar to React's setState callback style
-setFieldValue("fieldName", (prevValue) => prevValue.splice(2, 0, "🍎"));
+setValue("fieldName", (prevValue) => prevValue.splice(2, 0, "🍎"));
 ```
 
-We can clear the value of a field as the following way:
+We can clear the value of a field by the following way:
 
 ```js
-setFieldValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
+setValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
 // or
-setFieldValue("fieldName", undefined);
+setValue("fieldName", undefined);
 ```
 
-### setErrors
+### setTouched
 
-`(errors?: FormErrors | Function) => void`
+`(name: string, isTouched?: boolean, shouldValidate?: boolean) => void`
 
-This method allows us to manually set/clear the `errors` of the [form state](../getting-started/form-state).
+This method allows us to manually set/clear the touched of a field. Useful for creating custom field touched handlers.
 
 ```js
-const { setErrors } = useForm();
+const { setTouched } = useForm();
 
-setErrors({ firstName: "Required", lastName: "Required" });
+// Common use case
+setTouched("fieldName");
 
-// We can also pass a callback as the "errors" parameter, similar to React's setState callback style
-setErrors((prevErrors) => ({ ...prevErrors, firstName: "Required" }));
+// Full parameters
+setTouched(
+  "fieldName",
+  true, // (Default = true) Sets the field as touched
+  true // (Default = "validateOnBlur" option) Triggers field validation
+);
 ```
 
-We can clear the `errors` of the form state as the following way:
+We can clear the touched of a field by the following way:
 
 ```js
-setErrors();
-// or
-setErrors(undefined); // Works with any falsy values
+setTouched("fieldName", false); // The touched will be unset: { fieldName: true } → {}
 ```
 
-### setFieldError
+### setError
 
 `(name: string, error?: any | Function) => void`
 
 This method allows us to manually set/clear the error of a field. Useful for creating custom field error handlers.
 
 ```js
-const { setFieldError } = useForm();
+const { setError } = useForm();
 
-setFieldError("fieldName", "Required");
+setError("fieldName", "Required");
 
 // We can also pass a callback as the "error" parameter, similar to React's setState callback style
-setFieldError("fieldName", (prevError) =>
-  prevError ? "Too short" : "Required"
-);
+setError("fieldName", (prevError) => (prevError ? "Too short" : "Required"));
 ```
 
-We can clear the error of a field as the following way:
+We can clear the error of a field by the following way (or using [clearErrors](#clearerrors)):
 
 ```js
-setFieldError("fieldName"); // The error will be unset: { fieldName: "Required" } → {}
+setError("fieldName"); // The error will be unset: { fieldName: "Required" } → {}
 // or
-setFieldError("fieldName", undefined); // Works with any falsy values
+setError("fieldName", undefined); // Works with any falsy values
 ```
 
-### validateForm
+### clearErrors
 
-`() => Promise<FormErrors>`
+`(name?: string | string[]) => void`
 
-This method allows us to manually run validation for the form, it returns the `errors` of the [form state](../getting-started/form-state#about-the-form-state). Check the [Validation Guide](../getting-started/validation-guide) document to learn more.
+This method allows us to manually clear errors (or an error). Useful for creating custom field error handlers.
 
-### validateField
+```js
+const { clearErrors } = useForm();
 
-`(name: string) => Promise<any>`
+// Current errors: { foo: { bar: "Required", baz: "Required" }, qux: "Required" }
 
-This method allows us to manually run validation for a single field, it returns an error if any. Check the [Validation Guide](../getting-started/validation-guide) document to learn more.
+clearErrors(); // Clears all errors. Result: {}
+
+clearErrors("foo"); // Clears both "foo.bar" and "foo.baz". Result: { qux: "Required" }
+
+clearErrors(["foo.bar", "foo.baz"]); // Clears "foo.bar" and "foo.baz" respectively. Result: { foo: {}, qux: "Required" }
+```
+
+### runValidation
+
+`(name?: string | string[]) => Promise<boolean>`
+
+This method allows us to manually run validation for the field(s) or form. It returns a boolean that indicates the validation results, `true` means valid, `false` otherwise.
+
+```js
+const { runValidation } = useForm();
+
+// Validates the form (i.e. all the fields)
+runValidation();
+
+// Validates a single field
+runValidation("fieldName");
+
+// Validates multiple fields
+runValidation(["fieldName1", "fieldName2"]);
+
+// With result
+const validateForm = async () => {
+  const valid = await runValidation();
+  console.log("The form is: ", valid ? "valid" : "invalid");
+};
+```
+
+👉🏻 Check the [Validation Guide](../getting-started/validation-guide) to learn more.
 
 ### submit
 
@@ -383,15 +387,15 @@ This method allows us to integrate with an existing component (usually a [contro
 
 To use the `controller`, you **must pass in the field's name** to the first argument. The `options` containing the following optional properties:
 
-| Name         | Type       | Description                                                                                                                                                                                                                                                                                            |
-| ------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| validate     | `Function` | A synchronous/asynchronous function that is used for the [field-level validation](../getting-started/validation-guide#field-level-validation).                                                                                                                                                         |
-| value        | `any`      | A given value of the field for UI rendering. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance.                                                                                                            |
-| defaultValue | `any`      | The default value of the field. Useful for dealing with the case of [conditional fields](../examples/conditional-fields).                                                                                                                                                                              |
-| parse        | `Function` | A function that takes all the arguments of the attached component's `onChange` handler and parses the value of the field that you want to store into the [form state](../getting-started/form-state). Useful for data type converting.                                                                 |
-| format       | `Function` | A function that takes the field's value from the [form state](../getting-started/form-state) and formats the value to give to the field. Usually used in conjunction with `parse`.                                                                                                                     |
-| onChange     | `Function` | The `onChange` handler of the attached component. React Cool Form appends the field's value to the last argument, i.e. `(...args, fieldValue) => void`. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance. |
-| onBlur       | `Function` | The `onBlur` handler of the attached component.                                                                                                                                                                                                                                                        |
+| Name         | Type       | Description                                                                                                                                                                                                                                                                                          |
+| ------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| validate     | `function` | A synchronous/asynchronous function that is used for the [field-level validation](../getting-started/validation-guide#field-level-validation).                                                                                                                                                       |
+| value        | `any`      | A given value of the field for UI rendering. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance.                                                                                                          |
+| defaultValue | `any`      | The default value of the field. Useful for dealing with the case of [conditional fields](../examples/conditional-fields).                                                                                                                                                                            |
+| parse        | `function` | A function that takes all the arguments of the target component's `onChange` handler and parses the value of the field that you want to store into the [form state](../getting-started/form-state). Useful for data type converting.                                                                 |
+| format       | `function` | A function that takes the field's value from the [form state](../getting-started/form-state) and formats the value to give to the field. Usually used in conjunction with `parse`.                                                                                                                   |
+| onChange     | `function` | The `onChange` handler of the target component. React Cool Form appends the field's value to the last argument, i.e. `(...args, fieldValue) => void`. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance. |
+| onBlur       | `function` | The `onBlur` handler of the target component.                                                                                                                                                                                                                                                        |
 
 #### Return Props
 
@@ -401,8 +405,8 @@ It returns the following props:
 | -------- | ---------- | ---------------------------------------------------- |
 | name     | `string`   | The field's name.                                    |
 | value    | `any`      | The field's value.                                   |
-| onChange | `Function` | Event handler called when the field's value changed. |
-| onChange | `Function` | Event handler called when the field loses focus.     |
+| onChange | `function` | Event handler called when the field's value changed. |
+| onChange | `function` | Event handler called when the field loses focus.     |
 
 #### Basic Usage
 
@@ -412,12 +416,13 @@ The following code demonstrates a basic use case:
 const { controller } = useForm();
 
 // With built-in validation (if supported)
-<Component {...controller("name")} required />;
+<Component {...controller("fieldName")} required />;
 
 // With custom validation
 <Component
-  {...controller("name", {
-    validate: (value, values /* Form's values */) => !value.length && "Required",
+  {...controller("fieldName", {
+    validate: (value, values /* Form's values */) =>
+      !value.length && "Required",
   })}
   required
 />;

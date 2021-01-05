@@ -69,12 +69,11 @@ export type FieldArgs = Record<
 
 interface Options<V> {
   formState: FormState<V>;
-  setErrors: SetErrors<V>;
-  setFieldError: SetFieldError;
-  setValues: SetValues<V>;
-  setFieldValue: SetFieldValue;
-  validateForm: ValidateForm<V>;
-  validateField: ValidateField;
+  setValue: SetValue;
+  setTouched: SetTouched;
+  setError: SetError;
+  clearErrors: ClearErrors;
+  runValidation: RunValidation;
   reset: Reset<V>;
   submit: Submit<V>;
 }
@@ -135,36 +134,7 @@ export interface GetState {
   ): any;
 }
 
-export interface SetErrors<V> {
-  (
-    errors?:
-      | FormErrors<V>
-      | ((previousErrors: FormErrors<V>) => FormErrors<V> | undefined)
-  ): void;
-}
-
-export interface SetFieldError {
-  (name: string, error?: any | ((previousError?: any) => any)): void;
-}
-
-type ValuesArg<V> = V | ((previousValues: V) => V);
-
-interface FieldNamesFn {
-  (fieldNames: string[]): string[];
-}
-
-export interface SetValues<V> {
-  (
-    values: ValuesArg<V>,
-    options?: {
-      shouldValidate?: boolean;
-      touched?: string[] | FieldNamesFn;
-      dirty?: string[] | FieldNamesFn;
-    }
-  ): void;
-}
-
-export interface SetFieldValue {
+export interface SetValue {
   (
     name: string,
     value?: any | ((previousValue: any) => any),
@@ -174,17 +144,25 @@ export interface SetFieldValue {
   ): void;
 }
 
-export interface ValidateForm<V> {
-  (): Promise<FormErrors<V>>;
+export interface SetTouched {
+  (name: string, isTouched?: boolean, shouldValidate?: boolean): void;
 }
 
-export interface ValidateField {
-  (name: string): Promise<any>;
+export interface SetError {
+  (name: string, error?: any | ((previousError?: any) => any)): void;
+}
+
+export interface ClearErrors {
+  (name?: string | string[]): void;
+}
+
+export interface RunValidation {
+  (name?: string | string[]): Promise<boolean>;
 }
 
 export interface Reset<V> {
   (
-    values?: ValuesArg<V> | null,
+    values?: V | ((previousValues: V) => V) | null,
     exclude?: (keyof FormState<V>)[] | null,
     event?: SyntheticEvent
   ): void;
@@ -251,12 +229,11 @@ export interface Return<V> {
   form: RefObject<HTMLFormElement>;
   field: FieldRef<V>;
   getState: GetState;
-  setErrors: SetErrors<V>;
-  setFieldError: SetFieldError;
-  setValues: SetValues<V>;
-  setFieldValue: SetFieldValue;
-  validateForm: ValidateForm<V>;
-  validateField: ValidateField;
+  setValue: SetValue;
+  setTouched: SetTouched;
+  setError: SetError;
+  clearErrors: ClearErrors;
+  runValidation: RunValidation;
   reset: Reset<V>;
   submit: Submit<V>;
   controller: Controller<V>;

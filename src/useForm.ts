@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import {
+  ClearErrors,
   Config,
   Controller,
   FieldArgs,
@@ -18,17 +19,16 @@ import {
   Map,
   Reset,
   Return,
-  SetErrors,
-  SetFieldError,
-  SetFieldValue,
-  SetValues,
+  RunValidation,
+  SetError,
+  SetTouched,
+  SetValue,
   Submit,
-  ValidateField,
-  ValidateForm,
 } from "./types";
 import { useIsoLayoutEffect, useLatest, useState } from "./hooks";
 import {
   arrayToMap,
+  compact,
   deepMerge,
   filterErrors,
   get,
@@ -134,15 +134,9 @@ export default <V extends FormValues = FormValues>({
     []
   );
 
-  const getFieldNames = useCallback(
-    () => Object.keys({ ...fieldsRef.current, ...controllersRef.current }),
-    []
-  );
-
   const handleUnset = useCallback(
-    (path: string, fieldPath: string, target: any, name: string) => {
-      setStateRef(path, unset(target, name, true), { fieldPath });
-    },
+    (path: string, fieldPath: string, target: any, name: string) =>
+      setStateRef(path, unset(target, name, true), { fieldPath }),
     [setStateRef]
   );
 
@@ -369,17 +363,7 @@ export default <V extends FormValues = FormValues>({
     [setUsedStateRef, stateRef]
   );
 
-  const setErrors = useCallback<SetErrors<V>>(
-    (errors) => {
-      setStateRef(
-        "errors",
-        (isFunction(errors) ? errors(stateRef.current.errors) : errors) || {}
-      );
-    },
-    [setStateRef, stateRef]
-  );
-
-  const setFieldError = useCallback<SetFieldError>(
+  const setError = useCallback<SetError>(
     (name, error) => {
       error = isFunction(error)
         ? error(get(stateRef.current.errors, name))
@@ -394,19 +378,37 @@ export default <V extends FormValues = FormValues>({
     [handleUnset, setStateRef, stateRef]
   );
 
+  const clearErrors = useCallback<ClearErrors>(
+    (name) => {
+      if (!name) {
+        setStateRef("errors", {});
+      } else if (Array.isArray(name)) {
+        name.forEach((n) =>
+          handleUnset("errors", `errors.${n}`, stateRef.current.errors, n)
+        );
+      } else {
+        handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
+      }
+    },
+    [handleUnset, setStateRef, stateRef]
+  );
+
   const runBuiltInValidation = useCallback(
     (name: string) => {
       if (builtInValidationMode === false || !fieldsRef.current[name])
         return undefined;
 
-      const { field } = fieldsRef.current[name];
+      const {
+        field: { validationMessage, validity },
+      } = fieldsRef.current[name];
 
-      if (builtInValidationMode === "message") return field.validationMessage;
+      if (builtInValidationMode === "message" && validationMessage)
+        return validationMessage;
 
       // eslint-disable-next-line no-restricted-syntax
-      for (const k in field.validity) {
+      for (const k in validity) {
         // @ts-expect-error
-        if (k !== "valid" && field.validity[k]) return k;
+        if (k !== "valid" && validity[k]) return k;
       }
 
       return undefined;
@@ -467,20 +469,20 @@ export default <V extends FormValues = FormValues>({
 
         return isPlainObject(errors) ? errors : {};
       } catch (exception) {
-        warn(`💡 react-cool-form > config.validate: `, exception);
+        warn(`💡 react-cool-form > validate form: `, exception);
         throw exception;
       }
     },
     [formValidatorRef, stateRef]
   );
 
-  const validateField = useCallback<ValidateField>(
-    async (name) => {
-      const hasAsyncValidation =
+  const validateField = useCallback(
+    async (name: string) => {
+      const hasAsyncValidator =
         isAsyncFunction(formValidatorRef.current) ||
         isAsyncFunction(fieldValidatorsRef.current[name]);
 
-      if (hasAsyncValidation) setStateRef("isValidating", true);
+      if (hasAsyncValidator) setStateRef("isValidating", true);
 
       try {
         const error =
@@ -488,8 +490,8 @@ export default <V extends FormValues = FormValues>({
           (await runFieldValidation(name)) ||
           runBuiltInValidation(name);
 
-        setFieldError(name, error);
-        if (hasAsyncValidation) setStateRef("isValidating", false);
+        setError(name, error);
+        if (hasAsyncValidator) setStateRef("isValidating", false);
 
         return error;
       } catch (exception) {
@@ -501,17 +503,17 @@ export default <V extends FormValues = FormValues>({
       runBuiltInValidation,
       runFieldValidation,
       runFormValidation,
-      setFieldError,
+      setError,
       setStateRef,
     ]
   );
 
-  const validateFieldWithLowPriority = useCallback<ValidateField>(
+  const validateFieldWithLowPriority = useCallback<typeof validateField>(
     (name) => runWithLowPriority(() => validateField(name)),
     [validateField]
   );
 
-  const validateForm = useCallback<ValidateForm<V>>(() => {
+  const validateForm = useCallback((): Promise<FormErrors<V>> => {
     setStateRef("isValidating", true);
 
     return Promise.all([
@@ -521,7 +523,7 @@ export default <V extends FormValues = FormValues>({
     ]).then((errors) => {
       const errs = deepMerge(...errors);
 
-      setErrors(errs);
+      setStateRef("errors", errs);
       setStateRef("isValidating", false);
 
       return errs;
@@ -530,16 +532,24 @@ export default <V extends FormValues = FormValues>({
     runAllBuiltInValidation,
     runAllFieldsValidation,
     runFormValidation,
-    setErrors,
     setStateRef,
   ]);
 
-  const validateFormWithLowPriority = useCallback<ValidateForm<V>>(
-    () => runWithLowPriority(validateForm),
-    [validateForm]
+  const runValidation = useCallback<RunValidation>(
+    (name) => {
+      if (!name) return validateForm().then((errors) => isEmptyObject(errors));
+
+      if (Array.isArray(name))
+        return Promise.all(name.map((n) => validateField(n))).then(
+          (errors) => !compact(errors).length
+        );
+
+      return validateField(name).then((error) => !error);
+    },
+    [validateField, validateForm]
   );
 
-  const setFieldDirty = useCallback(
+  const setDirty = useCallback(
     (name: string) => {
       if (
         get(stateRef.current.values, name) !==
@@ -553,63 +563,41 @@ export default <V extends FormValues = FormValues>({
     [handleUnset, setStateRef, stateRef]
   );
 
-  const setFieldTouched = useCallback(
-    (name: string, shouldValidate = validateOnBlur) => {
-      setStateRef(`touched.${name}`, true);
+  const setTouched = useCallback<SetTouched>(
+    (name, isTouched = true, shouldValidate = validateOnBlur) => {
+      if (isTouched) {
+        setStateRef(`touched.${name}`, isTouched);
+      } else {
+        handleUnset(
+          "touched",
+          `touched.${name}`,
+          stateRef.current.touched,
+          name
+        );
+      }
 
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
-    [setStateRef, validateFieldWithLowPriority, validateOnBlur]
-  );
-
-  const setFieldTouchedMaybeValidate = useCallback(
-    (name) =>
-      setFieldTouched(
-        name,
-        validateOnChange ? name !== changedFieldRef.current : undefined
-      ),
-    [setFieldTouched, validateOnChange]
-  );
-
-  const setValues = useCallback<SetValues<V>>(
-    (
-      values,
-      { shouldValidate = validateOnChange, touched = [], dirty = [] } = {}
-    ) => {
-      values = isFunction(values) ? values(stateRef.current.values) : values;
-
-      setStateRef("values", values);
-      setNodesOrStateValue(values);
-
-      if (touched.length)
-        setStateRef(
-          "touched",
-          setTrueValues(
-            stateRef.current.touched,
-            isFunction(touched) ? touched(getFieldNames()) : touched
-          )
-        );
-      if (dirty.length)
-        setStateRef(
-          "dirty",
-          setTrueValues(
-            stateRef.current.dirty,
-            isFunction(dirty) ? dirty(getFieldNames()) : dirty
-          )
-        );
-      if (shouldValidate) validateFormWithLowPriority();
-    },
     [
-      getFieldNames,
-      setNodesOrStateValue,
+      handleUnset,
       setStateRef,
       stateRef,
-      validateFormWithLowPriority,
-      validateOnChange,
+      validateFieldWithLowPriority,
+      validateOnBlur,
     ]
   );
 
-  const setFieldValue = useCallback<SetFieldValue>(
+  const setTouchedMaybeValidate = useCallback(
+    (name) =>
+      setTouched(
+        name,
+        true,
+        validateOnChange ? name !== changedFieldRef.current : undefined
+      ),
+    [setTouched, validateOnChange]
+  );
+
+  const setValue = useCallback<SetValue>(
     (
       name,
       value,
@@ -630,16 +618,16 @@ export default <V extends FormValues = FormValues>({
       }
       setNodeValue(name, value);
 
-      if (shouldTouched) setFieldTouched(name, false);
-      if (shouldDirty) setFieldDirty(name);
+      if (shouldTouched) setTouched(name, true, false);
+      if (shouldDirty) setDirty(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
     [
       handleUnset,
-      setFieldDirty,
-      setFieldTouched,
+      setDirty,
       setNodeValue,
       setStateRef,
+      setTouched,
       stateRef,
       validateFieldWithLowPriority,
       validateOnChange,
@@ -649,27 +637,25 @@ export default <V extends FormValues = FormValues>({
   const getOptions = useCallback(
     () => ({
       formState: stateRef.current,
-      setErrors,
-      setFieldError,
-      setValues,
-      setFieldValue,
-      validateForm,
-      validateField,
+      setValue,
+      setTouched,
+      setError,
+      clearErrors,
+      runValidation,
       reset,
       submit,
     }),
     [
+      clearErrors,
       // @ts-expect-error
       reset,
-      setErrors,
-      setFieldError,
-      setFieldValue,
-      setValues,
+      runValidation,
+      setError,
+      setTouched,
+      setValue,
       stateRef,
       // @ts-expect-error
       submit,
-      validateField,
-      validateForm,
     ]
   );
 
@@ -711,7 +697,13 @@ export default <V extends FormValues = FormValues>({
 
       const { touched, values } = stateRef.current;
 
-      setStateRef("touched", setTrueValues(touched, getFieldNames()));
+      setStateRef(
+        "touched",
+        setTrueValues(
+          touched,
+          Object.keys({ ...fieldsRef.current, ...controllersRef.current })
+        )
+      );
       setStateRef("isSubmitting", true);
 
       try {
@@ -734,25 +726,17 @@ export default <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
-    [
-      getFieldNames,
-      getOptions,
-      onErrorRef,
-      onSubmitRef,
-      setStateRef,
-      stateRef,
-      validateForm,
-    ]
+    [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
   );
 
   const handleChangeEvent = useCallback(
     (name: string, value: any) => {
       setStateRef(`values.${name}`, value);
-      setFieldDirty(name);
+      setDirty(name);
 
       if (validateOnChange) validateFieldWithLowPriority(name);
     },
-    [setFieldDirty, setStateRef, validateFieldWithLowPriority, validateOnChange]
+    [setDirty, setStateRef, validateFieldWithLowPriority, validateOnChange]
   );
 
   const controller = useCallback<Controller<V>>(
@@ -796,7 +780,7 @@ export default <V extends FormValues = FormValues>({
           changedFieldRef.current = name;
         },
         onBlur: (e) => {
-          setFieldTouchedMaybeValidate(name);
+          setTouchedMaybeValidate(name);
           if (onBlur) onBlur(e);
           changedFieldRef.current = undefined;
         },
@@ -807,7 +791,7 @@ export default <V extends FormValues = FormValues>({
       getState,
       handleChangeEvent,
       setDefaultValue,
-      setFieldTouchedMaybeValidate,
+      setTouchedMaybeValidate,
     ]
   );
 
@@ -845,7 +829,7 @@ export default <V extends FormValues = FormValues>({
       const { name } = target as FieldElement;
 
       if (fieldsRef.current[name] && !controllersRef.current[name]) {
-        setFieldTouchedMaybeValidate(name);
+        setTouchedMaybeValidate(name);
         changedFieldRef.current = undefined;
       }
     };
@@ -932,8 +916,8 @@ export default <V extends FormValues = FormValues>({
     handleChangeEvent,
     handleUnset,
     reset,
-    setFieldTouchedMaybeValidate,
     setNodesOrStateValue,
+    setTouchedMaybeValidate,
     setUsedStateRef,
     shouldRemoveField,
     stateRef,
@@ -944,12 +928,11 @@ export default <V extends FormValues = FormValues>({
     form: formRef,
     field: fieldRef,
     getState,
-    setErrors,
-    setFieldError,
-    setValues,
-    setFieldValue,
-    validateForm,
-    validateField,
+    setValue,
+    setTouched,
+    setError,
+    clearErrors,
+    runValidation,
     reset,
     submit,
     controller,

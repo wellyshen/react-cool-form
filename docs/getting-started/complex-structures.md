@@ -6,19 +6,19 @@ hide_table_of_contents: true
 
 With React Cool Form you can use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation)-and-[bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation as the name of a field to create arbitrarily deeply nested fields. It's very similar to Lodash's [\_.set](https://lodash.com/docs/4.17.15#set) method.
 
-> 💡 Setting `undefined` as a field value deletes the field data from the structure (see [related doc](../api-reference/use-form#setfieldvalue)).
+> 💡 Setting `undefined` as a field value deletes the field data from the structure (see [related doc](../api-reference/use-form#setvalue)).
 
-| Name       | Current structure                 | Value     | Result                     |
-| ---------- | --------------------------------- | --------- | -------------------------- |
-| foo        | { }                               | "🍎"      | { foo: "🍎" }              |
-| foo.bar    | { }                               | "🍎"      | { foo: { bar: "🍎" } }     |
-| foo[0]     | { }                               | "🍎"      | { foo: [ "🍎" ] }          |
-| foo[1]     | { }                               | "🍎"      | { foo: [ empty, "🍎" ] }   |
-| foo.0      | { }                               | "🍎"      | { foo: [ "🍎" ] }          |
-| foo[0].bar | { }                               | "🍎"      | { foo: [ { bar: "🍎" } ] } |
-| foo        | { foo: "🍎" }                     | undefined | { }                        |
-| foo.bar    | { foo: { bar: "🍎" }, baz: "🍎" } | undefined | { baz: "🍎" }              |
-| foo[0]     | { foo: [ { bar: "🍎" } ] }        | undefined | { foo: [ empty ] }         |
+| Name         | Current structure                   | Value     | Result                      |
+| ------------ | ----------------------------------- | --------- | --------------------------- |
+| "foo"        | { }                                 | "rcf"     | { foo: "rcf" }              |
+| "foo.bar"    | { }                                 | "rcf"     | { foo: { bar: "rcf" } }     |
+| "foo[0]"     | { }                                 | "rcf"     | { foo: [ "rcf" ] }          |
+| "foo[1]"     | { }                                 | "rcf"     | { foo: [ empty, "rcf" ] }   |
+| "foo.0"      | { }                                 | "rcf"     | { foo: [ "rcf" ] }          |
+| "foo[0].bar" | { }                                 | "rcf"     | { foo: [ { bar: "rcf" } ] } |
+| "foo"        | { foo: "rcf" }                      | undefined | { }                         |
+| "foo.bar"    | { foo: { bar: "rcf" }, baz: "rcf" } | undefined | { baz: "rcf" }              |
+| "foo[0]"     | { foo: [ { bar: "rcf" } ] }         | undefined | { foo: [ empty ] }          |
 
 You can play around with the following example to get better understanding of how it works:
 
@@ -42,7 +42,7 @@ const FieldGroup = ({ name, onUpdate, onClear, ...rest }) => (
 );
 
 const App = () => {
-  const { form, setFieldValue } = useForm({
+  const { form, setValue } = useForm({
     defaultValues: {
       foo: "",
       bar: [],
@@ -56,23 +56,23 @@ const App = () => {
     <form ref={form}>
       <FieldGroup
         name="foo"
-        onUpdate={() => setFieldValue("foo", "🍎")}
-        onClear={() => setFieldValue("foo")}
+        onUpdate={() => setValue("foo", "rcf")}
+        onClear={() => setValue("foo")}
       />
       <FieldGroup
         name="bar[0]"
-        onUpdate={() => setFieldValue("bar[0]", "🍋")}
-        onClear={() => setFieldValue("bar[0]")}
+        onUpdate={() => setValue("bar[0]", "🍋")}
+        onClear={() => setValue("bar[0]")}
       />
       <FieldGroup
         name="baz.nested"
-        onUpdate={() => setFieldValue("baz.nested", "🍉")}
-        onClear={() => setFieldValue("baz.nested")}
+        onUpdate={() => setValue("baz.nested", "🍉")}
+        onClear={() => setValue("baz.nested")}
       />
       <FieldGroup
         name="qux[0].nested"
-        onUpdate={() => setFieldValue("qux[0].nested", "🥝")}
-        onClear={() => setFieldValue("qux[0].nested")}
+        onUpdate={() => setValue("qux[0].nested", "🥝")}
+        onClear={() => setValue("qux[0].nested")}
       />
       <input type="submit" />
     </form>
