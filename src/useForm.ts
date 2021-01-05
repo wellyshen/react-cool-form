@@ -398,14 +398,17 @@ export default <V extends FormValues = FormValues>({
       if (builtInValidationMode === false || !fieldsRef.current[name])
         return undefined;
 
-      const { field } = fieldsRef.current[name];
+      const {
+        field: { validationMessage, validity },
+      } = fieldsRef.current[name];
 
-      if (builtInValidationMode === "message") return field.validationMessage;
+      if (builtInValidationMode === "message" && validationMessage)
+        return validationMessage;
 
       // eslint-disable-next-line no-restricted-syntax
-      for (const k in field.validity) {
+      for (const k in validity) {
         // @ts-expect-error
-        if (k !== "valid" && field.validity[k]) return k;
+        if (k !== "valid" && validity[k]) return k;
       }
 
       return undefined;
@@ -466,7 +469,7 @@ export default <V extends FormValues = FormValues>({
 
         return isPlainObject(errors) ? errors : {};
       } catch (exception) {
-        warn(`💡 react-cool-form > config.validate: `, exception);
+        warn(`💡 react-cool-form > validate form: `, exception);
         throw exception;
       }
     },
@@ -475,11 +478,11 @@ export default <V extends FormValues = FormValues>({
 
   const validateField = useCallback<ValidateField>(
     async (name) => {
-      const hasAsyncValidation =
+      const hasAsyncValidator =
         isAsyncFunction(formValidatorRef.current) ||
         isAsyncFunction(fieldValidatorsRef.current[name]);
 
-      if (hasAsyncValidation) setStateRef("isValidating", true);
+      if (hasAsyncValidator) setStateRef("isValidating", true);
 
       try {
         const error =
@@ -488,7 +491,7 @@ export default <V extends FormValues = FormValues>({
           runBuiltInValidation(name);
 
         setError(name, error);
-        if (hasAsyncValidation) setStateRef("isValidating", false);
+        if (hasAsyncValidator) setStateRef("isValidating", false);
 
         return error;
       } catch (exception) {
