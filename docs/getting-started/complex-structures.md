@@ -8,17 +8,17 @@ With React Cool Form you can use [dot](https://developer.mozilla.org/en-US/docs/
 
 > 💡 Setting `undefined` as a field value deletes the field data from the structure (see [related doc](../api-reference/use-form#setvalue)).
 
-| Name       | Current structure                   | Value     | Result                      |
-| ---------- | ----------------------------------- | --------- | --------------------------- |
-| foo        | { }                                 | "rcf"     | { foo: "rcf" }              |
-| foo.bar    | { }                                 | "rcf"     | { foo: { bar: "rcf" } }     |
-| foo[0]     | { }                                 | "rcf"     | { foo: [ "rcf" ] }          |
-| foo[1]     | { }                                 | "rcf"     | { foo: [ empty, "rcf" ] }   |
-| foo.0      | { }                                 | "rcf"     | { foo: [ "rcf" ] }          |
-| foo[0].bar | { }                                 | "rcf"     | { foo: [ { bar: "rcf" } ] } |
-| foo        | { foo: "rcf" }                      | undefined | { }                         |
-| foo.bar    | { foo: { bar: "rcf" }, baz: "rcf" } | undefined | { baz: "rcf" }              |
-| foo[0]     | { foo: [ { bar: "rcf" } ] }         | undefined | { foo: [ empty ] }          |
+| Name         | Current structure                   | Value     | Result                      |
+| ------------ | ----------------------------------- | --------- | --------------------------- |
+| "foo"        | { }                                 | "rcf"     | { foo: "rcf" }              |
+| "foo.bar"    | { }                                 | "rcf"     | { foo: { bar: "rcf" } }     |
+| "foo[0]"     | { }                                 | "rcf"     | { foo: [ "rcf" ] }          |
+| "foo[1]"     | { }                                 | "rcf"     | { foo: [ empty, "rcf" ] }   |
+| "foo.0"      | { }                                 | "rcf"     | { foo: [ "rcf" ] }          |
+| "foo[0].bar" | { }                                 | "rcf"     | { foo: [ { bar: "rcf" } ] } |
+| "foo"        | { foo: "rcf" }                      | undefined | { }                         |
+| "foo.bar"    | { foo: { bar: "rcf" }, baz: "rcf" } | undefined | { baz: "rcf" }              |
+| "foo[0]"     | { foo: [ { bar: "rcf" } ] }         | undefined | { foo: [ empty ] }          |
 
 You can play around with the following example to get better understanding of how it works:
 
