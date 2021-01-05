@@ -202,14 +202,14 @@ const App = () => {
 
 ## 3. Do It Yourself
 
-If the above solutions can't meet your needs then you can set up a custom field via the [API](../api-reference/use-form) of React Cool Form.
+If the above solutions can't meet your needs then you can set up a custom field via the [API](../api-reference/use-form#return-values) of React Cool Form. The following example demonstrates how to implement a custom field with complete validation UX.
 
 ```js
 import { useForm } from "react-cool-form";
 import { TextField } from "@material-ui/core";
 
 const App = () => {
-  const { form, getState, setValue, validateField } = useForm({
+  const { form, getState, setValue, setTouched, submit } = useForm({
     defaultValues: { username: "" },
     // ignoreFields: ["username"], // You can also ignore the field by this option
     validate: ({ username }) => {
@@ -219,23 +219,27 @@ const App = () => {
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [value, errors] = getState(["values.username", "errors"], {
-    // Disable it to show the error at the right timing
-    // Because the field isn't be touched without changing its value
-    filterUntouchedError: false,
-  });
+  const [value, errors] = getState(["values.username", "errors"]);
+
+  const handleSubmit = (e: any) => {
+    setTouched("username"); // Set the field as touched for displaying error (if it's not touched)
+    submit(e);
+  };
 
   return (
     <form ref={form}>
       <TextField
         name="username" // Used for the "ignoreFields" option
         value={value}
-        onChange={(e) => setValue("username", e.target.value)}
-        onBlur={() => validateField("username")}
+        onChange={(e) => setValue("username", e.target.value)} // Update the field's value and set it as touched
+        onBlur={() => setTouched("username")} // Set the field as touched for displaying error (if it's not touched)
         error={!!errors.username}
         helperText={errors.username}
         inputProps={{ "data-rcf-ignore": true }} // Ignore the field via the pre-defined data attribute
       />
+      <button type="button" onClick={handleSubmit}>
+        Submit
+      </button>
     </form>
   );
 };
