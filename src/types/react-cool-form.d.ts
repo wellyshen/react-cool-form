@@ -7,9 +7,7 @@ declare module "react-cool-form" {
 
   interface Options<V> {
     formState: FormState<V>;
-    setErrors: SetErrors<V>;
     setFieldError: SetFieldError;
-    setValues: SetValues<V>;
     setFieldValue: SetFieldValue;
     validateForm: ValidateForm<V>;
     validateField: ValidateField;
@@ -28,17 +26,6 @@ declare module "react-cool-form" {
     ): any;
   }
 
-  interface SetValues<V> {
-    (
-      values: V | PreviousValuesFn<V>,
-      options?: {
-        shouldValidate?: boolean;
-        touched?: string[] | FieldNamesFn;
-        dirty?: string[] | FieldNamesFn;
-      }
-    ): void;
-  }
-
   interface SetFieldValue {
     (
       name: string,
@@ -47,10 +34,6 @@ declare module "react-cool-form" {
         [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
       }
     ): void;
-  }
-
-  interface SetErrors<V> {
-    (errors?: FormErrors<V> | PreviousErrorsFn<FormErrors<V>>): void;
   }
 
   interface SetFieldError {
@@ -112,20 +95,12 @@ declare module "react-cool-form" {
     submitCount: number;
   }>;
 
-  export interface FieldNamesFn {
-    (fieldNames: string[]): string[];
-  }
-
   export interface PreviousValuesFn<V = any> {
     (previousValues: V): V;
   }
 
   export interface PreviousValueFn {
     (previousValue: any): any;
-  }
-
-  export interface PreviousErrorsFn<E = FormErrors> {
-    (previousErrors: E): E | undefined;
   }
 
   export interface PreviousErrorFn {
@@ -218,9 +193,7 @@ declare module "react-cool-form" {
     form: RefObject<HTMLFormElement>;
     field: FieldRef<V>;
     getState: GetState;
-    setErrors: SetErrors<V>;
     setFieldError: SetFieldError;
-    setValues: SetValues<V>;
     setFieldValue: SetFieldValue;
     validateForm: ValidateForm<V>;
     validateField: ValidateField;
