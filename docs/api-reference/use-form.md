@@ -79,8 +79,7 @@ const returnValues = useForm({
       setValue,
       setTouched,
       setError,
-      validateForm,
-      validateField,
+      runValidation,
       submit,
       reset,
     } = options;
@@ -106,8 +105,7 @@ const returnValues = useForm({
       setValue,
       setTouched,
       setError,
-      validateForm,
-      validateField,
+      runValidation,
       submit,
       reset,
     } = options;
@@ -133,8 +131,7 @@ const returnValues = useForm({
       setValue,
       setTouched,
       setError,
-      validateForm,
-      validateField,
+      runValidation,
       submit,
       reset,
     } = options;
@@ -296,17 +293,32 @@ clearErrors("foo"); // Clears both "foo.bar" and "foo.baz". Result: { qux: "Requ
 clearErrors(["foo.bar", "foo.baz"]); // Clears "foo.bar" and "foo.baz" respectively. Result: { foo: {}, qux: "Required" }
 ```
 
-### validateForm
+### runValidation
 
-`() => Promise<FormErrors>`
+`(name?: string | string[]) => Promise<boolean>`
 
-This method allows us to manually run validation for the form, it returns the `errors` of the [form state](../getting-started/form-state#about-the-form-state). Check the [Validation Guide](../getting-started/validation-guide) document to learn more.
+This method allows us to manually run validation for the field(s) or form. It returns a boolean that indicates the validation results, `true` means valid, `false` otherwise.
 
-### validateField
+```js
+const { runValidation } = useForm();
 
-`(name: string) => Promise<any>`
+// Validates the form (i.e. all the fields)
+runValidation();
 
-This method allows us to manually run validation for a single field, it returns an error if any. Check the [Validation Guide](../getting-started/validation-guide) document to learn more.
+// Validates a single field
+runValidation("fieldName");
+
+// Validates multiple fields
+runValidation(["fieldName1", "fieldName2"]);
+
+// With validation results
+const validateForm = async () => {
+  const valid = await runValidation();
+  console.log("The form is: ", valid ? "valid" : "invalid");
+};
+```
+
+👉🏻 Check the [Validation Guide](../getting-started/validation-guide) to learn more.
 
 ### submit
 

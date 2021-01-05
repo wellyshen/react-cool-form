@@ -11,8 +11,7 @@ declare module "react-cool-form" {
     setTouched: SetTouched;
     setError: SetError;
     clearErrors: ClearErrors;
-    validateForm: ValidateForm<V>;
-    validateField: ValidateField;
+    runValidation: RunValidation;
     reset: Reset<V>;
     submit: Submit<V>;
   }
@@ -65,12 +64,8 @@ declare module "react-cool-form" {
     ) => void;
   }
 
-  interface ValidateForm<V> {
-    (): Promise<FormErrors<V>>;
-  }
-
-  interface ValidateField {
-    (name: string): Promise<any>;
+  interface RunValidation {
+    (name?: string | string[]): Promise<boolean>;
   }
 
   interface Reset<V> {
@@ -207,8 +202,7 @@ declare module "react-cool-form" {
     setTouched: SetTouched;
     setError: SetError;
     clearErrors: ClearErrors;
-    validateForm: ValidateForm<V>;
-    validateField: ValidateField;
+    runValidation: RunValidation;
     reset: Reset<V>;
     submit: Submit<V>;
     controller: Controller<V>;

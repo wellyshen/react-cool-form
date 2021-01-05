@@ -19,16 +19,16 @@ import {
   Map,
   Reset,
   Return,
+  RunValidation,
   SetError,
   SetTouched,
   SetValue,
   Submit,
-  ValidateField,
-  ValidateForm,
 } from "./types";
 import { useIsoLayoutEffect, useLatest, useState } from "./hooks";
 import {
   arrayToMap,
+  compact,
   deepMerge,
   filterErrors,
   get,
@@ -476,8 +476,8 @@ export default <V extends FormValues = FormValues>({
     [formValidatorRef, stateRef]
   );
 
-  const validateField = useCallback<ValidateField>(
-    async (name) => {
+  const validateField = useCallback(
+    async (name: string) => {
       const hasAsyncValidator =
         isAsyncFunction(formValidatorRef.current) ||
         isAsyncFunction(fieldValidatorsRef.current[name]);
@@ -508,12 +508,12 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const validateFieldWithLowPriority = useCallback<ValidateField>(
+  const validateFieldWithLowPriority = useCallback<typeof validateField>(
     (name) => runWithLowPriority(() => validateField(name)),
     [validateField]
   );
 
-  const validateForm = useCallback<ValidateForm<V>>(() => {
+  const validateForm = useCallback((): Promise<FormErrors<V>> => {
     setStateRef("isValidating", true);
 
     return Promise.all([
@@ -534,6 +534,20 @@ export default <V extends FormValues = FormValues>({
     runFormValidation,
     setStateRef,
   ]);
+
+  const runValidation = useCallback<RunValidation>(
+    (name) => {
+      if (!name) return validateForm().then((errors) => isEmptyObject(errors));
+
+      if (Array.isArray(name))
+        return Promise.all(name.map((n) => validateField(n))).then(
+          (errors) => !compact(errors).length
+        );
+
+      return validateField(name).then((error) => !error);
+    },
+    [validateField, validateForm]
+  );
 
   const setDirty = useCallback(
     (name: string) => {
@@ -627,8 +641,7 @@ export default <V extends FormValues = FormValues>({
       setTouched,
       setError,
       clearErrors,
-      validateForm,
-      validateField,
+      runValidation,
       reset,
       submit,
     }),
@@ -636,14 +649,13 @@ export default <V extends FormValues = FormValues>({
       clearErrors,
       // @ts-expect-error
       reset,
+      runValidation,
       setError,
       setTouched,
       setValue,
       stateRef,
       // @ts-expect-error
       submit,
-      validateField,
-      validateForm,
     ]
   );
 
@@ -920,8 +932,7 @@ export default <V extends FormValues = FormValues>({
     setTouched,
     setError,
     clearErrors,
-    validateForm,
-    validateField,
+    runValidation,
     reset,
     submit,
     controller,
