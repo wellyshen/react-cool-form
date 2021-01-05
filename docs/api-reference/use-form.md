@@ -252,7 +252,7 @@ setTouched(
 We can clear the touched of a field by the following way:
 
 ```js
-setTouched("fieldName", false); // The field will be unset: { fieldName: true } → {}
+setTouched("fieldName", false); // The touched will be unset: { fieldName: true } → {}
 ```
 
 ### setError
