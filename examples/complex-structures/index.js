@@ -4,7 +4,7 @@ import { useForm } from "react-cool-form";
 
 import "./styles.scss";
 
-const FieldGroup = ({ name, onUpdate, onClear, ...rest }) => (
+const FieldGroup = ({ name, onUpdate, onClear }) => (
   <>
     <input name={name} placeholder={name} />
     <div>
@@ -19,7 +19,7 @@ const FieldGroup = ({ name, onUpdate, onClear, ...rest }) => (
 );
 
 function App() {
-  const { form, setFieldValue } = useForm({
+  const { form, setValue } = useForm({
     defaultValues: {
       foo: "",
       bar: [],
@@ -33,23 +33,23 @@ function App() {
     <form ref={form}>
       <FieldGroup
         name="foo"
-        onUpdate={() => setFieldValue("foo", "🍎")}
-        onClear={() => setFieldValue("foo")}
+        onUpdate={() => setValue("foo", "🍎")}
+        onClear={() => setValue("foo")}
       />
       <FieldGroup
         name="bar[0]"
-        onUpdate={() => setFieldValue("bar[0]", "🍋")}
-        onClear={() => setFieldValue("bar[0]")}
+        onUpdate={() => setValue("bar[0]", "🍋")}
+        onClear={() => setValue("bar[0]")}
       />
       <FieldGroup
         name="baz.nested"
-        onUpdate={() => setFieldValue("baz.nested", "🍉")}
-        onClear={() => setFieldValue("baz.nested")}
+        onUpdate={() => setValue("baz.nested", "🍉")}
+        onClear={() => setValue("baz.nested")}
       />
       <FieldGroup
         name="qux[0].nested"
-        onUpdate={() => setFieldValue("qux[0].nested", "🥝")}
-        onClear={() => setFieldValue("qux[0].nested")}
+        onUpdate={() => setValue("qux[0].nested", "🥝")}
+        onClear={() => setValue("qux[0].nested")}
       />
       <input type="submit" />
     </form>
