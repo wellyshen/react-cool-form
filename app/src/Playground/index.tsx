@@ -1,41 +1,19 @@
 import { useForm } from "react-cool-form";
-import { TextField } from "@material-ui/core";
 
 export default () => {
-  const { form, getState, setValue, setTouched, submit } = useForm({
-    defaultValues: { username: "" },
-    validate: ({ username }) => {
-      const errors = {};
-
-      // @ts-expect-error
-      if (!username.length) errors.username = "Required";
-      // @ts-expect-error
-      if (username.length < 3) errors.username = "Too Short";
-
-      return errors;
-    },
+  const { form, getState, clearErrors } = useForm({
+    defaultValues: { t1: { a: "" }, t2: { a: { b: "" } } },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [value, errors] = getState(["values.username", "errors"]);
-
-  const handleSubmit = (e: any) => {
-    setTouched("username");
-    submit(e);
-  };
+  console.log("LOG ===> ", getState("errors.t1.a"));
 
   return (
-    <form ref={form}>
-      <TextField
-        name="username" // Used for the "ignoreFields" option
-        value={value}
-        onChange={(e) => setValue("username", e.target.value)}
-        onBlur={() => setTouched("username")}
-        error={!!errors.username}
-        helperText={errors.username}
-        inputProps={{ "data-rcf-ignore": true }} // Ignore the field via the pre-defined data attribute
-      />
-      <button type="button" onClick={handleSubmit}>
-        Submit
+    <form ref={form} noValidate>
+      <input name="t1.a" required />
+      <input name="t2.a.b" required />
+      <input type="submit" />
+      <button type="button" onClick={() => clearErrors(["t1.a"])}>
+        Clear
       </button>
     </form>
   );
