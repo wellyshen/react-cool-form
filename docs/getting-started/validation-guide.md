@@ -241,7 +241,7 @@ const App = () => {
       </button>
       {/* Validate the form (i.e. all the fields) */}
       <button onClick={() => runValidation()}>Validate All</button>
-      {/* With validate result */}
+      {/* With result */}
       <button
         onClick={async () => {
           const valid = await runValidation();

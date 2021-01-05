@@ -311,7 +311,7 @@ runValidation("fieldName");
 // Validates multiple fields
 runValidation(["fieldName1", "fieldName2"]);
 
-// With validation results
+// With result
 const validateForm = async () => {
   const valid = await runValidation();
   console.log("The form is: ", valid ? "valid" : "invalid");
