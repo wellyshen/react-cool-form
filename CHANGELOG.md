@@ -1,5 +1,21 @@
 # react-cool-form
 
+## 0.0.104
+
+### Patch Changes
+
+- [`83c2474`](https://github.com/wellyshen/react-cool-form/commit/83c2474a4f3f7781774f8541084eed9953490034) [#303](https://github.com/wellyshen/react-cool-form/pull/303) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): remove `setValues` and `setErrors`
+
+* [`c623681`](https://github.com/wellyshen/react-cool-form/commit/c6236811fe4569f39be18a4c62c8a3860e5952cc) [#306](https://github.com/wellyshen/react-cool-form/pull/306) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): add `setTouched` method
+
+- [`0bec8fd`](https://github.com/wellyshen/react-cool-form/commit/0bec8fd7a097d3d5760053efd8b52273ec5140c7) [#307](https://github.com/wellyshen/react-cool-form/pull/307) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): add `clearErrors` method
+
+* [`817f762`](https://github.com/wellyshen/react-cool-form/commit/817f762aac28d075f4d30e0f34417b7a382c567f) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): rename `setFieldDirty` to `setDirty`
+
+- [`6936727`](https://github.com/wellyshen/react-cool-form/commit/69367272f03d9e347e786079d565f3f7ab3ec126) [#305](https://github.com/wellyshen/react-cool-form/pull/305) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): change `setFieldValue` to `setValue` & change `setFieldError` to `setError`
+
+* [`1c30b23`](https://github.com/wellyshen/react-cool-form/commit/1c30b23bc255d6d5c3cba9186757c8404e136d0f) [#308](https://github.com/wellyshen/react-cool-form/pull/308) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): combine `validateField` and `validateForm` into `runValidation`
+
 ## 0.0.103
 
 ### Patch Changes
