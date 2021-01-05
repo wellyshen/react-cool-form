@@ -2,7 +2,7 @@ import { useForm } from "react-cool-form";
 import { TextField } from "@material-ui/core";
 
 export default () => {
-  const { form, getState, setFieldValue, validateField } = useForm({
+  const { form, getState, setValue, validateField } = useForm({
     defaultValues: { username: "" },
     validate: ({ username }) => {
       const errors = {};
@@ -25,7 +25,7 @@ export default () => {
       <TextField
         name="username" // Used for the "ignoreFields" option
         value={value}
-        onChange={(e) => setFieldValue("username", e.target.value)}
+        onChange={(e) => setValue("username", e.target.value)}
         onBlur={() => validateField("username")}
         error={!!errors.username}
         helperText={errors.username}

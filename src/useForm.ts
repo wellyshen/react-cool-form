@@ -18,8 +18,8 @@ import {
   Map,
   Reset,
   Return,
-  SetFieldError,
-  SetFieldValue,
+  SetError,
+  SetValue,
   Submit,
   ValidateField,
   ValidateForm,
@@ -362,7 +362,7 @@ export default <V extends FormValues = FormValues>({
     [setUsedStateRef, stateRef]
   );
 
-  const setFieldError = useCallback<SetFieldError>(
+  const setError = useCallback<SetError>(
     (name, error) => {
       error = isFunction(error)
         ? error(get(stateRef.current.errors, name))
@@ -471,7 +471,7 @@ export default <V extends FormValues = FormValues>({
           (await runFieldValidation(name)) ||
           runBuiltInValidation(name);
 
-        setFieldError(name, error);
+        setError(name, error);
         if (hasAsyncValidation) setStateRef("isValidating", false);
 
         return error;
@@ -484,7 +484,7 @@ export default <V extends FormValues = FormValues>({
       runBuiltInValidation,
       runFieldValidation,
       runFormValidation,
-      setFieldError,
+      setError,
       setStateRef,
     ]
   );
@@ -548,7 +548,7 @@ export default <V extends FormValues = FormValues>({
     [setFieldTouched, validateOnChange]
   );
 
-  const setFieldValue = useCallback<SetFieldValue>(
+  const setValue = useCallback<SetValue>(
     (
       name,
       value,
@@ -588,8 +588,8 @@ export default <V extends FormValues = FormValues>({
   const getOptions = useCallback(
     () => ({
       formState: stateRef.current,
-      setFieldError,
-      setFieldValue,
+      setValue,
+      setError,
       validateForm,
       validateField,
       reset,
@@ -598,8 +598,8 @@ export default <V extends FormValues = FormValues>({
     [
       // @ts-expect-error
       reset,
-      setFieldError,
-      setFieldValue,
+      setError,
+      setValue,
       stateRef,
       // @ts-expect-error
       submit,
@@ -877,8 +877,8 @@ export default <V extends FormValues = FormValues>({
     form: formRef,
     field: fieldRef,
     getState,
-    setFieldError,
-    setFieldValue,
+    setValue,
+    setError,
     validateForm,
     validateField,
     reset,
