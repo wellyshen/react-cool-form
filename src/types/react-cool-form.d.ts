@@ -10,6 +10,7 @@ declare module "react-cool-form" {
     setValue: SetValue;
     setTouched: SetTouched;
     setError: SetError;
+    clearErrors: ClearErrors;
     validateForm: ValidateForm<V>;
     validateField: ValidateField;
     reset: Reset<V>;
@@ -43,6 +44,10 @@ declare module "react-cool-form" {
 
   interface SetError {
     (name: string, error?: any | PreviousErrorFn): void;
+  }
+
+  interface ClearErrors {
+    (name?: string | string[]): void;
   }
 
   interface FieldRef<V> {
@@ -201,6 +206,7 @@ declare module "react-cool-form" {
     setValue: SetValue;
     setTouched: SetTouched;
     setError: SetError;
+    clearErrors: ClearErrors;
     validateForm: ValidateForm<V>;
     validateField: ValidateField;
     reset: Reset<V>;

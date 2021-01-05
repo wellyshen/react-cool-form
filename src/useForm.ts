@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import {
+  ClearErrors,
   Config,
   Controller,
   FieldArgs,
@@ -134,9 +135,8 @@ export default <V extends FormValues = FormValues>({
   );
 
   const handleUnset = useCallback(
-    (path: string, fieldPath: string, target: any, name: string) => {
-      setStateRef(path, unset(target, name, true), { fieldPath });
-    },
+    (path: string, fieldPath: string, target: any, name: string) =>
+      setStateRef(path, unset(target, name, true), { fieldPath }),
     [setStateRef]
   );
 
@@ -378,6 +378,21 @@ export default <V extends FormValues = FormValues>({
     [handleUnset, setStateRef, stateRef]
   );
 
+  const clearErrors = useCallback<ClearErrors>(
+    (name) => {
+      if (!name) {
+        setStateRef("errors", {});
+      } else if (Array.isArray(name)) {
+        name.forEach((n) =>
+          handleUnset("errors", `errors.${n}`, stateRef.current.errors, n)
+        );
+      } else {
+        handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
+      }
+    },
+    [handleUnset, setStateRef, stateRef]
+  );
+
   const runBuiltInValidation = useCallback(
     (name: string) => {
       if (builtInValidationMode === false || !fieldsRef.current[name])
@@ -608,12 +623,14 @@ export default <V extends FormValues = FormValues>({
       setValue,
       setTouched,
       setError,
+      clearErrors,
       validateForm,
       validateField,
       reset,
       submit,
     }),
     [
+      clearErrors,
       // @ts-expect-error
       reset,
       setError,
@@ -899,6 +916,7 @@ export default <V extends FormValues = FormValues>({
     setValue,
     setTouched,
     setError,
+    clearErrors,
     validateForm,
     validateField,
     reset,

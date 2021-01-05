@@ -72,6 +72,7 @@ interface Options<V> {
   setValue: SetValue;
   setTouched: SetTouched;
   setError: SetError;
+  clearErrors: ClearErrors;
   validateForm: ValidateForm<V>;
   validateField: ValidateField;
   reset: Reset<V>;
@@ -150,6 +151,10 @@ export interface SetTouched {
 
 export interface SetError {
   (name: string, error?: any | ((previousError?: any) => any)): void;
+}
+
+export interface ClearErrors {
+  (name?: string | string[]): void;
 }
 
 export interface ValidateForm<V> {
@@ -232,6 +237,7 @@ export interface Return<V> {
   setValue: SetValue;
   setTouched: SetTouched;
   setError: SetError;
+  clearErrors: ClearErrors;
   validateForm: ValidateForm<V>;
   validateField: ValidateField;
   reset: Reset<V>;
