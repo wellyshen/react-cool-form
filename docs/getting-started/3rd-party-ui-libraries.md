@@ -124,7 +124,7 @@ const App = () => {
 };
 ```
 
-The `controller` will trigger re-renders whenever the value of the target component updated. Re-renders are not bad but **slow re-renders** are. So, if you are building a complex form with large number of fields, you can create a reusable component to isolate re-rendering at the component level for better performance as below:
+The `controller` will trigger re-renders whenever the value of the target component updated. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can create a reusable component to isolate re-rendering at the component level for better performance as below:
 
 ```js
 import { memo, useState } from "react";
