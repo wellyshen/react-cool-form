@@ -31,8 +31,8 @@ const features = [
     description: (
       <>
         Struggling with form structures? With React Cool Form{" "}
-        <Link to="/docs/getting-started/complex-structures">nested fields</Link> API, you can
-        create complex form structures without hassle.
+        <Link to="/docs/getting-started/complex-structures">nested fields</Link>{" "}
+        API, you can create complex form structures without hassle.
       </>
     ),
   },
@@ -42,7 +42,10 @@ const features = [
     description: (
       <>
         Supports{" "}
-        <Link to="/docs/getting-started/validation-guide#built-in-validation">built-in</Link>,{" "}
+        <Link to="/docs/getting-started/validation-guide#built-in-validation">
+          built-in
+        </Link>
+        ,{" "}
         <Link to="/docs/getting-started/validation-guide#form-level-validation">
           form-level
         </Link>
@@ -72,9 +75,13 @@ const features = [
     imageUrl: "img/coding.svg",
     description: (
       <>
-        Intuitive and flexible <Link to="/docs/api-reference/use-form">API</Link> design,
-        provides a seamless way to integration with existing HTML form inputs or{" "}
-        <Link to="/docs/getting-started/3rd-party-ui-libraries">3rd-party UI libraries</Link>.
+        Intuitive and flexible{" "}
+        <Link to="/docs/api-reference/use-form">API</Link> design, provides a
+        seamless way to integration with existing HTML form inputs or{" "}
+        <Link to="/docs/getting-started/3rd-party-ui-libraries">
+          3rd-party UI libraries
+        </Link>
+        .
       </>
     ),
   },
@@ -110,9 +117,9 @@ function Feature({ imageUrl, title, description }) {
 
 function Home() {
   const context = useDocusaurusContext();
-  const { siteConfig = {} } = context;
+  const { siteConfig: { customFields = {} } = {} } = context;
   return (
-    <Layout description="React hooks for forms state and validation, less code more performant.">
+    <Layout description={customFields.description}>
       <header className={clsx("hero", styles.heroBanner)}>
         <div className="container">
           <h1 className={clsx("hero__title", styles.heroTitle)}>

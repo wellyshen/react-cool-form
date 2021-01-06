@@ -7,9 +7,14 @@ module.exports = {
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
+  customFields: {
+    description:
+      "React hooks for forms state and validation, less code more performant.",
+  },
   organizationName: "wellyshen",
   projectName: "react-cool-form",
   themeConfig: {
+    image: "img/react-cool-form.png",
     colorMode: { defaultMode: "dark" },
     announcementBar: {
       id: "start_us",
