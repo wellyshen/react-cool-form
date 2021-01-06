@@ -17,7 +17,7 @@ function App() {
     defaultValues: { username: "", email: "", password: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
-  const errors = getState("errors");
+  const errors = getState("errors", { errorWithTouched: true });
 
   return (
     <form ref={form} noValidate>
