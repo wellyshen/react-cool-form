@@ -24,10 +24,10 @@ module.exports = {
     },
     navbar: {
       title: "React Cool Form",
-      /* logo: {
-        alt: "My Site Logo",
+      logo: {
+        alt: "React Cool Form",
         src: "img/logo.svg",
-      }, */
+      },
       items: [
         {
           to: "/docs",
