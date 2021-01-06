@@ -1,39 +1,32 @@
 import { useForm } from "react-cool-form";
+import { TextField } from "@material-ui/core";
 
 export default () => {
-  const { form, getState, runValidation, field } = useForm({
-    defaultValues: { t1: "", t2: "" },
-    validate: (values) => {
+  const { form, getState, setValue, setTouched, submit } = useForm({
+    defaultValues: { username: "" },
+    // ignoreFields: ["username"], // You can also ignore the field by this option
+    validate: ({ username }) => {
       const errors = {};
-      // if (!values.t1.length) errors.t2 = "Form Required";
+      // @ts-expect-error
+      if (!username.length) errors.username = "Required";
       return errors;
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  console.log(
-    "LOG ===> ",
-    getState(
-      { errors: "errors" },
-      {
-        filterUntouchedError: false,
-      }
-    )
-  );
+  const [value, errors] = getState(["values.username", "errors"]);
 
   return (
-    <form ref={form} noValidate>
-      <input name="t1" ref={field((value) => false)} />
-      <input name="t2" required />
+    <form ref={form}>
+      <TextField
+        name="username" // Used for the "ignoreFields" option
+        value={value}
+        onChange={(e) => setValue("username", e.target.value)} // Update the field's value and set it as touched
+        onBlur={() => setTouched("username")} // Set the field as touched for displaying error (if it's not touched)
+        error={!!errors.username}
+        helperText={errors.username}
+        inputProps={{ "data-rcf-ignore": true }} // Ignore the field via the pre-defined data attribute
+      />
       <input type="submit" />
-      <button
-        type="button"
-        onClick={async () => {
-          const res = await runValidation("t1");
-          console.log(res);
-        }}
-      >
-        Validate
-      </button>
     </form>
   );
 };

@@ -288,7 +288,7 @@ When validating with mixed ways, the results are deeply merged according to the 
 
 ## Displaying Error Messages
 
-All errors are stored in the [formState.errors](./form-state#about-the-form-state), we can display error messages by accessing the `errors` object via the [getState](../api-reference/use-form#getstate) method. The `getState` method is designed to filter the errors of untouched fields by default, which based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can disable the feature by setting the `filterUntouchedError` option to `false` (see [related doc](./form-state#filters-untouched-field-errors)).
+All errors are stored in the [formState.errors](./form-state#about-the-form-state), we can display error messages by accessing the `errors` object via the [getState](../api-reference/use-form#getstate) method. The `getState` method provides an `errorWithTouched` option to help us filtering the errors of untouched fields, which is designed based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can enable the feature by setting the option to `true` (see [related doc](./form-state#filters-untouched-field-errors)).
 
 [![Edit RCF - Quick start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-quick-start-j8p1l?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -300,9 +300,9 @@ const App = () => {
     defaultValues: { username: "", email: "", password: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  // By default, the errors of untouched fields are filtered out, which helps the user focus on typing without being annoyed
-  // You can disable this feature by setting the "filterUntouchedError" option to false
-  const errors = getState("errors", { filterUntouchedError: true });
+  // We can enable the "errorWithTouched" option to filter the error of an un-blurred field
+  // Which helps the user focus on typing without being annoyed by the error message
+  const errors = getState("errors", { errorWithTouched: true }); // Default is "false"
 
   return (
     <form ref={form} noValidate>

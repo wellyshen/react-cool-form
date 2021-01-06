@@ -22,7 +22,7 @@ declare module "react-cool-form" {
       options?: {
         target?: string;
         watch?: boolean;
-        filterUntouchedError?: boolean;
+        errorWithTouched?: boolean;
       }
     ): any;
   }
