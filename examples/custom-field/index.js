@@ -1,78 +1,36 @@
 import React from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  InputLabel,
-  TextField,
-  Select,
-  Checkbox,
-  RadioGroup,
-  Radio,
-  Button
-} from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 
 import "./styles.scss";
 
 function App() {
-  const { form, getState } = useForm({
-    defaultValues: { username: "", framework: "", fruit: [], race: "" },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
+  const { form, getState, setValue, setTouched } = useForm({
+    defaultValues: { username: "" },
+    // ignoreFields: ["username"], // You can also ignore the field by this option
+    validate: ({ username }) => {
+      const errors = {};
+      if (!username.length) errors.username = "Required";
+      return errors;
+    },
+    onSubmit: (values) => console.log("onSubmit: ", values)
   });
-  const errors = getState("errors");
+  const [value, errors] = getState(["values.username", "errors"]);
 
   return (
     <form ref={form} noValidate>
       <TextField
         label="Username"
-        name="username"
+        name="username" // Used for the "ignoreFields" option
+        value={value}
         required
+        onChange={(e) => setValue("username", e.target.value)} // Update the field's value and set it as touched
+        onBlur={() => setTouched("username")} // Set the field as touched for displaying error (if it's not touched)
         error={!!errors.username}
         helperText={errors.username}
+        inputProps={{ "data-rcf-ignore": true }} // Ignore the field via the pre-defined data attribute
       />
-      <FormControl>
-        <InputLabel htmlFor="framework">Framework</InputLabel>
-        {/* When working with select, we need to enable the native select element or you can use the "NativeSelect" instead */}
-        <Select inputProps={{ id: "framework", name: "framework" }} native>
-          <option aria-label="None" value="I'm interesting in..." />
-          <option value="react">React</option>
-          <option value="vue">Vue</option>
-          <option value="angular">Angular</option>
-          <option value="svelte">Svelte</option>
-        </Select>
-      </FormControl>
-      <FormControl component="fieldset"></FormControl>
-      <div>
-        <FormLabel component="legend">Fruit</FormLabel>
-        <FormControlLabel
-          control={<Checkbox />}
-          name="fruit"
-          value="🍎"
-          label="🍎"
-        />
-        <FormControlLabel
-          control={<Checkbox />}
-          name="fruit"
-          value="🍋"
-          label="🍋"
-        />
-        <FormControlLabel
-          control={<Checkbox />}
-          name="fruit"
-          value="🥝"
-          label="🥝"
-        />
-      </div>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Race</FormLabel>
-        <RadioGroup name="race" aria-label="race" row>
-          <FormControlLabel control={<Radio />} value="🦸🏻‍♂️" label="🦸🏻‍♂️" />
-          <FormControlLabel control={<Radio />} value="🧛🏻‍♂️" label="🧛🏻‍♂️" />
-          <FormControlLabel control={<Radio />} value="🧝🏻‍♂️" label="🧝🏻‍♂️" />
-        </RadioGroup>
-      </FormControl>
       <Button type="submit" variant="contained" color="primary">
         Submit
       </Button>
