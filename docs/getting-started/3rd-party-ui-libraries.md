@@ -202,14 +202,16 @@ const App = () => {
 
 ## 3. Do It Yourself
 
-If the above solutions can't meet your needs then you can set up a custom field via the [API](../api-reference/use-form#return-values) of React Cool Form. The following example demonstrates how to implement a custom field with complete validation UX.
+If the above solutions can't meet your needs then you can set up a custom field via the [API](../api-reference/use-form#return-values) of React Cool Form. The following example demonstrates how to implement a custom field with full validation UX.
+
+[![Edit RCF - Custom Field](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-custom-field-p9lqi?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
 import { useForm } from "react-cool-form";
 import { TextField } from "@material-ui/core";
 
 const App = () => {
-  const { form, getState, setValue, setTouched, submit } = useForm({
+  const { form, getState, setValue, setTouched } = useForm({
     defaultValues: { username: "" },
     // ignoreFields: ["username"], // You can also ignore the field by this option
     validate: ({ username }) => {
@@ -222,10 +224,12 @@ const App = () => {
   const [value, errors] = getState(["values.username", "errors"]);
 
   return (
-    <form ref={form}>
+    <form ref={form} noValidate>
       <TextField
+        label="Username"
         name="username" // Used for the "ignoreFields" option
         value={value}
+        required
         onChange={(e) => setValue("username", e.target.value)} // Update the field's value and set it as touched
         onBlur={() => setTouched("username")} // Set the field as touched for displaying error (if it's not touched)
         error={!!errors.username}
