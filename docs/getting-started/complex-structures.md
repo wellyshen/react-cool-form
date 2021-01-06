@@ -27,7 +27,7 @@ You can play around with the following example to get better understanding of ho
 ```js
 import { useForm } from "react-cool-form";
 
-const FieldGroup = ({ name, onUpdate, onClear, ...rest }) => (
+const FieldGroup = ({ name, onUpdate, onClear }) => (
   <>
     <input name={name} placeholder={name} />
     <div>

@@ -221,11 +221,6 @@ const App = () => {
   });
   const [value, errors] = getState(["values.username", "errors"]);
 
-  const handleSubmit = (e: any) => {
-    setTouched("username"); // Set the field as touched for displaying error (if it's not touched)
-    submit(e);
-  };
-
   return (
     <form ref={form}>
       <TextField
@@ -237,9 +232,7 @@ const App = () => {
         helperText={errors.username}
         inputProps={{ "data-rcf-ignore": true }} // Ignore the field via the pre-defined data attribute
       />
-      <button type="button" onClick={handleSubmit}>
-        Submit
-      </button>
+      <input type="submit" />
     </form>
   );
 };

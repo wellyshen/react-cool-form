@@ -309,7 +309,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const getState = useCallback<GetState>(
-    (path, { target, watch = true, filterUntouchedError = true } = {}) => {
+    (path, { target, watch = true, errorWithTouched = false } = {}) => {
       if (!path) return undefined;
 
       const getPath = (path: string) => {
@@ -327,7 +327,7 @@ export default <V extends FormValues = FormValues>({
       const errorsEnhancer = (path: string, state: any) => {
         if (
           !watch ||
-          !filterUntouchedError ||
+          !errorWithTouched ||
           !path.startsWith("errors") ||
           !state ||
           isEmptyObject(state)

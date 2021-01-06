@@ -62,9 +62,9 @@ const App = () => {
     // The event only triggered when the form is valid
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  // React Cool Form filters the error of an un-blurred field by default (i.e. the "filterUntouchedError" option)
-  // Which helps the user focus on typing without being annoying
-  const errors = getState("errors", { filterUntouchedError: true });
+  // We can enable the "errorWithTouched" option to filter the error of an un-blurred field
+  // Which helps the user focus on typing without being annoyed by the error message
+  const errors = getState("errors", { errorWithTouched: true }); // Default is "false"
 
   return (
     <form ref={form} noValidate>
