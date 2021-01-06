@@ -14,7 +14,8 @@ module.exports = {
     announcementBar: {
       id: "start_us",
       content: `⭐ If you like React Cool Form, give it a star on <a href=${github} target="_blank" rel="noopener noreferrer">GitHub</a>!`,
-      backgroundColor: "#fbb243",
+      textColor: "#fff",
+      backgroundColor: "#496cfe",
     },
     algolia: {
       apiKey: "0afb2d2ec7187233d3642b33908d1bf1",
