@@ -28,6 +28,7 @@ module.exports = {
       "examples/lazy-default-values",
       "examples/material-ui",
       "examples/react-select",
+      "examples/custom-field",
     ],
     "API Reference": [
       "api-reference/use-form",

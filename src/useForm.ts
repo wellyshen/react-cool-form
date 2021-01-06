@@ -309,7 +309,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const getState = useCallback<GetState>(
-    (path, { target, watch = true, filterUntouchedError = true } = {}) => {
+    (path, { target, watch = true, errorWithTouched = false } = {}) => {
       if (!path) return undefined;
 
       const getPath = (path: string) => {
@@ -327,7 +327,7 @@ export default <V extends FormValues = FormValues>({
       const errorsEnhancer = (path: string, state: any) => {
         if (
           !watch ||
-          !filterUntouchedError ||
+          !errorWithTouched ||
           !path.startsWith("errors") ||
           !state ||
           isEmptyObject(state)
@@ -398,17 +398,14 @@ export default <V extends FormValues = FormValues>({
       if (builtInValidationMode === false || !fieldsRef.current[name])
         return undefined;
 
-      const {
-        field: { validationMessage, validity },
-      } = fieldsRef.current[name];
+      const { field } = fieldsRef.current[name];
 
-      if (builtInValidationMode === "message" && validationMessage)
-        return validationMessage;
+      if (builtInValidationMode === "message") return field.validationMessage;
 
       // eslint-disable-next-line no-restricted-syntax
-      for (const k in validity) {
+      for (const k in field.validity) {
         // @ts-expect-error
-        if (k !== "valid" && validity[k]) return k;
+        if (k !== "valid" && field.validity[k]) return k;
       }
 
       return undefined;

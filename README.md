@@ -1,11 +1,17 @@
-# <b>React Cool Form</b>
+<p align="center">
+  <a href="https://react-cool-form.netlify.app"><img src="https://react-cool-form.netlify.app/img/logo-github.svg" alt="React Cool Form"></a>
+</p>
 
-React hooks for forms state and validation, less code more performant.
+<h3 align="center">React hooks for forms state and validation, less code more performant.</h3>
+
+<div align="center">
 
 [![npm version](https://img.shields.io/npm/v/react-cool-form?style=flat-square)](https://www.npmjs.com/package/react-cool-form)
 [![npm downloads](https://img.shields.io/npm/dt/react-cool-form?style=flat-square)](https://www.npmtrends.com/react-cool-form)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/react-cool-form?style=flat-square)](https://bundlephobia.com/result?p=react-cool-form)
 [![netlify deploy](https://img.shields.io/netlify/3c201e27-b611-4512-b827-9523af7a1ae5?style=flat-square)](https://app.netlify.com/sites/react-cool-form/deploys)
+
+</div>
 
 ## Features
 
@@ -62,9 +68,9 @@ const App = () => {
     // The event only triggered when the form is valid
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  // React Cool Form filters the error of an un-blurred field by default (i.e. the "filterUntouchedError" option)
-  // Which helps the user focus on typing without being annoying
-  const errors = getState("errors", { filterUntouchedError: true });
+  // We can enable the "errorWithTouched" option to filter the error of an un-blurred field
+  // Which helps the user focus on typing without being annoyed by the error message
+  const errors = getState("errors", { errorWithTouched: true }); // Default is "false"
 
   return (
     <form ref={form} noValidate>
@@ -103,12 +109,5 @@ const App = () => {
 
 ## To Do
 
-- [x] Core features
-- [x] Type definition
-- [x] Support server-side rendering
-- [x] CI/CD
-- [x] Documentation
-- [x] Examples
-- [ ] Logo design (work in progress...)
 - [ ] Unit testing (work in progress...)
 - [ ] End to end testing

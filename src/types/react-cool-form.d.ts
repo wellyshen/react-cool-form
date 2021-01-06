@@ -22,7 +22,7 @@ declare module "react-cool-form" {
       options?: {
         target?: string;
         watch?: boolean;
-        filterUntouchedError?: boolean;
+        errorWithTouched?: boolean;
       }
     ): any;
   }
@@ -30,7 +30,7 @@ declare module "react-cool-form" {
   interface SetValue {
     (
       name: string,
-      value?: any | PreviousValueFn,
+      value: any | PreviousValueFn,
       options?: {
         [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
       }
@@ -42,7 +42,7 @@ declare module "react-cool-form" {
   }
 
   interface SetError {
-    (name: string, error?: any | PreviousErrorFn): void;
+    (name: string, error: any | PreviousErrorFn): void;
   }
 
   interface ClearErrors {

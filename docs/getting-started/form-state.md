@@ -8,7 +8,7 @@ Building highly performant forms is the duty of React Cool Form. It minimizes th
 - No unnecessary re-renders by leveraging the power of [uncontrolled components](https://reactjs.org/docs/uncontrolled-components.html)
 - No unnecessary re-renders when [using the form state](#using-the-form-state)
 - No unnecessary re-renders when receives the same form state (since last re-rendering)
-- [Filters the errors of untouched fields](#filters-untouched-field-errors) for better UX (refer to [theory](https://www.nngroup.com/articles/errors-forms-design-guidelines) at No.7)
+- [Filters the errors of untouched fields](#filter-untouched-field-errors) for better UX (refer to the [UX research](https://www.nngroup.com/articles/errors-forms-design-guidelines) at No.7)
 
 Here we will explore the form state and some [best practices for using it](#best-practices).
 
@@ -110,11 +110,11 @@ const SomeHandler = () => {
 };
 ```
 
-### Filters Untouched Field Errors
+### Filter Untouched Field Errors
 
-Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, React Cool Form auto filters the errors of untouched fields for you. However, you can disable this feature by setting the `filterUntouchedError` option to `false`.
+Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `getState`'s `errorWithTouched` option.
 
-> 💡 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
+> 💡 This feature filters any errors of the untouched fields. So when validating with the [runValidation](../api-reference/use-form#runvalidation), please ensure it's triggered after the field(s) is (are) touched.
 
 ```js
 const { getState } = useForm();
@@ -125,8 +125,10 @@ const { getState } = useForm();
 const errors = getState("errors");
 
 // Returns { foo: "Required" }
-const errors = getState("errors", { filterUntouchedError: false });
+const errors = getState("errors", { errorWithTouched: true }); // Default is "false"
 
 // Returns { foo: "Required" }, the feature only available in watch mode
 const errors = getState("errors", { watch: false });
 ```
+
+👉🏻 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.

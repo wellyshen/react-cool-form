@@ -201,7 +201,7 @@ This method provides us a performant way to use/read the form state. Check the [
 
 ### setValue
 
-`(name: string, value?: any | Function, options?: Object) => void`
+`(name: string, value: any | Function, options?: Object) => void`
 
 This method allows us to manually set/clear the value of a field. Useful for creating custom field change handlers.
 
@@ -221,9 +221,7 @@ setValue("fieldName", (prevValue) => prevValue.splice(2, 0, "🍎"));
 We can clear the value of a field by the following way:
 
 ```js
-setValue("fieldName"); // The field will be unset: { fieldName: "value" } → {}
-// or
-setValue("fieldName", undefined);
+setValue("fieldName", undefined); // The field will be unset: { fieldName: "value" } → {}
 ```
 
 ### setTouched
@@ -254,7 +252,7 @@ setTouched("fieldName", false); // The touched will be unset: { fieldName: true 
 
 ### setError
 
-`(name: string, error?: any | Function) => void`
+`(name: string, error: any | Function) => void`
 
 This method allows us to manually set/clear the error of a field. Useful for creating custom field error handlers.
 
@@ -270,9 +268,7 @@ setError("fieldName", (prevError) => (prevError ? "Too short" : "Required"));
 We can clear the error of a field by the following way (or using [clearErrors](#clearerrors)):
 
 ```js
-setError("fieldName"); // The error will be unset: { fieldName: "Required" } → {}
-// or
-setError("fieldName", undefined); // Works with any falsy values
+setError("fieldName", undefined); // Or any falsy values, the error will be unset: { fieldName: "Required" } → {}
 ```
 
 ### clearErrors
@@ -298,6 +294,8 @@ clearErrors(["foo.bar", "foo.baz"]); // Clears "foo.bar" and "foo.baz" respectiv
 `(name?: string | string[]) => Promise<boolean>`
 
 This method allows us to manually run validation for the field(s) or form. It returns a boolean that indicates the validation results, `true` means valid, `false` otherwise.
+
+- Please note, when enabling the [Filter Untouched Field Errors](../getting-started/form-state#filter-untouched-field-errors), only the errors of the touched fields are accessible.
 
 ```js
 const { runValidation } = useForm();
