@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.105
+
+### Patch Changes
+
+- [`02f25a3`](https://github.com/wellyshen/react-cool-form/commit/02f25a32f4fb1fd1136e52937f803b662ac8ea8a) [#312](https://github.com/wellyshen/react-cool-form/pull/312) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): require value for `setValue` and `setError`
+
+* [`d69188b`](https://github.com/wellyshen/react-cool-form/commit/d69188b3825197ee10bc240e816561e201af85b7) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): remove unnecessary logic
+
+- [`ad7336a`](https://github.com/wellyshen/react-cool-form/commit/ad7336abdc107e22c116873e43a4abe15d6aabca) [#311](https://github.com/wellyshen/react-cool-form/pull/311) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): rename the option of `getState` from `filterUntouchedError` to `errorWithTouched`
+
 ## 0.0.104
 
 ### Patch Changes
