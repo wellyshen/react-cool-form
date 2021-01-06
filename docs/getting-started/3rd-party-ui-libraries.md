@@ -202,7 +202,7 @@ const App = () => {
 
 ## 3. Do It Yourself
 
-If the above solutions can't meet your needs then you can set up a custom field via the [API](../api-reference/use-form#return-values) of React Cool Form. The following example demonstrates how to implement a custom field with full validation UX.
+If the above solutions can't meet your needs then you can set up a custom field with the [API](../api-reference/use-form#return-values) of React Cool Form. The following example demonstrates how to implement a custom field with full validation UX.
 
 [![Edit RCF - Custom Field](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-custom-field-p9lqi?fontsize=14&hidenavigation=1&theme=dark)
 
