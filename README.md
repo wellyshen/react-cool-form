@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://react-cool-form.netlify.app" title="React Cool Form"><img src="https://react-cool-form.netlify.app/img/logo-github.svg" alt="React Cool Form"></a>
+  <a href="https://react-cool-form.netlify.app" title="React Cool Form"><img src="https://react-cool-form.netlify.app/img/logo-github.svg" width="340px" alt="React Cool Form"></a>
 </p>
 
 <p align="center">React hooks for forms state and validation, less code more performant.</p>
