@@ -295,7 +295,7 @@ clearErrors(["foo.bar", "foo.baz"]); // Clears "foo.bar" and "foo.baz" respectiv
 
 This method allows us to manually run validation for the field(s) or form. It returns a boolean that indicates the validation results, `true` means valid, `false` otherwise.
 
-- Please note, when using with the [Filter Untouched Field Errors](../getting-started/form-state#filter-untouched-field-errors), only the errors of the touched fields are accessible.
+- Please note, when enabling the [Filter Untouched Field Errors](../getting-started/form-state#filter-untouched-field-errors), only the errors of the touched fields are accessible.
 
 ```js
 const { runValidation } = useForm();
