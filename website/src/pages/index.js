@@ -122,17 +122,29 @@ function Home() {
     <Layout description={customFields.description}>
       <header className={clsx("hero", styles.heroBanner)}>
         <div className="container">
-          <h1 className={clsx("hero__title", styles.heroTitle)}>
-            React hooks for forms <b>state</b> and <b>validation</b>, less code
-            more <b>performant</b>
-          </h1>
-          <div className={styles.buttons}>
-            <Link
-              className={clsx("button button--lg", styles.getStarted)}
-              to={useBaseUrl("docs/")}
-            >
-              Get Started
-            </Link>
+          <img src="/img/logo.svg" alt="React Cool Form" />
+          <div>
+            <h1 className={clsx("hero__title", styles.heroTitle)}>
+              React hooks for forms <b>state</b> and <b>validation</b>, less
+              code more <b>performant</b>
+            </h1>
+            <div className={styles.buttons}>
+              <Link
+                className={clsx("button button--lg", styles.getStarted)}
+                to={useBaseUrl("docs/")}
+              >
+                Get Started
+              </Link>
+              <span className={styles.gitHubBtnWrapper}>
+                <iframe
+                  className={styles.gitHubBtn}
+                  src="https://ghbtns.com/github-btn.html?user=wellyshen&repo=react-cool-form&type=star&count=true&size=large"
+                  width={160}
+                  height={30}
+                  title="GitHub Stars"
+                />
+              </span>
+            </div>
           </div>
         </div>
       </header>

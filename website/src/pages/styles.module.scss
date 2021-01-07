@@ -6,11 +6,18 @@
  */
 
 .heroBanner {
-  padding: 4rem 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+  padding: 3rem;
   background: #2b3137;
+
+  > div {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  img {
+    margin-left: 2rem;
+    min-width: 240px;
+  }
 
   .heroTitle {
     margin-bottom: 1.5rem;
@@ -25,7 +32,6 @@
   .buttons {
     display: flex;
     align-items: center;
-    justify-content: center;
   }
 
   .getStarted {
@@ -38,6 +44,15 @@
     &:hover {
       background: var(--ifm-color-primary);
       color: #fff;
+    }
+  }
+
+  .gitHubBtnWrapper {
+    display: flex;
+
+    .gitHubBtn {
+      margin-left: 24px;
+      border: none;
     }
   }
 }
@@ -84,16 +99,36 @@
 }
 
 @media only screen and (max-width: 768px) {
-  .heroTitle {
-    font-size: 2.5rem;
+  .heroBanner {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    text-align: center;
+
+    > div {
+      display: block;
+    }
+
+    img {
+      display: block;
+      width: 220px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .heroTitle {
+      font-size: 2.5rem;
+    }
+
+    .buttons {
+      justify-content: center;
+    }
+
+    .gitHubBtnWrapper {
+      display: none;
+    }
   }
 }
 
 @media screen and (max-width: 966px) {
-  .heroBanner {
-    padding: 2rem;
-  }
-
   .showbox {
     p {
       width: 90%;
