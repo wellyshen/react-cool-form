@@ -46,7 +46,7 @@ $ yarn add react-cool-form
 $ npm install --save react-cool-form
 ```
 
-Here's the basic concept of how does it rock:
+Here's the basic concept of how it rocks:
 
 [![Edit RCF - Quick start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-quick-start-j8p1l?fontsize=14&hidenavigation=1&theme=dark)
 
