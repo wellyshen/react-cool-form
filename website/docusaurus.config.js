@@ -14,7 +14,7 @@ module.exports = {
   organizationName: "wellyshen",
   projectName: "react-cool-form",
   themeConfig: {
-    image: "img/og-image.png",
+    image: "img/react-cool-form.png",
     colorMode: { defaultMode: "dark" },
     announcementBar: {
       id: "start_us",
