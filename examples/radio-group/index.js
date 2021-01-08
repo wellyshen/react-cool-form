@@ -13,17 +13,17 @@ const Field = ({ label, id, ...rest }) => (
 
 function App() {
   const { form } = useForm({
-    defaultValues: { race: "🦸🏻‍♂️" },
+    defaultValues: { fruit: "🍎" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
 
   return (
     <form ref={form}>
       <fieldset>
-        <legend>Race</legend>
-        <Field label="🦸🏻‍♂️" id="human" name="race" value="🦸🏻‍♂️" type="radio" />
-        <Field label="🧛🏻‍♂️" id="vampire" name="race" value="🧛🏻‍♂️" type="radio" />
-        <Field label="🧝🏻‍♂️" id="elf" name="race" value="🧝🏻‍♂️" type="radio" />
+        <legend>Fruit</legend>
+        <Field label="🍎" id="apple" name="fruit" value="🍎" type="radio" />
+        <Field label="🍋" id="lemon" name="fruit" value="🍋" type="radio" />
+        <Field label="🥝" id="kiwi" name="fruit" value="🥝" type="radio" />
       </fieldset>
       <input type="submit" />
     </form>
