@@ -1,7 +1,7 @@
 import get from "../get";
 
 describe("get", () => {
-  it('should return "undefined" when input isn\'t an object', () => {
+  it('should return "undefined" when target is invalid', () => {
     expect(get(null, "foo")).toBeUndefined();
     expect(get(undefined, "foo")).toBeUndefined();
     expect(get(true, "foo")).toBeUndefined();
