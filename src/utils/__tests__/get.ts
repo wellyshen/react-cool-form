@@ -1,3 +1,5 @@
+/* eslint-disable no-sparse-arrays */
+
 import get from "../get";
 
 describe("get", () => {
@@ -50,5 +52,8 @@ describe("get", () => {
     expect(get({ foo: { bar: [["🍋", "🍎"]] } }, "foo.bar[0].1")).toBe("🍎");
     expect(get({ foo: [{ bar: ["🍋", "🍎"] }] }, "foo.0.bar[1]")).toBe("🍎");
     expect(get({ foo: [["🍋", { bar: "🍎" }]] }, "foo[0].1.bar")).toBe("🍎");
+    expect(get({ foo: [, { bar: [{ baz: "🍎" }] }] }, "foo.1.bar[0].baz")).toBe(
+      "🍎"
+    );
   });
 });
