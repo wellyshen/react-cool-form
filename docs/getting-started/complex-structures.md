@@ -4,7 +4,7 @@ title: Complex Structures
 hide_table_of_contents: true
 ---
 
-With React Cool Form you can use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation)-and-[bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation as the name of a field to create arbitrarily deeply nested fields. It's very similar to Lodash's [\_.set](https://lodash.com/docs/4.17.15#set) method.
+With React Cool Form you can use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation)-and-[bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation as the name of a field to create arbitrarily deeply a fields. It's very similar to Lodash's [\_.set](https://lodash.com/docs/4.17.15#set) method.
 
 > 💡 Setting `undefined` as a field value deletes the field data from the structure (see [related doc](../api-reference/use-form#setvalue)).
 
@@ -46,8 +46,8 @@ const App = () => {
     defaultValues: {
       foo: "",
       bar: [],
-      baz: { nested: "" },
-      qux: [{ nested: "" }],
+      baz: { a: "" },
+      qux: [{ a: "" }],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
@@ -65,14 +65,14 @@ const App = () => {
         onClear={() => setValue("bar[0]")}
       />
       <FieldGroup
-        name="baz.nested"
-        onUpdate={() => setValue("baz.nested", "🍉")}
-        onClear={() => setValue("baz.nested")}
+        name="baz.a"
+        onUpdate={() => setValue("baz.a", "🍉")}
+        onClear={() => setValue("baz.a")}
       />
       <FieldGroup
-        name="qux[0].nested"
-        onUpdate={() => setValue("qux[0].nested", "🥝")}
-        onClear={() => setValue("qux[0].nested")}
+        name="qux[0].a"
+        onUpdate={() => setValue("qux[0].a", "🥝")}
+        onClear={() => setValue("qux[0].a")}
       />
       <input type="submit" />
     </form>
