@@ -1,5 +1,4 @@
 import cloneObject from "./cloneObject";
-import isObject from "./isObject";
 import isPlainObject from "./isPlainObject";
 import stringToPath from "./stringToPath";
 
@@ -16,7 +15,7 @@ export default (
   const newObject = immutable ? cloneObject(object) : object;
 
   segs.slice(0, -1).reduce((obj, key, idx) => {
-    if (isObject(obj[key])) return obj[key];
+    if (isPlainObject(obj[key])) return obj[key];
     const next = Number(segs[idx + 1]);
     obj[key] = Number.isInteger(next) && next >= 0 ? [] : {};
     return obj[key];
