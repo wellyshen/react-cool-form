@@ -1,16 +1,15 @@
 import { useEffect } from "react";
-import { useForm } from "react-cool-form";
+import { useForm, set } from "react-cool-form";
 
 export default () => {
-  const { form, setValue, setError } = useForm({
+  const { form } = useForm({
     defaultValues: { test: "test" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
   useEffect(() => {
-    setValue("test", undefined);
-    setError("test", undefined);
-  }, [setError, setValue]);
+    console.log(set({ a: ["abc"] }, '"a["0"]', "test"));
+  }, []);
 
   return (
     <form ref={form}>
