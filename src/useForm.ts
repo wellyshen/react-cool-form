@@ -48,7 +48,6 @@ import {
   isUndefined,
   runWithLowPriority,
   set,
-  setTrueValues,
   unset,
   warn,
 } from "./utils";
@@ -693,14 +692,15 @@ export default <V extends FormValues = FormValues>({
       e?.stopPropagation();
 
       const { touched, values } = stateRef.current;
+      const nextTouched = Object.keys({
+        ...fieldsRef.current,
+        ...controllersRef.current,
+      }).reduce((touched, name) => {
+        touched = set(touched, name, true, true);
+        return touched;
+      }, touched);
 
-      setStateRef(
-        "touched",
-        setTrueValues(
-          touched,
-          Object.keys({ ...fieldsRef.current, ...controllersRef.current })
-        )
-      );
+      setStateRef("touched", nextTouched);
       setStateRef("isSubmitting", true);
 
       try {
