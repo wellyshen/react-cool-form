@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.106
+
+### Patch Changes
+
+- [`448f554`](https://github.com/wellyshen/react-cool-form/commit/448f554121214d779a8c99f3fc8e7741cb344769) [#321](https://github.com/wellyshen/react-cool-form/pull/321) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(utils): set array type value correctly
+
+* [`6755695`](https://github.com/wellyshen/react-cool-form/commit/67556955e92a222521014ccc0dd1b90610ad564b) [#322](https://github.com/wellyshen/react-cool-form/pull/322) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(utils): set object type value correctly
+
+- [`414c489`](https://github.com/wellyshen/react-cool-form/commit/414c4897e191f61824370244550604567483cd44) [#319](https://github.com/wellyshen/react-cool-form/pull/319) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(utils): remove `setTrueValues` utility function
+
 ## 0.0.105
 
 ### Patch Changes
