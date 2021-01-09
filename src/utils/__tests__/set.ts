@@ -10,4 +10,21 @@ describe("set", () => {
     expect(() => set([], "foo", "🍎")).toThrow(TypeError);
     expect(() => set(() => null, "foo", "🍎")).toThrow(TypeError);
   });
+
+  it("should set value by keys", () => {
+    const obj = { obj: "🍎" };
+    expect(set({ ...obj }, "foo", "🍎")).toEqual({ foo: "🍎", ...obj });
+    expect(set({ foo: "", ...obj }, "foo", "🍎")).toEqual({
+      foo: "🍎",
+      ...obj,
+    });
+    expect(set({ foo: { a: "" }, ...obj }, "foo.a", "🍎")).toEqual({
+      foo: { a: "🍎" },
+      ...obj,
+    });
+    expect(set({ foo: { a: { b: "" } }, ...obj }, "foo.a.b", "🍎")).toEqual({
+      foo: { a: { b: "🍎" } },
+      ...obj,
+    });
+  });
 });
