@@ -13,6 +13,12 @@
 
 </div>
 
+<div align="center">
+
+![Demo](https://user-images.githubusercontent.com/21308003/104103951-0a117400-52e0-11eb-8e02-71ec54791552.gif)
+
+</div>
+
 ## Features
 
 - 🎣 [Easy to use](https://react-cool-form.netlify.app/docs/getting-started/integration-an-existing-form), just a React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook).
