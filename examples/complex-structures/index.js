@@ -23,8 +23,8 @@ function App() {
     defaultValues: {
       foo: "",
       bar: [],
-      baz: { nested: "" },
-      qux: [{ nested: "" }]
+      baz: { a: "" },
+      qux: [{ a: "" }]
     },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
@@ -42,14 +42,14 @@ function App() {
         onClear={() => setValue("bar[0]")}
       />
       <FieldGroup
-        name="baz.nested"
-        onUpdate={() => setValue("baz.nested", "🍉")}
-        onClear={() => setValue("baz.nested")}
+        name="baz.a"
+        onUpdate={() => setValue("baz.a", "🍉")}
+        onClear={() => setValue("baz.a")}
       />
       <FieldGroup
-        name="qux[0].nested"
-        onUpdate={() => setValue("qux[0].nested", "🥝")}
-        onClear={() => setValue("qux[0].nested")}
+        name="qux[0].a"
+        onUpdate={() => setValue("qux[0].a", "🥝")}
+        onClear={() => setValue("qux[0].a")}
       />
       <input type="submit" />
     </form>
