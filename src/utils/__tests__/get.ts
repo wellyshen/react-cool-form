@@ -1,5 +1,3 @@
-/* eslint-disable no-sparse-arrays */
-
 import get from "../get";
 
 describe("get", () => {

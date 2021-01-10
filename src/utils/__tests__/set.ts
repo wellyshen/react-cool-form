@@ -1,5 +1,3 @@
-/* eslint-disable no-sparse-arrays */
-
 import set from "../set";
 
 describe("set", () => {

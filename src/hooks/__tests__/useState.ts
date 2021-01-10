@@ -9,7 +9,6 @@ jest.mock("react", () => ({
   ...(jest.requireActual("react") as object),
   useReducer: jest.fn(),
 }));
-// eslint-disable-next-line no-sparse-arrays
 (useReducer as jest.Mock).mockImplementation(() => [, forceUpdate]);
 
 describe("useState", () => {
