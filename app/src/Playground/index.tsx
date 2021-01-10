@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm, set } from "react-cool-form";
+import { useForm, unset } from "react-cool-form";
 // @ts-expect-error
 import _ from "lodash";
 
@@ -10,8 +10,8 @@ export default () => {
   });
 
   useEffect(() => {
-    const obj = { a: ["rcf"] };
-    _.unset(obj, "a.0");
+    const obj = { a: { b: null } };
+    unset(obj, "a.b");
     console.log(obj);
   }, []);
 
