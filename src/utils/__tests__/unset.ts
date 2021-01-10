@@ -14,6 +14,10 @@ describe("unset", () => {
   });
 
   it("should unset value by keys", () => {
+    expect(unset({ foo: undefined }, "foo")).toStrictEqual({});
+    expect(unset({ foo: { a: undefined } }, "foo.a")).toStrictEqual({
+      foo: {},
+    });
     expect(unset({ ...obj }, "foo")).toEqual({ ...obj });
     expect(unset({ foo: "🍎", ...obj }, "foo")).toEqual({ ...obj });
     expect(unset({ foo: {}, ...obj }, "foo")).toEqual({ ...obj });
@@ -31,6 +35,10 @@ describe("unset", () => {
   });
 
   it("should unset value by indexes", () => {
+    expect(unset({ foo: [undefined] }, "foo.0")).toStrictEqual({ foo: [,] });
+    expect(unset({ foo: { a: [undefined] } }, "foo.a.0")).toStrictEqual({
+      foo: { a: [,] },
+    });
     expect(unset({ ...obj }, "foo.0")).toEqual({ ...obj });
     expect(unset({ foo: "🍎", ...obj }, "foo.0")).toEqual({
       foo: "🍎",
@@ -57,6 +65,10 @@ describe("unset", () => {
       ...obj,
     });
 
+    expect(unset({ foo: [undefined] }, "foo[0]")).toStrictEqual({ foo: [,] });
+    expect(unset({ foo: { a: [undefined] } }, "foo.a[0]")).toStrictEqual({
+      foo: { a: [,] },
+    });
     expect(unset({ ...obj }, "foo[0]")).toEqual({ ...obj });
     expect(unset({ foo: "🍎", ...obj }, "foo[0]")).toEqual({
       foo: "🍎",
