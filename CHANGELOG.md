@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.108
+
+### Patch Changes
+
+- [`3d37b97`](https://github.com/wellyshen/react-cool-form/commit/3d37b9731d5e52e384806ffa8030ed2cbe6f4d93) [#329](https://github.com/wellyshen/react-cool-form/pull/329) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(utils): correct the logic of `unset`
+
 ## 0.0.107
 
 ### Patch Changes
