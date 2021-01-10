@@ -14,6 +14,7 @@ describe("unset", () => {
   });
 
   it("should unset value by keys", () => {
+    expect(unset({}, "foo.a.b")).toEqual({});
     expect(unset({ foo: undefined }, "foo")).toStrictEqual({});
     expect(unset({ foo: { a: undefined } }, "foo.a")).toStrictEqual({
       foo: {},
@@ -29,9 +30,6 @@ describe("unset", () => {
     expect(unset({ foo: { a: { b: "🍎", ...obj } } }, "foo.a.b")).toEqual({
       foo: { a: { ...obj } },
     });
-
-    const special = { foo: { "\\": { a: "🍎" } } };
-    expect(unset(special, "foo.\\.a")).toEqual(special);
   });
 
   it("should unset value by indexes", () => {
