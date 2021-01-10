@@ -1,5 +1,17 @@
 # react-cool-form
 
+## 0.0.107
+
+### Patch Changes
+
+- [`64eccdb`](https://github.com/wellyshen/react-cool-form/commit/64eccdbe358d96e932cec6a74e45ad03e31af7a5) Thanks [@wellyshen](https://github.com/wellyshen)! - Docs(readme): add demo gif
+
+* [`db18bfa`](https://github.com/wellyshen/react-cool-form/commit/db18bfa3823c488905395b7da680e717842db4ad) [#328](https://github.com/wellyshen/react-cool-form/pull/328) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(utils): unset all types of value
+
+- [`a33fd6f`](https://github.com/wellyshen/react-cool-form/commit/a33fd6fc35f37b619fdb9f3f19ec1b4462112d96) Thanks [@wellyshen](https://github.com/wellyshen)! - Docs(readme): update demo gif
+
+* [`0f534a9`](https://github.com/wellyshen/react-cool-form/commit/0f534a90c2069c078e50fa0bac9b9a22e4d021c5) [#327](https://github.com/wellyshen/react-cool-form/pull/327) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(utils): handle `unset` exception
+
 ## 0.0.106
 
 ### Patch Changes
