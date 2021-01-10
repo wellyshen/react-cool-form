@@ -1,7 +1,6 @@
 import cloneObject from "./cloneObject";
 import get from "./get";
 import isPlainObject from "./isPlainObject";
-import isUndefined from "./isUndefined";
 import stringToPath from "./stringToPath";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -17,7 +16,9 @@ export default (object: any, path: string, immutable = false): any => {
     return refObject;
   }
 
-  if (!isUndefined(get(newObject, path))) {
+  const value = get(newObject, path);
+
+  if (value == null || value != null) {
     const segs = stringToPath(path);
     let last = segs.pop() as string;
 
