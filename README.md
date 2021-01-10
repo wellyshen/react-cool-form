@@ -15,7 +15,7 @@
 
 <div align="center">
 
-![Demo](https://user-images.githubusercontent.com/21308003/104106242-57e1a880-52ef-11eb-9825-7e312b31f05e.gif)
+![Demo](https://user-images.githubusercontent.com/21308003/104116470-be001700-5353-11eb-8c9f-ecb9e874cd62.gif)
 
 </div>
 
