@@ -114,14 +114,14 @@ describe("unset", () => {
   });
 
   it("should unset value with mutable way", () => {
-    const obj = { foo: "🍋" };
-    unset(obj, "foo");
-    expect(obj).toEqual({});
+    const obj = { foo: { a: "🍋" } };
+    unset(obj, "foo.a");
+    expect(obj).toEqual({ foo: {} });
   });
 
   it("should unset value with immutable way", () => {
-    const obj = { foo: "🍋" };
-    unset(obj, "foo");
-    expect(obj).toEqual(obj);
+    const obj = { foo: { a: "🍋" } };
+    unset(obj, "foo.a", true);
+    expect(obj).toEqual({ foo: { a: "🍋" } });
   });
 });

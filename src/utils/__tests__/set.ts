@@ -106,14 +106,14 @@ describe("set", () => {
   });
 
   it("should set value with mutable way", () => {
-    const obj = { foo: "🍋" };
-    set(obj, "foo", "🍎");
-    expect(obj).toEqual({ foo: "🍎" });
+    const obj = { foo: { a: "🍋" } };
+    set(obj, "foo.a", "🍎");
+    expect(obj).toEqual({ foo: { a: "🍎" } });
   });
 
   it("should set value with immutable way", () => {
-    const obj = { foo: "🍋" };
-    set(obj, "foo", "🍎", true);
-    expect(obj).toEqual(obj);
+    const obj = { foo: { a: "🍋" } };
+    set(obj, "foo.a", "🍎", true);
+    expect(obj).toEqual({ foo: { a: "🍋" } });
   });
 });
