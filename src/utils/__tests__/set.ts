@@ -106,4 +106,16 @@ describe("set", () => {
       foo: { a: [, { b: [[, "🍎"]] }], ...obj },
     });
   });
+
+  it("should set value with mutable way", () => {
+    const obj = { foo: "🍋" };
+    set(obj, "foo", "🍎");
+    expect(obj).toEqual({ foo: "🍎" });
+  });
+
+  it("should set value with immutable way", () => {
+    const obj = { foo: "🍋" };
+    set(obj, "foo", "🍎", true);
+    expect(obj).toEqual(obj);
+  });
 });
