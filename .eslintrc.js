@@ -11,6 +11,7 @@ module.exports = {
     ],
     "no-param-reassign": "off",
     "no-underscore-dangle": "off",
+    "no-sparse-arrays": "off",
     "@typescript-eslint/ban-types": "off",
   },
   settings: {
