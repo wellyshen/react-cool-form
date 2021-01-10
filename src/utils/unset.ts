@@ -26,7 +26,11 @@ export default (object: any, path: string, immutable = false): any => {
 
     while (segs.length) newObject = newObject[(path = segs.shift() as string)];
 
-    delete newObject[last];
+    try {
+      delete newObject[last];
+    } catch (error) {
+      // Ignore
+    }
   }
 
   return refObject;
