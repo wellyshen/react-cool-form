@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useForm, set } from "react-cool-form";
+// @ts-expect-error
+import _ from "lodash";
 
 export default () => {
   const { form } = useForm({
@@ -8,7 +10,9 @@ export default () => {
   });
 
   useEffect(() => {
-    console.log(set({ a: ["abc"] }, '"a["0"]', "test"));
+    const obj = { a: ["rcf"] };
+    _.unset(obj, "a.0");
+    console.log(obj);
   }, []);
 
   return (
