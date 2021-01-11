@@ -27,6 +27,10 @@ module.exports = {
       indexName: "react-cool-form",
       contextualSearch: true,
     },
+    googleAnalytics: {
+      trackingID: "G-N1ZDCBFXWJ",
+      anonymizeIP: true,
+    },
     navbar: {
       title: "React Cool Form",
       logo: {
@@ -126,5 +130,5 @@ module.exports = {
       },
     ],
   ],
-  plugins: ["docusaurus-plugin-sass"],
+  plugins: ["docusaurus-plugin-sass", "@docusaurus/plugin-google-analytics"],
 };
