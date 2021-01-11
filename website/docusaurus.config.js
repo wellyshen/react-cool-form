@@ -28,7 +28,7 @@ module.exports = {
       contextualSearch: true,
     },
     googleAnalytics: {
-      trackingID: "G-N1ZDCBFXWJ",
+      trackingID: "UA-186962415-1",
       anonymizeIP: true,
     },
     navbar: {
