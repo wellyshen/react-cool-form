@@ -1,4 +1,4 @@
-import isObject from "./isObject";
+import isPlainObject from "./isPlainObject";
 
 const deepMerge = (...objects: any[]): any =>
   objects.reduce((prev, obj) => {
@@ -8,7 +8,7 @@ const deepMerge = (...objects: any[]): any =>
 
       if (Array.isArray(prevValue) && Array.isArray(currValue)) {
         prev[key] = [...prevValue, ...currValue];
-      } else if (isObject(prevValue) && isObject(currValue)) {
+      } else if (isPlainObject(prevValue) && isPlainObject(currValue)) {
         prev[key] = deepMerge(prevValue, currValue);
       } else {
         prev[key] = currValue;
