@@ -562,7 +562,7 @@ export default <V extends FormValues = FormValues>({
   const setTouched = useCallback<SetTouched>(
     (name, isTouched = true, shouldValidate = validateOnBlur) => {
       if (isTouched) {
-        setStateRef(`touched.${name}`, isTouched);
+        setStateRef(`touched.${name}`, true);
       } else {
         handleUnset(
           "touched",
