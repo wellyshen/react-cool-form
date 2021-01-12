@@ -1,5 +1,17 @@
 # react-cool-form
 
+## 0.0.109
+
+### Patch Changes
+
+- [`facc86e`](https://github.com/wellyshen/react-cool-form/commit/facc86e086434aa158cd50e1ef1609254cbbb9d0) [#332](https://github.com/wellyshen/react-cool-form/pull/332) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): export `setDirty` method
+
+* [`649c03d`](https://github.com/wellyshen/react-cool-form/commit/649c03d8a5ccff33ac418414743e02493c350d67) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(utils): correct the logic of merging `object` with `array`
+
+- [`05cb324`](https://github.com/wellyshen/react-cool-form/commit/05cb324223e7fd9a2445253a93e2d491be96caee) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): code refactor for `setTouched`
+
+* [`68ccf7f`](https://github.com/wellyshen/react-cool-form/commit/68ccf7fd1ee7c91873986b824f19dace2b2b70fe) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(utils): exclude `Date` from `isPlainObject`
+
 ## 0.0.108
 
 ### Patch Changes
