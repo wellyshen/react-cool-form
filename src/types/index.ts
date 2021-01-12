@@ -71,6 +71,7 @@ interface Options<V> {
   formState: FormState<V>;
   setValue: SetValue;
   setTouched: SetTouched;
+  setDirty: SetDirty;
   setError: SetError;
   clearErrors: ClearErrors;
   runValidation: RunValidation;
@@ -146,6 +147,10 @@ export interface SetValue {
 
 export interface SetTouched {
   (name: string, isTouched?: boolean, shouldValidate?: boolean): void;
+}
+
+export interface SetDirty {
+  (name: string, isDirty?: boolean): void;
 }
 
 export interface SetError {
@@ -231,6 +236,7 @@ export interface Return<V> {
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;
+  setDirty: SetDirty;
   setError: SetError;
   clearErrors: ClearErrors;
   runValidation: RunValidation;
