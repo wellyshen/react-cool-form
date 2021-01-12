@@ -2,8 +2,7 @@ import isPlainObject from "./isPlainObject";
 import isUndefined from "./isUndefined";
 
 const filterErrors = (error: unknown, touched: unknown): any => {
-  if (!isPlainObject(error) || error instanceof Date)
-    return touched ? error : undefined;
+  if (!isPlainObject(error)) return touched ? error : undefined;
 
   return Object.keys(error).reduce((obj: Record<string, any>, key) => {
     const nextErrors = filterErrors(
