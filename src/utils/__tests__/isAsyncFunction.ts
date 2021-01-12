@@ -9,6 +9,7 @@ describe("isAsyncFunction", () => {
     expect(isAsyncFunction("")).toBeFalsy();
     expect(isAsyncFunction([])).toBeFalsy();
     expect(isAsyncFunction({})).toBeFalsy();
+    expect(isAsyncFunction(new Date())).toBeFalsy();
     expect(isAsyncFunction(() => null)).toBeFalsy();
     expect(isAsyncFunction(async () => null)).toBeTruthy();
   });

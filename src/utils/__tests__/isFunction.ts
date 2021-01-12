@@ -9,6 +9,7 @@ describe("isFunction", () => {
     expect(isFunction("")).toBeFalsy();
     expect(isFunction([])).toBeFalsy();
     expect(isFunction({})).toBeFalsy();
+    expect(isFunction(new Date())).toBeFalsy();
     expect(isFunction(() => null)).toBeTruthy();
   });
 });

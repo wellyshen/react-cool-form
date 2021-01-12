@@ -8,6 +8,7 @@ describe("isObject", () => {
     expect(isObject(1)).toBeFalsy();
     expect(isObject("")).toBeFalsy();
     expect(isObject(() => null)).toBeFalsy();
+    expect(isObject(new Date())).toBeTruthy();
     expect(isObject([])).toBeTruthy();
     expect(isObject({})).toBeTruthy();
   });

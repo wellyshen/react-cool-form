@@ -8,6 +8,7 @@ describe("get", () => {
     expect(get("", "foo")).toBeUndefined();
     expect(get(1, "foo")).toBeUndefined();
     expect(get([], "foo")).toBeUndefined();
+    expect(get(new Date(), "foo")).toBeUndefined();
     expect(get(() => null, "foo")).toBeUndefined();
   });
 

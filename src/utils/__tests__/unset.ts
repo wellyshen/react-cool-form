@@ -10,6 +10,7 @@ describe("unset", () => {
     expect(() => unset("", "foo")).toThrow(TypeError);
     expect(() => unset(1, "foo")).toThrow(TypeError);
     expect(() => unset([], "foo")).toThrow(TypeError);
+    expect(() => unset(new Date(), "foo")).toThrow(TypeError);
     expect(() => unset(() => null, "foo")).toThrow(TypeError);
   });
 

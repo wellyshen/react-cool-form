@@ -7,6 +7,7 @@ describe("isEmptyObject", () => {
     expect(isEmptyObject(true)).toBeFalsy();
     expect(isEmptyObject(1)).toBeFalsy();
     expect(isEmptyObject("")).toBeFalsy();
+    expect(isEmptyObject(new Date())).toBeFalsy();
     expect(isEmptyObject(() => null)).toBeFalsy();
     expect(isEmptyObject([])).toBeFalsy();
     expect(isEmptyObject({ test: "" })).toBeFalsy();

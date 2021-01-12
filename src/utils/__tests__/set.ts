@@ -10,6 +10,7 @@ describe("set", () => {
     expect(() => set("", "foo", "🍎")).toThrow(TypeError);
     expect(() => set(1, "foo", "🍎")).toThrow(TypeError);
     expect(() => set([], "foo", "🍎")).toThrow(TypeError);
+    expect(() => set(new Date(), "foo", "🍎")).toThrow(TypeError);
     expect(() => set(() => null, "foo", "🍎")).toThrow(TypeError);
   });
 

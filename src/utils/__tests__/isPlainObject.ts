@@ -7,6 +7,7 @@ describe("isPlainObject", () => {
     expect(isPlainObject(true)).toBeFalsy();
     expect(isPlainObject(1)).toBeFalsy();
     expect(isPlainObject("")).toBeFalsy();
+    expect(isPlainObject(new Date())).toBeFalsy();
     expect(isPlainObject(() => null)).toBeFalsy();
     expect(isPlainObject([])).toBeFalsy();
     expect(isPlainObject({})).toBeTruthy();
