@@ -401,7 +401,6 @@ export default <V extends FormValues = FormValues>({
 
       if (builtInValidationMode === "message") return field.validationMessage;
 
-      // eslint-disable-next-line no-restricted-syntax
       for (const k in field.validity) {
         // @ts-expect-error
         if (k !== "valid" && field.validity[k]) return k;
