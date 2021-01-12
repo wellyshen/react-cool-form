@@ -9,6 +9,7 @@ declare module "react-cool-form" {
     formState: FormState<V>;
     setValue: SetValue;
     setTouched: SetTouched;
+    setDirty: SetDirty;
     setError: SetError;
     clearErrors: ClearErrors;
     runValidation: RunValidation;
@@ -39,6 +40,10 @@ declare module "react-cool-form" {
 
   interface SetTouched {
     (name: string, isTouched?: boolean, shouldValidate?: boolean): void;
+  }
+
+  interface SetDirty {
+    (name: string, isDirty?: boolean): void;
   }
 
   interface SetError {
@@ -200,6 +205,7 @@ declare module "react-cool-form" {
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
+    setDirty: SetDirty;
     setError: SetError;
     clearErrors: ClearErrors;
     runValidation: RunValidation;

@@ -250,6 +250,25 @@ We can clear the touched of a field by the following way:
 setTouched("fieldName", false); // The touched will be unset: { fieldName: true } → {}
 ```
 
+### setDirty
+
+`(name: string, isDirty?: boolean) => void`
+
+This method allows us to manually set/clear the dirty of a field. Useful for creating custom field dirty handlers.
+
+```js
+const { setDirty } = useForm();
+
+// Common use case
+setDirty("fieldName");
+```
+
+We can clear the dirty of a field by the following way:
+
+```js
+setDirty("fieldName", false); // The dirty will be unset: { fieldName: true } → {}
+```
+
 ### setError
 
 `(name: string, error: any | Function) => void`

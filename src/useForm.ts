@@ -20,6 +20,7 @@ import {
   Reset,
   Return,
   RunValidation,
+  SetDirty,
   SetError,
   SetTouched,
   SetValue,
@@ -544,20 +545,6 @@ export default <V extends FormValues = FormValues>({
     [validateField, validateForm]
   );
 
-  const setDirty = useCallback(
-    (name: string) => {
-      if (
-        get(stateRef.current.values, name) !==
-        get(initialStateRef.current.values, name)
-      ) {
-        setStateRef(`dirty.${name}`, true);
-      } else {
-        handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
-      }
-    },
-    [handleUnset, setStateRef, stateRef]
-  );
-
   const setTouched = useCallback<SetTouched>(
     (name, isTouched = true, shouldValidate = validateOnBlur) => {
       if (isTouched) {
@@ -592,6 +579,27 @@ export default <V extends FormValues = FormValues>({
     [setTouched, validateOnChange]
   );
 
+  const setDirty = useCallback<SetDirty>(
+    (name, isDirty = true) => {
+      if (isDirty) {
+        setStateRef(`dirty.${name}`, true);
+      } else {
+        handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
+      }
+    },
+    [handleUnset, setStateRef, stateRef]
+  );
+
+  const setDirtyIfNeeded = useCallback(
+    (name: string) =>
+      setDirty(
+        name,
+        get(stateRef.current.values, name) !==
+          get(initialStateRef.current.values, name)
+      ),
+    [setDirty, stateRef]
+  );
+
   const setValue = useCallback<SetValue>(
     (
       name,
@@ -614,12 +622,12 @@ export default <V extends FormValues = FormValues>({
       setNodeValue(name, value);
 
       if (shouldTouched) setTouched(name, true, false);
-      if (shouldDirty) setDirty(name);
+      if (shouldDirty) setDirtyIfNeeded(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
     [
       handleUnset,
-      setDirty,
+      setDirtyIfNeeded,
       setNodeValue,
       setStateRef,
       setTouched,
@@ -634,6 +642,7 @@ export default <V extends FormValues = FormValues>({
       formState: stateRef.current,
       setValue,
       setTouched,
+      setDirty,
       setError,
       clearErrors,
       runValidation,
@@ -645,6 +654,7 @@ export default <V extends FormValues = FormValues>({
       // @ts-expect-error
       reset,
       runValidation,
+      setDirty,
       setError,
       setTouched,
       setValue,
@@ -728,11 +738,16 @@ export default <V extends FormValues = FormValues>({
   const handleChangeEvent = useCallback(
     (name: string, value: any) => {
       setStateRef(`values.${name}`, value);
-      setDirty(name);
+      setDirtyIfNeeded(name);
 
       if (validateOnChange) validateFieldWithLowPriority(name);
     },
-    [setDirty, setStateRef, validateFieldWithLowPriority, validateOnChange]
+    [
+      setDirtyIfNeeded,
+      setStateRef,
+      validateFieldWithLowPriority,
+      validateOnChange,
+    ]
   );
 
   const controller = useCallback<Controller<V>>(
@@ -926,6 +941,7 @@ export default <V extends FormValues = FormValues>({
     getState,
     setValue,
     setTouched,
+    setDirty,
     setError,
     clearErrors,
     runValidation,
