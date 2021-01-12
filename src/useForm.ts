@@ -583,7 +583,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setTouchedMaybeValidate = useCallback(
-    (name) =>
+    (name: string) =>
       setTouched(
         name,
         true,
