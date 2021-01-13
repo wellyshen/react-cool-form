@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.110
+
+### Patch Changes
+
+- [`26284c3`](https://github.com/wellyshen/react-cool-form/commit/26284c3007b3a64d5baa6eea0be3a792d0406e00) [#335](https://github.com/wellyshen/react-cool-form/pull/335) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): change `ignoreFields` to `excludeFields` & change `data-rcf-ignore` to `data-rcf-exclude`
+
+* [`34b1eb5`](https://github.com/wellyshen/react-cool-form/commit/34b1eb5fa602fac2b9e84cc7aabb550cae135c5f) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): exclude "button" type from form fields parser
+
 ## 0.0.109
 
 ### Patch Changes
