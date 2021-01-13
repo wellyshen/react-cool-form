@@ -7,7 +7,7 @@ import "./styles.scss";
 function App() {
   const { form } = useForm({
     defaultValues: { username: "", email: "" },
-    // ignoreFields: ["more"], // You can also ignore the fields by this option
+    // excludeFields: ["more"], // You can also exclude the fields by this option
     // shouldRemoveField: false, // To maintain the state of the unmouned fields (default = true)
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
@@ -23,7 +23,7 @@ function App() {
           name="more" // Used by the "ignoreFields" option
           type="checkbox"
           onChange={() => setToggle(!toggle)}
-          data-rcf-ignore // Ignore the fields via the pre-defined data attribute
+          data-rcf-exclude // Exclude the fields via the pre-defined data attribute
         />
         <label htmlFor="more">More</label>
       </div>
