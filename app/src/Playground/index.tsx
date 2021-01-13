@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useForm, unset } from "react-cool-form";
-// @ts-expect-error
-import _ from "lodash";
+
+enum FieldNames {
+  test = "test",
+}
 
 export default () => {
   const { form } = useForm({
@@ -17,7 +19,7 @@ export default () => {
 
   return (
     <form ref={form}>
-      <input name="test" />
+      <input name={FieldNames.test} />
       <input type="submit" />
     </form>
   );
