@@ -21,13 +21,13 @@ Default field values of the form. In most case (especially working with TypeScri
 
 - The `defaultValues` is cached **at the first render** within the custom hook. If you want to reset it or [lazily set it](../examples/lazy-default-values), you can use the [reset](#reset) method.
 
-### ignoreFields
+### excludeFields
 
 `string[]`
 
-Tell React Cool Form to ignore field(s) by passing in the `name` of the field. You can also ignore a field via the pre-defined `data-rcf-ignore` attribute. Check the [Ignore Fields](../getting-started/integration-an-existing-form#ignore-fields) to learn more.
+Tell React Cool Form to exclude field(s) by passing in the `name` of the field. You can also exclude a field via the pre-defined `data-rcf-exclude` attribute. Check the [Exclude Fields](../getting-started/integration-an-existing-form#exclude-fields) to learn more.
 
-- The `ignoreFields` and `data-rcf-ignore` won't affect the operation of the [controller](#controller).
+- The `excludeFields` and `data-rcf-exclude` won't affect the operation of the [controller](#controller).
 
 ### shouldRemoveField
 

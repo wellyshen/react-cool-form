@@ -63,9 +63,9 @@ const App = () => {
 };
 ```
 
-## Ignore Fields
+## Exclude Fields
 
-You can tell React Cool Form to ignore field(s) via the pre-defined `data-rcf-ignore` attribute or the [ignoreFields](../api-reference/use-form#ignorefields) option, depends on your case.
+You can tell React Cool Form to exclude field(s) via the pre-defined `data-rcf-exclude` attribute or the [excludeFields](../api-reference/use-form#excludefields) option, depends on your case.
 
 [![Edit RCF - Conditional Fields](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-conditional-fields-rnxe6?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -76,7 +76,7 @@ import { useForm } from "react-cool-form";
 const App = () => {
   const { from } = useForm({
     defaultValues: { username: "", email: "" },
-    // ignoreFields: ["more"], // You can also ignore the fields by this option
+    // excludeFields: ["more"], // You can also exclude the fields by this option
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
   const [toggle, setToggle] = useState(false);
@@ -86,10 +86,10 @@ const App = () => {
       <input name="username" />
       <input name="email" type="email" />
       <input
-        name="more" // Used for the "ignoreFields" option
+        name="more" // Used for the "excludeFields" option
         type="checkbox"
         onChange={() => setToggle(!toggle)}
-        data-rcf-ignore // Ignore the fields via the pre-defined data attribute
+        data-rcf-exclude // Exclude the fields via the pre-defined data attribute
       />
       {toggle && (
         <>

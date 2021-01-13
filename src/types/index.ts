@@ -223,7 +223,7 @@ export type Config<V> = Partial<{
   validateOnBlur: boolean;
   builtInValidationMode: "message" | "state" | false;
   shouldRemoveField: boolean;
-  ignoreFields: string[];
+  excludeFields: string[];
   onReset: ResetHandler<V>;
   onSubmit: SubmitHandler<V>;
   onError: ErrorHandler<V>;
