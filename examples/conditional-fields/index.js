@@ -20,7 +20,7 @@ function App() {
       <div>
         <input
           id="more"
-          name="more" // Used by the "ignoreFields" option
+          name="more" // Used by the "excludeFields" option
           type="checkbox"
           onChange={() => setToggle(!toggle)}
           data-rcf-exclude // Exclude the fields via the pre-defined data attribute
