@@ -107,7 +107,7 @@ export default <V extends FormValues = FormValues>({
             dataset: { rcfIgnore },
           } = field;
 
-          if (/image|submit|reset/.test(type)) return false;
+          if (/button|image|submit|reset/.test(type)) return false;
           if (rcfIgnore && !name) {
             warn('💡 react-cool-form > field: Missing the "name" attribute.');
             return false;
