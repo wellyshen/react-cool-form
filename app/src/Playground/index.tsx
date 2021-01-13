@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm, unset } from "react-cool-form";
 
 enum FieldNames {
-  test = "test",
+  "test.a.b" = "test.a.b",
 }
 
 export default () => {
@@ -19,7 +19,7 @@ export default () => {
 
   return (
     <form ref={form}>
-      <input name={FieldNames.test} />
+      <input name={FieldNames["test.a.b"]} />
       <input type="submit" />
     </form>
   );
