@@ -1,7 +1,7 @@
 import unset from "../unset";
 
 describe("unset", () => {
-  const obj = { bar: "🍋" };
+  const other = { bar: "🍋" };
 
   it("should throw error when input is invalid", () => {
     expect(() => unset(null, "foo")).toThrow(TypeError);
@@ -20,16 +20,16 @@ describe("unset", () => {
     expect(unset({ foo: { a: undefined } }, "foo.a")).toStrictEqual({
       foo: {},
     });
-    expect(unset({ ...obj }, "foo")).toEqual({ ...obj });
-    expect(unset({ foo: "🍎", ...obj }, "foo")).toEqual({ ...obj });
-    expect(unset({ foo: {}, ...obj }, "foo")).toEqual({ ...obj });
-    expect(unset({ foo: [], ...obj }, "foo")).toEqual({ ...obj });
-    expect(unset({ foo: { a: "🍎" }, ...obj }, "foo.a")).toEqual({
+    expect(unset({ ...other }, "foo")).toEqual({ ...other });
+    expect(unset({ foo: "🍎", ...other }, "foo")).toEqual({ ...other });
+    expect(unset({ foo: {}, ...other }, "foo")).toEqual({ ...other });
+    expect(unset({ foo: [], ...other }, "foo")).toEqual({ ...other });
+    expect(unset({ foo: { a: "🍎" }, ...other }, "foo.a")).toEqual({
       foo: {},
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: { a: { b: "🍎", ...obj } } }, "foo.a.b")).toEqual({
-      foo: { a: { ...obj } },
+    expect(unset({ foo: { a: { b: "🍎", ...other } } }, "foo.a.b")).toEqual({
+      foo: { a: { ...other } },
     });
   });
 
@@ -38,91 +38,96 @@ describe("unset", () => {
     expect(unset({ foo: { a: [undefined] } }, "foo.a.0")).toStrictEqual({
       foo: { a: [,] },
     });
-    expect(unset({ ...obj }, "foo.0")).toEqual({ ...obj });
-    expect(unset({ foo: "🍎", ...obj }, "foo.0")).toEqual({
+    expect(unset({ ...other }, "foo.0")).toEqual({ ...other });
+    expect(unset({ foo: "🍎", ...other }, "foo.0")).toEqual({
       foo: "🍎",
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: {}, ...obj }, "foo.0")).toEqual({
+    expect(unset({ foo: {}, ...other }, "foo.0")).toEqual({
       foo: {},
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: ["🍎"], ...obj }, "foo.0")).toEqual({
+    expect(unset({ foo: ["🍎"], ...other }, "foo.0")).toEqual({
       foo: [,],
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: ["🍋", "🍎"], ...obj }, "foo.1")).toEqual({
+    expect(unset({ foo: ["🍋", "🍎"], ...other }, "foo.1")).toEqual({
       foo: ["🍋", ,],
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: [["🍎"], ["🍋"]], ...obj }, "foo.0.0")).toEqual({
+    expect(unset({ foo: [["🍎"], ["🍋"]], ...other }, "foo.0.0")).toEqual({
       foo: [[,], ["🍋"]],
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: [["🍋", "🍎"], ["🥝"]], ...obj }, "foo.0.1")).toEqual({
-      foo: [["🍋", ,], ["🥝"]],
-      ...obj,
-    });
+    expect(unset({ foo: [["🍋", "🍎"], ["🥝"]], ...other }, "foo.0.1")).toEqual(
+      {
+        foo: [["🍋", ,], ["🥝"]],
+        ...other,
+      }
+    );
 
     expect(unset({ foo: [undefined] }, "foo[0]")).toStrictEqual({ foo: [,] });
     expect(unset({ foo: { a: [undefined] } }, "foo.a[0]")).toStrictEqual({
       foo: { a: [,] },
     });
-    expect(unset({ ...obj }, "foo[0]")).toEqual({ ...obj });
-    expect(unset({ foo: "🍎", ...obj }, "foo[0]")).toEqual({
+    expect(unset({ ...other }, "foo[0]")).toEqual({ ...other });
+    expect(unset({ foo: "🍎", ...other }, "foo[0]")).toEqual({
       foo: "🍎",
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: {}, ...obj }, "foo[0]")).toEqual({
+    expect(unset({ foo: {}, ...other }, "foo[0]")).toEqual({
       foo: {},
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: ["🍎"], ...obj }, "foo[0]")).toEqual({
+    expect(unset({ foo: ["🍎"], ...other }, "foo[0]")).toEqual({
       foo: [,],
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: ["🍋", "🍎"], ...obj }, "foo[1]")).toEqual({
+    expect(unset({ foo: ["🍋", "🍎"], ...other }, "foo[1]")).toEqual({
       foo: ["🍋", ,],
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: [["🍎"], ["🍋"]], ...obj }, "foo[0][0]")).toEqual({
+    expect(unset({ foo: [["🍎"], ["🍋"]], ...other }, "foo[0][0]")).toEqual({
       foo: [[,], ["🍋"]],
-      ...obj,
+      ...other,
     });
-    expect(unset({ foo: [["🍋", "🍎"], ["🥝"]], ...obj }, "foo[0][1]")).toEqual(
-      {
-        foo: [["🍋", ,], ["🥝"]],
-        ...obj,
-      }
-    );
+    expect(
+      unset({ foo: [["🍋", "🍎"], ["🥝"]], ...other }, "foo[0][1]")
+    ).toEqual({
+      foo: [["🍋", ,], ["🥝"]],
+      ...other,
+    });
   });
 
   it("should unset value by mixed", () => {
     expect(
       unset({ foo: { a: { b: ["🍋", ["🍎", "🥝"]] } } }, "foo.a.b.1[0]")
     ).toEqual({ foo: { a: { b: ["🍋", [, "🥝"]] } } });
-    expect(unset({ foo: [{ a: ["🍋", "🍎"], ...obj }] }, "foo.0.a[1]")).toEqual(
-      {
-        foo: [{ a: ["🍋", ,], ...obj }],
-      }
-    );
     expect(
-      unset({ foo: { a: ["🍋", { b: ["🍎", "🥝"] }] }, ...obj }, "foo.a[1].b.0")
-    ).toEqual({ foo: { a: ["🍋", { b: [, "🥝"] }] }, ...obj });
+      unset({ foo: [{ a: ["🍋", "🍎"], ...other }] }, "foo.0.a[1]")
+    ).toEqual({
+      foo: [{ a: ["🍋", ,], ...other }],
+    });
     expect(
-      unset({ foo: ["🍋", { a: [[{ b: "🍎" }]], ...obj }] }, "foo.1.a[0].0.b")
-    ).toEqual({ foo: ["🍋", { a: [[{}]], ...obj }] });
+      unset(
+        { foo: { a: ["🍋", { b: ["🍎", "🥝"] }] }, ...other },
+        "foo.a[1].b.0"
+      )
+    ).toEqual({ foo: { a: ["🍋", { b: [, "🥝"] }] }, ...other });
+    expect(
+      unset({ foo: ["🍋", { a: [[{ b: "🍎" }]], ...other }] }, "foo.1.a[0].0.b")
+    ).toEqual({ foo: ["🍋", { a: [[{}]], ...other }] });
   });
 
   it("should unset value with mutable way", () => {
-    const obj = { foo: { a: "🍋" } };
-    unset(obj, "foo.a");
-    expect(obj).toEqual({ foo: {} });
+    const target = { foo: { a: "🍋" } };
+    unset(target, "foo.a");
+    expect(target).toEqual({ foo: {} });
   });
 
   it("should unset value with immutable way", () => {
-    const obj = { foo: { a: "🍋" } };
-    unset(obj, "foo.a", true);
-    expect(obj).toEqual({ foo: { a: "🍋" } });
+    const target = { foo: { a: "🍋" } };
+    unset(target, "foo.a", true);
+    expect(target).toEqual({ foo: { a: "🍋" } });
   });
 });

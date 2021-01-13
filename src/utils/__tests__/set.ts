@@ -1,7 +1,7 @@
 import set from "../set";
 
 describe("set", () => {
-  const obj = { baz: "🍋" };
+  const other = { baz: "🍋" };
 
   it("should throw error when input is invalid", () => {
     expect(() => set(null, "foo", "🍎")).toThrow(TypeError);
@@ -15,106 +15,115 @@ describe("set", () => {
   });
 
   it("should set value by keys", () => {
-    expect(set({ ...obj }, "foo", "🍎")).toEqual({ foo: "🍎", ...obj });
-    expect(set({ foo: "", ...obj }, "foo", "🍎")).toEqual({
+    expect(set({ ...other }, "foo", "🍎")).toEqual({ foo: "🍎", ...other });
+    expect(set({ foo: "", ...other }, "foo", "🍎")).toEqual({
       foo: "🍎",
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: {}, ...obj }, "foo", "🍎")).toEqual({
+    expect(set({ foo: {}, ...other }, "foo", "🍎")).toEqual({
       foo: "🍎",
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: [], ...obj }, "foo", "🍎")).toEqual({
+    expect(set({ foo: [], ...other }, "foo", "🍎")).toEqual({
       foo: "🍎",
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: { a: "" }, ...obj }, "foo.a", "🍎")).toEqual({
+    expect(set({ foo: { a: "" }, ...other }, "foo.a", "🍎")).toEqual({
       foo: { a: "🍎" },
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: { a: [] }, ...obj }, "foo.a.b", "🍎")).toEqual({
+    expect(set({ foo: { a: [] }, ...other }, "foo.a.b", "🍎")).toEqual({
       foo: { a: { b: "🍎" } },
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: { a: { b: "" }, ...obj } }, "foo.a.b", "🍎")).toEqual({
-      foo: { a: { b: "🍎" }, ...obj },
+    expect(set({ foo: { a: { b: "" }, ...other } }, "foo.a.b", "🍎")).toEqual({
+      foo: { a: { b: "🍎" }, ...other },
     });
   });
 
   it("should set value by indexes", () => {
-    expect(set({ ...obj }, "foo.0", "🍎")).toEqual({ foo: ["🍎"], ...obj });
-    expect(set({ ...obj }, "foo.1", "🍎")).toEqual({ foo: [, "🍎"], ...obj });
-    expect(set({ foo: [], ...obj }, "foo.0", "🍎")).toEqual({
-      foo: ["🍎"],
-      ...obj,
-    });
-    expect(set({ foo: {}, ...obj }, "foo.1", "🍎")).toEqual({
+    expect(set({ ...other }, "foo.0", "🍎")).toEqual({ foo: ["🍎"], ...other });
+    expect(set({ ...other }, "foo.1", "🍎")).toEqual({
       foo: [, "🍎"],
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: {}, ...obj }, "foo.0.1", "🍎")).toEqual({
+    expect(set({ foo: [], ...other }, "foo.0", "🍎")).toEqual({
+      foo: ["🍎"],
+      ...other,
+    });
+    expect(set({ foo: {}, ...other }, "foo.1", "🍎")).toEqual({
+      foo: [, "🍎"],
+      ...other,
+    });
+    expect(set({ foo: {}, ...other }, "foo.0.1", "🍎")).toEqual({
       foo: [[, "🍎"]],
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: {}, ...obj }, "foo.1.1", "🍎")).toEqual({
+    expect(set({ foo: {}, ...other }, "foo.1.1", "🍎")).toEqual({
       foo: [, [, "🍎"]],
-      ...obj,
+      ...other,
     });
 
-    expect(set({ ...obj }, "foo[0]", "🍎")).toEqual({ foo: ["🍎"], ...obj });
-    expect(set({ ...obj }, "foo[1]", "🍎")).toEqual({ foo: [, "🍎"], ...obj });
-    expect(set({ foo: [], ...obj }, "foo[0]", "🍎")).toEqual({
+    expect(set({ ...other }, "foo[0]", "🍎")).toEqual({
       foo: ["🍎"],
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: {}, ...obj }, "foo[1]", "🍎")).toEqual({
+    expect(set({ ...other }, "foo[1]", "🍎")).toEqual({
       foo: [, "🍎"],
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: {}, ...obj }, "foo[0][1]", "🍎")).toEqual({
+    expect(set({ foo: [], ...other }, "foo[0]", "🍎")).toEqual({
+      foo: ["🍎"],
+      ...other,
+    });
+    expect(set({ foo: {}, ...other }, "foo[1]", "🍎")).toEqual({
+      foo: [, "🍎"],
+      ...other,
+    });
+    expect(set({ foo: {}, ...other }, "foo[0][1]", "🍎")).toEqual({
       foo: [[, "🍎"]],
-      ...obj,
+      ...other,
     });
-    expect(set({ foo: {}, ...obj }, "foo[1][1]", "🍎")).toEqual({
+    expect(set({ foo: {}, ...other }, "foo[1][1]", "🍎")).toEqual({
       foo: [, [, "🍎"]],
-      ...obj,
+      ...other,
     });
   });
 
   it("should get value by mixed", () => {
     expect(
-      set({ foo: { a: [{ b: "" }] }, ...obj }, "foo.a[0].1", "🍎")
+      set({ foo: { a: [{ b: "" }] }, ...other }, "foo.a[0].1", "🍎")
     ).toEqual({
       foo: { a: [[, "🍎"]] },
-      ...obj,
+      ...other,
     });
     expect(
-      set({ foo: { a: [{ b: {} }] }, ...obj }, "foo.0.a[1]", "🍎")
+      set({ foo: { a: [{ b: {} }] }, ...other }, "foo.0.a[1]", "🍎")
     ).toEqual({
       foo: [{ a: [, "🍎"] }],
-      ...obj,
+      ...other,
     });
     expect(
-      set({ foo: { a: [{ b: [], ...obj }] } }, "foo[0].a.b", "🍎")
+      set({ foo: { a: [{ b: [], ...other }] } }, "foo[0].a.b", "🍎")
     ).toEqual({
       foo: [{ a: { b: "🍎" } }],
     });
     expect(
-      set({ foo: { a: [, { b: "" }], ...obj } }, "foo.a[1].b.0[1]", "🍎")
+      set({ foo: { a: [, { b: "" }], ...other } }, "foo.a[1].b.0[1]", "🍎")
     ).toEqual({
-      foo: { a: [, { b: [[, "🍎"]] }], ...obj },
+      foo: { a: [, { b: [[, "🍎"]] }], ...other },
     });
   });
 
   it("should set value with mutable way", () => {
-    const obj = { foo: { a: "🍋" } };
-    set(obj, "foo.a", "🍎");
-    expect(obj).toEqual({ foo: { a: "🍎" } });
+    const target = { foo: { a: "🍋" } };
+    set(target, "foo.a", "🍎");
+    expect(target).toEqual({ foo: { a: "🍎" } });
   });
 
   it("should set value with immutable way", () => {
-    const obj = { foo: { a: "🍋" } };
-    set(obj, "foo.a", "🍎", true);
-    expect(obj).toEqual({ foo: { a: "🍋" } });
+    const target = { foo: { a: "🍋" } };
+    set(target, "foo.a", "🍎", true);
+    expect(target).toEqual({ foo: { a: "🍋" } });
   });
 });

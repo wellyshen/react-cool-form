@@ -1,11 +1,11 @@
 export default (callback: (args: any) => any): any =>
   (
     window.requestIdleCallback ||
-    ((callback) => {
+    ((cb) => {
       const start = Date.now();
       return setTimeout(
         () =>
-          callback({
+          cb({
             didTimeout: false,
             timeRemaining: () => Math.max(0, 50 - (Date.now() - start)),
           }),

@@ -154,9 +154,9 @@ export default <V extends FormValues = FormValues>({
         return;
       }
 
-      const { validate, ...parsers } = validateOrOptions;
+      const { validate: validator, ...parsers } = validateOrOptions;
 
-      if (validate) fieldValidatorsRef.current[field.name] = validate;
+      if (validator) fieldValidatorsRef.current[field.name] = validator;
       fieldArgsRef.current[field.name] = parsers;
     },
     []
@@ -312,46 +312,46 @@ export default <V extends FormValues = FormValues>({
     (path, { target, watch = true, errorWithTouched = false } = {}) => {
       if (!path) return undefined;
 
-      const getPath = (path: string) => {
-        if (path === "values" && !target && watch)
+      const getPath = (p: string) => {
+        if (p === "values" && !target && watch)
           warn(
             '💡 react-cool-form > getState: Get the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
           );
 
-        path = target ? `${target}.${path}` : path;
+        p = target ? `${target}.${p}` : p;
 
-        if (watch) setUsedStateRef(path);
+        if (watch) setUsedStateRef(p);
 
-        return path;
+        return p;
       };
-      const errorsEnhancer = (path: string, state: any) => {
+      const errorsEnhancer = (p: string, state: any) => {
         if (
           !watch ||
           !errorWithTouched ||
-          !path.startsWith("errors") ||
+          !p.startsWith("errors") ||
           !state ||
           isEmptyObject(state)
         )
           return state;
 
-        path = path.replace("errors", "touched");
-        setUsedStateRef(path);
+        p = p.replace("errors", "touched");
+        setUsedStateRef(p);
 
-        return filterErrors(state, get(stateRef.current, path));
+        return filterErrors(state, get(stateRef.current, p));
       };
       let state;
 
       if (Array.isArray(path)) {
-        state = path.map((path) => {
-          path = getPath(path);
-          return errorsEnhancer(path, get(stateRef.current, path));
+        state = path.map((p) => {
+          p = getPath(p);
+          return errorsEnhancer(p, get(stateRef.current, p));
         });
       } else if (isPlainObject(path)) {
         const paths = path as Record<string, string>;
-        state = Object.keys(paths).reduce((state: Record<string, any>, key) => {
+        state = Object.keys(paths).reduce((s: Record<string, any>, key) => {
           path = getPath(paths[key]);
-          state[key] = errorsEnhancer(path, get(stateRef.current, path));
-          return state;
+          s[key] = errorsEnhancer(path, get(stateRef.current, path));
+          return s;
         }, {});
       } else {
         path = getPath(path);
@@ -700,14 +700,13 @@ export default <V extends FormValues = FormValues>({
       e?.preventDefault();
       e?.stopPropagation();
 
-      const { touched, values } = stateRef.current;
       const nextTouched = Object.keys({
         ...fieldsRef.current,
         ...controllersRef.current,
       }).reduce((touched, name) => {
         touched = set(touched, name, true, true);
         return touched;
-      }, touched);
+      }, stateRef.current.touched);
 
       setStateRef("touched", nextTouched);
       setStateRef("isSubmitting", true);
@@ -721,10 +720,10 @@ export default <V extends FormValues = FormValues>({
           return { errors };
         }
 
-        await onSubmitRef.current(values, getOptions(), e);
+        await onSubmitRef.current(stateRef.current.values, getOptions(), e);
         setStateRef("isSubmitted", true);
 
-        return { values };
+        return { values: stateRef.current.values };
       } catch (exception) {
         warn(`💡 react-cool-form > submit: `, exception);
         throw exception;
@@ -753,7 +752,15 @@ export default <V extends FormValues = FormValues>({
   const controller = useCallback<Controller<V>>(
     (
       name,
-      { validate, value, defaultValue, parse, format, onChange, onBlur } = {}
+      {
+        validate: validator,
+        value,
+        defaultValue,
+        parse,
+        format,
+        onChange,
+        onBlur,
+      } = {}
     ) => {
       if (!name) {
         warn('💡 react-cool-form > controller: Missing the "name" parameter.');
@@ -761,7 +768,7 @@ export default <V extends FormValues = FormValues>({
       }
 
       controllersRef.current[name] = true;
-      if (validate) fieldValidatorsRef.current[name] = validate;
+      if (validator) fieldValidatorsRef.current[name] = validator;
 
       const val = get(defaultValuesRef.current, name);
       defaultValue = !isUndefined(val) ? val : defaultValue;
@@ -774,20 +781,20 @@ export default <V extends FormValues = FormValues>({
         name,
         value,
         onChange: (...args) => {
-          let value;
+          let v;
 
           if (parse) {
-            value = parse(...args);
+            v = parse(...args);
           } else {
             const e = args[0];
-            value =
+            v =
               e?.nativeEvent instanceof Event && isFieldElement(e.target)
                 ? getNodeValue(name)
                 : e;
           }
 
-          handleChangeEvent(name, value);
-          if (onChange) onChange(...args, value);
+          handleChangeEvent(name, v);
+          if (onChange) onChange(...args, v);
           changedFieldRef.current = name;
         },
         onBlur: (e) => {

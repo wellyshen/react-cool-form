@@ -61,7 +61,7 @@ export default <V>(
         if (
           shouldUpdate &&
           (Object.keys(usedStateRef.current).some(
-            (key) => path.startsWith(key) || key.startsWith(path)
+            (k) => path.startsWith(k) || k.startsWith(path)
           ) ||
             (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
             (usedStateRef.current.isValid && isValid !== prevIsValid))
