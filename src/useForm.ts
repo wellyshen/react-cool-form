@@ -60,7 +60,7 @@ export default <V extends FormValues = FormValues>({
   validateOnBlur = true,
   builtInValidationMode = "message",
   shouldRemoveField = true,
-  ignoreFields = [],
+  excludeFields = [],
   onReset,
   onSubmit,
   onError,
@@ -71,7 +71,7 @@ export default <V extends FormValues = FormValues>({
   const fieldsRef = useRef<Fields>({});
   const fieldArgsRef = useRef<FieldArgs>({});
   const controllersRef = useRef<Map>({});
-  const ignoreFieldsRef = useRef<Map>(arrayToMap(ignoreFields));
+  const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
@@ -104,18 +104,18 @@ export default <V extends FormValues = FormValues>({
           const {
             type,
             name,
-            dataset: { rcfIgnore },
+            dataset: { rcfExclude },
           } = field;
 
           if (/button|image|submit|reset/.test(type)) return false;
-          if (rcfIgnore && !name) {
+          if (rcfExclude && !name) {
             warn('💡 react-cool-form > field: Missing the "name" attribute.');
             return false;
           }
 
           return (
             controllersRef.current[name] ||
-            !(rcfIgnore || ignoreFieldsRef.current[name])
+            !(rcfExclude || excludeFieldsRef.current[name])
           );
         })
         .reduce((acc: Record<string, any>, cur) => {
@@ -145,7 +145,7 @@ export default <V extends FormValues = FormValues>({
       if (
         !field?.name ||
         controllersRef.current[field.name] ||
-        ignoreFieldsRef.current[field.name]
+        excludeFieldsRef.current[field.name]
       )
         return;
 
