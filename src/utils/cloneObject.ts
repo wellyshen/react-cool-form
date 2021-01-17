@@ -1,5 +1,5 @@
-import isObject from "./isObject";
 import isFileList from "./isFileList";
+import isObject from "./isObject";
 
 const cloneObject = (object: unknown): any => {
   if (object instanceof Event) throw new Error("Unable to clone event.");
