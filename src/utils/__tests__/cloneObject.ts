@@ -22,4 +22,9 @@ describe("cloneObject", () => {
     target = { foo: { bar: target } };
     expect(cloneObject(target)).toEqual(target);
   });
+
+  it("should return new object", () => {
+    const target = { foo: "🍎" };
+    expect(cloneObject(target)).not.toBe(target);
+  });
 });
