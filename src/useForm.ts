@@ -649,19 +649,8 @@ export default <V extends FormValues = FormValues>({
       reset,
       submit,
     }),
-    [
-      clearErrors,
-      // @ts-expect-error
-      reset,
-      runValidation,
-      setDirty,
-      setError,
-      setTouched,
-      setValue,
-      stateRef,
-      // @ts-expect-error
-      submit,
-    ]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const reset: Reset<V> = useCallback(
