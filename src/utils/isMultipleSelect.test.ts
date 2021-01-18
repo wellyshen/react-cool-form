@@ -1,4 +1,4 @@
-import isMultipleSelect from "../isMultipleSelect";
+import isMultipleSelect from "./isMultipleSelect";
 
 describe("isMultipleSelect", () => {
   it("should work correctly", () => {

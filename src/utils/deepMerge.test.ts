@@ -1,4 +1,4 @@
-import deepMerge from "../deepMerge";
+import deepMerge from "./deepMerge";
 
 describe("deepMerge", () => {
   it("should merge different types of values correctly", () => {

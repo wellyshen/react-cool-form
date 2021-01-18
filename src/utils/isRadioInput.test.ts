@@ -1,4 +1,4 @@
-import isRadioInput from "../isRadioInput";
+import isRadioInput from "./isRadioInput";
 
 describe("isRadioInput", () => {
   it("should work correctly", () => {

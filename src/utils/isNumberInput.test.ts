@@ -1,4 +1,4 @@
-import isNumberInput from "../isNumberInput";
+import isNumberInput from "./isNumberInput";
 
 describe("isNumberInput", () => {
   it("should work correctly", () => {

@@ -1,4 +1,4 @@
-import isFileInput from "../isFileInput";
+import isFileInput from "./isFileInput";
 
 describe("isFileInput", () => {
   it("should work correctly", () => {

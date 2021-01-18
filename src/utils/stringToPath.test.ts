@@ -1,4 +1,4 @@
-import stringToPath from "../stringToPath";
+import stringToPath from "./stringToPath";
 
 describe("stringToPath", () => {
   it("should throw error if input isn't a string", () => {

@@ -1,4 +1,4 @@
-import cloneObject from "../cloneObject";
+import cloneObject from "./cloneObject";
 
 describe("cloneObject", () => {
   it("should throw error when target is an event", () => {

@@ -1,6 +1,6 @@
 import { useLayoutEffect } from "react";
 
-import useIsoLayoutEffect from "../useIsoLayoutEffect";
+import useIsoLayoutEffect from "./useIsoLayoutEffect";
 
 describe("useIsoLayoutEffect", () => {
   it('should be "useLayoutEffect" in client-side', () => {

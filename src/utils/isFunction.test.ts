@@ -1,4 +1,4 @@
-import isFunction from "../isFunction";
+import isFunction from "./isFunction";
 
 describe("isFunction", () => {
   it("should work correctly", () => {

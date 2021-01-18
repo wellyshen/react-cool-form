@@ -1,4 +1,4 @@
-import compact from "../compact";
+import compact from "./compact";
 
 describe("compact", () => {
   it("should work correctly", () => {

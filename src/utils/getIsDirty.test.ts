@@ -1,4 +1,4 @@
-import getIsDirty from "../getIsDirty";
+import getIsDirty from "./getIsDirty";
 
 describe("getIsDirty", () => {
   it("should work correctly", () => {

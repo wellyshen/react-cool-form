@@ -1,4 +1,4 @@
-import isPlainObject from "../isPlainObject";
+import isPlainObject from "./isPlainObject";
 
 describe("isPlainObject", () => {
   it("should work correctly", () => {

@@ -1,4 +1,4 @@
-import isEmptyObject from "../isEmptyObject";
+import isEmptyObject from "./isEmptyObject";
 
 describe("isEmptyObject", () => {
   it("should work correctly", () => {

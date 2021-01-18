@@ -1,4 +1,4 @@
-import isAsyncFunction from "../isAsyncFunction";
+import isAsyncFunction from "./isAsyncFunction";
 
 describe("isAsyncFunction", () => {
   it("should work correctly", () => {

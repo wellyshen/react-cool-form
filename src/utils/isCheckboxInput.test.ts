@@ -1,4 +1,4 @@
-import isCheckboxInput from "../isCheckboxInput";
+import isCheckboxInput from "./isCheckboxInput";
 
 describe("isCheckboxInput", () => {
   it("should work correctly", () => {

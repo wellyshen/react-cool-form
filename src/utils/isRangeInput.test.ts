@@ -1,4 +1,4 @@
-import isRangeInput from "../isRangeInput";
+import isRangeInput from "./isRangeInput";
 
 describe("isRangeInput", () => {
   it("should work correctly", () => {

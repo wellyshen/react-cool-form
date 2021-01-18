@@ -1,7 +1,7 @@
 import { useReducer } from "react";
 import { renderHook } from "@testing-library/react-hooks";
 
-import useState from "../useState";
+import useState from "./useState";
 
 const forceUpdate = jest.fn();
 

@@ -1,4 +1,4 @@
-import runWithLowPriority from "../runWithLowPriority";
+import runWithLowPriority from "./runWithLowPriority";
 
 jest.useFakeTimers();
 

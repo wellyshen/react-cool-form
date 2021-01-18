@@ -1,4 +1,4 @@
-import isInputElement from "../isInputElement";
+import isInputElement from "./isInputElement";
 
 describe("isInputElement", () => {
   it("should work correctly", () => {

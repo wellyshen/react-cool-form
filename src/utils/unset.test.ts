@@ -1,4 +1,4 @@
-import unset from "../unset";
+import unset from "./unset";
 
 describe("unset", () => {
   const other = { bar: "🍋" };

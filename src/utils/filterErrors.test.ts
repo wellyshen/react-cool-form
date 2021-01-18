@@ -1,4 +1,4 @@
-import filterErrors from "../filterErrors";
+import filterErrors from "./filterErrors";
 
 describe("filterErrors", () => {
   it("should work correctly", () => {

@@ -1,4 +1,4 @@
-import arrayToMap from "../arrayToMap";
+import arrayToMap from "./arrayToMap";
 
 describe("arrayToMap", () => {
   it("should work correctly", () => {

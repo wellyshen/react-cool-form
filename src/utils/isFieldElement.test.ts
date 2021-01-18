@@ -1,4 +1,4 @@
-import isFieldElement from "../isFieldElement";
+import isFieldElement from "./isFieldElement";
 
 describe("isFieldElement", () => {
   it("should work correctly", () => {
