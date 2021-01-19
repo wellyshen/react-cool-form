@@ -63,6 +63,27 @@ const App = () => {
 };
 ```
 
+If you need to use the `ref` of form for other purpose, you can share the `ref` by the following way:
+
+```js {10}
+import { useRef } from "react";
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const formRef = useRef();
+  const { form } = useForm();
+
+  const setRef = (element) => {
+    if (element) {
+      formRef.current = element;
+      form(element);
+    }
+  };
+
+  return <form ref={form}>{/* Some fields... */}</form>;
+};
+```
+
 ## Exclude Fields
 
 You can tell React Cool Form to exclude field(s) via the pre-defined `data-rcf-exclude` attribute or the [excludeFields](../api-reference/use-form#excludefields) option, depends on your case.
