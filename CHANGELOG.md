@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.111
+
+### Patch Changes
+
+- [`1d6d0ae`](https://github.com/wellyshen/react-cool-form/commit/1d6d0aea93eff883cec506376bfbbd8e3cd941de) [#341](https://github.com/wellyshen/react-cool-form/pull/341) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): conditional form not working
+
 ## 0.0.110
 
 ### Patch Changes
