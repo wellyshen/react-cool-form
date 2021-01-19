@@ -13,6 +13,7 @@ module.exports = {
     "no-underscore-dangle": "off",
     "no-sparse-arrays": "off",
     "no-restricted-syntax": "off",
+    "react/react-in-jsx-scope": "off",
     "@typescript-eslint/ban-types": "off",
   },
   settings: {
