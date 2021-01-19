@@ -23,9 +23,10 @@ const Form = ({ children, onSubmit, ...config }: Props) => {
 
 describe("useForm", () => {
   describe("form values", () => {
-    it("should set default values correctly", async () => {
+    const onSubmit = jest.fn();
+    
+    it("should set defaultValues option correctly", async () => {
       const defaultValues = { foo: "🍎" };
-      const onSubmit = jest.fn();
       render(
         <Form defaultValues={defaultValues} onSubmit={onSubmit}>
           <input name="foo" />
@@ -33,6 +34,37 @@ describe("useForm", () => {
       );
       fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
+    });
+
+    it("should set defaultValue attribute correctly", async () => {
+      const defaultValue = "🍎";
+      render(
+        <Form onSubmit={onSubmit}>
+          <input name="foo" defaultValue={defaultValue} />
+        </Form>
+      );
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: defaultValue })
+      );
+    });
+
+    it("should handle text change correctly", async () => {
+      render(
+        <Form onSubmit={onSubmit}>
+          <input data-testid="foo" name="foo" />
+        </Form>
+      );
+
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: "" }));
+
+      const value = "🍎";
+      fireEvent.change(screen.getByTestId("foo"), { target: { value } });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
     });
   });
 });
