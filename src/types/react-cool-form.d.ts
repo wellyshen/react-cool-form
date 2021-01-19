@@ -1,5 +1,5 @@
 declare module "react-cool-form" {
-  import { FocusEvent, RefObject, SyntheticEvent } from "react";
+  import { FocusEvent, SyntheticEvent } from "react";
 
   type DeepProps<V, T = any> = {
     [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
@@ -54,7 +54,11 @@ declare module "react-cool-form" {
     (name?: string | string[]): void;
   }
 
-  interface FieldRef<V> {
+  interface RegisterForm {
+    (element: HTMLFormElement | null): void;
+  }
+
+  interface RegisterField<V> {
     (
       validateOrOptions:
         | FieldValidator<V>
@@ -200,8 +204,8 @@ declare module "react-cool-form" {
   }>;
 
   export interface Return<V = FormValues> {
-    form: RefObject<HTMLFormElement>;
-    field: FieldRef<V>;
+    form: RegisterForm;
+    field: RegisterField<V>;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;

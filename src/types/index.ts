@@ -1,4 +1,4 @@
-import { FocusEvent, MutableRefObject, RefObject, SyntheticEvent } from "react";
+import { FocusEvent, MutableRefObject, SyntheticEvent } from "react";
 
 // Common
 export type Map = Record<string, boolean>;
@@ -45,6 +45,17 @@ export interface FormStateReturn<V> {
 
 // Form
 export type FormValues = Record<string, any>;
+
+interface Handler {
+  (event: Event): void;
+}
+
+export type Handlers = Partial<{
+  change: Handler;
+  blur: Handler;
+  submit: Handler;
+  reset: Handler;
+}>;
 
 export type FieldElement =
   | HTMLInputElement
@@ -107,11 +118,15 @@ interface FormValidator<V> {
   (values: V): FormErrors<V> | void | Promise<FormErrors<V> | void>;
 }
 
+export interface RegisterForm {
+  (element: HTMLFormElement | null): void;
+}
+
 export interface FieldValidator<V> {
   (value: any, values: V): any | Promise<any>;
 }
 
-export interface FieldRef<V> {
+export interface RegisterField<V> {
   (
     validateOrOptions:
       | FieldValidator<V>
@@ -231,8 +246,8 @@ export type Config<V> = Partial<{
 }>;
 
 export interface Return<V> {
-  form: RefObject<HTMLFormElement>;
-  field: FieldRef<V>;
+  form: RegisterForm;
+  field: RegisterField<V>;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;

@@ -8,7 +8,6 @@ import {
   Controller,
   FieldArgs,
   FieldElement,
-  FieldRef,
   Fields,
   FieldValidator,
   FieldsValue,
@@ -16,7 +15,10 @@ import {
   FormState,
   FormValues,
   GetState,
+  Handlers,
   Map,
+  RegisterField,
+  RegisterForm,
   Reset,
   Return,
   RunValidation,
@@ -26,7 +28,7 @@ import {
   SetValue,
   Submit,
 } from "./types";
-import { useIsoLayoutEffect, useLatest, useState } from "./hooks";
+import { useLatest, useState } from "./hooks";
 import {
   arrayToMap,
   compact,
@@ -67,7 +69,9 @@ export default <V extends FormValues = FormValues>({
   debug,
 }: Config<V> = {}): Return<V> => {
   const isInitRef = useRef(true);
-  const formRef = useRef<HTMLFormElement>(null);
+  const handlersRef = useRef<Handlers>({});
+  const observerRef = useRef<MutationObserver>();
+  const formRef = useRef<HTMLFormElement>();
   const fieldsRef = useRef<Fields>({});
   const fieldArgsRef = useRef<FieldArgs>({});
   const controllersRef = useRef<Map>({});
@@ -138,28 +142,6 @@ export default <V extends FormValues = FormValues>({
     (path: string, fieldPath: string, target: any, name: string) =>
       setStateRef(path, unset(target, name, true), { fieldPath }),
     [setStateRef]
-  );
-
-  const fieldRef = useCallback<FieldRef<V>>(
-    (validateOrOptions) => (field) => {
-      if (
-        !field?.name ||
-        controllersRef.current[field.name] ||
-        excludeFieldsRef.current[field.name]
-      )
-        return;
-
-      if (isFunction(validateOrOptions)) {
-        fieldValidatorsRef.current[field.name] = validateOrOptions;
-        return;
-      }
-
-      const { validate: validator, ...parsers } = validateOrOptions;
-
-      if (validator) fieldValidatorsRef.current[field.name] = validator;
-      fieldArgsRef.current[field.name] = parsers;
-    },
-    []
   );
 
   const getNodeValue = useCallback(
@@ -802,138 +784,169 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  useIsoLayoutEffect(() => {
-    if (!formRef.current) return;
+  const registerForm = useCallback<RegisterForm>(
+    (el) => {
+      if (!el) return;
 
-    fieldsRef.current = getFields(formRef.current);
-    setNodesOrStateValue(initialStateRef.current.values, true);
-    isInitRef.current = false;
-  }, [getFields, setNodesOrStateValue]);
+      formRef.current = el;
+      const form = formRef.current;
 
-  useEffect(() => {
-    if (!formRef.current) return () => null;
+      fieldsRef.current = getFields(form);
+      setNodesOrStateValue(initialStateRef.current.values, true);
+      isInitRef.current = false;
 
-    const handleChange = ({ target }: Event) => {
-      const { name } = target as FieldElement;
+      handlersRef.current.change = ({ target }: Event) => {
+        const { name } = target as FieldElement;
 
-      if (!name) {
-        warn('💡 react-cool-form > field: Missing the "name" attribute.');
+        if (!name) {
+          warn('💡 react-cool-form > field: Missing the "name" attribute.');
+          return;
+        }
+
+        if (fieldsRef.current[name] && !controllersRef.current[name]) {
+          const parse = fieldArgsRef.current[name]?.parse;
+          const value = getNodeValue(name);
+
+          handleChangeEvent(name, parse ? parse(value) : value);
+          changedFieldRef.current = name;
+        }
+      };
+
+      handlersRef.current.blur = ({ target }: Event) => {
+        if (!isFieldElement(target as HTMLElement)) return;
+
+        const { name } = target as FieldElement;
+
+        if (fieldsRef.current[name] && !controllersRef.current[name]) {
+          setTouchedMaybeValidate(name);
+          changedFieldRef.current = undefined;
+        }
+      };
+
+      handlersRef.current.submit = (e: Event) => submit(e as any);
+
+      handlersRef.current.reset = (e: Event) => reset(null, null, e as any);
+
+      form.addEventListener("input", handlersRef.current.change);
+      form.addEventListener("focusout", handlersRef.current.blur);
+      form.addEventListener("submit", handlersRef.current.submit);
+      form.addEventListener("reset", handlersRef.current.reset);
+
+      observerRef.current = new MutationObserver(([{ type }]) => {
+        if (type !== "childList") return;
+
+        const fields = getFields(form);
+        let { values } = stateRef.current;
+
+        if (shouldRemoveField)
+          Object.keys(fieldsRef.current).forEach((name) => {
+            if (fields[name]) return;
+
+            handleUnset(
+              "values",
+              `values.${name}`,
+              stateRef.current.values,
+              name
+            );
+            handleUnset(
+              "touched",
+              `touched.${name}`,
+              stateRef.current.touched,
+              name
+            );
+            handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
+            handleUnset(
+              "errors",
+              `errors.${name}`,
+              stateRef.current.errors,
+              name
+            );
+            setUsedStateRef(name, true);
+
+            initialStateRef.current.values = unset(
+              initialStateRef.current.values,
+              name,
+              true
+            );
+            delete fieldArgsRef.current[name];
+            delete fieldValidatorsRef.current[name];
+            delete controllersRef.current[name];
+          });
+
+        const addedNodes: string[] = [];
+
+        Object.keys(fields).forEach((name) => {
+          if (fieldsRef.current[name] || controllersRef.current[name]) return;
+
+          const defaultValue = get(defaultValuesRef.current, name);
+
+          if (!isUndefined(defaultValue))
+            values = set(values, name, defaultValue, true);
+
+          addedNodes.push(name);
+        });
+
+        fieldsRef.current = fields;
+        if (addedNodes.length) setNodesOrStateValue(values, true, addedNodes);
+      });
+
+      observerRef.current.observe(form, { childList: true, subtree: true });
+    },
+    [
+      getFields,
+      getNodeValue,
+      handleChangeEvent,
+      handleUnset,
+      reset,
+      setNodesOrStateValue,
+      setTouchedMaybeValidate,
+      setUsedStateRef,
+      shouldRemoveField,
+      stateRef,
+      submit,
+    ]
+  );
+
+  const registerField = useCallback<RegisterField<V>>(
+    (validateOrOptions) => (field) => {
+      if (
+        !field?.name ||
+        controllersRef.current[field.name] ||
+        excludeFieldsRef.current[field.name]
+      )
+        return;
+
+      if (isFunction(validateOrOptions)) {
+        fieldValidatorsRef.current[field.name] = validateOrOptions;
         return;
       }
 
-      if (fieldsRef.current[name] && !controllersRef.current[name]) {
-        const parse = fieldArgsRef.current[name]?.parse;
-        const value = getNodeValue(name);
+      const { validate: validator, ...parsers } = validateOrOptions;
 
-        handleChangeEvent(name, parse ? parse(value) : value);
-        changedFieldRef.current = name;
-      }
-    };
+      if (validator) fieldValidatorsRef.current[field.name] = validator;
+      fieldArgsRef.current[field.name] = parsers;
+    },
+    []
+  );
 
-    const handleBlur = ({ target }: Event) => {
-      if (!isFieldElement(target as HTMLElement)) return;
+  useEffect(
+    () => () => {
+      if (!formRef.current) return;
 
-      const { name } = target as FieldElement;
+      const hanlders = handlersRef.current as Required<Handlers>;
 
-      if (fieldsRef.current[name] && !controllersRef.current[name]) {
-        setTouchedMaybeValidate(name);
-        changedFieldRef.current = undefined;
-      }
-    };
-
-    const handleSubmit = (e: Event) => submit(e as any);
-
-    const handleReset = (e: Event) => reset(null, null, e as any);
-
-    const form = formRef.current;
-    form.addEventListener("input", handleChange);
-    form.addEventListener("focusout", handleBlur);
-    form.addEventListener("submit", handleSubmit);
-    form.addEventListener("reset", handleReset);
-
-    const observer = new MutationObserver(([{ type }]) => {
-      if (type !== "childList") return;
-
-      const fields = getFields(form);
-      let { values } = stateRef.current;
-
-      if (shouldRemoveField)
-        Object.keys(fieldsRef.current).forEach((name) => {
-          if (fields[name]) return;
-
-          handleUnset(
-            "values",
-            `values.${name}`,
-            stateRef.current.values,
-            name
-          );
-          handleUnset(
-            "touched",
-            `touched.${name}`,
-            stateRef.current.touched,
-            name
-          );
-          handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
-          handleUnset(
-            "errors",
-            `errors.${name}`,
-            stateRef.current.errors,
-            name
-          );
-          setUsedStateRef(name, true);
-
-          initialStateRef.current.values = unset(
-            initialStateRef.current.values,
-            name,
-            true
-          );
-          delete fieldArgsRef.current[name];
-          delete fieldValidatorsRef.current[name];
-          delete controllersRef.current[name];
-        });
-
-      const addedNodes: string[] = [];
-
-      Object.keys(fields).forEach((name) => {
-        if (fieldsRef.current[name] || controllersRef.current[name]) return;
-
-        const defaultValue = get(defaultValuesRef.current, name);
-
-        if (!isUndefined(defaultValue))
-          values = set(values, name, defaultValue, true);
-
-        addedNodes.push(name);
-      });
-
-      fieldsRef.current = fields;
-      if (addedNodes.length) setNodesOrStateValue(values, true, addedNodes);
-    });
-    observer.observe(form, { childList: true, subtree: true });
-
-    return () => {
-      form.removeEventListener("input", handleChange);
-      form.removeEventListener("focusout", handleBlur);
-      form.removeEventListener("submit", handleSubmit);
-      form.removeEventListener("reset", handleReset);
-      observer.disconnect();
-    };
-  }, [
-    getFields,
-    getNodeValue,
-    handleChangeEvent,
-    handleUnset,
-    reset,
-    setNodesOrStateValue,
-    setTouchedMaybeValidate,
-    setUsedStateRef,
-    shouldRemoveField,
-    stateRef,
-    submit,
-  ]);
+      formRef.current.removeEventListener("input", hanlders.change);
+      formRef.current.removeEventListener("focusout", hanlders.blur);
+      formRef.current.removeEventListener("submit", hanlders.submit);
+      formRef.current.removeEventListener("reset", hanlders.reset);
+      observerRef.current?.disconnect();
+    },
+    []
+  );
 
   return {
-    form: formRef,
-    field: fieldRef,
+    form: registerForm,
+    field: registerField,
     getState,
     setValue,
     setTouched,
