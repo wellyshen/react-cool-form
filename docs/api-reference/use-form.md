@@ -159,9 +159,9 @@ An `object` with the following methods:
 
 ### form
 
-`React.RefObject`
+`(element: HTMLFormElement) => void`
 
-A React [ref](https://reactjs.org/docs/hooks-reference.html#useref) that allows you to [integrate a form with React Cool Form](./../getting-started/integration-an-existing-form).
+This method allows us to [integrate a form with React Cool Form](./../getting-started/integration-an-existing-form).
 
 ### field
 
