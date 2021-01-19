@@ -14,6 +14,10 @@ describe("unset", () => {
     expect(() => unset(() => null, "foo")).toThrow(TypeError);
   });
 
+  it("should do nothing if path is empty", () => {
+    expect(unset({ foo: "🍎" }, "")).toEqual({ foo: "🍎" });
+  });
+
   it("should unset value by keys", () => {
     expect(unset({}, "foo.a.b")).toEqual({});
     expect(unset({ foo: undefined }, "foo")).toStrictEqual({});
