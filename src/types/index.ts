@@ -46,16 +46,9 @@ export interface FormStateReturn<V> {
 // Form
 export type FormValues = Record<string, any>;
 
-interface Handler {
-  (event: Event): void;
-}
-
-export type Handlers = Partial<{
-  change: Handler;
-  blur: Handler;
-  submit: Handler;
-  reset: Handler;
-}>;
+export type Handlers = {
+  [k in "change" | "blur" | "submit" | "reset"]?: (event: Event) => void;
+};
 
 export type FieldElement =
   | HTMLInputElement
