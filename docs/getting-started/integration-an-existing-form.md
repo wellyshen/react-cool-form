@@ -84,6 +84,30 @@ const App = () => {
 };
 ```
 
+## Without Using a `<form>` Element
+
+React Cool Form is not limited to actual forms. It can be used with any container where inputs are used.
+
+```js {10,14}
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const { form, submit } = useForm({
+    defaultValues: { email: "", password: "" },
+    onSubmit: (values) => console.log("onSubmit: ", values),
+  });
+
+  return (
+    <div ref={div}>
+      <input name="email" required />
+      <input name="password" required minLength={8} />
+      {/* We need to manually submit the form */}
+      <button onClick={submit}>Submit</button>
+    </div>
+  );
+};
+```
+
 ## Exclude Fields
 
 You can tell React Cool Form to exclude field(s) via the pre-defined `data-rcf-exclude` attribute or the [excludeFields](../api-reference/use-form#excludefields) option, depends on your case.

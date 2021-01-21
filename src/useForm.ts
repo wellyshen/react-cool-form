@@ -71,7 +71,7 @@ export default <V extends FormValues = FormValues>({
   const isInitRef = useRef(true);
   const handlersRef = useRef<Handlers>({});
   const observerRef = useRef<MutationObserver>();
-  const formRef = useRef<HTMLFormElement>();
+  const formRef = useRef<HTMLElement>();
   const fieldsRef = useRef<Fields>({});
   const fieldArgsRef = useRef<FieldArgs>({});
   const controllersRef = useRef<Map>({});
@@ -101,7 +101,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const getFields = useCallback(
-    (form: HTMLFormElement) =>
+    (form: HTMLElement) =>
       Array.from(form.querySelectorAll("input,textarea,select"))
         .filter((element) => {
           const field = element as FieldElement;
