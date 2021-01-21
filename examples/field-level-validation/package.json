@@ -1,7 +1,7 @@
 {
   "name": "rcf-field-level-validation",
   "version": "0.0.0",
-  "description": "The field-level validation of RCF.",
+  "description": "The field-level validation example of RCF.",
   "main": "index.js",
   "dependencies": {
     "react": "^17.0.1",
