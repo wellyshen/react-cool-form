@@ -112,7 +112,7 @@ interface FormValidator<V> {
 }
 
 export interface RegisterForm {
-  (element: HTMLFormElement | null): void;
+  (element: HTMLElement | null): void;
 }
 
 export interface FieldValidator<V> {

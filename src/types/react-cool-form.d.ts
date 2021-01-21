@@ -55,7 +55,7 @@ declare module "react-cool-form" {
   }
 
   interface RegisterForm {
-    (element: HTMLFormElement | null): void;
+    (element: HTMLElement | null): void;
   }
 
   interface RegisterField<V> {
