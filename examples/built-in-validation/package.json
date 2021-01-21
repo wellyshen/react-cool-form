@@ -1,7 +1,7 @@
 {
   "name": "rcf-built-in-validation",
   "version": "0.0.0",
-  "description": "The built-in validation of RCF.",
+  "description": "The built-in validation example of RCF.",
   "main": "index.js",
   "dependencies": {
     "react": "^17.0.1",
