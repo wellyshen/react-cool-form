@@ -117,9 +117,9 @@ function Feature({ imageUrl, title, description }) {
 
 function Home() {
   const context = useDocusaurusContext();
-  const { siteConfig: { customFields = {} } = {} } = context;
+  const { description, keywords } = context.siteConfig.customFields;
   return (
-    <Layout description={customFields.description}>
+    <Layout description={description} keywords={keywords}>
       <header className={clsx("hero", styles.heroBanner)}>
         <div className="container">
           <img src="/img/logo.svg" alt="React Cool Form" />
