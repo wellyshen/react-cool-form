@@ -161,7 +161,7 @@ An `object` with the following methods:
 
 `(element: HTMLElement) => void`
 
-This method allows us to [integrate an existing form](../getting-started/integration-an-existing-form) or [any container where inputs are used](../examples/without-using-a-form-element.md) with React Cool Form.
+This method allows us to integrate [an existing form](../getting-started/integration-an-existing-form#hook-into-a-form) or [a container where inputs are used](../getting-started/integration-an-existing-form#without-using-a-form-element) with React Cool Form.
 
 ### field
 

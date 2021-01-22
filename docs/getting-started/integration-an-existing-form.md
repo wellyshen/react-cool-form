@@ -88,19 +88,45 @@ const App = () => {
 
 React Cool Form is not limited to actual forms. It can be used with any container where inputs are used.
 
-```js {10,14}
+[![Edit RCF - Without Form Element](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-without-form-element-wvctm?fontsize=14&hidenavigation=1&theme=dark)
+
+```js {19,38}
 import { useForm } from "react-cool-form";
 
+const Field = ({ label, id, error, ...rest }) => (
+  <div>
+    <label htmlFor={id}>{label}</label>
+    <input id={id} {...rest} />
+    {error && <p>{error}</p>}
+  </div>
+);
+
 const App = () => {
-  const { form, submit } = useForm({
+  const { form, getState, submit } = useForm({
     defaultValues: { email: "", password: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
+  const errors = getState("errors", { errorWithTouched: true });
 
   return (
-    <div ref={div}>
-      <input name="email" required />
-      <input name="password" required minLength={8} />
+    <div ref={form}>
+      <Field
+        label="Email"
+        id="email"
+        name="email"
+        type="email"
+        required
+        error={errors.email}
+      />
+      <Field
+        label="Password"
+        id="password"
+        name="password"
+        type="password"
+        required
+        minLength={6}
+        error={errors.password}
+      />
       {/* We need to manually submit the form */}
       <button onClick={submit}>Submit</button>
     </div>
