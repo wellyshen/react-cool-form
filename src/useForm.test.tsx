@@ -294,5 +294,21 @@ describe("useForm", () => {
         );
       }
     );
+
+    it("should handle textarea change correctly", async () => {
+      render(
+        <Form defaultValues={{ foo: "" }} onSubmit={onSubmit}>
+          <textarea data-testid="foo" name="foo" />
+        </Form>
+      );
+      const value = "🍎";
+      fireEvent.input(screen.getByTestId("foo"), {
+        target: { value },
+      });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
+    });
   });
 });
