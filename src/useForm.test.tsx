@@ -37,9 +37,9 @@ describe("useForm", () => {
       checkbox: true,
       checkboxes: ["🍎"],
       radio: "🍎",
+      textarea: "🍎",
       select: "🍎",
       selects: ["🍎", "🍋"],
-      textarea: "🍎",
     };
     const defaultNestedValue = { text: { a: [{ b: "🍎" }] } };
 
@@ -64,6 +64,7 @@ describe("useForm", () => {
           />
           <input data-testid="radio-0" name="radio" type="radio" value="🍎" />
           <input data-testid="radio-1" name="radio" type="radio" value="🍋" />
+          <textarea data-testid="textarea" name="textarea" />
           <select name="select">
             <option data-testid="select-0" value="🍎">
               🍎
@@ -80,7 +81,6 @@ describe("useForm", () => {
               🍋
             </option>
           </select>
-          <textarea data-testid="textarea" name="textarea" />
         </Form>
       );
       const {
@@ -90,9 +90,9 @@ describe("useForm", () => {
         checkbox,
         checkboxes,
         radio,
+        textarea,
         select,
         selects,
-        textarea,
       } = defaultValues;
 
       expect(getByTestId("text").value).toBe(text);
@@ -107,6 +107,7 @@ describe("useForm", () => {
       expect(radio0.checked).toBe(radio0.value === radio);
       const radio1 = getByTestId("radio-0");
       expect(radio1.checked).toBe(radio1.value === radio);
+      expect(getByTestId("textarea").value).toBe(textarea);
       const select0 = getByTestId("select-0");
       expect(select0.selected).toBe(select0.value === select);
       const select1 = getByTestId("select-1");
@@ -115,7 +116,6 @@ describe("useForm", () => {
       expect(selects0.selected).toBe(selects.includes(selects0.value));
       const selects1 = getByTestId("selects-1");
       expect(selects1.selected).toBe(selects.includes(selects1.value));
-      expect(getByTestId("textarea").value).toBe(textarea);
 
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
@@ -136,6 +136,7 @@ describe("useForm", () => {
           <input name="checkboxes" type="checkbox" value="🍋" />
           <input name="radio" type="radio" value="🍎" defaultChecked />
           <input name="radio" type="radio" value="🍋" />
+          <textarea name="textarea" defaultValue={defaultValues.textarea} />
           <select name="select" defaultValue={defaultValues.select}>
             <option value="🍎">🍎</option>
             <option value="🍋">🍋</option>
@@ -144,7 +145,6 @@ describe("useForm", () => {
             <option value="🍎">🍎</option>
             <option value="🍋">🍋</option>
           </select>
-          <textarea name="textarea" defaultValue={defaultValues.textarea} />
         </Form>
       );
       fireEvent.submit(screen.getByTestId("form"));
@@ -172,6 +172,7 @@ describe("useForm", () => {
           />
           <input data-testid="radio-0" name="radio" type="radio" value="🍎" />
           <input data-testid="radio-1" name="radio" type="radio" value="🍋" />
+          <textarea data-testid="textarea" name="textarea" />
           <select name="select">
             <option data-testid="select-0" value="🍎">
               🍎
@@ -188,7 +189,6 @@ describe("useForm", () => {
               🍋
             </option>
           </select>
-          <textarea data-testid="textarea" name="textarea" />
         </Form>
       );
       const values: any = {
@@ -198,9 +198,9 @@ describe("useForm", () => {
         checkbox: false,
         checkboxes: [],
         radio: "",
+        textarea: "",
         select: "🍎",
         selects: [],
-        textarea: "",
       };
       const {
         text,
@@ -209,9 +209,9 @@ describe("useForm", () => {
         checkbox,
         checkboxes,
         radio,
+        textarea,
         select,
         selects,
-        textarea,
       } = values;
 
       expect(getByTestId("text").value).toBe(text);
@@ -222,6 +222,7 @@ describe("useForm", () => {
       expect(checkboxes0.checked).toBe(checkboxes.includes(checkboxes0.value));
       const checkboxes1 = getByTestId("checkboxes-1");
       expect(checkboxes1.checked).toBe(checkboxes.includes(checkboxes1.value));
+      expect(getByTestId("textarea").value).toBe(textarea);
       const radio0 = getByTestId("radio-0");
       expect(radio0.checked).toBe(radio0.value === radio);
       const radio1 = getByTestId("radio-0");
@@ -234,7 +235,6 @@ describe("useForm", () => {
       expect(selects0.selected).toBe(selects.includes(selects0.value));
       const selects1 = getByTestId("selects-1");
       expect(selects1.selected).toBe(selects.includes(selects1.value));
-      expect(getByTestId("textarea").value).toBe(textarea);
 
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(values));
@@ -294,6 +294,74 @@ describe("useForm", () => {
         );
       }
     );
+
+    it("should handle checkbox change correctly", async () => {
+      render(
+        <Form defaultValues={{ foo: false }} onSubmit={onSubmit}>
+          <input data-testid="foo" name="foo" type="checkbox" />
+        </Form>
+      );
+      const checked = true;
+      fireEvent.input(screen.getByTestId("foo"), {
+        target: { checked },
+      });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: checked })
+      );
+    });
+
+    it("should handle checkboxes change correctly", async () => {
+      render(
+        <Form defaultValues={{ foo: [] }} onSubmit={onSubmit}>
+          <input data-testid="foo-0" name="foo" type="checkbox" value="🍎" />
+          <input data-testid="foo-1" name="foo" type="checkbox" value="🍋" />
+        </Form>
+      );
+      const foo0 = screen.getByTestId("foo-0") as HTMLInputElement;
+      const foo1 = screen.getByTestId("foo-1") as HTMLInputElement;
+
+      fireEvent.input(foo0, { target: { checked: true } });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: [foo0.value] })
+      );
+
+      fireEvent.input(foo1, { target: { checked: true } });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: [foo0.value, foo1.value] })
+      );
+
+      fireEvent.input(foo0, { target: { checked: false } });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: [foo1.value] })
+      );
+
+      fireEvent.input(foo1, { target: { checked: false } });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: [] }));
+    });
+
+    it("should handle radio buttons change correctly", async () => {
+      render(
+        <Form defaultValues={{ foo: "" }} onSubmit={onSubmit}>
+          <input data-testid="foo-0" name="foo" type="radio" value="🍎" />
+          <input data-testid="foo-1" name="foo" type="radio" value="🍋" />
+        </Form>
+      );
+      
+      const foo0 = screen.getByTestId("foo-0") as HTMLInputElement;
+      fireEvent.input(foo0, { target: { checked: true } });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: foo0.value }));
+
+      const foo1 = screen.getByTestId("foo-1") as HTMLInputElement;
+      fireEvent.input(foo1, { target: { checked: true } });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: foo1.value }));
+    });
 
     it("should handle textarea change correctly", async () => {
       render(
