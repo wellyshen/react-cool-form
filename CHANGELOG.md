@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.112
+
+### Patch Changes
+
+- [`841e904`](https://github.com/wellyshen/react-cool-form/commit/841e9043e3a387c48bdf617f6ea845dfa70b8f20) [#345](https://github.com/wellyshen/react-cool-form/pull/345) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): support non <form> element
+
 ## 0.0.111
 
 ### Patch Changes
