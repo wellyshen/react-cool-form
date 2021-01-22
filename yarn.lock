@@ -1019,7 +1019,7 @@
     "@changesets/types" "^3.0.0"
     dotenv "^8.1.0"
 
-"@changesets/cli@^2.13.0":
+"@changesets/cli@^2.13.1":
   version "2.13.1"
   resolved "https://registry.yarnpkg.com/@changesets/cli/-/cli-2.13.1.tgz#7f60d87bb68119a6f8a62686540b73c326d10aeb"
   integrity sha512-pG8/X57tD60WGVN9zFN190GktXXF3O4e1ApWPAtDNLh7A3ccgl8QaOg2npOARmkr4lBOPJHLjUILd8Z+u4B7+Q==
@@ -1536,10 +1536,10 @@
     lz-string "^1.4.4"
     pretty-format "^26.6.2"
 
-"@testing-library/react-hooks@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/react-hooks/-/react-hooks-5.0.0.tgz#994af047a94c7ed04b34920f70b3fd017e9976cd"
-  integrity sha512-c/wvcz/Set+KOvbi07EQO7tujsUIp5HnNAygJoSpMTVkIDcp7JtSemhjRDg1WL6Qsw076inWobTKCepK3mgi8A==
+"@testing-library/react-hooks@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/react-hooks/-/react-hooks-5.0.2.tgz#c3c497a860f6ec4f45779d14ee8f0ea6593caeb6"
+  integrity sha512-Ih/qcjEOVu0XCrWD7p0kI6PCHTv7kQpe1mo027Uxjvbusjde3KK8QosbOwj0pChri90G2x4+WGB8tScX+HlIhg==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@types/react" ">=16.9.0"
@@ -7422,7 +7422,7 @@ rollup-plugin-terser@^7.0.2:
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
 
-rollup@^2.36.2:
+rollup@^2.37.1:
   version "2.37.1"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.37.1.tgz#aa7aadffd75c80393f9314f9857e851b0ffd34e7"
   integrity sha512-V3ojEeyGeSdrMSuhP3diBb06P+qV4gKQeanbDv+Qh/BZbhdZ7kHV0xAt8Yjk4GFshq/WjO7R4c7DFM20AwTFVQ==
