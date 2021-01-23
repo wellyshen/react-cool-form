@@ -1,4 +1,5 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { Config } from "./types";
 import useForm from "./useForm";
@@ -318,29 +319,30 @@ describe("useForm", () => {
           <input data-testid="foo-1" name="foo" type="checkbox" value="🍋" />
         </Form>
       );
+      const form = screen.getByTestId("form");
       const foo0 = screen.getByTestId("foo-0") as HTMLInputElement;
       const foo1 = screen.getByTestId("foo-1") as HTMLInputElement;
 
       fireEvent.input(foo0, { target: { checked: true } });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(form);
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: [foo0.value] })
       );
 
       fireEvent.input(foo1, { target: { checked: true } });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(form);
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: [foo0.value, foo1.value] })
       );
 
       fireEvent.input(foo0, { target: { checked: false } });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(form);
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: [foo1.value] })
       );
 
       fireEvent.input(foo1, { target: { checked: false } });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(form);
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: [] }));
     });
 
@@ -351,16 +353,20 @@ describe("useForm", () => {
           <input data-testid="foo-1" name="foo" type="radio" value="🍋" />
         </Form>
       );
-      
+      const form = screen.getByTestId("form");
       const foo0 = screen.getByTestId("foo-0") as HTMLInputElement;
-      fireEvent.input(foo0, { target: { checked: true } });
-      fireEvent.submit(screen.getByTestId("form"));
-      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: foo0.value }));
-
       const foo1 = screen.getByTestId("foo-1") as HTMLInputElement;
+
+      fireEvent.input(foo0, { target: { checked: true } });
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: foo0.value })
+      );
       fireEvent.input(foo1, { target: { checked: true } });
-      fireEvent.submit(screen.getByTestId("form"));
-      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: foo1.value }));
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: foo1.value })
+      );
     });
 
     it("should handle textarea change correctly", async () => {
@@ -376,6 +382,82 @@ describe("useForm", () => {
       fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
+    });
+
+    it("should handle select change correctly", async () => {
+      render(
+        <Form defaultValues={{ foo: "" }} onSubmit={onSubmit}>
+          <select data-testid="foo" name="foo">
+            <option data-testid="foo-0" value="🍎">
+              🍎
+            </option>
+            <option data-testid="foo-1" value="🍋">
+              🍋
+            </option>
+          </select>
+        </Form>
+      );
+      const form = screen.getByTestId("form");
+      const foo = screen.getByTestId("foo");
+      const foo0 = screen.getByTestId("foo-0") as HTMLOptionElement;
+      const foo1 = screen.getByTestId("foo-1") as HTMLOptionElement;
+
+      fireEvent.input(foo, { target: { value: foo0.value } });
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: foo0.value })
+      );
+
+      fireEvent.input(foo, { target: { value: foo1.value } });
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: foo1.value })
+      );
+    });
+
+    it("should handle multiple select change correctly", async () => {
+      render(
+        <Form defaultValues={{ foo: [] }} onSubmit={onSubmit}>
+          <select data-testid="foo" name="foo" multiple>
+            <option data-testid="foo-0" value="🍎">
+              🍎
+            </option>
+            <option data-testid="foo-1" value="🍋">
+              🍋
+            </option>
+          </select>
+        </Form>
+      );
+      const form = screen.getByTestId("form");
+      const foo = screen.getByTestId("foo");
+      const foo0 = screen.getByTestId("foo-0") as HTMLOptionElement;
+      const foo1 = screen.getByTestId("foo-1") as HTMLOptionElement;
+
+      let value = [foo0.value];
+      userEvent.selectOptions(foo, value);
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
+
+      value = [foo0.value, foo1.value];
+      userEvent.selectOptions(foo, value);
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
+
+      userEvent.deselectOptions(foo, foo0.value);
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: [foo1.value] })
+      );
+
+      userEvent.deselectOptions(foo, foo1.value);
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: [] })
       );
     });
   });
