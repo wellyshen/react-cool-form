@@ -456,8 +456,51 @@ describe("useForm", () => {
 
       userEvent.deselectOptions(foo, foo1.value);
       fireEvent.submit(form);
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: [] }));
+    });
+
+    it("should handle file change correctly", async () => {
+      render(
+        <Form defaultValues={{ foo: null }} onSubmit={onSubmit}>
+          <input data-testid="foo" name="foo" type="file" />
+        </Form>
+      );
+      userEvent.upload(
+        screen.getByTestId("foo"),
+        new File(["🍎"], "🍎.png", { type: "image/png" })
+      );
+      fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith({ foo: [] })
+        expect(onSubmit).toHaveBeenCalledWith({
+          foo: {
+            "0": expect.any(Object),
+            item: expect.any(Function),
+            length: 1,
+          },
+        })
+      );
+    });
+
+    it("should handle files change correctly", async () => {
+      render(
+        <Form defaultValues={{ foo: null }} onSubmit={onSubmit}>
+          <input data-testid="foo" name="foo" type="file" multiple />
+        </Form>
+      );
+      userEvent.upload(screen.getByTestId("foo"), [
+        new File(["🍎"], "🍎.png", { type: "image/png" }),
+        new File(["🍋"], "🍋.png", { type: "image/png" }),
+      ]);
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({
+          foo: {
+            "0": expect.any(Object),
+            "1": expect.any(Object),
+            item: expect.any(Function),
+            length: 2,
+          },
+        })
       );
     });
   });

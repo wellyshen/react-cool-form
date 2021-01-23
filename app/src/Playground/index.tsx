@@ -1,19 +1,15 @@
 import { useForm } from "react-cool-form";
 
 export default () => {
-  const { form, getState, submit } = useForm({
+  const { form } = useForm({
     defaultValues: { test: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const errors = getState("errors");
 
   return (
-    <div ref={form}>
-      <input name="test" required />
-      {errors.test && <p>{errors.test}</p>}
-      <button type="button" onClick={submit}>
-        Submit
-      </button>
-    </div>
+    <form ref={form}>
+      <input name="test" type="file" multiple />
+      <input type="submit" />
+    </form>
   );
 };
