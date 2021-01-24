@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.113
+
+### Patch Changes
+
+- [`a90c405`](https://github.com/wellyshen/react-cool-form/commit/a90c405a4a84b69855afa808afc1ef5d85252977) [#350](https://github.com/wellyshen/react-cool-form/pull/350) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): should warn for missing field name
+
 ## 0.0.112
 
 ### Patch Changes
