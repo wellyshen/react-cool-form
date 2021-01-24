@@ -41,11 +41,23 @@ describe("useForm", () => {
       expect(console.warn).toHaveBeenNthCalledWith(2, missingNameMsg);
     });
 
-    it("should not warn for an excluded field via data attribute", () => {
+    it("should not warn for a missing name field when it's excluded", () => {
       console.warn = jest.fn();
       render(
         <Form>
           <input data-rcf-exclude />
+        </Form>
+      );
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+
+    it("should not warn for a missing name field in production", () => {
+      // @ts-expect-error
+      global.__DEV__ = false;
+      console.warn = jest.fn();
+      render(
+        <Form>
+          <input />
         </Form>
       );
       expect(console.warn).not.toHaveBeenCalled();
