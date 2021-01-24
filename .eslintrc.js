@@ -14,6 +14,7 @@ module.exports = {
     "no-sparse-arrays": "off",
     "no-restricted-syntax": "off",
     "react/react-in-jsx-scope": "off",
+    "react/require-default-props": "off",
     "@typescript-eslint/ban-types": "off",
   },
   settings: {
