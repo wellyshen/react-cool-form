@@ -539,4 +539,38 @@ describe("useForm", () => {
       );
     });
   });
+
+  describe("exclude fields", () => {
+    it("should exclude a field via excludeFields option", async () => {
+      const defaultValues = { foo: "🍋" };
+      render(
+        <Form
+          defaultValues={defaultValues}
+          excludeFields={["foo"]}
+          onSubmit={onSubmit}
+        >
+          <input data-testid="foo" name="foo" />
+        </Form>
+      );
+      const input = screen.getByTestId("foo") as HTMLInputElement;
+      expect(input.value).toBe("");
+      fireEvent.input(input, { target: { value: "🍎" } });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
+    });
+
+    it("should exclude a field via data attribute", async () => {
+      const defaultValues = { foo: "🍋" };
+      render(
+        <Form defaultValues={defaultValues} onSubmit={onSubmit}>
+          <input data-testid="foo" name="foo" data-rcf-exclude />
+        </Form>
+      );
+      const input = screen.getByTestId("foo") as HTMLInputElement;
+      expect(input.value).toBe("");
+      fireEvent.input(input, { target: { value: "🍎" } });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
+    });
+  });
 });
