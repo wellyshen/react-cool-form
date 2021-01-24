@@ -4,6 +4,10 @@
 
 <p align="center">React hooks for forms state and validation, less code more performant.</p>
 
+<blockquote align="center">
+  <p><g-emoji class="g-emoji" alias="eyes" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f440.png">👀</g-emoji> Looking for a places autocomplete library? Give <a href="https://github.com/wellyshen/use-places-autocomplete" rel="nofollow">use-places-autocomplete</a> a try!</p>
+</blockquote>
+
 <div align="center">
 
 [![npm version](https://img.shields.io/npm/v/react-cool-form?style=flat-square)](https://www.npmjs.com/package/react-cool-form)
