@@ -560,9 +560,15 @@ describe("useForm", () => {
           <input data-testid="foo" name="foo" required />
         </Form>
       );
-      fireEvent.submit(screen.getByTestId("form"));
+      const form = screen.getByTestId("form");
+      const input = screen.getByTestId("foo");
+      fireEvent.submit(form);
+      fireEvent.input(input, { target: { value: "🍎" } });
+      fireEvent.submit(form);
+      fireEvent.input(input, { target: { value: "" } });
+      fireEvent.submit(form);
       await waitFor(() =>
-        expect(onError).toHaveBeenCalledWith({
+        expect(onError).toHaveBeenNthCalledWith(2, {
           foo: "Constraints not satisfied",
         })
       );
