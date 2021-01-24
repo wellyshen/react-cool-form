@@ -55,6 +55,9 @@ import {
   warn,
 } from "./utils";
 
+export const missingNameMsg =
+  '💡 react-cool-form > field: Missing the "name" attribute.';
+
 export default <V extends FormValues = FormValues>({
   defaultValues = {} as V,
   validate,
@@ -112,14 +115,14 @@ export default <V extends FormValues = FormValues>({
           } = field;
 
           if (/button|image|submit|reset/.test(type)) return false;
-          if (rcfExclude && !name) {
-            warn('💡 react-cool-form > field: Missing the "name" attribute.');
+          if (rcfExclude !== "true" && !name) {
+            warn(missingNameMsg);
             return false;
           }
 
           return (
             controllersRef.current[name] ||
-            !(rcfExclude || excludeFieldsRef.current[name])
+            (rcfExclude !== "true" && !excludeFieldsRef.current[name])
           );
         })
         .reduce((acc: Record<string, any>, cur) => {
@@ -799,7 +802,7 @@ export default <V extends FormValues = FormValues>({
         const { name } = target as FieldElement;
 
         if (!name) {
-          warn('💡 react-cool-form > field: Missing the "name" attribute.');
+          warn(missingNameMsg);
           return;
         }
 
