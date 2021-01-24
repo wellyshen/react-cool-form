@@ -2,14 +2,14 @@ import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { Config } from "./types";
-import useForm from "./useForm";
+import useForm, { missingNameMsg } from "./useForm";
 
 interface Props extends Config<any> {
   children: JSX.Element | JSX.Element[];
-  onSubmit: (values: any) => void;
+  onSubmit?: (values: any) => void;
 }
 
-const Form = ({ children, onSubmit, ...config }: Props) => {
+const Form = ({ children, onSubmit = () => null, ...config }: Props) => {
   const { form } = useForm({
     ...config,
     onSubmit: (values) => onSubmit(values),
@@ -27,6 +27,28 @@ describe("useForm", () => {
 
   beforeEach(() => {
     onSubmit.mockClear();
+  });
+
+  describe("warning", () => {
+    it("should warn for field's name missing", () => {
+      console.warn = jest.fn();
+      render(
+        <Form>
+          <input />
+        </Form>
+      );
+      expect(console.warn).toHaveBeenCalledWith(missingNameMsg);
+    });
+
+    it("should not warn for an excluded field via data attribute", () => {
+      console.warn = jest.fn();
+      render(
+        <Form>
+          <input data-rcf-exclude />
+        </Form>
+      );
+      expect(console.warn).not.toHaveBeenCalled();
+    });
   });
 
   describe("default values", () => {
