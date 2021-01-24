@@ -541,8 +541,10 @@ describe("useForm", () => {
   });
 
   describe("exclude fields", () => {
+    const defaultValues = { foo: "🍋" };
+    const e = { target: { value: "🍎" } };
+
     it("should exclude a field via excludeFields option", async () => {
-      const defaultValues = { foo: "🍋" };
       render(
         <Form
           defaultValues={defaultValues}
@@ -554,13 +556,12 @@ describe("useForm", () => {
       );
       const input = screen.getByTestId("foo") as HTMLInputElement;
       expect(input.value).toBe("");
-      fireEvent.input(input, { target: { value: "🍎" } });
+      fireEvent.input(input, e);
       fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
 
     it("should exclude a field via data attribute", async () => {
-      const defaultValues = { foo: "🍋" };
       render(
         <Form defaultValues={defaultValues} onSubmit={onSubmit}>
           <input data-testid="foo" name="foo" data-rcf-exclude />
@@ -568,7 +569,7 @@ describe("useForm", () => {
       );
       const input = screen.getByTestId("foo") as HTMLInputElement;
       expect(input.value).toBe("");
-      fireEvent.input(input, { target: { value: "🍎" } });
+      fireEvent.input(input, e);
       fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
