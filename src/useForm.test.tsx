@@ -7,12 +7,19 @@ import useForm, { missingNameMsg } from "./useForm";
 interface Props extends Config<any> {
   children: JSX.Element | JSX.Element[];
   onSubmit?: (values: any) => void;
+  onError?: (errors: any) => void;
 }
 
-const Form = ({ children, onSubmit = () => null, ...config }: Props) => {
+const Form = ({
+  children,
+  onSubmit = () => null,
+  onError = () => null,
+  ...config
+}: Props) => {
   const { form } = useForm({
     ...config,
     onSubmit: (values) => onSubmit(values),
+    onError: (errors) => onError(errors),
   });
 
   return (
@@ -535,6 +542,28 @@ describe("useForm", () => {
             item: expect.any(Function),
             length: 2,
           },
+        })
+      );
+    });
+  });
+
+  describe("validation", () => {
+    const onError = jest.fn();
+
+    beforeEach(() => {
+      onError.mockClear();
+    });
+
+    it("should run built-in validation", async () => {
+      render(
+        <Form defaultValues={{ foo: "" }} onError={onError}>
+          <input data-testid="foo" name="foo" required />
+        </Form>
+      );
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        expect(onError).toHaveBeenCalledWith({
+          foo: "Constraints not satisfied",
         })
       );
     });
