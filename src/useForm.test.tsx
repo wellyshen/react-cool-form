@@ -30,14 +30,15 @@ describe("useForm", () => {
   });
 
   describe("warning", () => {
-    it("should warn for field's name missing", () => {
+    it("should warn for a missing name field", () => {
       console.warn = jest.fn();
       render(
         <Form>
-          <input />
+          <input data-testid="foo" />
         </Form>
       );
-      expect(console.warn).toHaveBeenCalledWith(missingNameMsg);
+      fireEvent.input(screen.getByTestId("foo"));
+      expect(console.warn).toHaveBeenNthCalledWith(2, missingNameMsg);
     });
 
     it("should not warn for an excluded field via data attribute", () => {
