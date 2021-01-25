@@ -164,7 +164,7 @@ describe("useForm", () => {
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
 
-    it("should set values correctly via defaultValue attributes", async () => {
+    it("should set values correctly via defaultValue attribute", async () => {
       render(
         <Form onSubmit={onSubmit}>
           <input name="text" defaultValue={defaultValues.text} />
@@ -194,7 +194,7 @@ describe("useForm", () => {
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
 
-    it("should set values correctly via value attributes", async () => {
+    it("should set values correctly via value attribute", async () => {
       render(
         <Form onSubmit={onSubmit}>
           <input data-testid="text" name="text" />
@@ -298,7 +298,7 @@ describe("useForm", () => {
       );
     });
 
-    it("should set nested values correctly via defaultValue attributes", async () => {
+    it("should set nested values correctly via defaultValue attribute", async () => {
       render(
         <Form onSubmit={onSubmit}>
           <input
@@ -558,11 +558,10 @@ describe("useForm", () => {
       );
       const form = screen.getByTestId("form");
       const foo = screen.getByTestId("foo");
+      const errors = { foo: expect.anything() };
 
       fireEvent.submit(form);
-      await waitFor(() =>
-        expect(onError).toHaveBeenNthCalledWith(1, { foo: expect.anything() })
-      );
+      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
 
       fireEvent.input(foo, { target: { value: "🍎" } });
       fireEvent.submit(form);
@@ -570,9 +569,33 @@ describe("useForm", () => {
 
       fireEvent.input(foo, { target: { value: "" } });
       fireEvent.submit(form);
-      await waitFor(() =>
-        expect(onError).toHaveBeenNthCalledWith(2, { foo: expect.anything() })
+      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
+    });
+
+    it("should run built-in validation with state mode", async () => {
+      render(
+        <Form
+          defaultValues={{ foo: "" }}
+          builtInValidationMode="state"
+          onError={onError}
+        >
+          <input data-testid="foo" name="foo" required />
+        </Form>
       );
+      const form = screen.getByTestId("form");
+      const foo = screen.getByTestId("foo");
+      const errors = { foo: "valueMissing" };
+
+      fireEvent.submit(form);
+      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+
+      fireEvent.input(foo, { target: { value: "🍎" } });
+      fireEvent.submit(form);
+      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+
+      fireEvent.input(foo, { target: { value: "" } });
+      fireEvent.submit(form);
+      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
     });
   });
 
