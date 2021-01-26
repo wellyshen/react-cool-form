@@ -1,11 +1,15 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { Config } from "./types";
-import useForm, { missingNameMsg } from "./useForm";
+import { Config, Return } from "./types";
+import { isFunction } from "./utils";
+import useForm from "./useForm";
 
 interface Props extends Config<any> {
-  children: JSX.Element | JSX.Element[];
+  children:
+    | JSX.Element
+    | JSX.Element[]
+    | ((args: Omit<Return<any>, "form">) => JSX.Element);
   onSubmit?: (values: any) => void;
   onError?: (errors: any) => void;
 }
@@ -16,7 +20,7 @@ const Form = ({
   onError = () => null,
   ...config
 }: Props) => {
-  const { form } = useForm({
+  const { form, ...rest } = useForm({
     ...config,
     onSubmit: (values) => onSubmit(values),
     onError: (errors) => onError(errors),
@@ -24,7 +28,7 @@ const Form = ({
 
   return (
     <form data-testid="form" ref={form}>
-      {children}
+      {isFunction(children) ? children({ ...rest }) : children}
     </form>
   );
 };
@@ -34,6 +38,8 @@ describe("useForm", () => {
 
   beforeEach(() => {
     onSubmit.mockClear();
+    // @ts-expect-error
+    global.__DEV__ = true;
   });
 
   describe("warning", () => {
@@ -45,7 +51,10 @@ describe("useForm", () => {
         </Form>
       );
       fireEvent.input(screen.getByTestId("foo"));
-      expect(console.warn).toHaveBeenNthCalledWith(2, missingNameMsg);
+      expect(console.warn).toHaveBeenNthCalledWith(
+        2,
+        '💡 react-cool-form > field: Missing the "name" attribute.'
+      );
     });
 
     it("should not warn for a missing name field when it's excluded", () => {
@@ -68,6 +77,53 @@ describe("useForm", () => {
         </Form>
       );
       expect(console.warn).not.toHaveBeenCalled();
+    });
+
+    it("should warn form-level validation exception", async () => {
+      console.warn = jest.fn();
+      render(
+        <Form
+          validate={() => {
+            // eslint-disable-next-line no-throw-literal
+            throw "🍎";
+          }}
+        >
+          <input data-testid="foo" name="foo" />
+        </Form>
+      );
+      fireEvent.input(screen.getByTestId("foo"));
+      await waitFor(() =>
+        expect(console.warn).toHaveBeenCalledWith(
+          "💡 react-cool-form > validate form: ",
+          "🍎"
+        )
+      );
+    });
+
+    it("should warn field-level validation exception", async () => {
+      console.warn = jest.fn();
+      const id = "foo";
+      render(
+        <Form>
+          {({ field }) => (
+            <input
+              data-testid={id}
+              name="foo"
+              ref={field(() => {
+                // eslint-disable-next-line no-throw-literal
+                throw "🍎";
+              })}
+            />
+          )}
+        </Form>
+      );
+      fireEvent.input(screen.getByTestId(id));
+      await waitFor(() =>
+        expect(console.warn).toHaveBeenCalledWith(
+          `💡 react-cool-form > validate ${id}: `,
+          "🍎"
+        )
+      );
     });
   });
 
@@ -585,6 +641,32 @@ describe("useForm", () => {
       const form = screen.getByTestId("form");
       const foo = screen.getByTestId("foo");
       const errors = { foo: "valueMissing" };
+
+      fireEvent.submit(form);
+      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+
+      fireEvent.input(foo, { target: { value: "🍎" } });
+      fireEvent.submit(form);
+      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+
+      fireEvent.input(foo, { target: { value: "" } });
+      fireEvent.submit(form);
+      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
+    });
+
+    it("should run form-level validation", async () => {
+      const errors = { foo: "Required" };
+      render(
+        <Form
+          defaultValues={{ foo: "" }}
+          validate={({ foo }) => (!foo.length ? errors : {})}
+          onError={onError}
+        >
+          <input data-testid="foo" name="foo" />
+        </Form>
+      );
+      const form = screen.getByTestId("form");
+      const foo = screen.getByTestId("foo");
 
       fireEvent.submit(form);
       await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
