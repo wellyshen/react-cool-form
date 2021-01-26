@@ -5,11 +5,13 @@ import { Config, Return } from "./types";
 import { isFunction } from "./utils";
 import useForm from "./useForm";
 
+type Methods = Omit<Return<any>, "form">;
+
 interface Props extends Config<any> {
   children:
     | JSX.Element
     | JSX.Element[]
-    | ((args: Omit<Return<any>, "form">) => JSX.Element);
+    | ((methods: Methods) => JSX.Element | JSX.Element[]);
   onSubmit?: (values: any) => void;
   onError?: (errors: any) => void;
 }
@@ -33,6 +35,21 @@ const Form = ({
   );
 };
 
+const renderHelper = ({ children, ...rest }: Props) => {
+  let api: Methods;
+  render(
+    <Form {...rest}>
+      {(methods) => {
+        api = methods;
+        return isFunction(children) ? children(methods) : children;
+      }}
+    </Form>
+  );
+
+  // @ts-expect-error
+  return api;
+};
+
 describe("useForm", () => {
   const onSubmit = jest.fn();
 
@@ -45,11 +62,7 @@ describe("useForm", () => {
   describe("warning", () => {
     it("should warn for a missing name field", () => {
       console.warn = jest.fn();
-      render(
-        <Form>
-          <input data-testid="foo" />
-        </Form>
-      );
+      renderHelper({ children: <input data-testid="foo" /> });
       fireEvent.input(screen.getByTestId("foo"));
       expect(console.warn).toHaveBeenNthCalledWith(
         2,
@@ -59,11 +72,7 @@ describe("useForm", () => {
 
     it("should not warn for a missing name field when it's excluded", () => {
       console.warn = jest.fn();
-      render(
-        <Form>
-          <input data-rcf-exclude />
-        </Form>
-      );
+      renderHelper({ children: <input data-rcf-exclude /> });
       expect(console.warn).not.toHaveBeenCalled();
     });
 
@@ -71,26 +80,19 @@ describe("useForm", () => {
       // @ts-expect-error
       global.__DEV__ = false;
       console.warn = jest.fn();
-      render(
-        <Form>
-          <input />
-        </Form>
-      );
+      renderHelper({ children: <input /> });
       expect(console.warn).not.toHaveBeenCalled();
     });
 
     it("should warn form-level validation exception", async () => {
       console.warn = jest.fn();
-      render(
-        <Form
-          validate={() => {
-            // eslint-disable-next-line no-throw-literal
-            throw "🍎";
-          }}
-        >
-          <input data-testid="foo" name="foo" />
-        </Form>
-      );
+      renderHelper({
+        validate: () => {
+          // eslint-disable-next-line no-throw-literal
+          throw "🍎";
+        },
+        children: <input data-testid="foo" name="foo" />,
+      });
       fireEvent.input(screen.getByTestId("foo"));
       await waitFor(() =>
         expect(console.warn).toHaveBeenCalledWith(
@@ -103,20 +105,18 @@ describe("useForm", () => {
     it("should warn field-level validation exception", async () => {
       console.warn = jest.fn();
       const id = "foo";
-      render(
-        <Form>
-          {({ field }) => (
-            <input
-              data-testid={id}
-              name="foo"
-              ref={field(() => {
-                // eslint-disable-next-line no-throw-literal
-                throw "🍎";
-              })}
-            />
-          )}
-        </Form>
-      );
+      renderHelper({
+        children: ({ field }: Methods) => (
+          <input
+            data-testid={id}
+            name="foo"
+            ref={field(() => {
+              // eslint-disable-next-line no-throw-literal
+              throw "🍎";
+            })}
+          />
+        ),
+      });
       fireEvent.input(screen.getByTestId(id));
       await waitFor(() =>
         expect(console.warn).toHaveBeenCalledWith(
@@ -143,45 +143,49 @@ describe("useForm", () => {
     const defaultNestedValue = { text: { a: [{ b: "🍎" }] } };
 
     it("should set values correctly via defaultValues option", async () => {
-      render(
-        <Form defaultValues={defaultValues} onSubmit={onSubmit}>
-          <input data-testid="text" name="text" />
-          <input data-testid="number" name="number" type="number" />
-          <input data-testid="range" name="range" type="range" />
-          <input data-testid="checkbox" name="checkbox" type="checkbox" />
-          <input
-            data-testid="checkboxes-0"
-            name="checkboxes"
-            type="checkbox"
-            value="🍎"
-          />
-          <input
-            data-testid="checkboxes-1"
-            name="checkboxes"
-            type="checkbox"
-            value="🍋"
-          />
-          <input data-testid="radio-0" name="radio" type="radio" value="🍎" />
-          <input data-testid="radio-1" name="radio" type="radio" value="🍋" />
-          <textarea data-testid="textarea" name="textarea" />
-          <select name="select">
-            <option data-testid="select-0" value="🍎">
-              🍎
-            </option>
-            <option data-testid="select-1" value="🍋">
-              🍋
-            </option>
-          </select>
-          <select name="selects" multiple>
-            <option data-testid="selects-0" value="🍎">
-              🍎
-            </option>
-            <option data-testid="selects-1" value="🍋">
-              🍋
-            </option>
-          </select>
-        </Form>
-      );
+      renderHelper({
+        defaultValues,
+        onSubmit,
+        children: (
+          <>
+            <input data-testid="text" name="text" />
+            <input data-testid="number" name="number" type="number" />
+            <input data-testid="range" name="range" type="range" />
+            <input data-testid="checkbox" name="checkbox" type="checkbox" />
+            <input
+              data-testid="checkboxes-0"
+              name="checkboxes"
+              type="checkbox"
+              value="🍎"
+            />
+            <input
+              data-testid="checkboxes-1"
+              name="checkboxes"
+              type="checkbox"
+              value="🍋"
+            />
+            <input data-testid="radio-0" name="radio" type="radio" value="🍎" />
+            <input data-testid="radio-1" name="radio" type="radio" value="🍋" />
+            <textarea data-testid="textarea" name="textarea" />
+            <select name="select">
+              <option data-testid="select-0" value="🍎">
+                🍎
+              </option>
+              <option data-testid="select-1" value="🍋">
+                🍋
+              </option>
+            </select>
+            <select name="selects" multiple>
+              <option data-testid="selects-0" value="🍎">
+                🍎
+              </option>
+              <option data-testid="selects-1" value="🍋">
+                🍋
+              </option>
+            </select>
+          </>
+        ),
+      });
       const {
         text,
         number,
@@ -221,75 +225,94 @@ describe("useForm", () => {
     });
 
     it("should set values correctly via defaultValue attribute", async () => {
-      render(
-        <Form onSubmit={onSubmit}>
-          <input name="text" defaultValue={defaultValues.text} />
-          <input
-            name="number"
-            type="number"
-            defaultValue={defaultValues.number}
-          />
-          <input name="range" type="range" defaultValue={defaultValues.range} />
-          <input name="checkbox" type="checkbox" defaultChecked />
-          <input name="checkboxes" type="checkbox" value="🍎" defaultChecked />
-          <input name="checkboxes" type="checkbox" value="🍋" />
-          <input name="radio" type="radio" value="🍎" defaultChecked />
-          <input name="radio" type="radio" value="🍋" />
-          <textarea name="textarea" defaultValue={defaultValues.textarea} />
-          <select name="select" defaultValue={defaultValues.select}>
-            <option value="🍎">🍎</option>
-            <option value="🍋">🍋</option>
-          </select>
-          <select name="selects" multiple defaultValue={defaultValues.selects}>
-            <option value="🍎">🍎</option>
-            <option value="🍋">🍋</option>
-          </select>
-        </Form>
-      );
+      renderHelper({
+        onSubmit,
+        children: (
+          <>
+            <input name="text" defaultValue={defaultValues.text} />
+            <input
+              name="number"
+              type="number"
+              defaultValue={defaultValues.number}
+            />
+            <input
+              name="range"
+              type="range"
+              defaultValue={defaultValues.range}
+            />
+            <input name="checkbox" type="checkbox" defaultChecked />
+            <input
+              name="checkboxes"
+              type="checkbox"
+              value="🍎"
+              defaultChecked
+            />
+            <input name="checkboxes" type="checkbox" value="🍋" />
+            <input name="radio" type="radio" value="🍎" defaultChecked />
+            <input name="radio" type="radio" value="🍋" />
+            <textarea name="textarea" defaultValue={defaultValues.textarea} />
+            <select name="select" defaultValue={defaultValues.select}>
+              <option value="🍎">🍎</option>
+              <option value="🍋">🍋</option>
+            </select>
+            <select
+              name="selects"
+              multiple
+              defaultValue={defaultValues.selects}
+            >
+              <option value="🍎">🍎</option>
+              <option value="🍋">🍋</option>
+            </select>
+          </>
+        ),
+      });
       fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
 
     it("should set values correctly via value attribute", async () => {
-      render(
-        <Form onSubmit={onSubmit}>
-          <input data-testid="text" name="text" />
-          <input data-testid="number" name="number" type="number" />
-          <input data-testid="range" name="range" type="range" />
-          <input data-testid="checkbox" name="checkbox" type="checkbox" />
-          <input
-            data-testid="checkboxes-0"
-            name="checkboxes"
-            type="checkbox"
-            value="🍎"
-          />
-          <input
-            data-testid="checkboxes-1"
-            name="checkboxes"
-            type="checkbox"
-            value="🍋"
-          />
-          <input data-testid="radio-0" name="radio" type="radio" value="🍎" />
-          <input data-testid="radio-1" name="radio" type="radio" value="🍋" />
-          <textarea data-testid="textarea" name="textarea" />
-          <select name="select">
-            <option data-testid="select-0" value="🍎">
-              🍎
-            </option>
-            <option data-testid="select-1" value="🍋">
-              🍋
-            </option>
-          </select>
-          <select name="selects" multiple>
-            <option data-testid="selects-0" value="🍎">
-              🍎
-            </option>
-            <option data-testid="selects-1" value="🍋">
-              🍋
-            </option>
-          </select>
-        </Form>
-      );
+      renderHelper({
+        onSubmit,
+        children: (
+          <>
+            <input data-testid="text" name="text" />
+            <input data-testid="number" name="number" type="number" />
+            <input data-testid="range" name="range" type="range" />
+            <input data-testid="checkbox" name="checkbox" type="checkbox" />
+            <input
+              data-testid="checkboxes-0"
+              name="checkboxes"
+              type="checkbox"
+              value="🍎"
+            />
+            <input
+              data-testid="checkboxes-1"
+              name="checkboxes"
+              type="checkbox"
+              value="🍋"
+            />
+            <input data-testid="radio-0" name="radio" type="radio" value="🍎" />
+            <input data-testid="radio-1" name="radio" type="radio" value="🍋" />
+            <textarea data-testid="textarea" name="textarea" />
+            <select name="select">
+              <option data-testid="select-0" value="🍎">
+                🍎
+              </option>
+              <option data-testid="select-1" value="🍋">
+                🍋
+              </option>
+            </select>
+            <select name="selects" multiple>
+              <option data-testid="selects-0" value="🍎">
+                🍎
+              </option>
+              <option data-testid="selects-1" value="🍋">
+                🍋
+              </option>
+            </select>
+          </>
+        ),
+      });
       const values: any = {
         text: "",
         number: "",
@@ -340,11 +363,11 @@ describe("useForm", () => {
     });
 
     it("should set nested values correctly via defaultValues option", async () => {
-      render(
-        <Form defaultValues={defaultNestedValue} onSubmit={onSubmit}>
-          <input data-testid="text" name="text.a[0].b" />
-        </Form>
-      );
+      renderHelper({
+        defaultValues: defaultNestedValue,
+        onSubmit,
+        children: <input data-testid="text" name="text.a[0].b" />,
+      });
 
       expect(getByTestId("text").value).toBe(defaultNestedValue.text.a[0].b);
 
@@ -355,14 +378,15 @@ describe("useForm", () => {
     });
 
     it("should set nested values correctly via defaultValue attribute", async () => {
-      render(
-        <Form onSubmit={onSubmit}>
+      renderHelper({
+        onSubmit,
+        children: (
           <input
             name="text.a[0].b"
             defaultValue={defaultNestedValue.text.a[0].b}
           />
-        </Form>
-      );
+        ),
+      });
       fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
@@ -374,11 +398,11 @@ describe("useForm", () => {
     it.each(["text", "number", "range"])(
       "should handle %s change correctly",
       async (type) => {
-        render(
-          <Form defaultValues={{ foo: "" }} onSubmit={onSubmit}>
-            <input data-testid="foo" name="foo" type={type} />
-          </Form>
-        );
+        renderHelper({
+          defaultValues: { foo: "" },
+          onSubmit,
+          children: <input data-testid="foo" name="foo" type={type} />,
+        });
         const values: any = {
           text: "🍎",
           number: 1,
@@ -395,23 +419,27 @@ describe("useForm", () => {
     );
 
     it("should handle checkbox change correctly", async () => {
-      render(
-        <Form defaultValues={{ foo: false }} onSubmit={onSubmit}>
-          <input data-testid="foo" name="foo" type="checkbox" />
-        </Form>
-      );
+      renderHelper({
+        defaultValues: { foo: false },
+        onSubmit,
+        children: <input data-testid="foo" name="foo" type="checkbox" />,
+      });
       userEvent.click(screen.getByTestId("foo"));
       fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: true }));
     });
 
     it("should handle checkboxes change correctly", async () => {
-      render(
-        <Form defaultValues={{ foo: [] }} onSubmit={onSubmit}>
-          <input data-testid="foo-0" name="foo" type="checkbox" value="🍎" />
-          <input data-testid="foo-1" name="foo" type="checkbox" value="🍋" />
-        </Form>
-      );
+      renderHelper({
+        defaultValues: { foo: [] },
+        onSubmit,
+        children: (
+          <>
+            <input data-testid="foo-0" name="foo" type="checkbox" value="🍎" />
+            <input data-testid="foo-1" name="foo" type="checkbox" value="🍋" />
+          </>
+        ),
+      });
       const form = screen.getByTestId("form");
       const foo0 = screen.getByTestId("foo-0") as HTMLInputElement;
       const foo1 = screen.getByTestId("foo-1") as HTMLInputElement;
@@ -440,12 +468,16 @@ describe("useForm", () => {
     });
 
     it("should handle radio buttons change correctly", async () => {
-      render(
-        <Form defaultValues={{ foo: "" }} onSubmit={onSubmit}>
-          <input data-testid="foo-0" name="foo" type="radio" value="🍎" />
-          <input data-testid="foo-1" name="foo" type="radio" value="🍋" />
-        </Form>
-      );
+      renderHelper({
+        defaultValues: { foo: "" },
+        onSubmit,
+        children: (
+          <>
+            <input data-testid="foo-0" name="foo" type="radio" value="🍎" />
+            <input data-testid="foo-1" name="foo" type="radio" value="🍋" />
+          </>
+        ),
+      });
       const form = screen.getByTestId("form");
       const foo0 = screen.getByTestId("foo-0") as HTMLInputElement;
       const foo1 = screen.getByTestId("foo-1") as HTMLInputElement;
@@ -464,11 +496,11 @@ describe("useForm", () => {
     });
 
     it("should handle textarea change correctly", async () => {
-      render(
-        <Form defaultValues={{ foo: "" }} onSubmit={onSubmit}>
-          <textarea data-testid="foo" name="foo" />
-        </Form>
-      );
+      renderHelper({
+        defaultValues: { foo: "" },
+        onSubmit,
+        children: <textarea data-testid="foo" name="foo" />,
+      });
       const value = "🍎";
       fireEvent.input(screen.getByTestId("foo"), {
         target: { value },
@@ -480,18 +512,22 @@ describe("useForm", () => {
     });
 
     it("should handle select change correctly", async () => {
-      render(
-        <Form defaultValues={{ foo: "" }} onSubmit={onSubmit}>
-          <select data-testid="foo" name="foo">
-            <option data-testid="foo-0" value="🍎">
-              🍎
-            </option>
-            <option data-testid="foo-1" value="🍋">
-              🍋
-            </option>
-          </select>
-        </Form>
-      );
+      renderHelper({
+        defaultValues: { foo: "" },
+        onSubmit,
+        children: (
+          <>
+            <select data-testid="foo" name="foo">
+              <option data-testid="foo-0" value="🍎">
+                🍎
+              </option>
+              <option data-testid="foo-1" value="🍋">
+                🍋
+              </option>
+            </select>
+          </>
+        ),
+      });
       const form = screen.getByTestId("form");
       const foo = screen.getByTestId("foo");
       const foo0 = screen.getByTestId("foo-0") as HTMLOptionElement;
@@ -511,18 +547,22 @@ describe("useForm", () => {
     });
 
     it("should handle multiple select change correctly", async () => {
-      render(
-        <Form defaultValues={{ foo: [] }} onSubmit={onSubmit}>
-          <select data-testid="foo" name="foo" multiple>
-            <option data-testid="foo-0" value="🍎">
-              🍎
-            </option>
-            <option data-testid="foo-1" value="🍋">
-              🍋
-            </option>
-          </select>
-        </Form>
-      );
+      renderHelper({
+        defaultValues: { foo: [] },
+        onSubmit,
+        children: (
+          <>
+            <select data-testid="foo" name="foo" multiple>
+              <option data-testid="foo-0" value="🍎">
+                🍎
+              </option>
+              <option data-testid="foo-1" value="🍋">
+                🍋
+              </option>
+            </select>
+          </>
+        ),
+      });
       const form = screen.getByTestId("form");
       const foo = screen.getByTestId("foo");
       const foo0 = screen.getByTestId("foo-0") as HTMLOptionElement;
@@ -554,11 +594,11 @@ describe("useForm", () => {
     });
 
     it("should handle file change correctly", async () => {
-      render(
-        <Form defaultValues={{ foo: null }} onSubmit={onSubmit}>
-          <input data-testid="foo" name="foo" type="file" />
-        </Form>
-      );
+      renderHelper({
+        defaultValues: { foo: null },
+        onSubmit,
+        children: <input data-testid="foo" name="foo" type="file" />,
+      });
       userEvent.upload(
         screen.getByTestId("foo"),
         new File(["🍎"], "🍎.png", { type: "image/png" })
@@ -576,11 +616,11 @@ describe("useForm", () => {
     });
 
     it("should handle files change correctly", async () => {
-      render(
-        <Form defaultValues={{ foo: null }} onSubmit={onSubmit}>
-          <input data-testid="foo" name="foo" type="file" multiple />
-        </Form>
-      );
+      renderHelper({
+        defaultValues: { foo: null },
+        onSubmit,
+        children: <input data-testid="foo" name="foo" type="file" multiple />,
+      });
       userEvent.upload(screen.getByTestId("foo"), [
         new File(["🍎"], "🍎.png", { type: "image/png" }),
         new File(["🍋"], "🍋.png", { type: "image/png" }),
@@ -607,11 +647,11 @@ describe("useForm", () => {
     });
 
     it("should run built-in validation", async () => {
-      render(
-        <Form defaultValues={{ foo: "" }} onError={onError}>
-          <input data-testid="foo" name="foo" required />
-        </Form>
-      );
+      const { getState } = renderHelper({
+        defaultValues: { foo: "" },
+        onError,
+        children: <input data-testid="foo" name="foo" required />,
+      });
       const form = screen.getByTestId("form");
       const foo = screen.getByTestId("foo");
       const errors = { foo: expect.anything() };
@@ -621,7 +661,10 @@ describe("useForm", () => {
 
       fireEvent.input(foo, { target: { value: "🍎" } });
       fireEvent.submit(form);
-      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+      await waitFor(() => {
+        expect(onError).toHaveBeenCalledTimes(1);
+        expect(getState("errors")).toEqual({});
+      });
 
       fireEvent.input(foo, { target: { value: "" } });
       fireEvent.submit(form);
@@ -629,15 +672,12 @@ describe("useForm", () => {
     });
 
     it("should run built-in validation with state mode", async () => {
-      render(
-        <Form
-          defaultValues={{ foo: "" }}
-          builtInValidationMode="state"
-          onError={onError}
-        >
-          <input data-testid="foo" name="foo" required />
-        </Form>
-      );
+      const { getState } = renderHelper({
+        defaultValues: { foo: "" },
+        builtInValidationMode: "state",
+        onError,
+        children: <input data-testid="foo" name="foo" required />,
+      });
       const form = screen.getByTestId("form");
       const foo = screen.getByTestId("foo");
       const errors = { foo: "valueMissing" };
@@ -647,7 +687,10 @@ describe("useForm", () => {
 
       fireEvent.input(foo, { target: { value: "🍎" } });
       fireEvent.submit(form);
-      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+      await waitFor(() => {
+        expect(onError).toHaveBeenCalledTimes(1);
+        expect(getState("errors")).toEqual({});
+      });
 
       fireEvent.input(foo, { target: { value: "" } });
       fireEvent.submit(form);
@@ -656,15 +699,12 @@ describe("useForm", () => {
 
     it("should run form-level validation", async () => {
       const errors = { foo: "Required" };
-      render(
-        <Form
-          defaultValues={{ foo: "" }}
-          validate={({ foo }) => (!foo.length ? errors : {})}
-          onError={onError}
-        >
-          <input data-testid="foo" name="foo" />
-        </Form>
-      );
+      const { getState } = renderHelper({
+        defaultValues: { foo: "" },
+        validate: ({ foo }) => (!foo.length ? errors : {}),
+        onError,
+        children: <input data-testid="foo" name="foo" required />,
+      });
       const form = screen.getByTestId("form");
       const foo = screen.getByTestId("foo");
 
@@ -673,7 +713,41 @@ describe("useForm", () => {
 
       fireEvent.input(foo, { target: { value: "🍎" } });
       fireEvent.submit(form);
-      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+      await waitFor(() => {
+        expect(onError).toHaveBeenCalledTimes(1);
+        expect(getState("errors")).toEqual({});
+      });
+
+      fireEvent.input(foo, { target: { value: "" } });
+      fireEvent.submit(form);
+      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
+    });
+
+    it("should run field-level validation", async () => {
+      const errors = { foo: "Required" };
+      const { getState } = renderHelper({
+        defaultValues: { foo: "" },
+        onError,
+        children: ({ field }: Methods) => (
+          <input
+            data-testid="foo"
+            name="foo"
+            ref={field((value) => (!value.length ? errors.foo : false))}
+          />
+        ),
+      });
+      const form = screen.getByTestId("form");
+      const foo = screen.getByTestId("foo");
+
+      fireEvent.submit(form);
+      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+
+      fireEvent.input(foo, { target: { value: "🍎" } });
+      fireEvent.submit(form);
+      await waitFor(() => {
+        expect(onError).toHaveBeenCalledTimes(1);
+        expect(getState("errors")).toEqual({});
+      });
 
       fireEvent.input(foo, { target: { value: "" } });
       fireEvent.submit(form);
@@ -686,15 +760,12 @@ describe("useForm", () => {
     const e = { target: { value: "🍎" } };
 
     it("should exclude a field via excludeFields option", async () => {
-      render(
-        <Form
-          defaultValues={defaultValues}
-          excludeFields={["foo"]}
-          onSubmit={onSubmit}
-        >
-          <input data-testid="foo" name="foo" />
-        </Form>
-      );
+      renderHelper({
+        defaultValues,
+        excludeFields: ["foo"],
+        onSubmit,
+        children: <input data-testid="foo" name="foo" />,
+      });
       const foo = screen.getByTestId("foo") as HTMLInputElement;
       expect(foo.value).toBe("");
       fireEvent.input(foo, e);
@@ -703,11 +774,11 @@ describe("useForm", () => {
     });
 
     it("should exclude a field via data attribute", async () => {
-      render(
-        <Form defaultValues={defaultValues} onSubmit={onSubmit}>
-          <input data-testid="foo" name="foo" data-rcf-exclude />
-        </Form>
-      );
+      renderHelper({
+        defaultValues,
+        onSubmit,
+        children: <input data-testid="foo" name="foo" data-rcf-exclude />,
+      });
       const foo = screen.getByTestId("foo") as HTMLInputElement;
       expect(foo.value).toBe("");
       fireEvent.input(foo, e);
