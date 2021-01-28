@@ -701,7 +701,7 @@ describe("useForm", () => {
       const errors = { foo: "Required" };
       const { getState } = renderHelper({
         defaultValues: { foo: "" },
-        validate: ({ foo }) => (!foo.length ? errors : {}),
+        validate: async ({ foo }) => (!foo.length ? errors : {}),
         onError,
         children: <input data-testid="foo" name="foo" required />,
       });
@@ -723,36 +723,41 @@ describe("useForm", () => {
       await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
     });
 
-    it("should run field-level validation", async () => {
-      const errors = { foo: "Required" };
-      const { getState } = renderHelper({
-        defaultValues: { foo: "" },
-        onError,
-        children: ({ field }: Methods) => (
-          <input
-            data-testid="foo"
-            name="foo"
-            ref={field((value) => (!value.length ? errors.foo : false))}
-          />
-        ),
-      });
-      const form = screen.getByTestId("form");
-      const foo = screen.getByTestId("foo");
+    it.each(["normal", "shortcut"])(
+      "should run field-level validation via %s",
+      async (type) => {
+        const errors = { foo: "Required" };
+        const validate = async (value: string) =>
+          !value.length ? errors.foo : false;
+        const { getState } = renderHelper({
+          defaultValues: { foo: "" },
+          onError,
+          children: ({ field }: Methods) => (
+            <input
+              data-testid="foo"
+              name="foo"
+              ref={field(type === "normal" ? { validate } : validate)}
+            />
+          ),
+        });
+        const form = screen.getByTestId("form");
+        const foo = screen.getByTestId("foo");
 
-      fireEvent.submit(form);
-      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+        fireEvent.submit(form);
+        await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
 
-      fireEvent.input(foo, { target: { value: "🍎" } });
-      fireEvent.submit(form);
-      await waitFor(() => {
-        expect(onError).toHaveBeenCalledTimes(1);
-        expect(getState("errors")).toEqual({});
-      });
+        fireEvent.input(foo, { target: { value: "🍎" } });
+        fireEvent.submit(form);
+        await waitFor(() => {
+          expect(onError).toHaveBeenCalledTimes(1);
+          expect(getState("errors")).toEqual({});
+        });
 
-      fireEvent.input(foo, { target: { value: "" } });
-      fireEvent.submit(form);
-      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
-    });
+        fireEvent.input(foo, { target: { value: "" } });
+        fireEvent.submit(form);
+        await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
+      }
+    );
   });
 
   describe("exclude fields", () => {
