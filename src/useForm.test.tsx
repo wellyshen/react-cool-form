@@ -657,18 +657,18 @@ describe("useForm", () => {
       const errors = { foo: expect.anything() };
 
       fireEvent.submit(form);
+      expect(getState("isValidating")).toBeTruthy();
       await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+      expect(getState("isValidating")).toBeFalsy();
+      expect(getState("isValid")).toBeFalsy();
 
       fireEvent.input(foo, { target: { value: "🍎" } });
       fireEvent.submit(form);
-      await waitFor(() => {
-        expect(onError).toHaveBeenCalledTimes(1);
-        expect(getState("errors")).toEqual({});
-      });
-
-      fireEvent.input(foo, { target: { value: "" } });
-      fireEvent.submit(form);
-      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
+      expect(getState("isValidating")).toBeTruthy();
+      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+      expect(getState("errors")).toEqual({});
+      expect(getState("isValidating")).toBeFalsy();
+      expect(getState("isValid")).toBeTruthy();
     });
 
     it("should run built-in validation with state mode", async () => {
@@ -683,18 +683,18 @@ describe("useForm", () => {
       const errors = { foo: "valueMissing" };
 
       fireEvent.submit(form);
+      expect(getState("isValidating")).toBeTruthy();
       await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+      expect(getState("isValidating")).toBeFalsy();
+      expect(getState("isValid")).toBeFalsy();
 
       fireEvent.input(foo, { target: { value: "🍎" } });
       fireEvent.submit(form);
-      await waitFor(() => {
-        expect(onError).toHaveBeenCalledTimes(1);
-        expect(getState("errors")).toEqual({});
-      });
-
-      fireEvent.input(foo, { target: { value: "" } });
-      fireEvent.submit(form);
-      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
+      expect(getState("isValidating")).toBeTruthy();
+      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+      expect(getState("errors")).toEqual({});
+      expect(getState("isValidating")).toBeFalsy();
+      expect(getState("isValid")).toBeTruthy();
     });
 
     it("should run form-level validation", async () => {
@@ -709,18 +709,18 @@ describe("useForm", () => {
       const foo = screen.getByTestId("foo");
 
       fireEvent.submit(form);
+      expect(getState("isValidating")).toBeTruthy();
       await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+      expect(getState("isValidating")).toBeFalsy();
+      expect(getState("isValid")).toBeFalsy();
 
       fireEvent.input(foo, { target: { value: "🍎" } });
       fireEvent.submit(form);
-      await waitFor(() => {
-        expect(onError).toHaveBeenCalledTimes(1);
-        expect(getState("errors")).toEqual({});
-      });
-
-      fireEvent.input(foo, { target: { value: "" } });
-      fireEvent.submit(form);
-      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
+      expect(getState("isValidating")).toBeTruthy();
+      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+      expect(getState("errors")).toEqual({});
+      expect(getState("isValidating")).toBeFalsy();
+      expect(getState("isValid")).toBeTruthy();
     });
 
     it.each(["normal", "shortcut"])(
@@ -748,10 +748,8 @@ describe("useForm", () => {
 
         fireEvent.input(foo, { target: { value: "🍎" } });
         fireEvent.submit(form);
-        await waitFor(() => {
-          expect(onError).toHaveBeenCalledTimes(1);
-          expect(getState("errors")).toEqual({});
-        });
+        await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+        expect(getState("errors")).toEqual({});
 
         fireEvent.input(foo, { target: { value: "" } });
         fireEvent.submit(form);
