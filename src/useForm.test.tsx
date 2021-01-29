@@ -646,53 +646,47 @@ describe("useForm", () => {
       onError.mockClear();
     });
 
-    it("should run built-in validation", async () => {
+    it.each(["message", "state"])(
+      "should run built-in validation with %s mode",
+      async (mode) => {
+        const { getState } = renderHelper({
+          defaultValues: { foo: "" },
+          builtInValidationMode: mode as "message" | "state",
+          onError,
+          children: <input data-testid="foo" name="foo" required />,
+        });
+        const form = screen.getByTestId("form");
+        const foo = screen.getByTestId("foo");
+        const errors = {
+          foo: mode === "message" ? expect.anything() : "valueMissing",
+        };
+
+        fireEvent.submit(form);
+        expect(getState("isValidating")).toBeTruthy();
+        await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+        expect(getState("isValidating")).toBeFalsy();
+        expect(getState("isValid")).toBeFalsy();
+
+        fireEvent.input(foo, { target: { value: "🍎" } });
+        fireEvent.submit(form);
+        expect(getState("isValidating")).toBeTruthy();
+        await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+        expect(getState("errors")).toEqual({});
+        expect(getState("isValidating")).toBeFalsy();
+        expect(getState("isValid")).toBeTruthy();
+      }
+    );
+
+    it("should disable built-in validation", async () => {
       const { getState } = renderHelper({
         defaultValues: { foo: "" },
+        builtInValidationMode: false,
         onError,
         children: <input data-testid="foo" name="foo" required />,
       });
-      const form = screen.getByTestId("form");
-      const foo = screen.getByTestId("foo");
-      const errors = { foo: expect.anything() };
-
-      fireEvent.submit(form);
+      fireEvent.submit(screen.getByTestId("form"));
       expect(getState("isValidating")).toBeTruthy();
-      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
-      expect(getState("isValidating")).toBeFalsy();
-      expect(getState("isValid")).toBeFalsy();
-
-      fireEvent.input(foo, { target: { value: "🍎" } });
-      fireEvent.submit(form);
-      expect(getState("isValidating")).toBeTruthy();
-      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
-      expect(getState("errors")).toEqual({});
-      expect(getState("isValidating")).toBeFalsy();
-      expect(getState("isValid")).toBeTruthy();
-    });
-
-    it("should run built-in validation with state mode", async () => {
-      const { getState } = renderHelper({
-        defaultValues: { foo: "" },
-        builtInValidationMode: "state",
-        onError,
-        children: <input data-testid="foo" name="foo" required />,
-      });
-      const form = screen.getByTestId("form");
-      const foo = screen.getByTestId("foo");
-      const errors = { foo: "valueMissing" };
-
-      fireEvent.submit(form);
-      expect(getState("isValidating")).toBeTruthy();
-      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
-      expect(getState("isValidating")).toBeFalsy();
-      expect(getState("isValid")).toBeFalsy();
-
-      fireEvent.input(foo, { target: { value: "🍎" } });
-      fireEvent.submit(form);
-      expect(getState("isValidating")).toBeTruthy();
-      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
-      expect(getState("errors")).toEqual({});
+      await waitFor(() => expect(onError).not.toHaveBeenCalled());
       expect(getState("isValidating")).toBeFalsy();
       expect(getState("isValid")).toBeTruthy();
     });
@@ -724,7 +718,7 @@ describe("useForm", () => {
     });
 
     it.each(["normal", "shortcut"])(
-      "should run field-level validation via %s",
+      "should run field-level validation via %s way",
       async (type) => {
         const errors = { foo: "Required" };
         const validate = async (value: string) =>
