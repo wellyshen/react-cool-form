@@ -744,16 +744,18 @@ describe("useForm", () => {
         const foo = screen.getByTestId("foo");
 
         fireEvent.submit(form);
+        expect(getState("isValidating")).toBeTruthy();
         await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+        expect(getState("isValidating")).toBeFalsy();
+        expect(getState("isValid")).toBeFalsy();
 
         fireEvent.input(foo, { target: { value: "🍎" } });
         fireEvent.submit(form);
+        expect(getState("isValidating")).toBeTruthy();
         await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
         expect(getState("errors")).toEqual({});
-
-        fireEvent.input(foo, { target: { value: "" } });
-        fireEvent.submit(form);
-        await waitFor(() => expect(onError).toHaveBeenNthCalledWith(2, errors));
+        expect(getState("isValidating")).toBeFalsy();
+        expect(getState("isValid")).toBeTruthy();
       }
     );
   });
