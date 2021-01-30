@@ -54,7 +54,7 @@ describe("useForm", () => {
   const onSubmit = jest.fn();
 
   beforeEach(() => {
-    onSubmit.mockClear();
+    jest.clearAllMocks();
     // @ts-expect-error
     global.__DEV__ = true;
   });
@@ -642,10 +642,6 @@ describe("useForm", () => {
   describe("validation", () => {
     const onError = jest.fn();
 
-    beforeEach(() => {
-      onError.mockClear();
-    });
-
     it.each(["message", "state"])(
       "should run built-in validation with %s mode",
       async (mode) => {
@@ -752,6 +748,50 @@ describe("useForm", () => {
         expect(getState("isValid")).toBeTruthy();
       }
     );
+
+    it.each(["run", "disable"])(
+      "should %s validation on change",
+      async (type) => {
+        const { getState } = renderHelper({
+          defaultValues: { foo: "🍎" },
+          validateOnChange: type === "run",
+          children: <input data-testid="foo" name="foo" required />,
+        });
+        fireEvent.input(screen.getByTestId("foo"), { target: { value: "" } });
+        await waitFor(() =>
+          expect(getState("errors")).toEqual(
+            type === "run" ? { foo: expect.anything() } : {}
+          )
+        );
+      }
+    );
+
+    it.each(["run", "disable"])(
+      "should %s validation on blur",
+      async (type) => {
+        const { getState } = renderHelper({
+          defaultValues: { foo: "" },
+          validateOnChange: false,
+          validateOnBlur: type === "run",
+          children: <input data-testid="foo" name="foo" required />,
+        });
+        fireEvent.focusOut(screen.getByTestId("foo"));
+        await waitFor(() =>
+          expect(getState("errors")).toEqual(
+            type === "run" ? { foo: expect.anything() } : {}
+          )
+        );
+      }
+    );
+
+    it("should avoid repeatedly validation", async () => {
+      const { getState } = renderHelper({
+        defaultValues: { foo: "" },
+        children: <input data-testid="foo" name="foo" required />,
+      });
+      fireEvent.focusOut(screen.getByTestId("foo"));
+      await waitFor(() => expect(getState("errors")).toEqual({}));
+    });
   });
 
   describe("exclude fields", () => {
