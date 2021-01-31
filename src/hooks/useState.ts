@@ -56,18 +56,18 @@ export default <V>(
 
         stateRef.current = { ...state, isDirty, isValid, submitCount };
 
-        path = fieldPath || path;
-
-        if (
-          shouldUpdate &&
-          (Object.keys(usedStateRef.current).some(
-            (k) => path.startsWith(k) || k.startsWith(path)
-          ) ||
-            (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
-            (usedStateRef.current.isValid && isValid !== prevIsValid))
-        ) {
-          forceUpdate();
+        if (shouldUpdate) {
           onChangeRef.current(stateRef.current);
+
+          path = fieldPath || path;
+          if (
+            Object.keys(usedStateRef.current).some(
+              (k) => path.startsWith(k) || k.startsWith(path)
+            ) ||
+            (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
+            (usedStateRef.current.isValid && isValid !== prevIsValid)
+          )
+            forceUpdate();
         }
       }
     },
