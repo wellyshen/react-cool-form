@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.114
+
+### Patch Changes
+
+- [`87f7814`](https://github.com/wellyshen/react-cool-form/commit/87f7814bc6756254658938268d825533ae50c208) [#360](https://github.com/wellyshen/react-cool-form/pull/360) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useState): trigger `debug` callback whenever form state changed
+
 ## 0.0.113
 
 ### Patch Changes
