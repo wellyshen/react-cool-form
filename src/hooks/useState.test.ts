@@ -221,7 +221,7 @@ describe("useState", () => {
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 
-  it("should call debug function correctly when set state", () => {
+  it("should call debug callback correctly when set state", () => {
     const debug = jest.fn();
     const { setStateRef } = renderHelper(debug);
     const state = {
@@ -236,12 +236,11 @@ describe("useState", () => {
     expect(debug).toHaveBeenCalledTimes(1);
   });
 
-  it("should call debug function correctly when set state's value", () => {
+  it("should call debug callback correctly when set state's value", () => {
     const debug = jest.fn();
-    const { setStateRef, setUsedStateRef } = renderHelper(debug);
+    const { setStateRef } = renderHelper(debug);
     const errors = { name: "Required" };
 
-    setUsedStateRef("errors");
     setStateRef("errors", errors);
     expect(debug).toHaveBeenNthCalledWith(1, {
       ...initialState,
