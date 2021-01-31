@@ -1,4 +1,10 @@
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  waitFor,
+  screen,
+  act,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { Config, Return } from "./types";
@@ -646,7 +652,6 @@ describe("useForm", () => {
       "should run built-in validation with %s mode",
       async (mode) => {
         const { getState } = renderHelper({
-          defaultValues: { foo: "" },
           builtInValidationMode: mode as "message" | "state",
           onError,
           children: <input data-testid="foo" name="foo" required />,
@@ -675,7 +680,6 @@ describe("useForm", () => {
 
     it("should disable built-in validation", async () => {
       const { getState } = renderHelper({
-        defaultValues: { foo: "" },
         builtInValidationMode: false,
         onError,
         children: <input data-testid="foo" name="foo" required />,
@@ -690,7 +694,6 @@ describe("useForm", () => {
     it("should run form-level validation", async () => {
       const errors = { foo: "Required" };
       const { getState } = renderHelper({
-        defaultValues: { foo: "" },
         validate: async ({ foo }) => (!foo.length ? errors : {}),
         onError,
         children: <input data-testid="foo" name="foo" required />,
@@ -720,7 +723,6 @@ describe("useForm", () => {
         const validate = async (value: string) =>
           !value.length ? errors.foo : false;
         const { getState } = renderHelper({
-          defaultValues: { foo: "" },
           onError,
           children: ({ field }: Methods) => (
             <input
@@ -753,7 +755,6 @@ describe("useForm", () => {
       "should %s validation on change",
       async (type) => {
         const { getState } = renderHelper({
-          defaultValues: { foo: "🍎" },
           validateOnChange: type === "run",
           children: <input data-testid="foo" name="foo" required />,
         });
@@ -770,7 +771,6 @@ describe("useForm", () => {
       "should %s validation on blur",
       async (type) => {
         const { getState } = renderHelper({
-          defaultValues: { foo: "" },
           validateOnChange: false,
           validateOnBlur: type === "run",
           children: <input data-testid="foo" name="foo" required />,
@@ -785,11 +785,22 @@ describe("useForm", () => {
     );
 
     it("should avoid repeatedly validation", async () => {
-      const { getState } = renderHelper({
-        defaultValues: { foo: "" },
+      const { getState, clearErrors } = renderHelper({
         children: <input data-testid="foo" name="foo" required />,
       });
+      const foo = screen.getByTestId("foo");
+
       fireEvent.focusOut(screen.getByTestId("foo"));
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({ foo: expect.anything() })
+      );
+
+      fireEvent.input(foo, { target: { value: "" } });
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({ foo: expect.anything() })
+      );
+      act(() => clearErrors("foo"));
+      fireEvent.focusOut(foo);
       await waitFor(() => expect(getState("errors")).toEqual({}));
     });
   });
@@ -824,5 +835,32 @@ describe("useForm", () => {
       fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
+  });
+
+  it("should call debug callback", async () => {
+    const debug = jest.fn();
+    renderHelper({ debug, children: <input data-testid="foo" name="foo" /> });
+    const state = {
+      values: { foo: "" },
+      errors: {},
+      touched: {},
+      dirty: { foo: true },
+      isDirty: true,
+      isValidating: false,
+      isValid: true,
+      isSubmitting: false,
+      isSubmitted: false,
+      submitCount: 0,
+    };
+    const value = "🍎";
+    fireEvent.input(screen.getByTestId("foo"), {
+      target: { value },
+    });
+    await waitFor(() =>
+      expect(debug).toHaveBeenNthCalledWith(2, {
+        ...state,
+        values: { foo: value },
+      })
+    );
   });
 });
