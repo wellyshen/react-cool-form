@@ -7,7 +7,7 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { Config, Return } from "./types";
+import { Config, Return, SubmitHandler, ErrorHandler } from "./types";
 import { isFunction } from "./utils";
 import useForm from "./useForm";
 
@@ -19,19 +19,25 @@ interface Props extends Config<any> {
     | JSX.Element[]
     | ((methods: Methods) => JSX.Element | JSX.Element[]);
   onSubmit?: (values: any) => void;
+  onSubmitFull?: SubmitHandler<any>;
   onError?: (errors: any) => void;
+  onErrorFull?: ErrorHandler<any>;
 }
 
 const Form = ({
   children,
   onSubmit = () => null,
+  onSubmitFull,
   onError = () => null,
+  onErrorFull,
   ...config
 }: Props) => {
   const { form, ...rest } = useForm({
     ...config,
-    onSubmit: (values) => onSubmit(values),
-    onError: (errors) => onError(errors),
+    onSubmit: (...args) =>
+      onSubmitFull ? onSubmitFull(...args) : onSubmit(args[0]),
+    onError: (...args) =>
+      onErrorFull ? onErrorFull(...args) : onError(args[0]),
   });
 
   return (
@@ -58,6 +64,20 @@ const renderHelper = ({ children, ...rest }: Props) => {
 
 describe("useForm", () => {
   const onSubmit = jest.fn();
+  const onError = jest.fn();
+  const builtInError = "Constraints not satisfied";
+  const initialState = {
+    values: {},
+    touched: {},
+    errors: {},
+    isDirty: false,
+    dirty: {},
+    isValidating: false,
+    isValid: true,
+    isSubmitting: false,
+    isSubmitted: false,
+    submitCount: 0,
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -128,6 +148,103 @@ describe("useForm", () => {
         expect(console.warn).toHaveBeenCalledWith(
           `💡 react-cool-form > validate ${id}: `,
           "🍎"
+        )
+      );
+    });
+  });
+
+  describe("event callbacks", () => {
+    const options = {
+      formState: initialState,
+      setValue: expect.any(Function),
+      setTouched: expect.any(Function),
+      setDirty: expect.any(Function),
+      setError: expect.any(Function),
+      clearErrors: expect.any(Function),
+      runValidation: expect.any(Function),
+      reset: expect.any(Function),
+      submit: expect.any(Function),
+    };
+
+    it('should call "onSubmit" event correctly', async () => {
+      renderHelper({
+        onSubmitFull: onSubmit,
+        onError,
+        children: <input data-testid="foo" name="foo" />,
+      });
+      const value = "🍎";
+      fireEvent.input(screen.getByTestId("foo"), { target: { value } });
+      fireEvent.submit(screen.getByTestId("form"));
+      const values = { foo: value };
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith(
+          values,
+          {
+            ...options,
+            formState: {
+              ...initialState,
+              values,
+              touched: { foo: true },
+              dirty: { foo: true },
+              isDirty: true,
+              isSubmitting: true,
+              submitCount: 1,
+            },
+          },
+          expect.any(Object)
+        )
+      );
+      expect(onError).not.toHaveBeenCalled();
+    });
+
+    it('should call "onError" event correctly', async () => {
+      renderHelper({
+        onErrorFull: onError,
+        onSubmit,
+        children: <input data-testid="foo" name="foo" required />,
+      });
+      fireEvent.submit(screen.getByTestId("form"));
+      const errors = { foo: builtInError };
+      await waitFor(() =>
+        expect(onError).toHaveBeenCalledWith(
+          errors,
+          {
+            ...options,
+            formState: {
+              ...initialState,
+              errors,
+              values: { foo: "" },
+              touched: { foo: true },
+              isValid: false,
+              isSubmitting: true,
+              submitCount: 1,
+            },
+          },
+          expect.any(Object)
+        )
+      );
+      expect(onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('should call "onReset" event correctly', async () => {
+      const onReset = jest.fn();
+      const defaultValues = { foo: "" };
+      renderHelper({
+        defaultValues,
+        onReset,
+        children: <input data-testid="foo" name="foo" />,
+      });
+      const value = "🍎";
+      const foo = screen.getByTestId("foo") as HTMLInputElement;
+      fireEvent.input(foo, { target: { value } });
+      expect(foo.value).toBe(value);
+      fireEvent.reset(screen.getByTestId("form"));
+      expect(foo.value).toBe(defaultValues.foo);
+      await waitFor(() =>
+        expect(onReset).toHaveBeenCalledWith(
+          defaultValues,
+          { ...options, formState: { ...initialState, values: defaultValues } },
+          expect.any(Object)
         )
       );
     });
@@ -646,8 +763,6 @@ describe("useForm", () => {
   });
 
   describe("validation", () => {
-    const onError = jest.fn();
-
     it.each(["message", "state"])(
       "should run built-in validation with %s mode",
       async (mode) => {
@@ -659,7 +774,7 @@ describe("useForm", () => {
         const form = screen.getByTestId("form");
         const foo = screen.getByTestId("foo");
         const errors = {
-          foo: mode === "message" ? expect.anything() : "valueMissing",
+          foo: mode === "message" ? builtInError : "valueMissing",
         };
 
         fireEvent.submit(form);
@@ -761,7 +876,7 @@ describe("useForm", () => {
         fireEvent.input(screen.getByTestId("foo"), { target: { value: "" } });
         await waitFor(() =>
           expect(getState("errors")).toEqual(
-            type === "run" ? { foo: expect.anything() } : {}
+            type === "run" ? { foo: builtInError } : {}
           )
         );
       }
@@ -778,7 +893,7 @@ describe("useForm", () => {
         fireEvent.focusOut(screen.getByTestId("foo"));
         await waitFor(() =>
           expect(getState("errors")).toEqual(
-            type === "run" ? { foo: expect.anything() } : {}
+            type === "run" ? { foo: builtInError } : {}
           )
         );
       }
@@ -792,12 +907,12 @@ describe("useForm", () => {
 
       fireEvent.focusOut(screen.getByTestId("foo"));
       await waitFor(() =>
-        expect(getState("errors")).toEqual({ foo: expect.anything() })
+        expect(getState("errors")).toEqual({ foo: builtInError })
       );
 
       fireEvent.input(foo, { target: { value: "" } });
       await waitFor(() =>
-        expect(getState("errors")).toEqual({ foo: expect.anything() })
+        expect(getState("errors")).toEqual({ foo: builtInError })
       );
       act(() => clearErrors("foo"));
       fireEvent.focusOut(foo);
@@ -840,25 +955,18 @@ describe("useForm", () => {
   it("should call debug callback", async () => {
     const debug = jest.fn();
     renderHelper({ debug, children: <input data-testid="foo" name="foo" /> });
-    const state = {
-      values: { foo: "" },
-      errors: {},
-      touched: {},
-      dirty: { foo: true },
-      isDirty: true,
-      isValidating: false,
-      isValid: true,
-      isSubmitting: false,
-      isSubmitted: false,
-      submitCount: 0,
-    };
     const value = "🍎";
     fireEvent.input(screen.getByTestId("foo"), {
       target: { value },
     });
     await waitFor(() =>
       expect(debug).toHaveBeenNthCalledWith(2, {
-        ...state,
+        ...{
+          ...initialState,
+          values: { foo: "" },
+          dirty: { foo: true },
+          isDirty: true,
+        },
         values: { foo: value },
       })
     );

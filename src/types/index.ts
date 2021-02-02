@@ -87,7 +87,7 @@ interface ResetHandler<V> {
   (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
 }
 
-interface SubmitHandler<V> {
+export interface SubmitHandler<V> {
   (
     values: V,
     options: Options<V>,
@@ -95,7 +95,7 @@ interface SubmitHandler<V> {
   ): void | Promise<void>;
 }
 
-interface ErrorHandler<V> {
+export interface ErrorHandler<V> {
   (
     errors: FormErrors<V>,
     options: Options<V>,
