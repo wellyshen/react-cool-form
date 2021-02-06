@@ -5,6 +5,7 @@ import {
   screen,
   act,
 } from "@testing-library/react";
+import { renderHook } from "@testing-library/react-hooks";
 import userEvent from "@testing-library/user-event";
 
 import { Config, Return, SubmitHandler, ErrorHandler } from "./types";
@@ -22,6 +23,7 @@ interface Props extends Config<any> {
   onSubmitFull?: SubmitHandler<any>;
   onError?: (errors: any) => void;
   onErrorFull?: ErrorHandler<any>;
+  onRender?: () => void;
 }
 
 const Form = ({
@@ -30,6 +32,7 @@ const Form = ({
   onSubmitFull,
   onError = () => null,
   onErrorFull,
+  onRender = () => null,
   ...config
 }: Props) => {
   const { form, ...rest } = useForm({
@@ -40,6 +43,8 @@ const Form = ({
       onErrorFull ? onErrorFull(...args) : onError(args[0]),
   });
 
+  onRender();
+
   return (
     <form data-testid="form" ref={form}>
       {isFunction(children) ? children({ ...rest }) : children}
@@ -49,6 +54,7 @@ const Form = ({
 
 const renderHelper = ({ children, ...rest }: Props) => {
   let api: Methods;
+
   render(
     <Form {...rest}>
       {(methods) => {
@@ -949,6 +955,75 @@ describe("useForm", () => {
       fireEvent.input(foo, e);
       fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
+    });
+  });
+
+  describe("getState", () => {
+    const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
+
+    it("should get state with correct format", () => {
+      const { result } = renderHook(() => useForm({ defaultValues: values }));
+      const { getState } = result.current;
+
+      expect(getState("values")).toEqual(values);
+      expect(getState("values.foo")).toBe(values.foo);
+      expect(getState("isValid")).toBe(isValid);
+
+      expect(getState(["values", "values.foo", "isValid"])).toEqual([
+        values,
+        values.foo,
+        isValid,
+      ]);
+
+      expect(
+        getState({
+          values: "values",
+          foo: "values.foo",
+          isValid: "isValid",
+        })
+      ).toEqual({ values, foo: values.foo, isValid });
+    });
+
+    it("should get state with specific target", () => {
+      const { result } = renderHook(() => useForm({ defaultValues: values }));
+      const { getState } = result.current;
+      const option = { target: "values" };
+      const { foo } = values;
+      expect(getState("foo", option)).toBe(foo);
+      expect(getState(["foo"], option)).toEqual([foo]);
+      expect(getState({ foo: "foo" }, option)).toEqual({ foo });
+    });
+
+    it("should get error with touched", async () => {
+      const { getState } = renderHelper({
+        defaultValues: { foo: "🍎" },
+        children: <input data-testid="foo" name="foo" required />,
+      });
+      const foo = screen.getByTestId("foo");
+      fireEvent.input(foo, { target: { value: "" } });
+      await waitFor(() => {
+        expect(getState("errors.foo")).not.toBeUndefined();
+        expect(
+          getState("errors.foo", { errorWithTouched: true })
+        ).toBeUndefined();
+      });
+      fireEvent.focusOut(foo);
+      await waitFor(() => {
+        expect(
+          getState("errors.foo", { errorWithTouched: true })
+        ).not.toBeUndefined();
+      });
+    });
+
+    it.each(["watch", "non-watch"])("should get state with %s mode", (type) => {
+      const onRender = jest.fn();
+      const { getState } = renderHelper({
+        onRender,
+        children: <input data-testid="foo" name="foo" />,
+      });
+      getState("values.foo", { watch: type === "watch" });
+      fireEvent.input(screen.getByTestId("foo"));
+      expect(onRender).toHaveBeenCalledTimes(type === "watch" ? 2 : 1);
     });
   });
 
