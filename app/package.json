@@ -13,8 +13,6 @@
     "lint:type": "tsc",
     "lint:style": "stylelint --fix \"**/*.{css,ts,tsx}\"",
     "lint:format": "prettier -w . -u --loglevel silent",
-    "test": "react-scripts test --passWithNoTests",
-    "test:cov": "yarn test --coverage --watchAll=false",
     "clean": "run-p clean:*",
     "clean:build": "rimraf build",
     "clean:cov": "rimraf coverage",
@@ -22,8 +20,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn test --watchAll=false"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
