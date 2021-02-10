@@ -875,33 +875,35 @@ describe("useForm", () => {
     it.each(["run", "disable"])(
       "should %s validation on change",
       async (type) => {
-        const { getState } = renderHelper({
+        const { getState, setValue } = renderHelper({
           validateOnChange: type === "run",
           children: <input data-testid="foo" name="foo" required />,
         });
+        const error = type === "run" ? { foo: builtInError } : {};
+
         fireEvent.input(screen.getByTestId("foo"), { target: { value: "" } });
-        await waitFor(() =>
-          expect(getState("errors")).toEqual(
-            type === "run" ? { foo: builtInError } : {}
-          )
-        );
+        await waitFor(() => expect(getState("errors")).toEqual(error));
+
+        setValue("foo", "");
+        await waitFor(() => expect(getState("errors")).toEqual(error));
       }
     );
 
     it.each(["run", "disable"])(
       "should %s validation on blur",
       async (type) => {
-        const { getState } = renderHelper({
+        const { getState, setTouched } = renderHelper({
           validateOnChange: false,
           validateOnBlur: type === "run",
           children: <input data-testid="foo" name="foo" required />,
         });
+        const error = type === "run" ? { foo: builtInError } : {};
+
         fireEvent.focusOut(screen.getByTestId("foo"));
-        await waitFor(() =>
-          expect(getState("errors")).toEqual(
-            type === "run" ? { foo: builtInError } : {}
-          )
-        );
+        await waitFor(() => expect(getState("errors")).toEqual(error));
+
+        setTouched("foo");
+        await waitFor(() => expect(getState("errors")).toEqual(error));
       }
     );
 
@@ -985,8 +987,9 @@ describe("useForm", () => {
     });
 
     it("should get state with specific target", () => {
-      const { result } = renderHook(() => useForm({ defaultValues: values }));
-      const { getState } = result.current;
+      const { getState } = renderHook(() =>
+        useForm({ defaultValues: values })
+      ).result.current;
       const option = { target: "values" };
       const { foo } = values;
       expect(getState("foo", option)).toBe(foo);
@@ -996,7 +999,6 @@ describe("useForm", () => {
 
     it("should get error with touched", async () => {
       const { getState } = renderHelper({
-        defaultValues: { foo: "🍎" },
         children: <input data-testid="foo" name="foo" required />,
       });
       const foo = screen.getByTestId("foo");
@@ -1024,6 +1026,58 @@ describe("useForm", () => {
       getState("values.foo", { watch: type === "watch" });
       fireEvent.input(screen.getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(type === "watch" ? 2 : 1);
+    });
+  });
+
+  describe("setValue", () => {
+    it("should set value correctly", () => {
+      const { setValue, getState } = renderHook(() => useForm()).result.current;
+      const value = "🍎";
+
+      setValue("foo", value);
+      expect(getState("values.foo", { watch: false })).toBe(value);
+
+      setValue("foo", (prevValue: string) => `${prevValue}${value}`);
+      expect(getState("values.foo", { watch: false })).toBe(`${value}${value}`);
+
+      setValue("foo.bar[0].baz", value);
+      expect(getState("values.foo.bar[0].baz")).toBe(value);
+    });
+
+    it("should set value with touched correctly", () => {
+      const { setValue, getState } = renderHook(() => useForm()).result.current;
+
+      setValue("foo", "🍎", { shouldTouched: false });
+      expect(getState("touched.foo", { watch: false })).toBeUndefined();
+
+      setValue("foo", "🍎");
+      expect(getState("touched.foo")).toBeTruthy();
+    });
+
+    it("should set value with dirty correctly", () => {
+      const { setValue, getState } = renderHook(() => useForm()).result.current;
+
+      setValue("foo", "🍎", { shouldDirty: false });
+      expect(getState("dirty.foo", { watch: false })).toBeUndefined();
+      expect(getState("isDirty", { watch: false })).toBeFalsy();
+
+      setValue("foo", "🍎");
+      expect(getState("dirty.foo")).toBeTruthy();
+      expect(getState("isDirty")).toBeTruthy();
+    });
+
+    it("should set value with validation correctly", async () => {
+      const { setValue, getState } = renderHelper({
+        children: <input data-testid="foo" name="foo" required />,
+      });
+
+      setValue("foo", "", { shouldValidate: false });
+      await waitFor(() =>
+        expect(getState("errors.foo", { watch: false })).toBeUndefined()
+      );
+
+      setValue("foo", "");
+      await waitFor(() => expect(getState("errors.foo")).toBe(builtInError));
     });
   });
 
