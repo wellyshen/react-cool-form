@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
 
@@ -16,9 +16,7 @@ function App() {
     onReset: (values) => console.log("onReset: ", values)
   });
 
-  React.useEffect(() => {
-    reset({ firstName: "Welly", lastName: "Shen" });
-  }, [reset]);
+  useEffect(() => reset({ firstName: "Welly", lastName: "Shen" }), [reset]);
 
   return (
     <form ref={form}>
