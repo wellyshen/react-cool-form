@@ -96,8 +96,8 @@ describe("useForm", () => {
       console.warn = jest.fn();
       renderHelper({ children: <input data-testid="foo" /> });
       fireEvent.input(screen.getByTestId("foo"));
-      expect(console.warn).toHaveBeenNthCalledWith(
-        2,
+      expect(console.warn).toHaveBeenCalledTimes(2);
+      expect(console.warn).toHaveBeenCalledWith(
         '💡 react-cool-form > field: Missing the "name" attribute.'
       );
     });
@@ -769,30 +769,36 @@ describe("useForm", () => {
   });
 
   describe("validation", () => {
+    const value = "🍎";
+
     it.each(["message", "state"])(
       "should run built-in validation with %s mode",
       async (mode) => {
         const { getState } = renderHelper({
           builtInValidationMode: mode as "message" | "state",
+          onSubmit,
           onError,
           children: <input data-testid="foo" name="foo" required />,
         });
         const form = screen.getByTestId("form");
         const foo = screen.getByTestId("foo");
+
         const errors = {
           foo: mode === "message" ? builtInError : "valueMissing",
         };
-
         fireEvent.submit(form);
         expect(getState("isValidating")).toBeTruthy();
-        await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+        await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
         expect(getState("isValidating")).toBeFalsy();
         expect(getState("isValid")).toBeFalsy();
 
-        fireEvent.input(foo, { target: { value: "🍎" } });
+        fireEvent.input(foo, { target: { value } });
         fireEvent.submit(form);
         expect(getState("isValidating")).toBeTruthy();
-        await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+        await waitFor(() => {
+          expect(onSubmit).toHaveBeenCalledWith({ foo: value });
+          expect(onError).toHaveBeenCalledTimes(1);
+        });
         expect(getState("errors")).toEqual({});
         expect(getState("isValidating")).toBeFalsy();
         expect(getState("isValid")).toBeTruthy();
@@ -816,6 +822,7 @@ describe("useForm", () => {
       const errors = { foo: "Required" };
       const { getState } = renderHelper({
         validate: async ({ foo }) => (!foo.length ? errors : {}),
+        onSubmit,
         onError,
         children: <input data-testid="foo" name="foo" required />,
       });
@@ -824,14 +831,17 @@ describe("useForm", () => {
 
       fireEvent.submit(form);
       expect(getState("isValidating")).toBeTruthy();
-      await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+      await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
       expect(getState("isValidating")).toBeFalsy();
       expect(getState("isValid")).toBeFalsy();
 
-      fireEvent.input(foo, { target: { value: "🍎" } });
+      fireEvent.input(foo, { target: { value } });
       fireEvent.submit(form);
       expect(getState("isValidating")).toBeTruthy();
-      await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+      await waitFor(() => {
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value });
+        expect(onError).toHaveBeenCalledTimes(1);
+      });
       expect(getState("errors")).toEqual({});
       expect(getState("isValidating")).toBeFalsy();
       expect(getState("isValid")).toBeTruthy();
@@ -841,9 +851,10 @@ describe("useForm", () => {
       "should run field-level validation via %s way",
       async (type) => {
         const errors = { foo: "Required" };
-        const validate = async (value: string) =>
-          !value.length ? errors.foo : false;
+        const validate = async (val: string) =>
+          !val.length ? errors.foo : false;
         const { getState } = renderHelper({
+          onSubmit,
           onError,
           children: ({ field }: Methods) => (
             <input
@@ -858,14 +869,17 @@ describe("useForm", () => {
 
         fireEvent.submit(form);
         expect(getState("isValidating")).toBeTruthy();
-        await waitFor(() => expect(onError).toHaveBeenNthCalledWith(1, errors));
+        await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
         expect(getState("isValidating")).toBeFalsy();
         expect(getState("isValid")).toBeFalsy();
 
-        fireEvent.input(foo, { target: { value: "🍎" } });
+        fireEvent.input(foo, { target: { value } });
         fireEvent.submit(form);
         expect(getState("isValidating")).toBeTruthy();
-        await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+        await waitFor(() => {
+          expect(onSubmit).toHaveBeenCalledWith({ foo: value });
+          expect(onError).toHaveBeenCalledTimes(1);
+        });
         expect(getState("errors")).toEqual({});
         expect(getState("isValidating")).toBeFalsy();
         expect(getState("isValid")).toBeTruthy();
@@ -1183,8 +1197,9 @@ describe("useForm", () => {
     fireEvent.input(screen.getByTestId("foo"), {
       target: { value },
     });
-    await waitFor(() =>
-      expect(debug).toHaveBeenNthCalledWith(2, {
+    await waitFor(() => {
+      expect(debug).toHaveBeenCalledTimes(2);
+      expect(debug).toHaveBeenCalledWith({
         ...{
           ...initialState,
           values: { foo: "" },
@@ -1192,7 +1207,7 @@ describe("useForm", () => {
           isDirty: true,
         },
         values: { foo: value },
-      })
-    );
+      });
+    });
   });
 });

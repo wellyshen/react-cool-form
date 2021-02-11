@@ -230,10 +230,9 @@ describe("useState", () => {
     };
 
     setStateRef("", state);
-    expect(debug).toHaveBeenNthCalledWith(1, state);
-
     setStateRef("", state);
     expect(debug).toHaveBeenCalledTimes(1);
+    expect(debug).toHaveBeenCalledWith(state);
   });
 
   it("should call debug callback correctly when set state's value", () => {
@@ -242,14 +241,13 @@ describe("useState", () => {
     const errors = { name: "Required" };
 
     setStateRef("errors", errors);
-    expect(debug).toHaveBeenNthCalledWith(1, {
+    setStateRef("errors", errors);
+    expect(debug).toHaveBeenCalledTimes(1);
+    expect(debug).toHaveBeenCalledWith({
       ...initialState,
       errors,
       isValid: false,
     });
-
-    setStateRef("errors", errors);
-    expect(debug).toHaveBeenCalledTimes(1);
   });
 
   it("should unset used state", () => {
