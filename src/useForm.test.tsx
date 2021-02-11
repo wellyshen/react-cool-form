@@ -1037,11 +1037,14 @@ describe("useForm", () => {
       setValue("foo", value);
       expect(getState("values.foo", { watch: false })).toBe(value);
 
-      setValue("foo", (prevValue: string) => `${prevValue}${value}`);
-      expect(getState("values.foo", { watch: false })).toBe(`${value}${value}`);
+      setValue("foo", (prevValue: string) => prevValue);
+      expect(getState("values.foo", { watch: false })).toBe(value);
 
-      setValue("foo.bar[0].baz", value);
-      expect(getState("values.foo.bar[0].baz")).toBe(value);
+      setValue("foo.a[0].b", value);
+      expect(getState("values.foo.a[0].b", { watch: false })).toBe(value);
+
+      setValue("foo");
+      expect(getState("values.foo")).toBeUndefined();
     });
 
     it("should set value with touched correctly", () => {
@@ -1079,6 +1082,98 @@ describe("useForm", () => {
       setValue("foo", "");
       await waitFor(() => expect(getState("errors.foo")).toBe(builtInError));
     });
+  });
+
+  describe("setTouched", () => {
+    it("should set touched correctly", () => {
+      const { setTouched, getState } = renderHook(() =>
+        useForm()
+      ).result.current;
+
+      setTouched("foo");
+      expect(getState("touched.foo", { watch: false })).toBeTruthy();
+
+      setTouched("foo.a[0].b");
+      expect(getState("touched.foo.a[0].b", { watch: false })).toBeTruthy();
+
+      setTouched("foo", false);
+      expect(getState("touched.foo")).toBeUndefined();
+    });
+
+    it("should set touched with validation correctly", async () => {
+      const { setTouched, getState } = renderHelper({
+        children: <input data-testid="foo" name="foo" required />,
+      });
+
+      setTouched("foo", true, false);
+      await waitFor(() =>
+        expect(getState("errors.foo", { watch: false })).toBeUndefined()
+      );
+
+      setTouched("foo");
+      await waitFor(() => expect(getState("errors.foo")).toBe(builtInError));
+    });
+  });
+
+  it("should set dirty correctly", () => {
+    const { setDirty, getState } = renderHook(() => useForm()).result.current;
+
+    setDirty("foo");
+    expect(getState("dirty.foo", { watch: false })).toBeTruthy();
+
+    setDirty("foo.a[0].b");
+    expect(getState("dirty.foo.a[0].b", { watch: false })).toBeTruthy();
+
+    setDirty("foo", false);
+    expect(getState("dirty.foo")).toBeUndefined();
+  });
+
+  it("should set error correctly", () => {
+    const { setError, getState } = renderHook(() => useForm()).result.current;
+    const error = "Required";
+
+    setError("foo", error);
+    expect(getState("errors.foo", { watch: false })).toBe(error);
+
+    setError("foo", (prevError: string) => prevError);
+    expect(getState("errors.foo", { watch: false })).toBe(error);
+
+    setError("foo.a[0].b", error);
+    expect(getState("errors.foo.a[0].b", { watch: false })).toBe(error);
+
+    setError("foo");
+    expect(getState("errors.foo", { watch: false })).toBeUndefined();
+
+    setError("foo", error);
+    setError("foo", false);
+    expect(getState("errors.foo", { watch: false })).toBeUndefined();
+
+    setError("foo", error);
+    setError("foo", null);
+    expect(getState("errors.foo")).toBeUndefined();
+  });
+
+  it("should clear error(s)", () => {
+    const { setError, clearErrors, getState } = renderHook(() =>
+      useForm()
+    ).result.current;
+    const error = "Required";
+
+    setError("foo", error);
+    setError("bar", error);
+    setError("baz.a[0].b", error);
+    expect(getState("errors", { watch: false })).toEqual({
+      foo: error,
+      bar: error,
+      baz: { a: [{ b: error }] },
+    });
+
+    clearErrors("foo");
+    expect(getState("errors.foo", { watch: false })).toBeUndefined();
+
+    clearErrors(["bar", "baz.a[0].b"]);
+    expect(getState("errors.bar", { watch: false })).toBeUndefined();
+    expect(getState("baz.a[0].b")).toBeUndefined();
   });
 
   it("should call debug callback", async () => {
