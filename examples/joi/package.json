@@ -4,11 +4,11 @@
   "description": "The Joi example of RCF.",
   "main": "index.js",
   "dependencies": {
-    "joi": "^17.3.0",
+    "joi": "^17.4.0",
     "react": "^17.0.1",
     "react-cool-form": "latest",
     "react-dom": "^17.0.1",
-    "react-scripts": "^4.0.1"
+    "react-scripts": "^4.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
