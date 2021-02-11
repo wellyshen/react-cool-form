@@ -1,4 +1,3 @@
-import React from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
 
@@ -9,9 +8,7 @@ const submitHandler = async (values) => {
   alert(JSON.stringify(values, undefined, 2));
 };
 
-const errorHandler = (errors) => {
-  console.log("onError: ", errors);
-};
+const errorHandler = (errors) => console.log("onError: ", errors);
 
 function App() {
   const { form, getState } = useForm({
