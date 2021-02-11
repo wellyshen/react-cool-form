@@ -4,10 +4,10 @@
   "description": "The without form element example of RCF.",
   "main": "index.js",
   "dependencies": {
-    "react": "^17.0.1",
+    "react": "17.0.1",
     "react-cool-form": "latest",
-    "react-dom": "^17.0.1",
-    "react-scripts": "^4.0.1"
+    "react-dom": "17.0.1",
+    "react-scripts": "4.0.2"
   },
   "scripts": {
     "start": "react-scripts start",

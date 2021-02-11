@@ -1,4 +1,3 @@
-import React from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
 
@@ -15,7 +14,7 @@ const Field = ({ label, id, error, ...rest }) => (
 function App() {
   const { form, getState, submit } = useForm({
     defaultValues: { email: "", password: "" },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const errors = getState("errors", { errorWithTouched: true });
 
