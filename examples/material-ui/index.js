@@ -1,4 +1,3 @@
-import React from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
 import {
@@ -29,7 +28,7 @@ function App() {
         label="Username"
         name="username"
         required
-        error={!!errors.username}
+        error={errors.username}
         helperText={errors.username}
       />
       <FormControl>
