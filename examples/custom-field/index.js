@@ -1,4 +1,3 @@
-import React from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
 import { TextField, Button } from "@material-ui/core";
