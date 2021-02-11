@@ -1,4 +1,3 @@
-import React from "react";
 import { render } from "react-dom";
 import { useForm, set } from "react-cool-form";
 import * as yup from "yup";
