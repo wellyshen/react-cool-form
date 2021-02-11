@@ -15,7 +15,6 @@ function App() {
     },
     onSubmit: (values) => console.log("onSubmit: ", values)
   });
-
   const [value, errors] = getState(["values.username", "errors"]);
 
   return (
