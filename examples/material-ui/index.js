@@ -28,7 +28,7 @@ function App() {
         label="Username"
         name="username"
         required
-        error={errors.username}
+        error={!!errors.username}
         helperText={errors.username}
       />
       <FormControl>
