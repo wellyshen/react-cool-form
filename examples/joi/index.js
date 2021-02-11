@@ -16,9 +16,9 @@ const validate = (values) => {
   const { error: joiError } = schema.validate(values, { abortEarly: false });
 
   if (joiError)
-    joiError.details.forEach(({ path, message }) => {
-      set(errors, path, message);
-    });
+    joiError.details.forEach(({ path, message }) =>
+      set(errors, path[0], message)
+    );
 
   return errors;
 };
