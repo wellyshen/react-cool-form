@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
 
