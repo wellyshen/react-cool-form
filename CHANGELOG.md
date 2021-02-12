@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.115
+
+### Patch Changes
+
+- [`38f64a8`](https://github.com/wellyshen/react-cool-form/commit/38f64a8423dd6b3bb8fe4b61e139312c74e9a113) [#384](https://github.com/wellyshen/react-cool-form/pull/384) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): prevent errors from calling `e.preventDefault()` and `e.stopPropagation()` when using `submit` or `reset` methods
+
 ## 0.0.114
 
 ### Patch Changes
