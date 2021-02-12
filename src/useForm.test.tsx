@@ -974,6 +974,126 @@ describe("useForm", () => {
     });
   });
 
+  describe("runValidation", () => {
+    it("should run built-in validation correctly", async () => {
+      const { runValidation, getState } = renderHelper({
+        children: (
+          <>
+            <input data-testid="foo" name="foo" required />
+            <input data-testid="bar" name="bar" required />
+            <input data-testid="baz" name="baz" required />
+          </>
+        ),
+      });
+
+      runValidation("foo");
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({
+          foo: builtInError,
+        })
+      );
+
+      runValidation(["foo", "bar"]);
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({
+          foo: builtInError,
+          bar: builtInError,
+        })
+      );
+
+      runValidation();
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({
+          foo: builtInError,
+          bar: builtInError,
+          baz: builtInError,
+        })
+      );
+    });
+
+    it("should run field-level validation correctly", async () => {
+      const error = "Required";
+      const validate = (value: string) => (!value.length ? "Required" : false);
+      const { runValidation, getState } = renderHelper({
+        children: ({ field }: Methods) => (
+          <>
+            <input data-testid="foo" name="foo" ref={field(validate)} />
+            <input data-testid="bar" name="bar" ref={field(validate)} />
+            <input data-testid="baz" name="baz" ref={field(validate)} />
+          </>
+        ),
+      });
+
+      runValidation("foo");
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({
+          foo: error,
+        })
+      );
+
+      runValidation(["foo", "bar"]);
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({
+          foo: error,
+          bar: error,
+        })
+      );
+
+      runValidation();
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({
+          foo: error,
+          bar: error,
+          baz: error,
+        })
+      );
+    });
+
+    it("should run form-level validation correctly", async () => {
+      const error = "Required";
+      const { runValidation, getState } = renderHelper({
+        validate: ({ foo, bar, baz }) => {
+          const errors: { foo?: string; bar?: string; baz?: string } = {};
+          if (!foo.length) errors.foo = error;
+          if (!bar.length) errors.bar = error;
+          if (!baz.length) errors.baz = error;
+          return errors;
+        },
+        children: (
+          <>
+            <input data-testid="foo" name="foo" />
+            <input data-testid="bar" name="bar" />
+            <input data-testid="baz" name="baz" />
+          </>
+        ),
+      });
+
+      runValidation("foo");
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({
+          foo: error,
+        })
+      );
+
+      runValidation(["foo", "bar"]);
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({
+          foo: error,
+          bar: error,
+        })
+      );
+
+      runValidation();
+      await waitFor(() =>
+        expect(getState("errors")).toEqual({
+          foo: error,
+          bar: error,
+          baz: error,
+        })
+      );
+    });
+  });
+
   describe("getState", () => {
     const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
 
@@ -1164,6 +1284,10 @@ describe("useForm", () => {
 
     setError("foo", error);
     setError("foo", null);
+    expect(getState("errors.foo", { watch: false })).toBeUndefined();
+
+    setError("foo", error);
+    setError("foo", "");
     expect(getState("errors.foo")).toBeUndefined();
   });
 
