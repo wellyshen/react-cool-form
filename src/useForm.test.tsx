@@ -5,7 +5,6 @@ import {
   screen,
   act,
 } from "@testing-library/react";
-import { renderHook } from "@testing-library/react-hooks";
 import userEvent from "@testing-library/user-event";
 
 import { Config, Return, SubmitHandler, ErrorHandler } from "./types";
@@ -14,17 +13,18 @@ import useForm from "./useForm";
 
 type Methods = Omit<Return<any>, "form">;
 
-interface Props extends Config<any> {
-  children:
-    | JSX.Element
-    | JSX.Element[]
-    | ((methods: Methods) => JSX.Element | JSX.Element[]);
-  onSubmit?: (values: any) => void;
-  onSubmitFull?: SubmitHandler<any>;
-  onError?: (errors: any) => void;
-  onErrorFull?: ErrorHandler<any>;
-  onRender?: () => void;
+type Children = JSX.Element | JSX.Element[] | null;
+
+interface Conf extends Config<any> {
+  children: Children | ((methods: Methods) => Children);
+  onSubmit: (values: any) => void;
+  onSubmitFull: SubmitHandler<any>;
+  onError: (errors: any) => void;
+  onErrorFull: ErrorHandler<any>;
+  onRender: () => void;
 }
+
+type Props = Partial<Conf>;
 
 const Form = ({
   children,
@@ -52,7 +52,7 @@ const Form = ({
   );
 };
 
-const renderHelper = ({ children, ...rest }: Props) => {
+const renderHelper = ({ children = null, ...rest }: Props = {}) => {
   let api: Methods;
 
   render(
@@ -83,6 +83,17 @@ describe("useForm", () => {
     isSubmitting: false,
     isSubmitted: false,
     submitCount: 0,
+  };
+  const options = {
+    formState: initialState,
+    setValue: expect.any(Function),
+    setTouched: expect.any(Function),
+    setDirty: expect.any(Function),
+    setError: expect.any(Function),
+    clearErrors: expect.any(Function),
+    runValidation: expect.any(Function),
+    reset: expect.any(Function),
+    submit: expect.any(Function),
   };
 
   beforeEach(() => {
@@ -160,28 +171,21 @@ describe("useForm", () => {
   });
 
   describe("event callbacks", () => {
-    const options = {
-      formState: initialState,
-      setValue: expect.any(Function),
-      setTouched: expect.any(Function),
-      setDirty: expect.any(Function),
-      setError: expect.any(Function),
-      clearErrors: expect.any(Function),
-      runValidation: expect.any(Function),
-      reset: expect.any(Function),
-      submit: expect.any(Function),
-    };
-
     it('should call "onSubmit" event correctly', async () => {
       renderHelper({
         onSubmitFull: onSubmit,
         onError,
-        children: <input data-testid="foo" name="foo" />,
+        children: (
+          <>
+            <input data-testid="foo" name="foo" />
+            <input data-testid="bar" name="bar" />
+          </>
+        ),
       });
       const value = "🍎";
       fireEvent.input(screen.getByTestId("foo"), { target: { value } });
       fireEvent.submit(screen.getByTestId("form"));
-      const values = { foo: value };
+      const values = { foo: value, bar: "" };
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith(
           values,
@@ -190,7 +194,7 @@ describe("useForm", () => {
             formState: {
               ...initialState,
               values,
-              touched: { foo: true },
+              touched: { foo: true, bar: true },
               dirty: { foo: true },
               isDirty: true,
               isSubmitting: true,
@@ -252,6 +256,71 @@ describe("useForm", () => {
           { ...options, formState: { ...initialState, values: defaultValues } },
           expect.any(Object)
         )
+      );
+    });
+  });
+
+  describe("submit", () => {
+    it("should submit form with success mode", async () => {
+      const { submit } = renderHelper({
+        onSubmitFull: onSubmit,
+        children: (
+          <>
+            <input data-testid="foo" name="foo" />
+            <input data-testid="bar" name="bar" />
+          </>
+        ),
+      });
+      const value = "🍎";
+      const e = {};
+      fireEvent.input(screen.getByTestId("foo"), { target: { value } });
+      // @ts-expect-error
+      const result = await submit(e);
+      const values = { foo: value, bar: "" };
+      expect(result).toEqual({ values });
+      expect(onSubmit).toHaveBeenCalledWith(
+        values,
+        {
+          ...options,
+          formState: {
+            ...initialState,
+            values,
+            touched: { foo: true, bar: true },
+            dirty: { foo: true },
+            isDirty: true,
+            isSubmitting: true,
+            submitCount: 1,
+          },
+        },
+        e
+      );
+    });
+
+    it("should submit form with fail mode", async () => {
+      const { submit } = renderHelper({
+        onErrorFull: onError,
+        children: <input data-testid="foo" name="foo" required />,
+      });
+      const e = {};
+      // @ts-expect-error
+      const result = await submit(e);
+      const errors = { foo: builtInError };
+      expect(result).toEqual({ errors });
+      expect(onError).toHaveBeenCalledWith(
+        errors,
+        {
+          ...options,
+          formState: {
+            ...initialState,
+            errors,
+            values: { foo: "" },
+            touched: { foo: true },
+            isValid: false,
+            isSubmitting: true,
+            submitCount: 1,
+          },
+        },
+        e
       );
     });
   });
@@ -1098,8 +1167,7 @@ describe("useForm", () => {
     const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
 
     it("should get state with correct format", () => {
-      const { result } = renderHook(() => useForm({ defaultValues: values }));
-      const { getState } = result.current;
+      const { getState } = renderHelper({ defaultValues: values });
 
       expect(getState("values")).toEqual(values);
       expect(getState("values.foo")).toBe(values.foo);
@@ -1121,9 +1189,7 @@ describe("useForm", () => {
     });
 
     it("should get state with specific target", () => {
-      const { getState } = renderHook(() =>
-        useForm({ defaultValues: values })
-      ).result.current;
+      const { getState } = renderHelper({ defaultValues: values });
       const option = { target: "values" };
       const { foo } = values;
       expect(getState("foo", option)).toBe(foo);
@@ -1165,7 +1231,7 @@ describe("useForm", () => {
 
   describe("setValue", () => {
     it("should set value correctly", () => {
-      const { setValue, getState } = renderHook(() => useForm()).result.current;
+      const { setValue, getState } = renderHelper();
       const value = "🍎";
 
       setValue("foo", value);
@@ -1182,7 +1248,7 @@ describe("useForm", () => {
     });
 
     it("should set value with touched correctly", () => {
-      const { setValue, getState } = renderHook(() => useForm()).result.current;
+      const { setValue, getState } = renderHelper();
 
       setValue("foo", "🍎", { shouldTouched: false });
       expect(getState("touched.foo", { watch: false })).toBeUndefined();
@@ -1192,7 +1258,7 @@ describe("useForm", () => {
     });
 
     it("should set value with dirty correctly", () => {
-      const { setValue, getState } = renderHook(() => useForm()).result.current;
+      const { setValue, getState } = renderHelper();
 
       setValue("foo", "🍎", { shouldDirty: false });
       expect(getState("dirty.foo", { watch: false })).toBeUndefined();
@@ -1220,9 +1286,7 @@ describe("useForm", () => {
 
   describe("setTouched", () => {
     it("should set touched correctly", () => {
-      const { setTouched, getState } = renderHook(() =>
-        useForm()
-      ).result.current;
+      const { setTouched, getState } = renderHelper();
 
       setTouched("foo");
       expect(getState("touched.foo", { watch: false })).toBeTruthy();
@@ -1250,7 +1314,7 @@ describe("useForm", () => {
   });
 
   it("should set dirty correctly", () => {
-    const { setDirty, getState } = renderHook(() => useForm()).result.current;
+    const { setDirty, getState } = renderHelper();
 
     setDirty("foo");
     expect(getState("dirty.foo", { watch: false })).toBeTruthy();
@@ -1263,7 +1327,7 @@ describe("useForm", () => {
   });
 
   it("should set error correctly", () => {
-    const { setError, getState } = renderHook(() => useForm()).result.current;
+    const { setError, getState } = renderHelper();
     const error = "Required";
 
     setError("foo", error);
@@ -1292,9 +1356,7 @@ describe("useForm", () => {
   });
 
   it("should clear error(s)", () => {
-    const { setError, clearErrors, getState } = renderHook(() =>
-      useForm()
-    ).result.current;
+    const { setError, clearErrors, getState } = renderHelper();
     const error = "Required";
 
     setError("foo", error);
