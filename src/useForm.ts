@@ -637,8 +637,8 @@ export default <V extends FormValues = FormValues>({
 
   const reset: Reset<V> = useCallback(
     (values, exclude, e) => {
-      e?.preventDefault();
-      e?.stopPropagation();
+      if (e?.preventDefault) e.preventDefault();
+      if (e?.stopPropagation) e.stopPropagation();
 
       const state = { ...stateRef.current };
       const skip = arrayToMap(exclude || []);
@@ -668,8 +668,8 @@ export default <V extends FormValues = FormValues>({
 
   const submit: Submit<V> = useCallback(
     async (e) => {
-      e?.preventDefault();
-      e?.stopPropagation();
+      if (e?.preventDefault) e.preventDefault();
+      if (e?.stopPropagation) e.stopPropagation();
 
       const nextTouched = Object.keys({
         ...fieldsRef.current,
