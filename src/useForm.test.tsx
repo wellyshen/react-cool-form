@@ -71,6 +71,7 @@ const renderHelper = ({ children = null, ...rest }: Props = {}) => {
 describe("useForm", () => {
   const onSubmit = jest.fn();
   const onError = jest.fn();
+  const onReset = jest.fn();
   const builtInError = "Constraints not satisfied";
   const initialState = {
     values: {},
@@ -236,8 +237,7 @@ describe("useForm", () => {
       expect(onSubmit).not.toHaveBeenCalled();
     });
 
-    it('should call "onReset" event correctly', async () => {
-      const onReset = jest.fn();
+    it('should call "onReset" event correctly', () => {
       const defaultValues = { foo: "" };
       renderHelper({
         defaultValues,
@@ -250,12 +250,10 @@ describe("useForm", () => {
       expect(foo.value).toBe(value);
       fireEvent.reset(screen.getByTestId("form"));
       expect(foo.value).toBe(defaultValues.foo);
-      await waitFor(() =>
-        expect(onReset).toHaveBeenCalledWith(
-          defaultValues,
-          { ...options, formState: { ...initialState, values: defaultValues } },
-          expect.any(Object)
-        )
+      expect(onReset).toHaveBeenCalledWith(
+        defaultValues,
+        { ...options, formState: { ...initialState, values: defaultValues } },
+        expect.any(Object)
       );
     });
   });
@@ -323,6 +321,69 @@ describe("useForm", () => {
         e
       );
     });
+  });
+
+  it("should reset form correctly", () => {
+    const defaultValues = { foo: "" };
+    const { reset, setValue, setError } = renderHelper({
+      defaultValues,
+      onReset,
+    });
+
+    setValue("foo", "🍎");
+    setError("foo", "Required");
+    const e = {};
+    // @ts-expect-error
+    act(() => reset(null, null, e));
+    expect(onReset).toHaveBeenCalledWith(
+      defaultValues,
+      { ...options, formState: { ...initialState, values: defaultValues } },
+      e
+    );
+
+    const values = { foo: "🍋" };
+    // @ts-expect-error
+    act(() => reset(values, null, e));
+    expect(onReset).toHaveBeenCalledWith(
+      values,
+      {
+        ...options,
+        formState: { ...initialState, values },
+      },
+      e
+    );
+
+    const value = "🍎";
+    // @ts-expect-error
+    // eslint-disable-next-line no-return-assign
+    act(() => reset((prevValues) => (prevValues.foo = value), null, e));
+    expect(onReset).toHaveBeenCalledWith(
+      { foo: value },
+      {
+        ...options,
+        formState: { ...initialState, values: { foo: value } },
+      },
+      e
+    );
+
+    const error = "Required";
+    setValue("foo", value);
+    setError("foo", error);
+    // @ts-expect-error
+    act(() => reset(null, ["values", "errors", "touched"], e));
+    expect(onReset).toHaveBeenCalledWith(
+      { foo: value },
+      {
+        ...options,
+        formState: {
+          ...initialState,
+          values: { foo: value },
+          errors: { foo: error },
+          touched: { foo: true },
+        },
+      },
+      e
+    );
   });
 
   describe("default values", () => {
