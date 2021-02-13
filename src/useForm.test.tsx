@@ -69,10 +69,13 @@ const renderHelper = ({ children = null, ...rest }: Props = {}) => {
 };
 
 describe("useForm", () => {
+  const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
   const onError = jest.fn();
   const onReset = jest.fn();
   const builtInError = "Constraints not satisfied";
+  const missingNameWarn =
+    '💡 react-cool-form > field: Missing the "name" attribute.';
   const initialState = {
     values: {},
     touched: {},
@@ -104,36 +107,15 @@ describe("useForm", () => {
   });
 
   describe("warning", () => {
-    const missingName =
-      '💡 react-cool-form > field: Missing the "name" attribute.';
-
     it("should warn for a missing name field", () => {
       console.warn = jest.fn();
       renderHelper({
         children: <input data-testid="foo" />,
       });
-      fireEvent.input(screen.getByTestId("foo"));
+      fireEvent.input(getByTestId("foo"));
       expect(console.warn).toHaveBeenCalledTimes(2);
-      expect(console.warn).toHaveBeenNthCalledWith(1, missingName);
-      expect(console.warn).toHaveBeenNthCalledWith(2, missingName);
-    });
-
-    it("should warn for a missing name controller", () => {
-      console.warn = jest.fn();
-      renderHelper({
-        children: ({ controller }: Methods) => (
-          // @ts-expect-error
-          <input data-testid="foo" {...controller()} />
-        ),
-      });
-      fireEvent.input(screen.getByTestId("foo"));
-      expect(console.warn).toHaveBeenCalledTimes(3);
-      expect(console.warn).toHaveBeenNthCalledWith(
-        1,
-        '💡 react-cool-form > controller: Missing the "name" parameter.'
-      );
-      expect(console.warn).toHaveBeenNthCalledWith(2, missingName);
-      expect(console.warn).toHaveBeenNthCalledWith(3, missingName);
+      expect(console.warn).toHaveBeenNthCalledWith(1, missingNameWarn);
+      expect(console.warn).toHaveBeenNthCalledWith(2, missingNameWarn);
     });
 
     it("should not warn for a missing name field when it's excluded", () => {
@@ -159,7 +141,7 @@ describe("useForm", () => {
         },
         children: <input data-testid="foo" name="foo" />,
       });
-      fireEvent.input(screen.getByTestId("foo"));
+      fireEvent.input(getByTestId("foo"));
       await waitFor(() =>
         expect(console.warn).toHaveBeenCalledWith(
           "💡 react-cool-form > validate form: ",
@@ -183,7 +165,7 @@ describe("useForm", () => {
           />
         ),
       });
-      fireEvent.input(screen.getByTestId(id));
+      fireEvent.input(getByTestId(id));
       await waitFor(() =>
         expect(console.warn).toHaveBeenCalledWith(
           `💡 react-cool-form > validate ${id}: `,
@@ -206,8 +188,8 @@ describe("useForm", () => {
         ),
       });
       const value = "🍎";
-      fireEvent.input(screen.getByTestId("foo"), { target: { value } });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.input(getByTestId("foo"), { target: { value } });
+      fireEvent.submit(getByTestId("form"));
       const values = { foo: value, bar: "" };
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith(
@@ -236,7 +218,7 @@ describe("useForm", () => {
         onSubmit,
         children: <input data-testid="foo" name="foo" required />,
       });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       const errors = { foo: builtInError };
       await waitFor(() =>
         expect(onError).toHaveBeenCalledWith(
@@ -267,10 +249,10 @@ describe("useForm", () => {
         children: <input data-testid="foo" name="foo" />,
       });
       const value = "🍎";
-      const foo = screen.getByTestId("foo") as HTMLInputElement;
+      const foo = getByTestId("foo") as HTMLInputElement;
       fireEvent.input(foo, { target: { value } });
       expect(foo.value).toBe(value);
-      fireEvent.reset(screen.getByTestId("form"));
+      fireEvent.reset(getByTestId("form"));
       expect(foo.value).toBe(defaultValues.foo);
       expect(onReset).toHaveBeenCalledWith(
         defaultValues,
@@ -293,7 +275,7 @@ describe("useForm", () => {
       });
       const value = "🍎";
       const e = {};
-      fireEvent.input(screen.getByTestId("foo"), { target: { value } });
+      fireEvent.input(getByTestId("foo"), { target: { value } });
       // @ts-expect-error
       const result = await submit(e);
       const values = { foo: value, bar: "" };
@@ -409,7 +391,6 @@ describe("useForm", () => {
   });
 
   describe("default values", () => {
-    const getByTestId = screen.getByTestId as any;
     const defaultValues = {
       text: "🍎",
       number: 1,
@@ -547,7 +528,7 @@ describe("useForm", () => {
           </>
         ),
       });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
 
@@ -668,7 +649,7 @@ describe("useForm", () => {
           />
         ),
       });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
       );
@@ -689,10 +670,10 @@ describe("useForm", () => {
           number: 1,
           range: 10,
         };
-        fireEvent.input(screen.getByTestId("foo"), {
+        fireEvent.input(getByTestId("foo"), {
           target: { value: values[type] },
         });
-        fireEvent.submit(screen.getByTestId("form"));
+        fireEvent.submit(getByTestId("form"));
         await waitFor(() =>
           expect(onSubmit).toHaveBeenCalledWith({ foo: values[type] })
         );
@@ -705,8 +686,8 @@ describe("useForm", () => {
         onSubmit,
         children: <input data-testid="foo" name="foo" type="checkbox" />,
       });
-      userEvent.click(screen.getByTestId("foo"));
-      fireEvent.submit(screen.getByTestId("form"));
+      userEvent.click(getByTestId("foo"));
+      fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: true }));
     });
 
@@ -721,9 +702,9 @@ describe("useForm", () => {
           </>
         ),
       });
-      const form = screen.getByTestId("form");
-      const foo0 = screen.getByTestId("foo-0") as HTMLInputElement;
-      const foo1 = screen.getByTestId("foo-1") as HTMLInputElement;
+      const form = getByTestId("form");
+      const foo0 = getByTestId("foo-0") as HTMLInputElement;
+      const foo1 = getByTestId("foo-1") as HTMLInputElement;
 
       userEvent.click(foo0);
       fireEvent.submit(form);
@@ -759,9 +740,9 @@ describe("useForm", () => {
           </>
         ),
       });
-      const form = screen.getByTestId("form");
-      const foo0 = screen.getByTestId("foo-0") as HTMLInputElement;
-      const foo1 = screen.getByTestId("foo-1") as HTMLInputElement;
+      const form = getByTestId("form");
+      const foo0 = getByTestId("foo-0") as HTMLInputElement;
+      const foo1 = getByTestId("foo-1") as HTMLInputElement;
 
       userEvent.click(foo0);
       fireEvent.submit(form);
@@ -783,10 +764,10 @@ describe("useForm", () => {
         children: <textarea data-testid="foo" name="foo" />,
       });
       const value = "🍎";
-      fireEvent.input(screen.getByTestId("foo"), {
+      fireEvent.input(getByTestId("foo"), {
         target: { value },
       });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })
       );
@@ -809,10 +790,10 @@ describe("useForm", () => {
           </>
         ),
       });
-      const form = screen.getByTestId("form");
-      const foo = screen.getByTestId("foo");
-      const foo0 = screen.getByTestId("foo-0") as HTMLOptionElement;
-      const foo1 = screen.getByTestId("foo-1") as HTMLOptionElement;
+      const form = getByTestId("form");
+      const foo = getByTestId("foo");
+      const foo0 = getByTestId("foo-0") as HTMLOptionElement;
+      const foo1 = getByTestId("foo-1") as HTMLOptionElement;
 
       fireEvent.input(foo, { target: { value: foo0.value } });
       fireEvent.submit(form);
@@ -844,10 +825,10 @@ describe("useForm", () => {
           </>
         ),
       });
-      const form = screen.getByTestId("form");
-      const foo = screen.getByTestId("foo");
-      const foo0 = screen.getByTestId("foo-0") as HTMLOptionElement;
-      const foo1 = screen.getByTestId("foo-1") as HTMLOptionElement;
+      const form = getByTestId("form");
+      const foo = getByTestId("foo");
+      const foo0 = getByTestId("foo-0") as HTMLOptionElement;
+      const foo1 = getByTestId("foo-1") as HTMLOptionElement;
 
       let value = [foo0.value];
       userEvent.selectOptions(foo, value);
@@ -881,10 +862,10 @@ describe("useForm", () => {
         children: <input data-testid="foo" name="foo" type="file" />,
       });
       userEvent.upload(
-        screen.getByTestId("foo"),
+        getByTestId("foo"),
         new File(["🍎"], "🍎.png", { type: "image/png" })
       );
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({
           foo: {
@@ -902,11 +883,11 @@ describe("useForm", () => {
         onSubmit,
         children: <input data-testid="foo" name="foo" type="file" multiple />,
       });
-      userEvent.upload(screen.getByTestId("foo"), [
+      userEvent.upload(getByTestId("foo"), [
         new File(["🍎"], "🍎.png", { type: "image/png" }),
         new File(["🍋"], "🍋.png", { type: "image/png" }),
       ]);
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({
           foo: {
@@ -932,8 +913,8 @@ describe("useForm", () => {
           onError,
           children: <input data-testid="foo" name="foo" required />,
         });
-        const form = screen.getByTestId("form");
-        const foo = screen.getByTestId("foo");
+        const form = getByTestId("form");
+        const foo = getByTestId("foo");
 
         const errors = {
           foo: mode === "message" ? builtInError : "valueMissing",
@@ -963,7 +944,7 @@ describe("useForm", () => {
         onError,
         children: <input data-testid="foo" name="foo" required />,
       });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       expect(getState("isValidating")).toBeTruthy();
       await waitFor(() => expect(onError).not.toHaveBeenCalled());
       expect(getState("isValidating")).toBeFalsy();
@@ -978,8 +959,8 @@ describe("useForm", () => {
         onError,
         children: <input data-testid="foo" name="foo" required />,
       });
-      const form = screen.getByTestId("form");
-      const foo = screen.getByTestId("foo");
+      const form = getByTestId("form");
+      const foo = getByTestId("foo");
 
       fireEvent.submit(form);
       expect(getState("isValidating")).toBeTruthy();
@@ -1016,8 +997,8 @@ describe("useForm", () => {
             />
           ),
         });
-        const form = screen.getByTestId("form");
-        const foo = screen.getByTestId("foo");
+        const form = getByTestId("form");
+        const foo = getByTestId("foo");
 
         fireEvent.submit(form);
         expect(getState("isValidating")).toBeTruthy();
@@ -1047,7 +1028,7 @@ describe("useForm", () => {
         });
         const error = type === "run" ? { foo: builtInError } : {};
 
-        fireEvent.input(screen.getByTestId("foo"), { target: { value: "" } });
+        fireEvent.input(getByTestId("foo"), { target: { value: "" } });
         await waitFor(() => expect(getState("errors")).toEqual(error));
 
         setValue("foo", "");
@@ -1065,7 +1046,7 @@ describe("useForm", () => {
         });
         const error = type === "run" ? { foo: builtInError } : {};
 
-        fireEvent.focusOut(screen.getByTestId("foo"));
+        fireEvent.focusOut(getByTestId("foo"));
         await waitFor(() => expect(getState("errors")).toEqual(error));
 
         setTouched("foo");
@@ -1077,9 +1058,9 @@ describe("useForm", () => {
       const { getState, clearErrors } = renderHelper({
         children: <input data-testid="foo" name="foo" required />,
       });
-      const foo = screen.getByTestId("foo");
+      const foo = getByTestId("foo");
 
-      fireEvent.focusOut(screen.getByTestId("foo"));
+      fireEvent.focusOut(getByTestId("foo"));
       await waitFor(() =>
         expect(getState("errors")).toEqual({ foo: builtInError })
       );
@@ -1105,10 +1086,10 @@ describe("useForm", () => {
         onSubmit,
         children: <input data-testid="foo" name="foo" />,
       });
-      const foo = screen.getByTestId("foo") as HTMLInputElement;
+      const foo = getByTestId("foo") as HTMLInputElement;
       expect(foo.value).toBe("");
       fireEvent.input(foo, e);
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
 
@@ -1118,10 +1099,10 @@ describe("useForm", () => {
         onSubmit,
         children: <input data-testid="foo" name="foo" data-rcf-exclude />,
       });
-      const foo = screen.getByTestId("foo") as HTMLInputElement;
+      const foo = getByTestId("foo") as HTMLInputElement;
       expect(foo.value).toBe("");
       fireEvent.input(foo, e);
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
   });
@@ -1284,7 +1265,7 @@ describe("useForm", () => {
       const { getState } = renderHelper({
         children: <input data-testid="foo" name="foo" required />,
       });
-      const foo = screen.getByTestId("foo");
+      const foo = getByTestId("foo");
       fireEvent.input(foo, { target: { value: "" } });
       await waitFor(() => {
         expect(getState("errors.foo")).not.toBeUndefined();
@@ -1307,7 +1288,7 @@ describe("useForm", () => {
         children: <input data-testid="foo" name="foo" />,
       });
       getState("values.foo", { watch: type === "watch" });
-      fireEvent.input(screen.getByTestId("foo"));
+      fireEvent.input(getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(type === "watch" ? 2 : 1);
     });
   });
@@ -1482,10 +1463,10 @@ describe("useForm", () => {
           />
         ),
       });
-      fireEvent.input(screen.getByTestId("foo"), {
+      fireEvent.input(getByTestId("foo"), {
         target: { value: "1970-01-01" },
       });
-      fireEvent.submit(screen.getByTestId("form"));
+      fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
         // @ts-expect-error
         expect(onSubmit).toHaveBeenCalledWith({ foo: value[type] })
@@ -1493,13 +1474,93 @@ describe("useForm", () => {
     }
   );
 
+  describe("controller", () => {
+    const value = "🍎";
+
+    it("should warn for a missing name controller", () => {
+      console.warn = jest.fn();
+      renderHelper({
+        children: ({ controller }: Methods) => (
+          // @ts-expect-error
+          <input data-testid="foo" {...controller()} />
+        ),
+      });
+      fireEvent.input(getByTestId("foo"));
+      expect(console.warn).toHaveBeenCalledTimes(3);
+      expect(console.warn).toHaveBeenNthCalledWith(
+        1,
+        '💡 react-cool-form > controller: Missing the "name" parameter.'
+      );
+      expect(console.warn).toHaveBeenNthCalledWith(2, missingNameWarn);
+      expect(console.warn).toHaveBeenNthCalledWith(3, missingNameWarn);
+    });
+
+    it.each(["form", "controller"])(
+      "should set default value via %s option",
+      async (type) => {
+        renderHelper({
+          defaultValues: type === "form" ? { foo: value } : undefined,
+          onSubmit,
+          children: ({ controller }: Methods) => (
+            <input
+              data-testid="foo"
+              {...controller("foo", {
+                defaultValue: type === "controller" ? value : undefined,
+              })}
+            />
+          ),
+        });
+        expect((getByTestId("foo") as HTMLInputElement).value).toBe(value);
+        fireEvent.submit(getByTestId("form"));
+        await waitFor(() =>
+          expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+        );
+      }
+    );
+
+    it("should run controller validation", async () => {
+      const errors = { foo: "Required" };
+      const { getState } = renderHelper({
+        defaultValues: { foo: "" },
+        onSubmit,
+        onError,
+        children: ({ controller }: Methods) => (
+          <input
+            data-testid="foo"
+            {...controller("foo", {
+              validate: async (val: string) =>
+                !val.length ? errors.foo : false,
+            })}
+          />
+        ),
+      });
+      const form = getByTestId("form");
+      const foo = getByTestId("foo");
+
+      fireEvent.submit(form);
+      expect(getState("isValidating")).toBeTruthy();
+      await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
+      expect(getState("isValidating")).toBeFalsy();
+      expect(getState("isValid")).toBeFalsy();
+
+      fireEvent.input(foo, { target: { value } });
+      fireEvent.submit(form);
+      expect(getState("isValidating")).toBeTruthy();
+      await waitFor(() => {
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value });
+        expect(onError).toHaveBeenCalledTimes(1);
+      });
+      expect(getState("errors")).toEqual({});
+      expect(getState("isValidating")).toBeFalsy();
+      expect(getState("isValid")).toBeTruthy();
+    });
+  });
+
   it("should call debug callback", async () => {
     const debug = jest.fn();
     renderHelper({ debug, children: <input data-testid="foo" name="foo" /> });
     const value = "🍎";
-    fireEvent.input(screen.getByTestId("foo"), {
-      target: { value },
-    });
+    fireEvent.input(getByTestId("foo"), { target: { value } });
     await waitFor(() => {
       expect(debug).toHaveBeenCalledTimes(2);
       expect(debug).toHaveBeenCalledWith({
