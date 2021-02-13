@@ -1437,6 +1437,40 @@ describe("useForm", () => {
     expect(getState("baz.a[0].b")).toBeUndefined();
   });
 
+  it.each(["number", "date", "custom"])(
+    "should convert field value to %s",
+    async (type) => {
+      const value = {
+        number: expect.any(Number),
+        date: expect.any(Date),
+        custom: "🍎",
+      };
+      renderHelper({
+        onSubmit,
+        children: ({ field }: Methods) => (
+          <input
+            data-testid="foo"
+            name="foo"
+            type="date"
+            ref={field({
+              valueAsNumber: type === "number",
+              valueAsDate: type === "date",
+              parse: type === "custom" ? () => value[type] : undefined,
+            })}
+          />
+        ),
+      });
+      fireEvent.input(screen.getByTestId("foo"), {
+        target: { value: "1970-01-01" },
+      });
+      fireEvent.submit(screen.getByTestId("form"));
+      await waitFor(() =>
+        // @ts-expect-error
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value[type] })
+      );
+    }
+  );
+
   it("should call debug callback", async () => {
     const debug = jest.fn();
     renderHelper({ debug, children: <input data-testid="foo" name="foo" /> });
