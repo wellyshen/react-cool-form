@@ -107,7 +107,7 @@ describe("useForm", () => {
     const missingName =
       '💡 react-cool-form > field: Missing the "name" attribute.';
 
-    it("should warn for a missing name %s", () => {
+    it("should warn for a missing name field", () => {
       console.warn = jest.fn();
       renderHelper({
         children: <input data-testid="foo" />,
