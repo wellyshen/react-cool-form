@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.116
+
+### Patch Changes
+
+- [`645b5f4`](https://github.com/wellyshen/react-cool-form/commit/645b5f4269737f535735e73eea242bb3a48dfff7) [#391](https://github.com/wellyshen/react-cool-form/pull/391) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: refine types
+
 ## 0.0.115
 
 ### Patch Changes
