@@ -430,7 +430,8 @@ It returns the following props:
 The following code demonstrates a basic use case:
 
 ```js
-const { controller } = useForm();
+// (Strongly advise) Provide a default value for the controlled field
+const { controller } = useForm({ defaultValues: { fieldName: "" } });
 
 // With built-in validation (if supported)
 <Component {...controller("fieldName")} required />;

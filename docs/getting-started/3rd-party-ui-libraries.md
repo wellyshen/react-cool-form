@@ -85,6 +85,8 @@ const App = () => {
 
 [Controlled components](https://reactjs.org/docs/forms.html#controlled-components) with highly customized and full features like [React Select](https://react-select.com) or [React Datepicker](https://reactdatepicker.com). We can use React Cool Form's [controller](../api-reference/use-form#controller) API for it.
 
+> 💡 We strongly advise to provide a default value for the controlled field.
+
 [![Edit RCF - React Select](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-react-select-djsl1?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
@@ -100,6 +102,7 @@ const options = [
 
 const App = () => {
   const { form, controller } = useForm({
+    // (Strongly advise) Provide a default value for the controlled field
     defaultValues: { framework: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
   });
