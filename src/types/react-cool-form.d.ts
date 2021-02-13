@@ -109,7 +109,7 @@ declare module "react-cool-form" {
     submitCount: number;
   }>;
 
-  export interface PreviousValuesFn<V = any> {
+  export interface PreviousValuesFn<V = FormValues> {
     (previousValues: V): V;
   }
 
@@ -185,7 +185,7 @@ declare module "react-cool-form" {
     } | void;
   }
 
-  export interface Debug<V> {
+  export interface Debug<V = FormValues> {
     (formState: FormState<V>): void;
   }
 
