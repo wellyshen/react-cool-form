@@ -104,14 +104,36 @@ describe("useForm", () => {
   });
 
   describe("warning", () => {
-    it("should warn for a missing name field", () => {
+    const missingName =
+      '💡 react-cool-form > field: Missing the "name" attribute.';
+
+    it("should warn for a missing name %s", () => {
       console.warn = jest.fn();
-      renderHelper({ children: <input data-testid="foo" /> });
+      renderHelper({
+        children: <input data-testid="foo" />,
+      });
       fireEvent.input(screen.getByTestId("foo"));
       expect(console.warn).toHaveBeenCalledTimes(2);
-      expect(console.warn).toHaveBeenCalledWith(
-        '💡 react-cool-form > field: Missing the "name" attribute.'
+      expect(console.warn).toHaveBeenNthCalledWith(1, missingName);
+      expect(console.warn).toHaveBeenNthCalledWith(2, missingName);
+    });
+
+    it("should warn for a missing name controller", () => {
+      console.warn = jest.fn();
+      renderHelper({
+        children: ({ controller }: Methods) => (
+          // @ts-expect-error
+          <input data-testid="foo" {...controller()} />
+        ),
+      });
+      fireEvent.input(screen.getByTestId("foo"));
+      expect(console.warn).toHaveBeenCalledTimes(3);
+      expect(console.warn).toHaveBeenNthCalledWith(
+        1,
+        '💡 react-cool-form > controller: Missing the "name" parameter.'
       );
+      expect(console.warn).toHaveBeenNthCalledWith(2, missingName);
+      expect(console.warn).toHaveBeenNthCalledWith(3, missingName);
     });
 
     it("should not warn for a missing name field when it's excluded", () => {
