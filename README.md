@@ -107,8 +107,3 @@ const App = () => {
 ```
 
 ✨ Pretty easy right? React Cool Form is more powerful than you think. Let's [explore it](https://react-cool-form.netlify.app)!
-
-## To Do
-
-- [ ] Unit testing (work in progress...)
-- [ ] End to end testing
