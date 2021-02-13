@@ -13,6 +13,7 @@ const options = [
 
 function App() {
   const { form, controller } = useForm({
+    // (Strongly advise) Provide a default value for the controlled field
     defaultValues: { framework: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
