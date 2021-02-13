@@ -74,8 +74,6 @@ describe("useForm", () => {
   const onError = jest.fn();
   const onReset = jest.fn();
   const builtInError = "Constraints not satisfied";
-  const missingNameWarn =
-    '💡 react-cool-form > field: Missing the "name" attribute.';
   const initialState = {
     values: {},
     touched: {},
@@ -114,8 +112,9 @@ describe("useForm", () => {
       });
       fireEvent.input(getByTestId("foo"));
       expect(console.warn).toHaveBeenCalledTimes(2);
-      expect(console.warn).toHaveBeenNthCalledWith(1, missingNameWarn);
-      expect(console.warn).toHaveBeenNthCalledWith(2, missingNameWarn);
+      expect(console.warn).toHaveBeenCalledWith(
+        '💡 react-cool-form > field: Missing the "name" attribute.'
+      );
     });
 
     it("should not warn for a missing name field when it's excluded", () => {
@@ -1491,8 +1490,6 @@ describe("useForm", () => {
         1,
         '💡 react-cool-form > controller: Missing the "name" parameter.'
       );
-      expect(console.warn).toHaveBeenNthCalledWith(2, missingNameWarn);
-      expect(console.warn).toHaveBeenNthCalledWith(3, missingNameWarn);
     });
 
     it.each(["form", "controller"])(
