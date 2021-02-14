@@ -402,51 +402,99 @@ describe("useForm", () => {
       selects: ["🍎", "🍋"],
     };
     const defaultNestedValue = { text: { a: [{ b: "🍎" }] } };
+    const getChildren = () => (
+      <>
+        <input data-testid="text" name="text" />
+        <input data-testid="number" name="number" type="number" />
+        <input data-testid="range" name="range" type="range" />
+        <input data-testid="checkbox" name="checkbox" type="checkbox" />
+        <input
+          data-testid="checkboxes-0"
+          name="checkboxes"
+          type="checkbox"
+          value="🍎"
+        />
+        <input
+          data-testid="checkboxes-1"
+          name="checkboxes"
+          type="checkbox"
+          value="🍋"
+        />
+        <input data-testid="radio-0" name="radio" type="radio" value="🍎" />
+        <input data-testid="radio-1" name="radio" type="radio" value="🍋" />
+        <textarea data-testid="textarea" name="textarea" />
+        <select name="select">
+          <option data-testid="select-0" value="🍎">
+            🍎
+          </option>
+          <option data-testid="select-1" value="🍋">
+            🍋
+          </option>
+        </select>
+        <select name="selects" multiple>
+          <option data-testid="selects-0" value="🍎">
+            🍎
+          </option>
+          <option data-testid="selects-1" value="🍋">
+            🍋
+          </option>
+        </select>
+      </>
+    );
+
+    it("should set values correctly via value attribute", async () => {
+      renderHelper({ onSubmit, children: getChildren() });
+      const values: any = {
+        text: "",
+        number: "",
+        range: 50,
+        checkbox: false,
+        checkboxes: [],
+        radio: "",
+        textarea: "",
+        select: "🍎",
+        selects: [],
+      };
+      const {
+        text,
+        number,
+        range,
+        checkbox,
+        checkboxes,
+        radio,
+        textarea,
+        select,
+        selects,
+      } = values;
+
+      expect(getByTestId("text").value).toBe(text);
+      expect(getByTestId("number").value).toBe(number.toString());
+      expect(getByTestId("range").value).toBe(range.toString());
+      expect(getByTestId("checkbox").checked).toBe(checkbox);
+      const checkboxes0 = getByTestId("checkboxes-0");
+      expect(checkboxes0.checked).toBe(checkboxes.includes(checkboxes0.value));
+      const checkboxes1 = getByTestId("checkboxes-1");
+      expect(checkboxes1.checked).toBe(checkboxes.includes(checkboxes1.value));
+      expect(getByTestId("textarea").value).toBe(textarea);
+      const radio0 = getByTestId("radio-0");
+      expect(radio0.checked).toBe(radio0.value === radio);
+      const radio1 = getByTestId("radio-0");
+      expect(radio1.checked).toBe(radio1.value === radio);
+      const select0 = getByTestId("select-0");
+      expect(select0.selected).toBe(select0.value === select);
+      const select1 = getByTestId("select-1");
+      expect(select1.selected).toBe(select1.value === select);
+      const selects0 = getByTestId("selects-0");
+      expect(selects0.selected).toBe(selects.includes(selects0.value));
+      const selects1 = getByTestId("selects-1");
+      expect(selects1.selected).toBe(selects.includes(selects1.value));
+
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(values));
+    });
 
     it("should set values correctly via defaultValues option", async () => {
-      renderHelper({
-        defaultValues,
-        onSubmit,
-        children: (
-          <>
-            <input data-testid="text" name="text" />
-            <input data-testid="number" name="number" type="number" />
-            <input data-testid="range" name="range" type="range" />
-            <input data-testid="checkbox" name="checkbox" type="checkbox" />
-            <input
-              data-testid="checkboxes-0"
-              name="checkboxes"
-              type="checkbox"
-              value="🍎"
-            />
-            <input
-              data-testid="checkboxes-1"
-              name="checkboxes"
-              type="checkbox"
-              value="🍋"
-            />
-            <input data-testid="radio-0" name="radio" type="radio" value="🍎" />
-            <input data-testid="radio-1" name="radio" type="radio" value="🍋" />
-            <textarea data-testid="textarea" name="textarea" />
-            <select name="select">
-              <option data-testid="select-0" value="🍎">
-                🍎
-              </option>
-              <option data-testid="select-1" value="🍋">
-                🍋
-              </option>
-            </select>
-            <select name="selects" multiple>
-              <option data-testid="selects-0" value="🍎">
-                🍎
-              </option>
-              <option data-testid="selects-1" value="🍋">
-                🍋
-              </option>
-            </select>
-          </>
-        ),
-      });
+      renderHelper({ defaultValues, onSubmit, children: getChildren() });
       const {
         text,
         number,
@@ -529,98 +577,6 @@ describe("useForm", () => {
       });
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
-    });
-
-    it("should set values correctly via value attribute", async () => {
-      renderHelper({
-        onSubmit,
-        children: (
-          <>
-            <input data-testid="text" name="text" />
-            <input data-testid="number" name="number" type="number" />
-            <input data-testid="range" name="range" type="range" />
-            <input data-testid="checkbox" name="checkbox" type="checkbox" />
-            <input
-              data-testid="checkboxes-0"
-              name="checkboxes"
-              type="checkbox"
-              value="🍎"
-            />
-            <input
-              data-testid="checkboxes-1"
-              name="checkboxes"
-              type="checkbox"
-              value="🍋"
-            />
-            <input data-testid="radio-0" name="radio" type="radio" value="🍎" />
-            <input data-testid="radio-1" name="radio" type="radio" value="🍋" />
-            <textarea data-testid="textarea" name="textarea" />
-            <select name="select">
-              <option data-testid="select-0" value="🍎">
-                🍎
-              </option>
-              <option data-testid="select-1" value="🍋">
-                🍋
-              </option>
-            </select>
-            <select name="selects" multiple>
-              <option data-testid="selects-0" value="🍎">
-                🍎
-              </option>
-              <option data-testid="selects-1" value="🍋">
-                🍋
-              </option>
-            </select>
-          </>
-        ),
-      });
-      const values: any = {
-        text: "",
-        number: "",
-        range: 50,
-        checkbox: false,
-        checkboxes: [],
-        radio: "",
-        textarea: "",
-        select: "🍎",
-        selects: [],
-      };
-      const {
-        text,
-        number,
-        range,
-        checkbox,
-        checkboxes,
-        radio,
-        textarea,
-        select,
-        selects,
-      } = values;
-
-      expect(getByTestId("text").value).toBe(text);
-      expect(getByTestId("number").value).toBe(number.toString());
-      expect(getByTestId("range").value).toBe(range.toString());
-      expect(getByTestId("checkbox").checked).toBe(checkbox);
-      const checkboxes0 = getByTestId("checkboxes-0");
-      expect(checkboxes0.checked).toBe(checkboxes.includes(checkboxes0.value));
-      const checkboxes1 = getByTestId("checkboxes-1");
-      expect(checkboxes1.checked).toBe(checkboxes.includes(checkboxes1.value));
-      expect(getByTestId("textarea").value).toBe(textarea);
-      const radio0 = getByTestId("radio-0");
-      expect(radio0.checked).toBe(radio0.value === radio);
-      const radio1 = getByTestId("radio-0");
-      expect(radio1.checked).toBe(radio1.value === radio);
-      const select0 = getByTestId("select-0");
-      expect(select0.selected).toBe(select0.value === select);
-      const select1 = getByTestId("select-1");
-      expect(select1.selected).toBe(select1.value === select);
-      const selects0 = getByTestId("selects-0");
-      expect(selects0.selected).toBe(selects.includes(selects0.value));
-      const selects1 = getByTestId("selects-1");
-      expect(selects1.selected).toBe(selects.includes(selects1.value));
-
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(values));
     });
 
     it("should set nested values correctly via defaultValues option", async () => {
@@ -1492,6 +1448,17 @@ describe("useForm", () => {
       );
     });
 
+    it("should not set default value automatically", async () => {
+      renderHelper({
+        onSubmit,
+        children: ({ controller }: Methods) => (
+          <input data-testid="foo" {...controller("foo")} />
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({}));
+    });
+
     it.each(["form", "controller"])(
       "should set default value via %s option",
       async (type) => {
@@ -1514,6 +1481,33 @@ describe("useForm", () => {
         );
       }
     );
+
+    it("should handle change correctly", async () => {
+      renderHelper({
+        defaultValues: { text: "" },
+        onSubmit,
+        children: ({ controller }: Methods) => (
+          <>
+            <input data-testid="text" {...controller("text")} />
+            <input
+              data-testid="checkbox"
+              {...controller("checkbox")}
+              type="checkbox"
+            />
+          </>
+        ),
+      });
+      const textValue = "🍎";
+      fireEvent.input(getByTestId("text"), { target: { value: textValue } });
+      userEvent.click(getByTestId("checkbox"));
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({
+          text: textValue,
+          checkbox: true,
+        })
+      );
+    });
 
     it("should run controller validation", async () => {
       const errors = { foo: "Required" };
