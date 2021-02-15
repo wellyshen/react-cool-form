@@ -203,7 +203,7 @@ This method provides us a performant way to use the form state. Check the [Form 
 
 `(path?: string | string[] | Record<string, string>, target?: string) => any`
 
-This method allows us to read the value(s) of the form state without triggering re-renders. Check the [Reading the State](../getting-started/form-state#reading-the-state) to learn more.
+This method allows us to read the form state without triggering re-renders. Check the [Reading the State](../getting-started/form-state#reading-the-state) to learn more.
 
 ### setValue
 

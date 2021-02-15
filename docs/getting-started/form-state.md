@@ -98,7 +98,7 @@ const [touched, dirty] = select(["touched", "dirty"]);
 
 ### Reading the State
 
-If you just want to read the state's values without triggering re-renders, here's the [getState](../api-reference/use-form#getstate) method for you.
+If you just want to read the form state without triggering re-renders, here's the [getState](../api-reference/use-form#getstate) method for you.
 
 > 💡 Please note, this method should be used in an event handler.
 
