@@ -90,11 +90,11 @@ const features = [
     imageUrl: "img/loading.svg",
     description: (
       <>
-        The lower size the faster speed. React Cool Form is a tiny (
+        The lower size the faster speed. React Cool Form is a{" "}
         <Link to="https://bundlephobia.com/result?p=react-cool-form">
-          {"~ 5KB gzipped"}
-        </Link>
-        ) but powerful library.
+          tiny size
+        </Link>{" "}
+        library but powerful.
       </>
     ),
   },

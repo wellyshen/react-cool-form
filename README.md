@@ -25,7 +25,7 @@
 - 🔩 Provides useful [utility functions](https://react-cool-form.netlify.app/docs/api-reference/utility-functions) to boost forms development.
 - 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
 - ☁️ Server-side rendering compatibility.
-- 🦔 Tiny size ([~ 5KB gzipped](https://bundlephobia.com/result?p=react-cool-form)) but powerful.
+- 🦔 A [tiny size](https://bundlephobia.com/result?p=react-cool-form) library but powerful.
 
 ## [Docs](https://react-cool-form.netlify.app)
 
