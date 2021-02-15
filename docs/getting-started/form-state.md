@@ -143,7 +143,7 @@ Error messages are dependent on the form's validation (i.e. the `errors` object)
 ```js
 const { select } = useForm();
 
-// Current form state: { errors: { foo: "Required" }, touched: { foo: true } }
+// Current state: { errors: { foo: "Required" }, touched: { foo: true } }
 
 // Returns {}
 const errors = select("errors");
