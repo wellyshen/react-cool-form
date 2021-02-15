@@ -103,6 +103,12 @@ export default <V extends FormValues = FormValues>({
     debug
   );
 
+  const handleUnset = useCallback(
+    (path: string, fieldPath: string, target: any, name: string) =>
+      setStateRef(path, unset(target, name, true), { fieldPath }),
+    [setStateRef]
+  );
+
   const getFields = useCallback(
     (form: HTMLElement) =>
       Array.from(form.querySelectorAll("input,textarea,select"))
@@ -141,77 +147,49 @@ export default <V extends FormValues = FormValues>({
     []
   );
 
-  const handleUnset = useCallback(
-    (path: string, fieldPath: string, target: any, name: string) =>
-      setStateRef(path, unset(target, name, true), { fieldPath }),
-    [setStateRef]
-  );
+  const getNodeValue = useCallback((name: string) => {
+    const { field, options } = fieldsRef.current[name];
+    let value = field.value as any;
 
-  const getNodeValue = useCallback(
-    (name: string) => {
-      const { field, options } = fieldsRef.current[name];
-      let value = field.value as any;
-
-      if (isInputElement(field)) {
-        if (fieldArgsRef.current[name]?.valueAsNumber) {
-          value = field.valueAsNumber;
-          return value;
-        }
-        if (fieldArgsRef.current[name]?.valueAsDate) {
-          value = field.valueAsDate;
-          return value;
-        }
+    if (isInputElement(field)) {
+      if (fieldArgsRef.current[name]?.valueAsNumber) {
+        value = field.valueAsNumber;
+        return value;
       }
+      if (fieldArgsRef.current[name]?.valueAsDate) {
+        value = field.valueAsDate;
+        return value;
+      }
+    }
 
-      if (isNumberInput(field) || isRangeInput(field))
-        value = field.valueAsNumber || "";
+    if (isNumberInput(field) || isRangeInput(field))
+      value = field.valueAsNumber || "";
 
-      if (isCheckboxInput(field)) {
-        if (options) {
-          const checkboxes = options as HTMLInputElement[];
+    if (isCheckboxInput(field)) {
+      const checkboxes = options as HTMLInputElement[];
 
-          if (options.length > 1) {
-            value = checkboxes
+      value =
+        checkboxes.length > 1
+          ? checkboxes
               .filter((checkbox) => checkbox.checked)
-              .map((checkbox) => checkbox.value);
-          } else {
-            value = checkboxes[0].checked;
-          }
-        } else {
-          let checkValues = get(stateRef.current.values, field.name);
+              .map((checkbox) => checkbox.value)
+          : checkboxes[0].checked;
+    }
 
-          if (Array.isArray(checkValues)) {
-            checkValues = new Set(checkValues);
+    if (isRadioInput(field))
+      value =
+        (options as HTMLInputElement[]).find((radio) => radio.checked)?.value ||
+        "";
 
-            if (field.checked) {
-              checkValues.add(value);
-            } else {
-              checkValues.delete(value);
-            }
+    if (isMultipleSelect(field))
+      value = Array.from(field.options)
+        .filter((option) => option.selected)
+        .map((option) => option.value);
 
-            value = Array.from(checkValues);
-          } else {
-            value = field.checked;
-          }
-        }
-      }
+    if (isFileInput(field)) value = field.files;
 
-      if (isRadioInput(field) && options)
-        value =
-          (options as HTMLInputElement[]).find((radio) => radio.checked)
-            ?.value || "";
-
-      if (isMultipleSelect(field) && !options)
-        value = Array.from(field.options)
-          .filter((option) => option.selected)
-          .map((option) => option.value);
-
-      if (isFileInput(field)) value = field.files;
-
-      return value;
-    },
-    [stateRef]
-  );
+    return value;
+  }, []);
 
   const setNodeValue = useCallback((name: string, value: any) => {
     if (!fieldsRef.current[name] || controllersRef.current[name]) return;
