@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
 import { useCallback, useEffect, useRef } from "react";
+import { dequal } from "dequal/lite";
 
 import {
   ClearErrors,
@@ -590,8 +591,10 @@ export default <V extends FormValues = FormValues>({
     (name: string) =>
       setDirty(
         name,
-        get(stateRef.current.values, name) !==
+        !dequal(
+          get(stateRef.current.values, name),
           get(initialStateRef.current.values, name)
+        )
       ),
     [setDirty, stateRef]
   );
