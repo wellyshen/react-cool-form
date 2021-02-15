@@ -377,10 +377,8 @@ export default <V extends FormValues = FormValues>({
 
       if (builtInValidationMode === "message") return field.validationMessage;
 
-      for (const k in field.validity) {
-        // @ts-expect-error
+      for (const k in field.validity) // @ts-expect-error
         if (k !== "valid" && field.validity[k]) return k;
-      }
 
       return undefined;
     },
