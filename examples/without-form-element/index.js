@@ -12,11 +12,11 @@ const Field = ({ label, id, error, ...rest }) => (
 );
 
 function App() {
-  const { form, getState, submit } = useForm({
+  const { form, select, submit } = useForm({
     defaultValues: { email: "", password: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
-  const errors = getState("errors", { errorWithTouched: true });
+  const errors = select("errors", { errorWithTouched: true });
 
   return (
     <div ref={form}>
