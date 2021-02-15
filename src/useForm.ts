@@ -299,15 +299,16 @@ export default <V extends FormValues = FormValues>({
       const getPath = (p: string) => {
         p = target ? `${target}.${p}` : p;
 
-        if (shouldUpdate) setUsedStateRef(p);
+        if (shouldUpdate) {
+          if (p === "values")
+            warn(
+              '💡 react-cool-form > select: Getting the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+            );
+
+          setUsedStateRef(p);
+        }
 
         return p;
-      };
-      const warnValues = (p: string) => {
-        if (p === "values" && shouldUpdate)
-          warn(
-            '💡 react-cool-form > select: Getting the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
-          );
       };
       const errorsEnhancer = (p: string, state: any) => {
         if (
@@ -328,20 +329,17 @@ export default <V extends FormValues = FormValues>({
       if (Array.isArray(path)) {
         state = path.map((p) => {
           p = getPath(p);
-          warnValues(p);
           return errorsEnhancer(p, get(stateRef.current, p));
         });
       } else if (isPlainObject(path)) {
         const paths = path as Record<string, string>;
         state = Object.keys(paths).reduce((s: Record<string, any>, key) => {
           path = getPath(paths[key]);
-          warnValues(path);
           s[key] = errorsEnhancer(path, get(stateRef.current, path));
           return s;
         }, {});
       } else {
         path = getPath(path);
-        warnValues(path);
         state = errorsEnhancer(path, get(stateRef.current, path));
       }
 
