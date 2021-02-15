@@ -1210,7 +1210,7 @@ describe("useForm", () => {
       expect(select()).toBeUndefined();
     });
 
-    it("should select state with correct format", () => {
+    it("should get state with correct format", () => {
       const { select } = renderHelper({ defaultValues: values });
 
       expect(select("values")).toEqual(values);
@@ -1232,7 +1232,7 @@ describe("useForm", () => {
       ).toEqual({ values, foo: values.foo, isValid });
     });
 
-    it("should select state with specific target", () => {
+    it("should get state with specific target", () => {
       const { select } = renderHelper({ defaultValues: values });
       const option = { target: "values" };
       const { foo } = values;
@@ -1241,7 +1241,7 @@ describe("useForm", () => {
       expect(select({ foo: "foo" }, option)).toEqual({ foo });
     });
 
-    it("should select error with touched", async () => {
+    it("should get error with touched", async () => {
       const { select } = renderHelper({
         children: <input data-testid="foo" name="foo" required />,
       });
