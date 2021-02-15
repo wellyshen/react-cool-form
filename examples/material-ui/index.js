@@ -16,11 +16,11 @@ import {
 import "./styles.scss";
 
 function App() {
-  const { form, getState } = useForm({
+  const { form, select } = useForm({
     defaultValues: { username: "", framework: "", fruit: [], race: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
-  const errors = getState("errors");
+  const errors = select("errors");
 
   return (
     <form ref={form} noValidate>
