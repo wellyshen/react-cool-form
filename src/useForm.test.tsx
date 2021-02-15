@@ -98,7 +98,7 @@ describe("useForm", () => {
     submitCount: 0,
   };
   const options = {
-    formState: initialState,
+    getState: expect.any(Function),
     setValue: expect.any(Function),
     setTouched: expect.any(Function),
     setDirty: expect.any(Function),
@@ -134,12 +134,13 @@ describe("useForm", () => {
       expect(console.warn).not.toHaveBeenCalled();
     });
 
-    it("should not warn for a missing name field in production", () => {
-      // @ts-expect-error
-      global.__DEV__ = false;
+    it('should warn select "values" alone', () => {
       console.warn = jest.fn();
-      renderHelper({ children: <input /> });
-      expect(console.warn).not.toHaveBeenCalled();
+      const { select } = renderHelper();
+      select("values");
+      expect(console.warn).toHaveBeenCalledWith(
+        '💡 react-cool-form > select: Select the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+      );
     });
 
     it("should warn form-level validation exception", async () => {
@@ -183,11 +184,19 @@ describe("useForm", () => {
         )
       );
     });
+
+    it("should not warn in production", () => {
+      // @ts-expect-error
+      global.__DEV__ = false;
+      console.warn = jest.fn();
+      renderHelper({ children: <input /> });
+      expect(console.warn).not.toHaveBeenCalled();
+    });
   });
 
   describe("event callbacks", () => {
     it('should call "onSubmit" event correctly', async () => {
-      renderHelper({
+      const { getState } = renderHelper({
         onSubmitFull: onSubmit,
         onError,
         children: (
@@ -200,30 +209,35 @@ describe("useForm", () => {
       const value = "🍎";
       fireEvent.input(getByTestId("foo"), { target: { value } });
       fireEvent.submit(getByTestId("form"));
-      const values = { foo: value, bar: "" };
+      const state = {
+        ...initialState,
+        values: { foo: value, bar: "" },
+        touched: { foo: true, bar: true },
+        dirty: { foo: true },
+        isDirty: true,
+        isValidating: true,
+        isSubmitting: true,
+        submitCount: 1,
+      };
+      expect(getState()).toEqual(state);
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith(
-          values,
-          {
-            ...options,
-            formState: {
-              ...initialState,
-              values,
-              touched: { foo: true, bar: true },
-              dirty: { foo: true },
-              isDirty: true,
-              isSubmitting: true,
-              submitCount: 1,
-            },
-          },
+          state.values,
+          options,
           expect.any(Object)
         )
       );
       expect(onError).not.toHaveBeenCalled();
+      expect(getState()).toEqual({
+        ...state,
+        isValidating: false,
+        isSubmitting: false,
+        isSubmitted: true,
+      });
     });
 
     it('should call "onError" event correctly', async () => {
-      renderHelper({
+      const { getState } = renderHelper({
         onErrorFull: onError,
         onSubmit,
         children: <input data-testid="foo" name="foo" required />,
@@ -233,27 +247,24 @@ describe("useForm", () => {
       await waitFor(() =>
         expect(onError).toHaveBeenCalledWith(
           errors,
-          {
-            ...options,
-            formState: {
-              ...initialState,
-              errors,
-              values: { foo: "" },
-              touched: { foo: true },
-              isValid: false,
-              isSubmitting: true,
-              submitCount: 1,
-            },
-          },
+          options,
           expect.any(Object)
         )
       );
       expect(onSubmit).not.toHaveBeenCalled();
+      expect(getState()).toEqual({
+        ...initialState,
+        values: { foo: "" },
+        errors,
+        touched: { foo: true },
+        isValid: false,
+        submitCount: 1,
+      });
     });
 
     it('should call "onReset" event correctly', () => {
       const defaultValues = { foo: "" };
-      renderHelper({
+      const { getState } = renderHelper({
         defaultValues,
         onReset,
         children: <input data-testid="foo" name="foo" />,
@@ -266,15 +277,16 @@ describe("useForm", () => {
       expect(foo.value).toBe(defaultValues.foo);
       expect(onReset).toHaveBeenCalledWith(
         defaultValues,
-        { ...options, formState: { ...initialState, values: defaultValues } },
+        options,
         expect.any(Object)
       );
+      expect(getState()).toEqual({ ...initialState, values: defaultValues });
     });
   });
 
   describe("submit", () => {
     it("should submit form with success mode", async () => {
-      const { submit } = renderHelper({
+      const { submit, getState } = renderHelper({
         onSubmitFull: onSubmit,
         children: (
           <>
@@ -290,26 +302,20 @@ describe("useForm", () => {
       const result = await submit(e);
       const values = { foo: value, bar: "" };
       expect(result).toEqual({ values });
-      expect(onSubmit).toHaveBeenCalledWith(
+      expect(onSubmit).toHaveBeenCalledWith(values, options, e);
+      expect(getState()).toEqual({
+        ...initialState,
         values,
-        {
-          ...options,
-          formState: {
-            ...initialState,
-            values,
-            touched: { foo: true, bar: true },
-            dirty: { foo: true },
-            isDirty: true,
-            isSubmitting: true,
-            submitCount: 1,
-          },
-        },
-        e
-      );
+        touched: { foo: true, bar: true },
+        dirty: { foo: true },
+        isDirty: true,
+        isSubmitted: true,
+        submitCount: 1,
+      });
     });
 
     it("should submit form with fail mode", async () => {
-      const { submit } = renderHelper({
+      const { submit, getState } = renderHelper({
         onErrorFull: onError,
         children: <input data-testid="foo" name="foo" required />,
       });
@@ -318,28 +324,21 @@ describe("useForm", () => {
       const result = await submit(e);
       const errors = { foo: builtInError };
       expect(result).toEqual({ errors });
-      expect(onError).toHaveBeenCalledWith(
+      expect(onError).toHaveBeenCalledWith(errors, options, e);
+      expect(getState()).toEqual({
+        ...initialState,
+        values: { foo: "" },
         errors,
-        {
-          ...options,
-          formState: {
-            ...initialState,
-            errors,
-            values: { foo: "" },
-            touched: { foo: true },
-            isValid: false,
-            isSubmitting: true,
-            submitCount: 1,
-          },
-        },
-        e
-      );
+        touched: { foo: true },
+        isValid: false,
+        submitCount: 1,
+      });
     });
   });
 
   it("should reset form correctly", () => {
     const defaultValues = { foo: "" };
-    const { reset, setValue, setError } = renderHelper({
+    const { reset, setValue, setError, getState } = renderHelper({
       defaultValues,
       onReset,
     });
@@ -349,55 +348,33 @@ describe("useForm", () => {
     const e = {};
     // @ts-expect-error
     act(() => reset(null, null, e));
-    expect(onReset).toHaveBeenCalledWith(
-      defaultValues,
-      { ...options, formState: { ...initialState, values: defaultValues } },
-      e
-    );
+    expect(onReset).toHaveBeenCalledWith(defaultValues, options, e);
+    expect(getState()).toEqual({ ...initialState, values: defaultValues });
 
     const values = { foo: "🍋" };
     // @ts-expect-error
     act(() => reset(values, null, e));
-    expect(onReset).toHaveBeenCalledWith(
-      values,
-      {
-        ...options,
-        formState: { ...initialState, values },
-      },
-      e
-    );
+    expect(onReset).toHaveBeenCalledWith(values, options, e);
+    expect(getState()).toEqual({ ...initialState, values });
 
     const value = "🍎";
     // @ts-expect-error
-    // eslint-disable-next-line no-return-assign
-    act(() => reset((prevValues) => (prevValues.foo = value), null, e));
-    expect(onReset).toHaveBeenCalledWith(
-      { foo: value },
-      {
-        ...options,
-        formState: { ...initialState, values: { foo: value } },
-      },
-      e
-    );
+    act(() => reset((prevValues) => ({ ...prevValues, foo: value }), null, e));
+    expect(onReset).toHaveBeenCalledWith({ foo: value }, options, e);
+    expect(getState()).toEqual({ ...initialState, values: { foo: value } });
 
     const error = "Required";
     setValue("foo", value);
     setError("foo", error);
     // @ts-expect-error
     act(() => reset(null, ["values", "errors", "touched"], e));
-    expect(onReset).toHaveBeenCalledWith(
-      { foo: value },
-      {
-        ...options,
-        formState: {
-          ...initialState,
-          values: { foo: value },
-          errors: { foo: error },
-          touched: { foo: true },
-        },
-      },
-      e
-    );
+    expect(onReset).toHaveBeenCalledWith({ foo: value }, options, e);
+    expect(getState()).toEqual({
+      ...initialState,
+      values: { foo: value },
+      errors: { foo: error },
+      touched: { foo: true },
+    });
   });
 
   describe("default values", () => {
@@ -1224,8 +1201,86 @@ describe("useForm", () => {
     });
   });
 
-  describe("getState", () => {
+  describe("select", () => {
     const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
+
+    it('should return undefined if "path" isn\'t set', () => {
+      const { select } = renderHelper();
+      // @ts-expect-error
+      expect(select()).toBeUndefined();
+    });
+
+    it("should select state with correct format", () => {
+      const { select } = renderHelper({ defaultValues: values });
+
+      expect(select("values")).toEqual(values);
+      expect(select("values.foo")).toBe(values.foo);
+      expect(select("isValid")).toBe(isValid);
+
+      expect(select(["values", "values.foo", "isValid"])).toEqual([
+        values,
+        values.foo,
+        isValid,
+      ]);
+
+      expect(
+        select({
+          values: "values",
+          foo: "values.foo",
+          isValid: "isValid",
+        })
+      ).toEqual({ values, foo: values.foo, isValid });
+    });
+
+    it("should select state with specific target", () => {
+      const { select } = renderHelper({ defaultValues: values });
+      const option = { target: "values" };
+      const { foo } = values;
+      expect(select("foo", option)).toBe(foo);
+      expect(select(["foo"], option)).toEqual([foo]);
+      expect(select({ foo: "foo" }, option)).toEqual({ foo });
+    });
+
+    it("should select error with touched", async () => {
+      const { select } = renderHelper({
+        children: <input data-testid="foo" name="foo" required />,
+      });
+      const foo = getByTestId("foo");
+      fireEvent.input(foo, { target: { value: "" } });
+      await waitFor(() => {
+        expect(select("errors.foo")).not.toBeUndefined();
+        expect(
+          select("errors.foo", { errorWithTouched: true })
+        ).toBeUndefined();
+      });
+      fireEvent.focusOut(foo);
+      await waitFor(() => {
+        expect(
+          select("errors.foo", { errorWithTouched: true })
+        ).not.toBeUndefined();
+      });
+    });
+
+    it("should trigger re-rendering", () => {
+      const onRender = jest.fn();
+      const { select } = renderHelper({
+        onRender,
+        children: <input data-testid="foo" name="foo" />,
+      });
+      select("values.foo");
+      fireEvent.input(getByTestId("foo"));
+      expect(onRender).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("getState", () => {
+    const state = { ...initialState, values: { foo: "🍎" } };
+    const { values, isValid } = state;
+
+    it("should get state", () => {
+      const { getState } = renderHelper({ defaultValues: values });
+      expect(getState()).toEqual(state);
+    });
 
     it("should get state with correct format", () => {
       const { getState } = renderHelper({ defaultValues: values });
@@ -1251,42 +1306,22 @@ describe("useForm", () => {
 
     it("should get state with specific target", () => {
       const { getState } = renderHelper({ defaultValues: values });
-      const option = { target: "values" };
+      const target = "values";
       const { foo } = values;
-      expect(getState("foo", option)).toBe(foo);
-      expect(getState(["foo"], option)).toEqual([foo]);
-      expect(getState({ foo: "foo" }, option)).toEqual({ foo });
+      expect(getState("foo", target)).toBe(foo);
+      expect(getState(["foo"], target)).toEqual([foo]);
+      expect(getState({ foo: "foo" }, target)).toEqual({ foo });
     });
 
-    it("should get error with touched", async () => {
-      const { getState } = renderHelper({
-        children: <input data-testid="foo" name="foo" required />,
-      });
-      const foo = getByTestId("foo");
-      fireEvent.input(foo, { target: { value: "" } });
-      await waitFor(() => {
-        expect(getState("errors.foo")).not.toBeUndefined();
-        expect(
-          getState("errors.foo", { errorWithTouched: true })
-        ).toBeUndefined();
-      });
-      fireEvent.focusOut(foo);
-      await waitFor(() => {
-        expect(
-          getState("errors.foo", { errorWithTouched: true })
-        ).not.toBeUndefined();
-      });
-    });
-
-    it.each(["watch", "non-watch"])("should get state with %s mode", (type) => {
+    it("should not trigger re-rendering", () => {
       const onRender = jest.fn();
       const { getState } = renderHelper({
         onRender,
         children: <input data-testid="foo" name="foo" />,
       });
-      getState("values.foo", { watch: type === "watch" });
+      getState("values.foo");
       fireEvent.input(getByTestId("foo"));
-      expect(onRender).toHaveBeenCalledTimes(type === "watch" ? 2 : 1);
+      expect(onRender).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -1296,13 +1331,13 @@ describe("useForm", () => {
       const value = "🍎";
 
       setValue("foo", value);
-      expect(getState("values.foo", { watch: false })).toBe(value);
+      expect(getState("values.foo")).toBe(value);
 
       setValue("foo", (prevValue: string) => prevValue);
-      expect(getState("values.foo", { watch: false })).toBe(value);
+      expect(getState("values.foo")).toBe(value);
 
       setValue("foo.a[0].b", value);
-      expect(getState("values.foo.a[0].b", { watch: false })).toBe(value);
+      expect(getState("values.foo.a[0].b")).toBe(value);
 
       setValue("foo");
       expect(getState("values.foo")).toBeUndefined();
@@ -1312,7 +1347,7 @@ describe("useForm", () => {
       const { setValue, getState } = renderHelper();
 
       setValue("foo", "🍎", { shouldTouched: false });
-      expect(getState("touched.foo", { watch: false })).toBeUndefined();
+      expect(getState("touched.foo")).toBeUndefined();
 
       setValue("foo", "🍎");
       expect(getState("touched.foo")).toBeTruthy();
@@ -1322,8 +1357,8 @@ describe("useForm", () => {
       const { setValue, getState } = renderHelper();
 
       setValue("foo", "🍎", { shouldDirty: false });
-      expect(getState("dirty.foo", { watch: false })).toBeUndefined();
-      expect(getState("isDirty", { watch: false })).toBeFalsy();
+      expect(getState("dirty.foo")).toBeUndefined();
+      expect(getState("isDirty")).toBeFalsy();
 
       setValue("foo", "🍎");
       expect(getState("dirty.foo")).toBeTruthy();
@@ -1336,9 +1371,7 @@ describe("useForm", () => {
       });
 
       setValue("foo", "", { shouldValidate: false });
-      await waitFor(() =>
-        expect(getState("errors.foo", { watch: false })).toBeUndefined()
-      );
+      await waitFor(() => expect(getState("errors.foo")).toBeUndefined());
 
       setValue("foo", "");
       await waitFor(() => expect(getState("errors.foo")).toBe(builtInError));
@@ -1350,10 +1383,10 @@ describe("useForm", () => {
       const { setTouched, getState } = renderHelper();
 
       setTouched("foo");
-      expect(getState("touched.foo", { watch: false })).toBeTruthy();
+      expect(getState("touched.foo")).toBeTruthy();
 
       setTouched("foo.a[0].b");
-      expect(getState("touched.foo.a[0].b", { watch: false })).toBeTruthy();
+      expect(getState("touched.foo.a[0].b")).toBeTruthy();
 
       setTouched("foo", false);
       expect(getState("touched.foo")).toBeUndefined();
@@ -1365,9 +1398,7 @@ describe("useForm", () => {
       });
 
       setTouched("foo", true, false);
-      await waitFor(() =>
-        expect(getState("errors.foo", { watch: false })).toBeUndefined()
-      );
+      await waitFor(() => expect(getState("errors.foo")).toBeUndefined());
 
       setTouched("foo");
       await waitFor(() => expect(getState("errors.foo")).toBe(builtInError));
@@ -1378,10 +1409,10 @@ describe("useForm", () => {
     const { setDirty, getState } = renderHelper();
 
     setDirty("foo");
-    expect(getState("dirty.foo", { watch: false })).toBeTruthy();
+    expect(getState("dirty.foo")).toBeTruthy();
 
     setDirty("foo.a[0].b");
-    expect(getState("dirty.foo.a[0].b", { watch: false })).toBeTruthy();
+    expect(getState("dirty.foo.a[0].b")).toBeTruthy();
 
     setDirty("foo", false);
     expect(getState("dirty.foo")).toBeUndefined();
@@ -1392,24 +1423,24 @@ describe("useForm", () => {
     const error = "Required";
 
     setError("foo", error);
-    expect(getState("errors.foo", { watch: false })).toBe(error);
+    expect(getState("errors.foo")).toBe(error);
 
     setError("foo", (prevError: string) => prevError);
-    expect(getState("errors.foo", { watch: false })).toBe(error);
+    expect(getState("errors.foo")).toBe(error);
 
     setError("foo.a[0].b", error);
-    expect(getState("errors.foo.a[0].b", { watch: false })).toBe(error);
+    expect(getState("errors.foo.a[0].b")).toBe(error);
 
     setError("foo");
-    expect(getState("errors.foo", { watch: false })).toBeUndefined();
+    expect(getState("errors.foo")).toBeUndefined();
 
     setError("foo", error);
     setError("foo", false);
-    expect(getState("errors.foo", { watch: false })).toBeUndefined();
+    expect(getState("errors.foo")).toBeUndefined();
 
     setError("foo", error);
     setError("foo", null);
-    expect(getState("errors.foo", { watch: false })).toBeUndefined();
+    expect(getState("errors.foo")).toBeUndefined();
 
     setError("foo", error);
     setError("foo", "");
@@ -1423,17 +1454,17 @@ describe("useForm", () => {
     setError("foo", error);
     setError("bar", error);
     setError("baz.a[0].b", error);
-    expect(getState("errors", { watch: false })).toEqual({
+    expect(getState("errors")).toEqual({
       foo: error,
       bar: error,
       baz: { a: [{ b: error }] },
     });
 
     clearErrors("foo");
-    expect(getState("errors.foo", { watch: false })).toBeUndefined();
+    expect(getState("errors.foo")).toBeUndefined();
 
     clearErrors(["bar", "baz.a[0].b"]);
-    expect(getState("errors.bar", { watch: false })).toBeUndefined();
+    expect(getState("errors.bar")).toBeUndefined();
     expect(getState("baz.a[0].b")).toBeUndefined();
   });
 

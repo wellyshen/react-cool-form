@@ -72,7 +72,7 @@ export type FieldArgs = Record<
 >;
 
 interface Options<V> {
-  formState: FormState<V>;
+  getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;
   setDirty: SetDirty;
@@ -132,15 +132,26 @@ export interface RegisterField<V> {
   ): (field: FieldElement | null) => void;
 }
 
-export interface GetState {
+export interface GetFormState {
   (
-    path: string | string[] | Record<string, string>,
-    options?: {
+    path: string | string[] | Record<string, string> | undefined,
+    options: {
       target?: string;
-      watch?: boolean;
       errorWithTouched?: boolean;
+      shouldUpdate?: boolean;
     }
   ): any;
+}
+
+export interface Select {
+  (
+    path: string | string[] | Record<string, string>,
+    options?: { target?: string; errorWithTouched?: boolean }
+  ): any;
+}
+
+export interface GetState {
+  (path?: string | string[] | Record<string, string>, target?: string): any;
 }
 
 export interface SetValue {
@@ -241,6 +252,7 @@ export type Config<V> = Partial<{
 export interface Return<V> {
   form: RegisterForm;
   field: RegisterField<V>;
+  select: Select;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;
