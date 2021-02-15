@@ -75,7 +75,7 @@ The form submission handler that is called when the form is submitted (or when t
 const returnValues = useForm({
   onSubmit: async (values, options, e) => {
     const {
-      formState, // The current form state, don't mutate it directly
+      getState,
       setValue,
       setTouched,
       setError,
@@ -101,7 +101,7 @@ The form error handler that is called when the form is submitted (or when the [s
 const returnValues = useForm({
   onError: (errors, options, e) => {
     const {
-      formState, // The current form state, don't mutate it directly
+      getState,
       setValue,
       setTouched,
       setError,
@@ -127,7 +127,7 @@ The form reset handler that is called when the form is reset (or when the [reset
 const returnValues = useForm({
   onReset: (values, options, e) => {
     const {
-      formState, // The current form state, don't mutate it directly
+      getState,
       setValue,
       setTouched,
       setError,
@@ -193,11 +193,17 @@ If you just want to validate the field, there's a shortcut for it:
 <input nam="rcf" ref={field((value) => !value.length && "Required")} />
 ```
 
-### getState
+### select
 
 `(path: string | string[] | Record<string, string>, options?: Object) => any`
 
-This method provides us a performant way to use/read the form state. Check the [Form State](../getting-started/form-state) document to learn more.
+This method provides us a performant way to use the form state. Check the [Form State](../getting-started/form-state) to learn more.
+
+### getState
+
+`(path?: string | string[] | Record<string, string>, target?: string) => any`
+
+This method allows us to read the form state without triggering re-renders. Check the [Reading the State](../getting-started/form-state#reading-the-state) to learn more.
 
 ### setValue
 

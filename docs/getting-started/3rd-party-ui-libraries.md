@@ -25,11 +25,11 @@ import {
 } from "@material-ui/core";
 
 const App = () => {
-  const { form, getState } = useForm({
+  const { form, select } = useForm({
     defaultValues: { username: "", framework: "", fruit: [] },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const errors = getState("errors");
+  const errors = select("errors");
 
   return (
     <form ref={form} noValidate>
@@ -214,7 +214,7 @@ import { useForm } from "react-cool-form";
 import { TextField } from "@material-ui/core";
 
 const App = () => {
-  const { form, getState, setValue, setTouched } = useForm({
+  const { form, select, setValue, setTouched } = useForm({
     defaultValues: { username: "" },
     // excludeFields: ["username"], // You can also exclude the field by this option
     validate: ({ username }) => {
@@ -224,7 +224,7 @@ const App = () => {
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [value, errors] = getState(["values.username", "errors"]);
+  const [value, errors] = select(["values.username", "errors"]);
 
   return (
     <form ref={form} noValidate>

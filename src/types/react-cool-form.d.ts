@@ -6,7 +6,7 @@ declare module "react-cool-form" {
   };
 
   interface Options<V> {
-    formState: FormState<V>;
+    getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
     setDirty: SetDirty;
@@ -17,15 +17,15 @@ declare module "react-cool-form" {
     submit: Submit<V>;
   }
 
-  interface GetState {
+  interface Select {
     (
       path: string | string[] | Record<string, string>,
-      options?: {
-        target?: string;
-        watch?: boolean;
-        errorWithTouched?: boolean;
-      }
+      options?: { target?: string; errorWithTouched?: boolean }
     ): any;
+  }
+
+  interface GetState {
+    (path?: string | string[] | Record<string, string>, target?: string): any;
   }
 
   interface SetValue {
@@ -206,6 +206,7 @@ declare module "react-cool-form" {
   export interface Return<V = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
+    select: Select;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;

@@ -14,6 +14,7 @@ import {
   FormErrors,
   FormState,
   FormValues,
+  GetFormState,
   GetState,
   Handlers,
   Map,
@@ -22,6 +23,7 @@ import {
   Reset,
   Return,
   RunValidation,
+  Select,
   SetDirty,
   SetError,
   SetTouched,
@@ -290,25 +292,26 @@ export default <V extends FormValues = FormValues>({
     [getNodeValue, setDefaultValue, setNodeValue]
   );
 
-  const getState = useCallback<GetState>(
-    (path, { target, watch = true, errorWithTouched = false } = {}) => {
-      if (!path) return undefined;
+  const getFormState = useCallback<GetFormState>(
+    (path, { target, errorWithTouched = false, shouldUpdate = false }) => {
+      if (!path) return shouldUpdate ? undefined : stateRef.current;
 
       const getPath = (p: string) => {
-        if (p === "values" && !target && watch)
-          warn(
-            '💡 react-cool-form > getState: Get the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
-          );
-
         p = target ? `${target}.${p}` : p;
 
-        if (watch) setUsedStateRef(p);
+        if (shouldUpdate) {
+          if (p === "values")
+            warn(
+              '💡 react-cool-form > select: Getting the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+            );
+
+          setUsedStateRef(p);
+        }
 
         return p;
       };
       const errorsEnhancer = (p: string, state: any) => {
         if (
-          !watch ||
           !errorWithTouched ||
           !p.startsWith("errors") ||
           !state ||
@@ -343,6 +346,17 @@ export default <V extends FormValues = FormValues>({
       return state;
     },
     [setUsedStateRef, stateRef]
+  );
+
+  const select = useCallback<Select>(
+    (path, { target, errorWithTouched } = {}) =>
+      getFormState(path, { target, errorWithTouched, shouldUpdate: true }),
+    [getFormState]
+  );
+
+  const getState = useCallback<GetState>(
+    (path, target) => getFormState(path, { target }),
+    [getFormState]
   );
 
   const setError = useCallback<SetError>(
@@ -621,7 +635,7 @@ export default <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      formState: stateRef.current,
+      getState,
       setValue,
       setTouched,
       setDirty,
@@ -745,7 +759,7 @@ export default <V extends FormValues = FormValues>({
       defaultValue = !isUndefined(val) ? val : defaultValue;
       if (!isUndefined(defaultValue)) setDefaultValue(name, defaultValue);
 
-      value = !isUndefined(value) ? value : getState(`values.${name}`);
+      value = !isUndefined(value) ? value : select(`values.${name}`);
       value = (format ? format(value) : value) ?? "";
 
       return {
@@ -777,10 +791,10 @@ export default <V extends FormValues = FormValues>({
     },
     [
       getNodeValue,
-      getState,
       handleChangeEvent,
       setDefaultValue,
       setTouchedMaybeValidate,
+      select,
     ]
   );
 
@@ -947,6 +961,7 @@ export default <V extends FormValues = FormValues>({
   return {
     form: registerForm,
     field: registerField,
+    select,
     getState,
     setValue,
     setTouched,
