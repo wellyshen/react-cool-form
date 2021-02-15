@@ -5,7 +5,7 @@ import { TextField, Button } from "@material-ui/core";
 import "./styles.scss";
 
 function App() {
-  const { form, getState, setValue, setTouched } = useForm({
+  const { form, select, setValue, setTouched } = useForm({
     defaultValues: { username: "" },
     // excludeFields: ["username"], // You can also exclude the field by this option
     validate: ({ username }) => {
@@ -15,7 +15,7 @@ function App() {
     },
     onSubmit: (values) => console.log("onSubmit: ", values)
   });
-  const [value, errors] = getState(["values.username", "errors"]);
+  const [value, errors] = select(["values.username", "errors"]);
 
   return (
     <form ref={form} noValidate>
