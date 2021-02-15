@@ -759,13 +759,13 @@ describe("useForm", () => {
       const foo0 = getByTestId("foo-0") as HTMLOptionElement;
       const foo1 = getByTestId("foo-1") as HTMLOptionElement;
 
-      fireEvent.input(foo, { target: { value: foo1.value } });
+      userEvent.selectOptions(foo, [foo1.value]);
       fireEvent.submit(form);
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: foo1.value })
       );
 
-      fireEvent.input(foo, { target: { value: foo0.value } });
+      userEvent.selectOptions(foo, [foo0.value]);
       fireEvent.submit(form);
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: foo0.value })
@@ -1547,27 +1547,45 @@ describe("useForm", () => {
 
     it("should handle native field(s) change correctly", async () => {
       renderHelper({
-        defaultValues: { text: "" },
+        defaultValues: { text: "", checkboxes: [], selects: [] },
         onSubmit,
         children: ({ controller }: Methods) => (
           <>
             <input data-testid="text" {...controller("text")} />
             <input
-              data-testid="checkbox"
-              {...controller("checkbox")}
+              data-testid="checkboxes-0"
+              {...controller("checkboxes")}
               type="checkbox"
+              value="🍎"
             />
+            <input
+              data-testid="checkboxes-1"
+              {...controller("checkboxes")}
+              type="checkbox"
+              value="🍋"
+            />
+            <select data-testid="selects" name="selects" multiple>
+              <option data-testid="selects-0" value="🍎">
+                🍎
+              </option>
+              <option data-testid="selects-1" value="🍋">
+                🍋
+              </option>
+            </select>
           </>
         ),
       });
-      const textValue = "🍎";
-      fireEvent.input(getByTestId("text"), { target: { value: textValue } });
-      userEvent.click(getByTestId("checkbox"));
+      fireEvent.input(getByTestId("text"), { target: { value } });
+      const checkboxes0 = getByTestId("checkboxes-0");
+      userEvent.click(checkboxes0);
+      const selects0 = getByTestId("selects-0");
+      userEvent.selectOptions(getByTestId("selects"), [selects0.value]);
       fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({
-          text: textValue,
-          checkbox: true,
+          text: value,
+          checkboxes: [checkboxes0.value],
+          selects: [selects0.value],
         })
       );
     });
