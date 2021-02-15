@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.117
+
+### Patch Changes
+
+- [`5797ca4`](https://github.com/wellyshen/react-cool-form/commit/5797ca447cb4024dd8f56e9b1e3afc6bef607b60) [#394](https://github.com/wellyshen/react-cool-form/pull/394) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): add "select" method
+
 ## 0.0.116
 
 ### Patch Changes
