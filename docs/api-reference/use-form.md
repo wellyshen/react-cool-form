@@ -147,6 +147,10 @@ const returnValues = useForm({
 
 A callback for debugging that receives the form state. It's called on every state change.
 
+`(formState: FormState) => void`
+
+- `formState` is readonly and should not be mutated directly.
+
 ```js
 const returnValues = useForm({
   debug: (formState) => console.log("Debug: ", formState),
