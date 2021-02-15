@@ -128,7 +128,7 @@ export default <V extends FormValues = FormValues>({
           const field = cur as FieldElement;
           const { name } = field;
 
-          acc[name] = { ...acc[name], field: cur };
+          acc[name] = { ...acc[name], field: acc[name]?.field || cur };
 
           if (isCheckboxInput(field) || isRadioInput(field))
             acc[name].options = acc[name].options
