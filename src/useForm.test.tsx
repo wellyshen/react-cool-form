@@ -603,13 +603,8 @@ describe("useForm", () => {
     it.each(["text", "number", "range"])(
       "should handle %s change correctly",
       async (type) => {
-        const defaultValues: any = {
-          text: "",
-          number: "",
-          range: 50,
-        };
-        const { getState } = renderHelper({
-          defaultValues: { foo: defaultValues[type] },
+        renderHelper({
+          defaultValues: { foo: "" },
           onSubmit,
           children: <input data-testid="foo" name="foo" type={type} />,
         });
@@ -618,25 +613,13 @@ describe("useForm", () => {
           number: 100,
           range: 100,
         };
-        const foo = getByTestId("foo");
-        const form = getByTestId("form");
-
-        fireEvent.input(foo, { target: { value: values[type] } });
-        fireEvent.submit(form);
+        fireEvent.input(getByTestId("foo"), {
+          target: { value: values[type] },
+        });
+        fireEvent.submit(getByTestId("form"));
         await waitFor(() =>
           expect(onSubmit).toHaveBeenCalledWith({ foo: values[type] })
         );
-        expect(getState("touched.foo")).toBeTruthy();
-        expect(getState("dirty.foo")).toBeTruthy();
-        expect(getState("isDirty")).toBeTruthy();
-
-        fireEvent.input(foo, { target: { value: defaultValues[type] } });
-        fireEvent.submit(form);
-        await waitFor(() =>
-          expect(onSubmit).toHaveBeenCalledWith({ foo: defaultValues[type] })
-        );
-        expect(getState("dirty.foo")).toBeUndefined();
-        expect(getState("isDirty")).toBeFalsy();
       }
     );
 
@@ -687,6 +670,9 @@ describe("useForm", () => {
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: [foo0.value] })
       );
+      expect(getState("touched.foo")).toBeTruthy();
+      expect(getState("dirty.foo")).toBeTruthy();
+      expect(getState("isDirty")).toBeTruthy();
 
       userEvent.click(foo1);
       fireEvent.submit(form);
@@ -703,14 +689,12 @@ describe("useForm", () => {
       userEvent.click(foo1);
       fireEvent.submit(form);
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: [] }));
-
-      expect(getState("touched.foo")).toBeTruthy();
-      expect(getState("dirty.foo")).toBeTruthy();
-      expect(getState("isDirty")).toBeTruthy();
+      expect(getState("dirty.foo")).toBeUndefined();
+      expect(getState("isDirty")).toBeFalsy();
     });
 
     it("should handle radio buttons change correctly", async () => {
-      const { getState } = renderHelper({
+      renderHelper({
         defaultValues: { foo: "" },
         onSubmit,
         children: (
@@ -735,14 +719,10 @@ describe("useForm", () => {
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: foo1.value })
       );
-
-      expect(getState("touched.foo")).toBeTruthy();
-      expect(getState("dirty.foo")).toBeTruthy();
-      expect(getState("isDirty")).toBeTruthy();
     });
 
     it("should handle textarea change correctly", async () => {
-      const { getState } = renderHelper({
+      renderHelper({
         defaultValues: { foo: "" },
         onSubmit,
         children: <textarea data-testid="foo" name="foo" />,
@@ -755,14 +735,11 @@ describe("useForm", () => {
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })
       );
-      expect(getState("touched.foo")).toBeTruthy();
-      expect(getState("dirty.foo")).toBeTruthy();
-      expect(getState("isDirty")).toBeTruthy();
     });
 
     it("should handle select change correctly", async () => {
-      const { getState } = renderHelper({
-        defaultValues: { foo: "" },
+      renderHelper({
+        defaultValues: { foo: "🍎" },
         onSubmit,
         children: (
           <>
@@ -782,25 +759,21 @@ describe("useForm", () => {
       const foo0 = getByTestId("foo-0") as HTMLOptionElement;
       const foo1 = getByTestId("foo-1") as HTMLOptionElement;
 
-      fireEvent.input(foo, { target: { value: foo0.value } });
-      fireEvent.submit(form);
-      await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith({ foo: foo0.value })
-      );
-
       fireEvent.input(foo, { target: { value: foo1.value } });
       fireEvent.submit(form);
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: foo1.value })
       );
 
-      expect(getState("touched.foo")).toBeTruthy();
-      expect(getState("dirty.foo")).toBeTruthy();
-      expect(getState("isDirty")).toBeTruthy();
+      fireEvent.input(foo, { target: { value: foo0.value } });
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: foo0.value })
+      );
     });
 
     it("should handle multiple select change correctly", async () => {
-      const { getState } = renderHelper({
+      renderHelper({
         defaultValues: { foo: [] },
         onSubmit,
         children: (
@@ -844,14 +817,10 @@ describe("useForm", () => {
       userEvent.deselectOptions(foo, foo1.value);
       fireEvent.submit(form);
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: [] }));
-
-      expect(getState("touched.foo")).toBeTruthy();
-      expect(getState("dirty.foo")).toBeTruthy();
-      expect(getState("isDirty")).toBeTruthy();
     });
 
     it("should handle file change correctly", async () => {
-      const { getState } = renderHelper({
+      renderHelper({
         defaultValues: { foo: null },
         onSubmit,
         children: <input data-testid="foo" name="foo" type="file" />,
@@ -870,13 +839,10 @@ describe("useForm", () => {
           },
         })
       );
-      expect(getState("touched.foo")).toBeTruthy();
-      expect(getState("dirty.foo")).toBeTruthy();
-      expect(getState("isDirty")).toBeTruthy();
     });
 
     it("should handle files change correctly", async () => {
-      const { getState } = renderHelper({
+      renderHelper({
         defaultValues: { foo: null },
         onSubmit,
         children: <input data-testid="foo" name="foo" type="file" multiple />,
@@ -896,9 +862,6 @@ describe("useForm", () => {
           },
         })
       );
-      expect(getState("touched.foo")).toBeTruthy();
-      expect(getState("dirty.foo")).toBeTruthy();
-      expect(getState("isDirty")).toBeTruthy();
     });
   });
 
@@ -1583,7 +1546,7 @@ describe("useForm", () => {
     );
 
     it("should handle native field(s) change correctly", async () => {
-      const { getState } = renderHelper({
+      renderHelper({
         defaultValues: { text: "" },
         onSubmit,
         children: ({ controller }: Methods) => (
@@ -1607,15 +1570,10 @@ describe("useForm", () => {
           checkbox: true,
         })
       );
-      expect(getState("touched.text")).toBeTruthy();
-      expect(getState("dirty.text")).toBeTruthy();
-      expect(getState("touched.checkbox")).toBeTruthy();
-      expect(getState("dirty.checkbox")).toBeTruthy();
-      expect(getState("isDirty")).toBeTruthy();
     });
 
     it("should handle custom field change correctly", async () => {
-      const { getState } = renderHelper({
+      renderHelper({
         defaultValues: { foo: 0 },
         onSubmit,
         children: ({ controller }: Methods) => (
@@ -1627,9 +1585,6 @@ describe("useForm", () => {
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })
       );
-      expect(getState("touched.foo")).toBeTruthy();
-      expect(getState("dirty.foo")).toBeTruthy();
-      expect(getState("isDirty")).toBeTruthy();
     });
 
     it("should run controller validation", async () => {
