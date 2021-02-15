@@ -11,12 +11,12 @@ const submitHandler = async (values) => {
 const errorHandler = (errors) => console.log("onError: ", errors);
 
 function App() {
-  const { form, getState } = useForm({
+  const { form, select } = useForm({
     defaultValues: { username: "", email: "" },
     onSubmit: submitHandler,
     onError: errorHandler
   });
-  const isSubmitting = getState("isSubmitting");
+  const isSubmitting = select("isSubmitting");
 
   return (
     <form ref={form} noValidate>
