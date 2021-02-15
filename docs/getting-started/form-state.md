@@ -112,7 +112,7 @@ const SomeHandler = () => {
 };
 ```
 
-With the `getState`, we can read/organize the data by the following ways:
+With the `getState`, we can read/construct the data by the following ways:
 
 ```js
 const { getState } = useForm();
