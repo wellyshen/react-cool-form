@@ -603,26 +603,40 @@ describe("useForm", () => {
     it.each(["text", "number", "range"])(
       "should handle %s change correctly",
       async (type) => {
+        const defaultValues: any = {
+          text: "",
+          number: "",
+          range: 50,
+        };
         const { getState } = renderHelper({
-          defaultValues: { foo: "" },
+          defaultValues: { foo: defaultValues[type] },
           onSubmit,
           children: <input data-testid="foo" name="foo" type={type} />,
         });
         const values: any = {
           text: "🍎",
-          number: 1,
-          range: 10,
+          number: 100,
+          range: 100,
         };
-        fireEvent.input(getByTestId("foo"), {
-          target: { value: values[type] },
-        });
-        fireEvent.submit(getByTestId("form"));
+        const foo = getByTestId("foo");
+        const form = getByTestId("form");
+
+        fireEvent.input(foo, { target: { value: values[type] } });
+        fireEvent.submit(form);
         await waitFor(() =>
           expect(onSubmit).toHaveBeenCalledWith({ foo: values[type] })
         );
         expect(getState("touched.foo")).toBeTruthy();
         expect(getState("dirty.foo")).toBeTruthy();
         expect(getState("isDirty")).toBeTruthy();
+
+        fireEvent.input(foo, { target: { value: defaultValues[type] } });
+        fireEvent.submit(form);
+        await waitFor(() =>
+          expect(onSubmit).toHaveBeenCalledWith({ foo: defaultValues[type] })
+        );
+        expect(getState("dirty.foo")).toBeUndefined();
+        expect(getState("isDirty")).toBeFalsy();
       }
     );
 
@@ -632,12 +646,25 @@ describe("useForm", () => {
         onSubmit,
         children: <input data-testid="foo" name="foo" type="checkbox" />,
       });
-      userEvent.click(getByTestId("foo"));
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: true }));
+      const foo = getByTestId("foo");
+      const form = getByTestId("form");
+
+      userEvent.click(foo);
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: foo.checked })
+      );
       expect(getState("touched.foo")).toBeTruthy();
       expect(getState("dirty.foo")).toBeTruthy();
       expect(getState("isDirty")).toBeTruthy();
+
+      userEvent.click(foo);
+      fireEvent.submit(form);
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: foo.checked })
+      );
+      expect(getState("dirty.foo")).toBeUndefined();
+      expect(getState("isDirty")).toBeFalsy();
     });
 
     it("should handle checkboxes change correctly", async () => {
