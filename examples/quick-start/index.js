@@ -12,7 +12,7 @@ const Field = ({ label, id, error, ...rest }) => (
 );
 
 function App() {
-  const { form, getState } = useForm({
+  const { form, select } = useForm({
     // (Strongly advise) Provide the default values just like we use React state
     defaultValues: { username: "", email: "", password: "" },
     // The event only triggered when the form is valid
@@ -20,7 +20,7 @@ function App() {
   });
   // We can enable the "errorWithTouched" option to filter the error of an un-blurred field
   // Which helps the user focus on typing without being annoyed by the error message
-  const errors = getState("errors", { errorWithTouched: true });
+  const errors = select("errors", { errorWithTouched: true });
 
   return (
     <form ref={form} noValidate>
