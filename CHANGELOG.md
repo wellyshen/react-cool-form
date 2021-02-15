@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.118
+
+### Patch Changes
+
+- [`1d4e794`](https://github.com/wellyshen/react-cool-form/commit/1d4e79401f92ee2f4060efdfa377d769b6ff9a86) [#397](https://github.com/wellyshen/react-cool-form/pull/397) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): `dirty` and `isDirty` state not work correctly with reference type values
+
 ## 0.0.117
 
 ### Patch Changes
