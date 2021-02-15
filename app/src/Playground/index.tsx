@@ -1,18 +1,16 @@
+import { useState } from "react";
 import { useForm } from "react-cool-form";
 
 export default () => {
-  const { form } = useForm({
+  const [value, setValue] = useState("state");
+  const { form, controller } = useForm({
+    defaultValues: { foo: "form" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
   return (
     <form ref={form}>
-      <input name="foo" type="checkbox" value="1" />
-      <input name="bar" type="radio" value="1" />
-      <select name="baz" multiple>
-        <option>1</option>
-        <option>1</option>
-      </select>
+      <input {...controller("foo", { value, defaultValue: "field" })} />
       <input type="submit" />
     </form>
   );
