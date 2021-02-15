@@ -306,7 +306,7 @@ export default <V extends FormValues = FormValues>({
       const warnValues = (p: string) => {
         if (p === "values" && shouldUpdate)
           warn(
-            '💡 react-cool-form > select: Select the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+            '💡 react-cool-form > select: Selecting the alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
           );
       };
       const errorsEnhancer = (p: string, state: any) => {

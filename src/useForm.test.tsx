@@ -139,7 +139,7 @@ describe("useForm", () => {
       const { select } = renderHelper();
       select("values");
       expect(console.warn).toHaveBeenCalledWith(
-        '💡 react-cool-form > select: Select the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+        "💡 react-cool-form > select: Selecting the alone may cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices"
       );
     });
 
