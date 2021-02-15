@@ -13,7 +13,7 @@ jest.mock("react", () => ({
 
 describe("useState", () => {
   const initialState = {
-    values: { name: "Welly" },
+    values: { foo: "🍋" },
     touched: {},
     errors: {},
     dirty: {},
@@ -38,11 +38,11 @@ describe("useState", () => {
     const { stateRef, setStateRef } = renderHelper();
     const nextState = {
       ...initialState,
-      values: { name: "🍎" },
-      touched: { name: true },
-      errors: { name: "Required" },
+      values: { foo: "🍎" },
+      touched: { foo: true },
+      errors: { foo: "Required" },
       isDirty: true,
-      dirty: { name: true },
+      dirty: { foo: true },
       isValid: false,
       submitCount: 1,
     };
@@ -57,25 +57,25 @@ describe("useState", () => {
 
   it("should set state's values without re-render", () => {
     const { stateRef, setStateRef } = renderHelper();
-    const name = "🍎";
+    const foo = "🍎";
     const error = "Required";
     const isValidating = true;
     const isSubmitting = true;
     const isSubmitted = true;
-    setStateRef("values.name", name);
-    setStateRef("touched.name", true);
-    setStateRef("errors.name", error);
-    setStateRef("dirty.name", true);
+    setStateRef("values.foo", foo);
+    setStateRef("touched.foo", true);
+    setStateRef("errors.foo", error);
+    setStateRef("dirty.foo", true);
     setStateRef("isValidating", isValidating);
     setStateRef("isSubmitting", isSubmitting);
     setStateRef("isSubmitted", isSubmitted);
     expect(forceUpdate).not.toHaveBeenCalled();
     expect(stateRef.current).toEqual({
-      values: { name },
-      touched: { name: true },
-      errors: { name: error },
+      values: { foo },
+      touched: { foo: true },
+      errors: { foo: error },
       isDirty: true,
-      dirty: { name: true },
+      dirty: { foo: true },
       isValidating,
       isValid: false,
       isSubmitting,
@@ -87,26 +87,26 @@ describe("useState", () => {
   it("should set state's values and re-render correctly", () => {
     const { stateRef, setStateRef, setUsedStateRef } = renderHelper();
 
-    const name = "🍎";
-    setUsedStateRef("values.name");
-    setStateRef("values.name", name);
-    setStateRef("values.name", name);
+    const foo = "🍎";
+    setUsedStateRef("values.foo");
+    setStateRef("values.foo", foo);
+    setStateRef("values.foo", foo);
     expect(forceUpdate).toHaveBeenCalledTimes(2);
 
-    setUsedStateRef("touched.name");
-    setStateRef("touched.name", true);
-    setStateRef("touched.name", true);
+    setUsedStateRef("touched.foo");
+    setStateRef("touched.foo", true);
+    setStateRef("touched.foo", true);
     expect(forceUpdate).toHaveBeenCalledTimes(3);
 
     const error = "Required";
-    setUsedStateRef("errors.name");
-    setStateRef("errors.name", error);
-    setStateRef("errors.name", error);
+    setUsedStateRef("errors.foo");
+    setStateRef("errors.foo", error);
+    setStateRef("errors.foo", error);
     expect(forceUpdate).toHaveBeenCalledTimes(4);
 
-    setUsedStateRef("dirty.name");
-    setStateRef("dirty.name", true);
-    setStateRef("dirty.name", true);
+    setUsedStateRef("dirty.foo");
+    setStateRef("dirty.foo", true);
+    setStateRef("dirty.foo", true);
     expect(forceUpdate).toHaveBeenCalledTimes(5);
 
     const isValidating = true;
@@ -128,11 +128,11 @@ describe("useState", () => {
     expect(forceUpdate).toHaveBeenCalledTimes(8);
 
     expect(stateRef.current).toEqual({
-      values: { name },
-      touched: { name: true },
-      errors: { name: error },
+      values: { foo },
+      touched: { foo: true },
+      errors: { foo: error },
       isDirty: true,
-      dirty: { name: true },
+      dirty: { foo: true },
       isValidating,
       isValid: false,
       isSubmitting,
@@ -143,8 +143,8 @@ describe("useState", () => {
 
   it("should set state.isValid and state.isDirty without re-render", () => {
     const { setStateRef } = renderHelper();
-    setStateRef("errors", { name: "Required" });
-    setStateRef("dirty", { name: true });
+    setStateRef("errors", { foo: "Required" });
+    setStateRef("dirty", { foo: true });
     expect(forceUpdate).not.toHaveBeenCalled();
   });
 
@@ -152,13 +152,13 @@ describe("useState", () => {
     const { setStateRef, setUsedStateRef } = renderHelper();
 
     setUsedStateRef("isValid");
-    setStateRef("errors", { name: "Required" });
-    setStateRef("errors", { name: "Required" });
+    setStateRef("errors", { foo: "Required" });
+    setStateRef("errors", { foo: "Required" });
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
     setUsedStateRef("isDirty");
-    setStateRef("dirty", { name: true });
-    setStateRef("dirty", { name: true });
+    setStateRef("dirty", { foo: true });
+    setStateRef("dirty", { foo: true });
     expect(forceUpdate).toHaveBeenCalledTimes(2);
   });
 
@@ -166,46 +166,46 @@ describe("useState", () => {
     const { setStateRef, setUsedStateRef } = renderHelper();
 
     setUsedStateRef("values");
-    setStateRef("values.name", "🍎");
+    setStateRef("values.foo", "🍎");
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
     setUsedStateRef("touched");
-    setStateRef("touched.name", true);
+    setStateRef("touched.foo", true);
     expect(forceUpdate).toHaveBeenCalledTimes(2);
 
     setUsedStateRef("errors");
-    setStateRef("errors.name", "Required");
+    setStateRef("errors.foo", "Required");
     expect(forceUpdate).toHaveBeenCalledTimes(3);
 
     setUsedStateRef("dirty");
-    setStateRef("dirty.name", true);
+    setStateRef("dirty.foo", true);
     expect(forceUpdate).toHaveBeenCalledTimes(4);
   });
 
   it("should re-render due to match parent path (parent = set-state)", () => {
     const { setStateRef, setUsedStateRef } = renderHelper();
 
-    setUsedStateRef("values.name");
-    setStateRef("values", { name: "🍎" });
+    setUsedStateRef("values.foo");
+    setStateRef("values", { foo: "🍎" });
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
-    setUsedStateRef("touched.name");
-    setStateRef("touched.name", { name: true });
+    setUsedStateRef("touched.foo");
+    setStateRef("touched.foo", { foo: true });
     expect(forceUpdate).toHaveBeenCalledTimes(2);
 
-    setUsedStateRef("errors.name");
-    setStateRef("errors", { name: "Required" });
+    setUsedStateRef("errors.foo");
+    setStateRef("errors", { foo: "Required" });
     expect(forceUpdate).toHaveBeenCalledTimes(3);
 
-    setUsedStateRef("dirty.name");
-    setStateRef("dirty", { name: true });
+    setUsedStateRef("dirty.foo");
+    setStateRef("dirty", { foo: true });
     expect(forceUpdate).toHaveBeenCalledTimes(4);
   });
 
   it("should skip re-render", () => {
     const { setStateRef, setUsedStateRef } = renderHelper();
-    setUsedStateRef("values.name");
-    setStateRef("values.name", "🍎", { shouldUpdate: false });
+    setUsedStateRef("values.foo");
+    setStateRef("values.foo", "🍎", { shouldUpdate: false });
     expect(forceUpdate).not.toHaveBeenCalled();
   });
 
@@ -214,10 +214,10 @@ describe("useState", () => {
     const fieldPath = "values.some-value";
 
     setUsedStateRef(fieldPath);
-    setStateRef("values.name", "🍎");
+    setStateRef("values.foo", "🍎");
     expect(forceUpdate).not.toHaveBeenCalled();
 
-    setStateRef("values.name", "🍎", { fieldPath });
+    setStateRef("values.foo", "🍎", { fieldPath });
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 
@@ -226,7 +226,7 @@ describe("useState", () => {
     const { setStateRef } = renderHelper(debug);
     const state = {
       ...initialState,
-      values: { ...initialState.values, name: "🍎" },
+      values: { ...initialState.values, foo: "🍎" },
     };
 
     setStateRef("", state);
@@ -238,7 +238,7 @@ describe("useState", () => {
   it("should call debug callback correctly when set state's value", () => {
     const debug = jest.fn();
     const { setStateRef } = renderHelper(debug);
-    const errors = { name: "Required" };
+    const errors = { foo: "Required" };
 
     setStateRef("errors", errors);
     setStateRef("errors", errors);
@@ -253,12 +253,12 @@ describe("useState", () => {
   it("should unset used state", () => {
     const { setStateRef, setUsedStateRef } = renderHelper();
 
-    setUsedStateRef("values.name");
-    setStateRef("values.name", "🍎");
+    setUsedStateRef("values.foo");
+    setStateRef("values.foo", "🍎");
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
-    setUsedStateRef("values.name", true);
-    setStateRef("values.name", "🍎");
+    setUsedStateRef("values.foo", true);
+    setStateRef("values.foo", "🍎");
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 });
