@@ -1649,7 +1649,7 @@ describe("useForm", () => {
     const value = "🍎";
     fireEvent.input(getByTestId("foo"), { target: { value } });
     await waitFor(() => {
-      expect(debug).toHaveBeenCalledTimes(2);
+      expect(debug).toHaveBeenCalledTimes(3);
       expect(debug).toHaveBeenCalledWith({
         ...{
           ...initialState,
