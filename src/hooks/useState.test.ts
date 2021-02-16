@@ -207,10 +207,25 @@ describe("useState", () => {
     expect(forceUpdate).toHaveBeenCalledTimes(4);
   });
 
-  it("should skip re-render", () => {
-    const { setStateRef, setUsedStateRef } = renderHelper();
+  it("should skip re-render when setting state", () => {
+    const debug = jest.fn();
+    const { setStateRef, setUsedStateRef } = renderHelper(debug);
+    setUsedStateRef("values.foo");
+    setStateRef(
+      "",
+      { ...initialState, values: { foo: "🍎" } },
+      { shouldUpdate: false }
+    );
+    expect(debug).toHaveBeenCalled();
+    expect(forceUpdate).not.toHaveBeenCalled();
+  });
+
+  it("should skip re-render when setting state's value", () => {
+    const debug = jest.fn();
+    const { setStateRef, setUsedStateRef } = renderHelper(debug);
     setUsedStateRef("values.foo");
     setStateRef("values.foo", "🍎", { shouldUpdate: false });
+    expect(debug).toHaveBeenCalled();
     expect(forceUpdate).not.toHaveBeenCalled();
   });
 

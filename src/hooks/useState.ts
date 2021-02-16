@@ -28,8 +28,9 @@ export default <V>(
       if (!key) {
         if (!dequal(stateRef.current, value)) {
           stateRef.current = value;
-          if (!isEmptyObject(usedStateRef.current)) forceUpdate();
           onChangeRef.current(stateRef.current);
+          if (shouldUpdate && !isEmptyObject(usedStateRef.current))
+            forceUpdate();
         }
 
         return;
@@ -55,20 +56,18 @@ export default <V>(
             : prevSubmitCount;
 
         stateRef.current = { ...state, isDirty, isValid, submitCount };
+        onChangeRef.current(stateRef.current);
 
-        if (shouldUpdate) {
-          onChangeRef.current(stateRef.current);
-
-          path = fieldPath || path;
-          if (
-            Object.keys(usedStateRef.current).some(
-              (k) => path.startsWith(k) || k.startsWith(path)
-            ) ||
+        path = fieldPath || path;
+        if (
+          shouldUpdate &&
+          (Object.keys(usedStateRef.current).some(
+            (k) => path.startsWith(k) || k.startsWith(path)
+          ) ||
             (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
-            (usedStateRef.current.isValid && isValid !== prevIsValid)
-          )
-            forceUpdate();
-        }
+            (usedStateRef.current.isValid && isValid !== prevIsValid))
+        )
+          forceUpdate();
       }
     },
     [onChangeRef]
