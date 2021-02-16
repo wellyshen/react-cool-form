@@ -854,7 +854,6 @@ export default <V extends FormValues = FormValues>({
               stateRef.current.errors,
               name
             );
-            setUsedStateRef(name, true);
 
             initialStateRef.current.values = unset(
               initialStateRef.current.values,

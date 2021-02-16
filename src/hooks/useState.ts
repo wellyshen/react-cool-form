@@ -73,16 +73,9 @@ export default <V>(
     [onChangeRef]
   );
 
-  const setUsedStateRef = useCallback<SetUsedStateRef>(
-    (path, unset = false) => {
-      if (unset) {
-        delete usedStateRef.current[path];
-      } else {
-        usedStateRef.current[path] = true;
-      }
-    },
-    []
-  );
+  const setUsedStateRef = useCallback<SetUsedStateRef>((path) => {
+    usedStateRef.current[path] = true;
+  }, []);
 
   return { stateRef, setStateRef, setUsedStateRef };
 };
