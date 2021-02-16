@@ -892,7 +892,6 @@ export default <V extends FormValues = FormValues>({
       reset,
       setNodesOrStateValue,
       setTouchedMaybeValidate,
-      setUsedStateRef,
       shouldRemoveField,
       stateRef,
       submit,
