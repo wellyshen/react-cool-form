@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-cool-form";
 
-const Field = ({ name }: any) => {
+const Field = ({ name, defaultValue }: any) => {
   const [show, setShow] = useState(true);
 
   return (
@@ -9,14 +9,15 @@ const Field = ({ name }: any) => {
       <button type="button" onClick={() => setShow(!show)}>
         Toggle
       </button>
-      {show && <input name={name} />}
+      {show && <input name={name} defaultValue={defaultValue} />}
     </>
   );
 };
 
 export default () => {
   const { form, select, setValue } = useForm({
-    defaultValues: { foo: "test" },
+    // defaultValues: { foo: "form" },
+    shouldRemoveField: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
   console.log("LOG ===> ", select("values.foo"));
@@ -27,7 +28,7 @@ export default () => {
         Set Value
       </button>
       <form ref={form}>
-        <Field name="foo" />
+        <Field name="foo" defaultValue="field" />
         <input type="submit" />
       </form>
     </>
