@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.119
+
+### Patch Changes
+
+- [`d4c7258`](https://github.com/wellyshen/react-cool-form/commit/d4c7258382b2aa5e4f2937973e7c5f253caf5a73) [#405](https://github.com/wellyshen/react-cool-form/pull/405) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): should call `debug` on every state changed
+
+* [`b0a5141`](https://github.com/wellyshen/react-cool-form/commit/b0a5141d589d1e82924e5f8b7eb4e8bee02bfbd6) [#403](https://github.com/wellyshen/react-cool-form/pull/403) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): do not trigger re-renders on reset if no any selected state
+
 ## 0.0.118
 
 ### Patch Changes
