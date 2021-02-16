@@ -269,16 +269,4 @@ describe("useState", () => {
       isValid: false,
     });
   });
-
-  it("should unset used state", () => {
-    const { setStateRef, setUsedStateRef } = renderHelper();
-
-    setUsedStateRef("values.foo");
-    setStateRef("values.foo", "🍎");
-    expect(forceUpdate).toHaveBeenCalledTimes(1);
-
-    setUsedStateRef("values.foo", true);
-    setStateRef("values.foo", "🍎");
-    expect(forceUpdate).toHaveBeenCalledTimes(1);
-  });
 });
