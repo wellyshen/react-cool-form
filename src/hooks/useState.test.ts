@@ -35,8 +35,8 @@ describe("useState", () => {
   });
 
   it("should set state and re-render correctly", () => {
-    const { stateRef, setStateRef } = renderHelper();
-    const nextState = {
+    const { stateRef, setStateRef, setUsedStateRef } = renderHelper();
+    let nextState = {
       ...initialState,
       values: { foo: "🍎" },
       touched: { foo: true },
@@ -49,6 +49,11 @@ describe("useState", () => {
 
     setStateRef("", nextState);
     expect(stateRef.current).toEqual(nextState);
+    expect(forceUpdate).not.toHaveBeenCalled();
+
+    nextState = { ...nextState, values: { foo: "🍋" } };
+    setUsedStateRef("values.foo");
+    setStateRef("", nextState);
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
     setStateRef("", nextState);

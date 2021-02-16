@@ -28,7 +28,7 @@ export default <V>(
       if (!key) {
         if (!dequal(stateRef.current, value)) {
           stateRef.current = value;
-          forceUpdate();
+          if (!isEmptyObject(usedStateRef.current)) forceUpdate();
           onChangeRef.current(stateRef.current);
         }
 
