@@ -11,5 +11,5 @@ export default (object: any, path: string, defaultValue?: unknown): any => {
     object
   );
 
-  return isUndefined(value) ? defaultValue : value;
+  return !isUndefined(value) ? value : defaultValue;
 };
