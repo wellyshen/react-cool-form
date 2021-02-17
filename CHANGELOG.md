@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.120
+
+### Patch Changes
+
+- [`090f275`](https://github.com/wellyshen/react-cool-form/commit/090f27576174431f948c9a72ff3b8950b93d986c) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): do not unset subscribed state for conditional component
+
 ## 0.0.119
 
 ### Patch Changes
