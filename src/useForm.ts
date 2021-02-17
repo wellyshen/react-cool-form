@@ -924,12 +924,12 @@ export default <V extends FormValues = FormValues>({
     () => () => {
       if (!formRef.current) return;
 
-      const hanlders = handlersRef.current as Required<Handlers>;
+      const handlers = handlersRef.current as Required<Handlers>;
 
-      formRef.current.removeEventListener("input", hanlders.change);
-      formRef.current.removeEventListener("focusout", hanlders.blur);
-      formRef.current.removeEventListener("submit", hanlders.submit);
-      formRef.current.removeEventListener("reset", hanlders.reset);
+      formRef.current.removeEventListener("input", handlers.change);
+      formRef.current.removeEventListener("focusout", handlers.blur);
+      formRef.current.removeEventListener("submit", handlers.submit);
+      formRef.current.removeEventListener("reset", handlers.reset);
       observerRef.current?.disconnect();
     },
     []
