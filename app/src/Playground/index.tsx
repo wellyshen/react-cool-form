@@ -1,36 +1,24 @@
-import { useState } from "react";
-import { useForm } from "react-cool-form";
+import { useForm, useFormState } from "react-cool-form";
 
-const Field = ({ name, defaultValue }: any) => {
-  const [show, setShow] = useState(true);
+const Field = (props: any) => {
+  const foo = useFormState("values.foo", { formId: "form-1" });
+  console.log("LOG ====> Field: ", foo);
 
-  return (
-    <>
-      <button type="button" onClick={() => setShow(!show)}>
-        Toggle
-      </button>
-      {show && <input name={name} defaultValue={defaultValue} />}
-    </>
-  );
+  return <input {...props} />;
 };
 
 export default () => {
-  const { form, select, setValue } = useForm({
-    // defaultValues: { foo: "form" },
-    shouldRemoveField: false,
+  const { form } = useForm({
+    id: "form-1",
+    defaultValues: { foo: "form" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  console.log("LOG ===> ", select("values.foo"));
+  console.log("LOG ====> Form");
 
   return (
-    <>
-      <button type="button" onClick={() => setValue("foo", "new test")}>
-        Set Value
-      </button>
-      <form ref={form}>
-        <Field name="foo" defaultValue="field" />
-        <input type="submit" />
-      </form>
-    </>
+    <form ref={form}>
+      <Field name="foo" />
+      <input type="submit" />
+    </form>
   );
 };
