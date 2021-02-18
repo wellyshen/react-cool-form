@@ -189,7 +189,8 @@ declare module "react-cool-form" {
     (formState: FormState<V>): void;
   }
 
-  export type Config<V = FormValues> = Partial<{
+  export type FormConfig<V = FormValues> = Partial<{
+    id: string;
     defaultValues: V;
     validate: FormValidator<V>;
     validateOnChange: boolean;
@@ -203,7 +204,7 @@ declare module "react-cool-form" {
     debug: Debug<V>;
   }>;
 
-  export interface Return<V = FormValues> {
+  export interface FormReturn<V = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
     select: Select;
@@ -220,8 +221,18 @@ declare module "react-cool-form" {
   }
 
   export function useForm<V extends FormValues = FormValues>(
-    config?: Config<V>
-  ): Return<V>;
+    config?: FormConfig<V>
+  ): FormReturn<V>;
+
+  export type Path = string | string[] | Record<string, string>;
+
+  export interface StateConfig {
+    formId: string;
+    target?: string;
+    errorWithTouched?: boolean;
+  }
+
+  export function useFormState(path: Path, config: StateConfig): any;
 
   export function get(object: any, path: string, defaultValue?: unknown): any;
 

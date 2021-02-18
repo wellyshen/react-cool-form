@@ -5,9 +5,10 @@ import {
   Debug,
   FormState,
   FormStateReturn,
-  Map,
+  Observer,
+  ObserverHandler,
   SetStateRef,
-  SetUsedStateRef,
+  SetUsedState,
 } from "../types";
 import useLatest from "./useLatest";
 import { get, getIsDirty, isEmptyObject, set } from "../utils";
@@ -18,7 +19,9 @@ export default <V>(
 ): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const stateRef = useRef(initialState);
-  const usedStateRef = useRef<Map>({});
+  const stateObserversRef = useRef<Observer[]>([
+    { usedState: {}, update: forceUpdate },
+  ]);
   const onChangeRef = useLatest(onChange || (() => undefined));
 
   const setStateRef = useCallback<SetStateRef>(
@@ -29,8 +32,10 @@ export default <V>(
         if (!dequal(stateRef.current, value)) {
           stateRef.current = value;
           onChangeRef.current(stateRef.current);
-          if (shouldUpdate && !isEmptyObject(usedStateRef.current))
-            forceUpdate();
+
+          stateObserversRef.current.forEach(({ usedState, update }) => {
+            if (shouldUpdate && !isEmptyObject(usedState)) update();
+          });
         }
 
         return;
@@ -58,24 +63,44 @@ export default <V>(
         stateRef.current = { ...state, isDirty, isValid, submitCount };
         onChangeRef.current(stateRef.current);
 
+        if (!shouldUpdate) return;
+
         path = fieldPath || path;
-        if (
-          shouldUpdate &&
-          (Object.keys(usedStateRef.current).some(
-            (k) => path.startsWith(k) || k.startsWith(path)
-          ) ||
-            (usedStateRef.current.isDirty && isDirty !== prevIsDirty) ||
-            (usedStateRef.current.isValid && isValid !== prevIsValid))
-        )
-          forceUpdate();
+        stateObserversRef.current.forEach(({ usedState, update }) => {
+          if (
+            Object.keys(usedState).some(
+              (k) => path.startsWith(k) || k.startsWith(path)
+            ) ||
+            (usedState.isDirty && isDirty !== prevIsDirty) ||
+            (usedState.isValid && isValid !== prevIsValid)
+          )
+            update();
+        });
       }
     },
     [onChangeRef]
   );
 
-  const setUsedStateRef = useCallback<SetUsedStateRef>((path) => {
-    usedStateRef.current[path] = true;
+  const setUsedState = useCallback<SetUsedState>((usedState) => {
+    stateObserversRef.current[0].usedState = usedState;
   }, []);
 
-  return { stateRef, setStateRef, setUsedStateRef };
+  const subscribeObserver = useCallback<ObserverHandler>(
+    (observer) => stateObserversRef.current.push(observer),
+    []
+  );
+
+  const unsubscribeObserver = useCallback<ObserverHandler>((observer) => {
+    stateObserversRef.current = stateObserversRef.current.filter(
+      (o) => o !== observer
+    );
+  }, []);
+
+  return {
+    stateRef,
+    setStateRef,
+    setUsedState,
+    subscribeObserver,
+    unsubscribeObserver,
+  };
 };

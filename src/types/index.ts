@@ -1,9 +1,16 @@
 import { FocusEvent, MutableRefObject, SyntheticEvent } from "react";
 
-// Common
+// Utils
 export type Map = Record<string, boolean>;
 
-// State
+// Global
+export interface Methods {
+  getFormState: GetFormState;
+  subscribeObserver: ObserverHandler;
+  unsubscribeObserver: ObserverHandler;
+}
+
+// useState
 type DeepProps<V, T = any> = {
   [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
 };
@@ -33,17 +40,28 @@ export interface SetStateRef {
   ): void;
 }
 
-export interface SetUsedStateRef {
-  (path: string): void;
+export interface SetUsedState {
+  (usedState: Map): void;
+}
+
+export interface Observer {
+  usedState: Map;
+  update: () => void;
+}
+
+export interface ObserverHandler {
+  (observer: Observer): void;
 }
 
 export interface FormStateReturn<V> {
   stateRef: StateRef<V>;
   setStateRef: SetStateRef;
-  setUsedStateRef: SetUsedStateRef;
+  setUsedState: SetUsedState;
+  subscribeObserver: ObserverHandler;
+  unsubscribeObserver: ObserverHandler;
 }
 
-// Form
+// useForm
 export type FormValues = Record<string, any>;
 
 export type Handlers = {
@@ -132,22 +150,22 @@ export interface RegisterField<V> {
   ): (field: FieldElement | null) => void;
 }
 
+export type Path = string | string[] | Record<string, string>;
+
 export interface GetFormState {
   (
-    path: string | string[] | Record<string, string> | undefined,
+    path: Path | undefined,
     options: {
       target?: string;
       errorWithTouched?: boolean;
-      shouldUpdate?: boolean;
+      methodName?: string;
+      callback?: (usedState: Map) => void;
     }
   ): any;
 }
 
 export interface Select {
-  (
-    path: string | string[] | Record<string, string>,
-    options?: { target?: string; errorWithTouched?: boolean }
-  ): any;
+  (path: Path, options?: { target?: string; errorWithTouched?: boolean }): any;
 }
 
 export interface GetState {
@@ -235,7 +253,8 @@ export interface Controller<V> {
   } | void;
 }
 
-export type Config<V> = Partial<{
+export type FormConfig<V> = Partial<{
+  id: string;
   defaultValues: V;
   validate: FormValidator<V>;
   validateOnChange: boolean;
@@ -249,7 +268,7 @@ export type Config<V> = Partial<{
   debug: Debug<V>;
 }>;
 
-export interface Return<V> {
+export interface FormReturn<V> {
   form: RegisterForm;
   field: RegisterField<V>;
   select: Select;
@@ -263,4 +282,11 @@ export interface Return<V> {
   reset: Reset<V>;
   submit: Submit<V>;
   controller: Controller<V>;
+}
+
+// useFormState
+export interface StateConfig {
+  formId: string;
+  target?: string;
+  errorWithTouched?: boolean;
 }

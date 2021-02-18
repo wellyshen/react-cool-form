@@ -7,15 +7,15 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { Config, Return, SubmitHandler, ErrorHandler } from "./types";
+import { FormConfig, FormReturn, SubmitHandler, ErrorHandler } from "./types";
 import { isFunction } from "./utils";
 import useForm from "./useForm";
 
-type Methods = Omit<Return<any>, "form">;
+type Methods = Omit<FormReturn<any>, "form">;
 
 type Children = JSX.Element | JSX.Element[] | null;
 
-interface Conf extends Config<any> {
+interface Config extends FormConfig<any> {
   children: Children | ((methods: Methods) => Children);
   onSubmit: (values: any) => void;
   onSubmitFull: SubmitHandler<any>;
@@ -24,7 +24,7 @@ interface Conf extends Config<any> {
   onRender: () => void;
 }
 
-type Props = Partial<Conf>;
+type Props = Partial<Config>;
 
 const Form = ({
   children,
