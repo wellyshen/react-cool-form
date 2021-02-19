@@ -4,7 +4,6 @@ import { renderHook } from "@testing-library/react-hooks";
 import useState from "./useState";
 
 const forceUpdate = jest.fn();
-const valuesPath = "values.foo";
 
 jest.mock("react", () => ({
   ...(jest.requireActual("react") as object),
@@ -68,7 +67,7 @@ describe("useState", () => {
     const isValidating = true;
     const isSubmitting = true;
     const isSubmitted = true;
-    setStateRef(valuesPath, foo);
+    setStateRef("values.foo", foo);
     setStateRef("touched.foo", true);
     setStateRef("errors.foo", error);
     setStateRef("dirty.foo", true);
@@ -94,9 +93,9 @@ describe("useState", () => {
     const { stateRef, setStateRef, setUsedState } = renderHelper();
 
     const foo = "🍎";
-    setUsedState({ [valuesPath]: true });
-    setStateRef(valuesPath, foo);
-    setStateRef(valuesPath, foo);
+    setUsedState({ "values.foo": true });
+    setStateRef("values.foo", foo);
+    setStateRef("values.foo", foo);
     expect(forceUpdate).toHaveBeenCalledTimes(2);
 
     setUsedState({ "touched.foo": true });
@@ -172,7 +171,7 @@ describe("useState", () => {
     const { setStateRef, setUsedState } = renderHelper();
 
     setUsedState({ values: true });
-    setStateRef(valuesPath, "🍎");
+    setStateRef("values.foo", "🍎");
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
     setUsedState({ touched: true });
@@ -191,7 +190,7 @@ describe("useState", () => {
   it("should re-render due to match parent path (parent = set-state)", () => {
     const { setStateRef, setUsedState } = renderHelper();
 
-    setUsedState({ valuesPath: true });
+    setUsedState({ "values.foo": true });
     setStateRef("values", { foo: "🍎" });
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
@@ -225,7 +224,7 @@ describe("useState", () => {
     const debug = jest.fn();
     const { setStateRef, setUsedState } = renderHelper(debug);
     setUsedState({ valuesPath: true });
-    setStateRef(valuesPath, "🍎", { shouldUpdate: false });
+    setStateRef("values.foo", "🍎", { shouldUpdate: false });
     expect(debug).toHaveBeenCalled();
     expect(forceUpdate).not.toHaveBeenCalled();
   });
@@ -235,10 +234,10 @@ describe("useState", () => {
     const fieldPath = "values.some-value";
 
     setUsedState({ [fieldPath]: true });
-    setStateRef(valuesPath, "🍎");
+    setStateRef("values.foo", "🍎");
     expect(forceUpdate).not.toHaveBeenCalled();
 
-    setStateRef(valuesPath, "🍎", { fieldPath });
+    setStateRef("values.foo", "🍎", { fieldPath });
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 
@@ -275,14 +274,15 @@ describe("useState", () => {
       unsubscribeObserver,
       setStateRef,
     } = renderHelper();
-    const observer = { usedState: { [valuesPath]: true }, update: forceUpdate };
+    const path = "values.foo";
+    const observer = { usedState: { [path]: true }, update: forceUpdate };
 
     subscribeObserver(observer);
-    setStateRef(valuesPath, "🍎");
+    setStateRef(path, "🍎");
     expect(forceUpdate).toHaveBeenCalledTimes(1);
 
     unsubscribeObserver(observer);
-    setStateRef(valuesPath, "🍎");
+    setStateRef(path, "🍎");
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 });

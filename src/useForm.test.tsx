@@ -80,6 +80,7 @@ const renderHelper = ({ children = null, ...rest }: Props = {}) => {
 };
 
 describe("useForm", () => {
+  console.warn = jest.fn();
   const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
   const onError = jest.fn();
@@ -117,7 +118,6 @@ describe("useForm", () => {
 
   describe("warning", () => {
     it("should warn for a missing name field", () => {
-      console.warn = jest.fn();
       renderHelper({
         children: <input data-testid="foo" />,
       });
@@ -128,14 +128,20 @@ describe("useForm", () => {
       );
     });
 
+    it("should not warn for a missing name field", () => {
+      renderHelper({
+        children: <input data-testid="foo" name="foo" />,
+      });
+      fireEvent.input(getByTestId("foo"));
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+
     it("should not warn for a missing name field when it's excluded", () => {
-      console.warn = jest.fn();
       renderHelper({ children: <input data-rcf-exclude /> });
       expect(console.warn).not.toHaveBeenCalled();
     });
 
     it('should warn select "values" alone', () => {
-      console.warn = jest.fn();
       const { select } = renderHelper();
       select("values");
       expect(console.warn).toHaveBeenCalledWith(
@@ -143,8 +149,13 @@ describe("useForm", () => {
       );
     });
 
+    it('should not warn select "values" alone', () => {
+      const { select } = renderHelper();
+      select("values.foo");
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+
     it("should warn form-level validation exception", async () => {
-      console.warn = jest.fn();
       renderHelper({
         validate: () => {
           // eslint-disable-next-line no-throw-literal
@@ -161,8 +172,16 @@ describe("useForm", () => {
       );
     });
 
+    /* it("should not warn form-level validation exception", async () => {
+      renderHelper({
+        validate: () => false,
+        children: <input data-testid="foo" name="foo" />,
+      });
+      fireEvent.input(getByTestId("foo"));
+      await waitFor(() => expect(console.warn).not.toHaveBeenCalled());
+    }); */
+
     it("should warn field-level validation exception", async () => {
-      console.warn = jest.fn();
       const id = "foo";
       renderHelper({
         children: ({ field }: Methods) => (
@@ -188,7 +207,6 @@ describe("useForm", () => {
     it("should not warn in production", () => {
       // @ts-expect-error
       global.__DEV__ = false;
-      console.warn = jest.fn();
       renderHelper({ children: <input /> });
       expect(console.warn).not.toHaveBeenCalled();
     });
@@ -1496,19 +1514,26 @@ describe("useForm", () => {
     const value = "🍎";
 
     it("should warn for a missing name controller", () => {
-      console.warn = jest.fn();
       renderHelper({
         children: ({ controller }: Methods) => (
           // @ts-expect-error
           <input data-testid="foo" {...controller()} />
         ),
       });
-      fireEvent.input(getByTestId("foo"));
-      expect(console.warn).toHaveBeenCalledTimes(3);
+      expect(console.warn).toHaveBeenCalledTimes(2);
       expect(console.warn).toHaveBeenNthCalledWith(
         1,
         '💡 react-cool-form > controller: Missing the "name" parameter.'
       );
+    });
+
+    it("should not warn for a missing name controller", () => {
+      renderHelper({
+        children: ({ controller }: Methods) => (
+          <input data-testid="foo" {...controller("foo")} />
+        ),
+      });
+      expect(console.warn).not.toHaveBeenCalled();
     });
 
     it("should not set default value automatically", async () => {
