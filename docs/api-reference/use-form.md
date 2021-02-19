@@ -61,7 +61,7 @@ Tell React Cool Form to run validations on `blur` events. Default is `true`.
 
 ### validate
 
-`(values: FormValues) => FormErrors | void | Promise<FormErrors | void>`
+`(values: FormValues) => FormErrors | false | void | Promise<FormErrors | false | void>`
 
 A synchronous/asynchronous function that is used for the [form-level validation](../getting-started/validation-guide#form-level-validation). It takes all the `values` of the form and returns any validation errors (or returns `undefined` if there's no error). The validation errors must be in the same shape as the values of the form.
 
