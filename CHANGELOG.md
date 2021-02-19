@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.121
+
+### Patch Changes
+
+- [`cc3eb6c`](https://github.com/wellyshen/react-cool-form/commit/cc3eb6c845ba540de38bc2cab9a708b5bbc6739f) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): add `false` type for form validator
+
 ## 0.0.120
 
 ### Patch Changes
