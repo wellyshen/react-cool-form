@@ -122,7 +122,11 @@ declare module "react-cool-form" {
   }
 
   export interface FormValidator<V = FormValues> {
-    (values: V): FormErrors<V> | void | Promise<FormErrors<V> | void>;
+    (values: V):
+      | FormErrors<V>
+      | false
+      | void
+      | Promise<FormErrors<V> | false | void>;
   }
 
   export interface FieldValidator<V = FormValues> {

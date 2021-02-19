@@ -126,15 +126,19 @@ export interface Debug<V> {
 }
 
 interface FormValidator<V> {
-  (values: V): FormErrors<V> | void | Promise<FormErrors<V> | void>;
-}
-
-export interface RegisterForm {
-  (element: HTMLElement | null): void;
+  (values: V):
+    | FormErrors<V>
+    | false
+    | void
+    | Promise<FormErrors<V> | false | void>;
 }
 
 export interface FieldValidator<V> {
   (value: any, values: V): any | Promise<any>;
+}
+
+export interface RegisterForm {
+  (element: HTMLElement | null): void;
 }
 
 export interface RegisterField<V> {
