@@ -120,6 +120,8 @@ const errors = select("errors", { errorWithTouched: true }); // Default is "fals
 
 Whenever a [selected value](#accessing-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via the [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to the `select` method that maintain a consistent DX for us.
 
+[![Edit RCF - Isolating Re-rendering](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/intelligent-banach-uqxyx?fontsize=14&hidenavigation=1&theme=dark)
+
 ```js
 import { useForm, useFormState } from "react-cool-form";
 
@@ -151,7 +153,7 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      <label htmlFor={id}>Password</label>
+      <label htmlFor="password">Password</label>
       <input
         id="password"
         name="password"

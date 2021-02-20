@@ -30,6 +30,7 @@ module.exports = {
       "examples/material-ui",
       "examples/react-select",
       "examples/custom-field",
+      "examples/isolating-rerendering",
       "examples/without-form-element",
     ],
     "API Reference": [
