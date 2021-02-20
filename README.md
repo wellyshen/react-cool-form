@@ -8,7 +8,6 @@
 
 [![npm version](https://img.shields.io/npm/v/react-cool-form?style=flat-square)](https://www.npmjs.com/package/react-cool-form)
 [![npm downloads](https://img.shields.io/npm/dt/react-cool-form?style=flat-square)](https://www.npmtrends.com/react-cool-form)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/react-cool-form?style=flat-square)](https://bundlephobia.com/result?p=react-cool-form)
 [![coverage status](https://img.shields.io/coveralls/github/wellyshen/react-cool-form?style=flat-square)](https://coveralls.io/github/wellyshen/react-cool-form?branch=master)
 [![netlify deploy](https://img.shields.io/netlify/3c201e27-b611-4512-b827-9523af7a1ae5?style=flat-square)](https://app.netlify.com/sites/react-cool-form/deploys)
 
@@ -25,7 +24,7 @@
 - 🔩 Provides useful [utility functions](https://react-cool-form.netlify.app/docs/api-reference/utility-functions) to boost forms development.
 - 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
 - ☁️ Server-side rendering compatibility.
-- 🦔 A [tiny size](https://bundlephobia.com/result?p=react-cool-form) library but powerful.
+- 🦔 A [tiny size](https://react-cool-form.netlify.app/docs/getting-started/bundle-size-overview) library but powerful.
 
 ## [Docs](https://react-cool-form.netlify.app)
 

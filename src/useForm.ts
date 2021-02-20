@@ -3,16 +3,18 @@
 import { useCallback, useEffect, useRef } from "react";
 import { dequal } from "dequal/lite";
 
+import * as shared from "./shared";
 import {
   ClearErrors,
-  Config,
   Controller,
   FieldArgs,
   FieldElement,
   Fields,
   FieldValidator,
   FieldsValue,
+  FormConfig,
   FormErrors,
+  FormReturn,
   FormState,
   FormValues,
   GetFormState,
@@ -22,7 +24,6 @@ import {
   RegisterField,
   RegisterForm,
   Reset,
-  Return,
   RunValidation,
   Select,
   SetDirty,
@@ -59,6 +60,7 @@ import {
 } from "./utils";
 
 export default <V extends FormValues = FormValues>({
+  id,
   defaultValues = {} as V,
   validate,
   validateOnChange = true,
@@ -70,7 +72,7 @@ export default <V extends FormValues = FormValues>({
   onSubmit,
   onError,
   debug,
-}: Config<V> = {}): Return<V> => {
+}: FormConfig<V> = {}): FormReturn<V> => {
   const isInitRef = useRef(true);
   const handlersRef = useRef<Handlers>({});
   const observerRef = useRef<MutationObserver>();
@@ -98,10 +100,13 @@ export default <V extends FormValues = FormValues>({
     isSubmitted: false,
     submitCount: 0,
   });
-  const { stateRef, setStateRef, setUsedStateRef } = useState<V>(
-    initialStateRef.current,
-    debug
-  );
+  const {
+    stateRef,
+    setStateRef,
+    setUsedState,
+    subscribeObserver,
+    unsubscribeObserver,
+  } = useState<V>(initialStateRef.current, debug);
 
   const handleUnset = useCallback(
     (path: string, fieldPath: string, target: any, name: string) =>
@@ -272,19 +277,20 @@ export default <V extends FormValues = FormValues>({
   );
 
   const getFormState = useCallback<GetFormState>(
-    (path, { target, errorWithTouched = false, shouldUpdate = false }) => {
-      if (!path) return shouldUpdate ? undefined : stateRef.current;
+    (path, { target, errorWithTouched, methodName = "select", callback }) => {
+      if (!path) return callback ? undefined : stateRef.current;
 
+      const usedState: Map = {};
       const getPath = (p: string) => {
         p = target ? `${target}.${p}` : p;
 
-        if (shouldUpdate) {
+        if (callback) {
           if (p === "values")
             warn(
-              '💡 react-cool-form > select: Getting the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+              `💡 react-cool-form > ${methodName}: Getting the "values" alone may cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
             );
 
-          setUsedStateRef(p);
+          usedState[p] = true;
         }
 
         return p;
@@ -299,7 +305,7 @@ export default <V extends FormValues = FormValues>({
           return state;
 
         p = p.replace("errors", "touched");
-        setUsedStateRef(p);
+        usedState[p] = true;
 
         return filterErrors(state, get(stateRef.current, p));
       };
@@ -322,15 +328,21 @@ export default <V extends FormValues = FormValues>({
         state = errorsEnhancer(path, get(stateRef.current, path));
       }
 
+      if (callback) callback(usedState);
+
       return state;
     },
-    [setUsedStateRef, stateRef]
+    [stateRef]
   );
 
   const select = useCallback<Select>(
     (path, { target, errorWithTouched } = {}) =>
-      getFormState(path, { target, errorWithTouched, shouldUpdate: true }),
-    [getFormState]
+      getFormState(path, {
+        target,
+        errorWithTouched,
+        callback: (usedState) => setUsedState(usedState),
+      }),
+    [getFormState, setUsedState]
   );
 
   const getState = useCallback<GetState>(
@@ -920,19 +932,28 @@ export default <V extends FormValues = FormValues>({
     []
   );
 
+  if (id)
+    shared.set(id, {
+      getFormState,
+      subscribeObserver,
+      unsubscribeObserver,
+    });
+
   useEffect(
     () => () => {
-      if (!formRef.current) return;
+      if (formRef.current) {
+        const handlers = handlersRef.current as Required<Handlers>;
 
-      const handlers = handlersRef.current as Required<Handlers>;
+        formRef.current.removeEventListener("input", handlers.change);
+        formRef.current.removeEventListener("focusout", handlers.blur);
+        formRef.current.removeEventListener("submit", handlers.submit);
+        formRef.current.removeEventListener("reset", handlers.reset);
+        observerRef.current?.disconnect();
+      }
 
-      formRef.current.removeEventListener("input", handlers.change);
-      formRef.current.removeEventListener("focusout", handlers.blur);
-      formRef.current.removeEventListener("submit", handlers.submit);
-      formRef.current.removeEventListener("reset", handlers.reset);
-      observerRef.current?.disconnect();
+      if (id) shared.remove(id);
     },
-    []
+    [id]
   );
 
   return {

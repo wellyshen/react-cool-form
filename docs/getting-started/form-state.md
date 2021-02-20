@@ -96,6 +96,75 @@ const fooError = select("errors.foo");
 const [touched, dirty] = select(["touched", "dirty"]);
 ```
 
+### Filter Untouched Field Errors
+
+Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `select`'s `errorWithTouched` option.
+
+> 💡 This feature filters any errors of the untouched fields. So when validating with the [runValidation](../api-reference/use-form#runvalidation), please ensure it's triggered after the field(s) is (are) touched.
+
+```js
+const { select } = useForm();
+
+// Current state: { errors: { foo: "Required" }, touched: { foo: true } }
+
+// Returns {}
+const errors = select("errors");
+
+// Returns { foo: "Required" }
+const errors = select("errors", { errorWithTouched: true }); // Default is "false"
+```
+
+👉🏻 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
+
+### Isolating Re-rendering
+
+Whenever a [selected value](#accessing-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via the [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to the `select` method that maintain a consistent DX for us.
+
+```js
+import { useForm, useFormState } from "react-cool-form";
+
+const checkStrength = (pwd) => {
+  const passed = [/[$@$!%*#?&]/, /[A-Z]/, /[0-9]/, /[a-z]/].reduce(
+    (cal, test) => cal + test.test(pwd),
+    0
+  );
+
+  return { 1: "weak", 2: "good", 3: "strong", 4: "very strong" }[passed];
+};
+
+const FieldMessage = () => {
+  // Supports single-value-pick, array-pick, and object-pick data formats
+  const [error, value] = useFormState(["errors.password", "values.password"], {
+    formId: "form-1", // Provide the corresponding ID of "useForm" hook
+    errorWithTouched: true,
+  });
+
+  return <p>{error || checkStrength(value)}</p>;
+};
+
+const App = () => {
+  const {} = useForm({
+    id: "form-1", // The ID is used by the "useFormState" hook
+    defaultValues: { password: "" },
+    onSubmit: (values) => console.log("onSubmit: ", values),
+  });
+
+  return (
+    <form ref={form} noValidate>
+      <label htmlFor={id}>Password</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        required
+        minLength={6}
+      />
+      <FieldMessage />
+    </form>
+  );
+};
+```
+
 ### Reading the State
 
 If you just want to read the form state without triggering re-renders, here's the [getState](../api-reference/use-form#getstate) method for you.
@@ -133,23 +202,3 @@ const { foo, bar } = getState({ foo: "values.foo", bar: "values.bar" });
 // Current state: { values: { foo: "🍎", bar: "🥝", baz: "🍋" } }
 const [foo, bar, baz] = getState(["foo", "bar", "baz"], "values");
 ```
-
-### Filter Untouched Field Errors
-
-Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `select`'s `errorWithTouched` option.
-
-> 💡 This feature filters any errors of the untouched fields. So when validating with the [runValidation](../api-reference/use-form#runvalidation), please ensure it's triggered after the field(s) is (are) touched.
-
-```js
-const { select } = useForm();
-
-// Current state: { errors: { foo: "Required" }, touched: { foo: true } }
-
-// Returns {}
-const errors = select("errors");
-
-// Returns { foo: "Required" }
-const errors = select("errors", { errorWithTouched: true }); // Default is "false"
-```
-
-👉🏻 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.

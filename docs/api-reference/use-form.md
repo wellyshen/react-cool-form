@@ -13,6 +13,12 @@ const returnValues = useForm(config);
 
 An `object` with the following options:
 
+### id
+
+`string`
+
+The ID of the hook, it's only be used when working with the related hooks system.
+
 ### defaultValues
 
 `Record<string, any>`
