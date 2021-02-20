@@ -1,5 +1,5 @@
 {
-  "name": "rcf-isolating-re-rendering",
+  "name": "rcf-isolating-rerendering",
   "version": "0.0.0",
   "description": "The isolating re-rendering example of RCF.",
   "main": "index.js",
