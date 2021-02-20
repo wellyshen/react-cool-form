@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.122
+
+### Patch Changes
+
+- [`3f92f38`](https://github.com/wellyshen/react-cool-form/commit/3f92f3861baa7bfe51e1ba67525055c0ae97f09d) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat: new `useFormState` hook
+
 ## 0.0.121
 
 ### Patch Changes
