@@ -17,7 +17,7 @@ An `object` with the following options:
 
 `string`
 
-The ID of the hook, it's only be used when working with the related hooks system.
+The ID of the hook, it's only be used when working with the related hook(s) of React Cool Form.
 
 ### defaultValues
 
