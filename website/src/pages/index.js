@@ -91,9 +91,7 @@ const features = [
     description: (
       <>
         The lower size the faster speed. React Cool Form is a{" "}
-        <Link to="https://bundlephobia.com/result?p=react-cool-form">
-          tiny size
-        </Link>{" "}
+        <Link to="/docs/getting-started/bundle-size-overview">tiny size</Link>{" "}
         library but powerful.
       </>
     ),

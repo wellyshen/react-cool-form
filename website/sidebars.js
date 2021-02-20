@@ -10,6 +10,7 @@ module.exports = {
       "getting-started/form-state",
       "getting-started/complex-structures",
       "getting-started/3rd-party-ui-libraries",
+      "getting-started/bundle-size-overview",
     ],
     Examples: [
       "examples/basic",
@@ -33,6 +34,7 @@ module.exports = {
     ],
     "API Reference": [
       "api-reference/use-form",
+      "api-reference/use-form-state",
       "api-reference/utility-functions",
     ],
   },

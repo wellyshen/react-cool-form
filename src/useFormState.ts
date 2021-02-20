@@ -20,7 +20,7 @@ const useFormState = (path: Path, { formId, ...rest }: StateConfig): any => {
 
   if (!methods) {
     warn(
-      `💡 react-cool-form > ${methodName}: You must provide the corresponding ID to the form. See: TBD`
+      `💡 react-cool-form > ${methodName}: You must provide the corresponding ID to the form hook. See: TBD`
     );
     return undefined;
   }

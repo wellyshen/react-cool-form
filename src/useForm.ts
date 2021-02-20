@@ -287,7 +287,7 @@ export default <V extends FormValues = FormValues>({
         if (callback) {
           if (p === "values")
             warn(
-              `💡 react-cool-form > ${methodName}: Getting the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
+              `💡 react-cool-form > ${methodName}: Getting the "values" alone may cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
             );
 
           usedState[p] = true;
@@ -803,10 +803,10 @@ export default <V extends FormValues = FormValues>({
       handlersRef.current.change = ({ target }: Event) => {
         const { name } = target as FieldElement;
 
-        if (!name)
-          return warn(
-            '💡 react-cool-form > field: Missing the "name" attribute.'
-          );
+        if (!name) {
+          warn('💡 react-cool-form > field: Missing the "name" attribute.');
+          return;
+        }
 
         if (fieldsRef.current[name] && !controllersRef.current[name]) {
           const parse = fieldArgsRef.current[name]?.parse;
