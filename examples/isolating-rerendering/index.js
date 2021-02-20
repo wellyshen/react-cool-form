@@ -16,7 +16,7 @@ const FieldMessage = () => {
   // Supports single-value-pick, array-pick, and object-pick data formats
   const [error, value] = useFormState(["errors.password", "values.password"], {
     formId: "form-1", // Provide the corresponding ID of "useForm" hook
-    errorWithTouched: true,
+    errorWithTouched: true
   });
 
   return <p>{error || checkStrength(value)}</p>;
@@ -26,12 +26,12 @@ function App() {
   const { form } = useForm({
     id: "form-1", // The ID is used by the "useFormState" hook
     defaultValues: { password: "" },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
 
   return (
     <form ref={form} noValidate>
-      <label htmlFor={id}>Password</label>
+      <label htmlFor="password">Password</label>
       <input
         id="password"
         name="password"
