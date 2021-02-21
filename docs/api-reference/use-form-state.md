@@ -34,7 +34,7 @@ const { foo, bar } = useFormState({ foo: "values.foo", bar: "values.bar" }, conf
 
 An `object` with the following options:
 
-### id
+### formId
 
 `string`
 
