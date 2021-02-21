@@ -98,20 +98,28 @@ const [touched, dirty] = select(["touched", "dirty"]);
 
 ### Filter Untouched Field Errors
 
-Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `select`'s `errorWithTouched` option.
+Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `select`'s `errorWithTouched` option (default is `false`).
 
 > 💡 This feature filters any errors of the untouched fields. So when validating with the [runValidation](../api-reference/use-form#runvalidation), please ensure it's triggered after the field(s) is (are) touched.
 
 ```js
 const { select } = useForm();
 
-// Current state: { errors: { foo: "Required" }, touched: { foo: true } }
-
-// Returns {}
+// Current state: { errors: { foo: "Required" }, touched: { foo: false } }
+// Returns { foo: "Required" }
 const errors = select("errors");
 
+// Current state: { errors: { foo: "Required" }, touched: { foo: false } }
+// Returns {}
+const errors = select("errors", {
+  errorWithTouched: true,
+});
+
+// Current state: { errors: { foo: "Required" }, touched: { foo: true } }
 // Returns { foo: "Required" }
-const errors = select("errors", { errorWithTouched: true }); // Default is "false"
+const errors = select("errors", {
+  errorWithTouched: true,
+});
 ```
 
 👉🏻 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
@@ -137,7 +145,7 @@ const checkStrength = (pwd) => {
 const FieldMessage = () => {
   // Supports single-value-pick, array-pick, and object-pick data formats
   const [error, value] = useFormState(["errors.password", "values.password"], {
-    formId: "form-1", // Provide the corresponding ID of "useForm" hook
+    formId: "form-1", // Provide the corresponding ID of the "useForm" hook
   });
 
   return <p>{error || checkStrength(value)}</p>;
