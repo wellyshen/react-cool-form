@@ -1,7 +1,7 @@
 import { FocusEvent, MutableRefObject, SyntheticEvent } from "react";
 
 // Utils
-export type Map = Record<string, boolean>;
+export type Map<T = boolean> = Record<string, T>;
 
 // Global
 export interface Methods {
@@ -62,7 +62,7 @@ export interface FormStateReturn<V> {
 }
 
 // useForm
-export type FormValues = Record<string, any>;
+export type FormValues = Map<any>;
 
 export type Handlers = {
   [k in "change" | "blur" | "submit" | "reset"]?: (event: Event) => void;
@@ -73,21 +73,12 @@ export type FieldElement =
   | HTMLTextAreaElement
   | HTMLSelectElement;
 
-export interface FieldsValue {
+export interface Field {
   field: FieldElement;
   options?: FieldElement[];
 }
 
-export type Fields = Record<string, FieldsValue>;
-
-export type FieldArgs = Record<
-  string,
-  {
-    valueAsNumber?: boolean;
-    valueAsDate?: boolean;
-    parse?: Parser;
-  }
->;
+export type Fields = Map<Field>;
 
 interface Options<V> {
   getState: GetState;
@@ -154,7 +145,7 @@ export interface RegisterField<V> {
   ): (field: FieldElement | null) => void;
 }
 
-export type Path = string | string[] | Record<string, string>;
+export type Path = string | string[] | Map<string>;
 
 export interface GetFormState {
   (
@@ -173,7 +164,7 @@ export interface Select {
 }
 
 export interface GetState {
-  (path?: string | string[] | Record<string, string>, target?: string): any;
+  (path?: string | string[] | Map<string>, target?: string): any;
 }
 
 export interface SetValue {
@@ -232,6 +223,12 @@ interface BlurHandler {
 interface Parser {
   (...args: any[]): any;
 }
+
+export type Parsers = Map<{
+  valueAsNumber?: boolean;
+  valueAsDate?: boolean;
+  parse?: Parser;
+}>;
 
 interface Formatter {
   (value: any): any;

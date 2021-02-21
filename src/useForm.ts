@@ -7,11 +7,10 @@ import * as shared from "./shared";
 import {
   ClearErrors,
   Controller,
-  FieldArgs,
+  Field,
   FieldElement,
   Fields,
   FieldValidator,
-  FieldsValue,
   FormConfig,
   FormErrors,
   FormReturn,
@@ -21,6 +20,7 @@ import {
   GetState,
   Handlers,
   Map,
+  Parsers,
   RegisterField,
   RegisterForm,
   Reset,
@@ -78,12 +78,12 @@ export default <V extends FormValues = FormValues>({
   const observerRef = useRef<MutationObserver>();
   const formRef = useRef<HTMLElement>();
   const fieldsRef = useRef<Fields>({});
-  const fieldArgsRef = useRef<FieldArgs>({});
+  const fieldParsersRef = useRef<Parsers>({});
   const controllersRef = useRef<Map>({});
   const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
-  const fieldValidatorsRef = useRef<Record<string, FieldValidator<V>>>({});
+  const fieldValidatorsRef = useRef<Map<FieldValidator<V>>>({});
   const onResetRef = useLatest(onReset || (() => undefined));
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
@@ -136,7 +136,7 @@ export default <V extends FormValues = FormValues>({
             (rcfExclude !== "true" && !excludeFieldsRef.current[name])
           );
         })
-        .reduce((acc: Record<string, any>, cur) => {
+        .reduce((acc: Map<any>, cur) => {
           const field = cur as FieldElement;
           const { name } = field;
 
@@ -157,11 +157,11 @@ export default <V extends FormValues = FormValues>({
     let value = field.value as any;
 
     if (isInputElement(field)) {
-      if (fieldArgsRef.current[name]?.valueAsNumber) {
+      if (fieldParsersRef.current[name]?.valueAsNumber) {
         value = field.valueAsNumber;
         return value;
       }
-      if (fieldArgsRef.current[name]?.valueAsDate) {
+      if (fieldParsersRef.current[name]?.valueAsDate) {
         value = field.valueAsDate;
         return value;
       }
@@ -251,12 +251,10 @@ export default <V extends FormValues = FormValues>({
     (
       values: V,
       checkDefaultValues = false,
-      fields: FieldsValue[] | string[] = Object.values(fieldsRef.current)
+      fields: Field[] | string[] = Object.values(fieldsRef.current)
     ) =>
-      fields.forEach((field: FieldsValue | string) => {
-        const name = isPlainObject(field)
-          ? (field as FieldsValue).field.name
-          : field;
+      fields.forEach((field: Field | string) => {
+        const name = isPlainObject(field) ? (field as Field).field.name : field;
 
         if (controllersRef.current[name]) return;
 
@@ -317,8 +315,8 @@ export default <V extends FormValues = FormValues>({
           return errorsEnhancer(p, get(stateRef.current, p));
         });
       } else if (isPlainObject(path)) {
-        const paths = path as Record<string, string>;
-        state = Object.keys(paths).reduce((s: Record<string, any>, key) => {
+        const paths = path as Map<string>;
+        state = Object.keys(paths).reduce((s: Map<any>, key) => {
           path = getPath(paths[key]);
           s[key] = errorsEnhancer(path, get(stateRef.current, path));
           return s;
@@ -809,7 +807,7 @@ export default <V extends FormValues = FormValues>({
         }
 
         if (fieldsRef.current[name] && !controllersRef.current[name]) {
-          const parse = fieldArgsRef.current[name]?.parse;
+          const parse = fieldParsersRef.current[name]?.parse;
           const value = getNodeValue(name);
 
           handleChangeEvent(name, parse ? parse(value) : value);
@@ -872,7 +870,7 @@ export default <V extends FormValues = FormValues>({
               name,
               true
             );
-            delete fieldArgsRef.current[name];
+            delete fieldParsersRef.current[name];
             delete fieldValidatorsRef.current[name];
             delete controllersRef.current[name];
           });
@@ -927,7 +925,7 @@ export default <V extends FormValues = FormValues>({
       const { validate: validator, ...parsers } = validateOrOptions;
 
       if (validator) fieldValidatorsRef.current[field.name] = validator;
-      fieldArgsRef.current[field.name] = parsers;
+      fieldParsersRef.current[field.name] = parsers;
     },
     []
   );

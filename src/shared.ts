@@ -1,6 +1,6 @@
-import { Methods } from "./types";
+import { Map, Methods } from "./types";
 
-const shared: Record<string, Methods> = {};
+const shared: Map<Methods> = {};
 
 export const get = (id: string): Methods => shared[id];
 
