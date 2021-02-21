@@ -11,7 +11,7 @@ const useFormState = (path: Path, { formId, ...rest }: StateConfig): any => {
 
   if (!formId) {
     warn(
-      `💡 react-cool-form > ${methodName}: Missing the "formId" option. See: TBD`
+      `💡 react-cool-form > ${methodName}: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-state#formid`
     );
     return undefined;
   }
@@ -20,7 +20,7 @@ const useFormState = (path: Path, { formId, ...rest }: StateConfig): any => {
 
   if (!methods) {
     warn(
-      `💡 react-cool-form > ${methodName}: You must provide the corresponding ID to the form hook. See: TBD`
+      `💡 react-cool-form > ${methodName}: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id`
     );
     return undefined;
   }
