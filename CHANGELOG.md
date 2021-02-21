@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.123
+
+### Patch Changes
+
+- [`e7795c3`](https://github.com/wellyshen/react-cool-form/commit/e7795c30c36b26e402d4b07e458ee2f5f2617063) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFormState): correct the URL of warnings
+
 ## 0.0.122
 
 ### Patch Changes
