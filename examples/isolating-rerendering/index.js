@@ -15,7 +15,7 @@ const checkStrength = (pwd) => {
 const FieldMessage = () => {
   // Supports single-value-pick, array-pick, and object-pick data formats
   const [error, value] = useFormState(["errors.password", "values.password"], {
-    formId: "form-1" // Provide the corresponding ID of "useForm" hook
+    formId: "form-1" // Provide the corresponding ID of the "useForm" hook
   });
 
   return <p>{error || checkStrength(value)}</p>;
