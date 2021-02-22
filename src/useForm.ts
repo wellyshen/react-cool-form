@@ -250,7 +250,7 @@ export default <V extends FormValues = FormValues>({
   const setNodesOrStateValue = useCallback(
     (
       values: V,
-      checkDefaultValues = false,
+      checkDefaultValues,
       fields: Field[] | string[] = Object.values(fieldsRef.current)
     ) =>
       fields.forEach((field: Field | string) => {
