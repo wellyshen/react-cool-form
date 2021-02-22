@@ -52,7 +52,7 @@ const Form = ({
   );
 };
 
-const CustomField = ({ value, onChange }: any) => (
+/* const CustomField = ({ value, onChange }: any) => (
   <button
     data-testid="custom"
     // @ts-expect-error
@@ -61,7 +61,7 @@ const CustomField = ({ value, onChange }: any) => (
   >
     {value}
   </button>
-);
+); */
 
 const renderHelper = ({ children = null, ...rest }: Props = {}) => {
   let api: Methods;
@@ -1518,7 +1518,7 @@ describe("useForm", () => {
     }
   );
 
-  describe("controller", () => {
+  /* describe("controller", () => {
     const value = "🍎";
 
     it("should warn for a missing name controller", () => {
@@ -1675,7 +1675,7 @@ describe("useForm", () => {
       expect(getState("isValidating")).toBeFalsy();
       expect(getState("isValid")).toBeTruthy();
     });
-  });
+  }); */
 
   it("should call debug callback", async () => {
     const debug = jest.fn();

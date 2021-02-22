@@ -5,7 +5,23 @@ export type Map<T = boolean> = Record<string, T>;
 
 // Global
 export interface Methods {
+  excludeFieldsRef: MutableRefObject<Map>;
+  controllersRef: MutableRefObject<Map>;
+  fieldValidatorsRef: MutableRefObject<Map<FieldValidator<any>>>;
+  defaultValuesRef: MutableRefObject<any>;
+  changedFieldRef: MutableRefObject<string | undefined>;
+  getNodeValue: GetNodeValue;
+  getState: GetState;
   getFormState: GetFormState;
+  setDefaultValue: SetDefaultValue;
+  setValue: SetValue;
+  setTouched: SetTouched;
+  setTouchedMaybeValidate: SetTouchedMaybeValidate;
+  setDirty: SetDirty;
+  setError: SetError;
+  clearErrors: ClearErrors;
+  runValidation: RunValidation;
+  handleChangeEvent: HandleChangeEvent;
   subscribeObserver: ObserverHandler;
   unsubscribeObserver: ObserverHandler;
 }
@@ -145,6 +161,22 @@ export interface RegisterField<V> {
   ): (field: FieldElement | null) => void;
 }
 
+export interface HandleChangeEvent {
+  (name: string, value: any): void;
+}
+
+export interface SetDefaultValue {
+  (name: string, value: any): void;
+}
+
+export interface SetTouchedMaybeValidate {
+  (name: string): void;
+}
+
+export interface GetNodeValue {
+  (name: string): any;
+}
+
 export type Path = string | string[] | Map<string>;
 
 export interface GetFormState {
@@ -212,14 +244,6 @@ export interface Submit<V> {
   }>;
 }
 
-interface ChangeHandler {
-  (...args: any[]): void;
-}
-
-interface BlurHandler {
-  (event: FocusEvent): void;
-}
-
 interface Parser {
   (...args: any[]): any;
 }
@@ -229,30 +253,6 @@ export type Parsers = Map<{
   valueAsDate?: boolean;
   parse?: Parser;
 }>;
-
-interface Formatter {
-  (value: any): any;
-}
-
-export interface Controller<V> {
-  (
-    name: string,
-    options?: {
-      validate?: FieldValidator<V>;
-      value?: any;
-      defaultValue?: any;
-      parse?: Parser;
-      format?: Formatter;
-      onChange?: ChangeHandler;
-      onBlur?: BlurHandler;
-    }
-  ): {
-    name: string;
-    value: any;
-    onChange: ChangeHandler;
-    onBlur: BlurHandler;
-  } | void;
-}
 
 export type FormConfig<V> = Partial<{
   id: string;
@@ -282,7 +282,6 @@ export interface FormReturn<V> {
   runValidation: RunValidation;
   reset: Reset<V>;
   submit: Submit<V>;
-  controller: Controller<V>;
 }
 
 // useFormState
@@ -290,4 +289,51 @@ export interface StateConfig {
   formId: string;
   target?: string;
   errorWithTouched?: boolean;
+}
+
+// useControlled
+interface Formatter {
+  (value: any): any;
+}
+
+interface BlurHandler {
+  (event: FocusEvent): void;
+}
+
+export interface ControlledConfig<V> {
+  formId: string;
+  validate?: FieldValidator<V>;
+  defaultValue?: any;
+  parse?: Parser;
+  format?: Formatter;
+  errorWithTouched?: boolean;
+  exclude?: boolean;
+  [k: string]: any;
+}
+
+export type FieldProps<E extends any[]> =
+  | {
+      name: string;
+      value: any;
+      onChange: (...args: E) => void;
+      onBlur: BlurHandler;
+      [k: string]: any;
+    }
+  | undefined;
+
+export interface ControlledReturn<E extends any[]> {
+  fieldProps?: FieldProps<E>;
+  meta: {
+    value: any;
+    error: any;
+    isTouched: boolean;
+    isDirty: boolean;
+  };
+  getState: GetState;
+  setValue: SetValue;
+  setTouched: SetTouched;
+  setDirty: SetDirty;
+  setError: SetError;
+  clearErrors: ClearErrors;
+  runValidation: RunValidation;
 }

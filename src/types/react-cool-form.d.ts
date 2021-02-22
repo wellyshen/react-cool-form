@@ -1,6 +1,10 @@
 declare module "react-cool-form" {
   import { FocusEvent, SyntheticEvent } from "react";
 
+  // Type utils
+  type Map<T = boolean> = Record<string, T>;
+
+  // useForm
   type DeepProps<V, T = any> = {
     [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
   };
@@ -19,13 +23,13 @@ declare module "react-cool-form" {
 
   interface Select {
     (
-      path: string | string[] | Record<string, string>,
+      path: string | string[] | Map<string>,
       options?: { target?: string; errorWithTouched?: boolean }
     ): any;
   }
 
   interface GetState {
-    (path?: string | string[] | Record<string, string>, target?: string): any;
+    (path?: string | string[] | Map<string>, target?: string): any;
   }
 
   interface SetValue {
@@ -92,7 +96,7 @@ declare module "react-cool-form" {
     }>;
   }
 
-  export type FormValues = Record<string, any>;
+  export type FormValues = Map<any>;
 
   export type FormErrors<E = FormValues> = DeepProps<E>;
 
@@ -153,42 +157,6 @@ declare module "react-cool-form" {
     ): void;
   }
 
-  export interface ChangeHandler<A extends any[] = any[]> {
-    (...args: A): void;
-  }
-
-  export interface BlurHandler {
-    (event: FocusEvent): void;
-  }
-
-  export interface Parser<A extends any[] = any[], R = any> {
-    (...args: A): R;
-  }
-
-  export interface Formatter<V = any, R = any> {
-    (value: V): R;
-  }
-
-  export interface Controller<V = FormValues, E extends any[] = any[]> {
-    (
-      name: string,
-      options?: {
-        validate?: FieldValidator<V>;
-        value?: any;
-        defaultValue?: any;
-        parse?: Parser;
-        format?: Formatter;
-        onChange?: ChangeHandler;
-        onBlur?: BlurHandler;
-      }
-    ): {
-      name: string;
-      value: any;
-      onChange: (...args: E) => void;
-      onBlur: BlurHandler;
-    } | void;
-  }
-
   export interface Debug<V = FormValues> {
     (formState: FormState<V>): void;
   }
@@ -221,14 +189,14 @@ declare module "react-cool-form" {
     runValidation: RunValidation;
     reset: Reset<V>;
     submit: Submit<V>;
-    controller: Controller<V>;
   }
 
   export function useForm<V extends FormValues = FormValues>(
     config?: FormConfig<V>
   ): FormReturn<V>;
 
-  export type Path = string | string[] | Record<string, string>;
+  // useFormState
+  export type Path = string | string[] | Map<string>;
 
   export interface StateConfig {
     formId: string;
@@ -238,6 +206,59 @@ declare module "react-cool-form" {
 
   export function useFormState(path: Path, config: StateConfig): any;
 
+  // useControlled
+  export interface Parser<A extends any[] = any[], R = any> {
+    (...args: A): R;
+  }
+
+  export interface Formatter<V = any, R = any> {
+    (value: V): R;
+  }
+
+  export interface BlurHandler {
+    (event: FocusEvent): void;
+  }
+
+  export interface ControlledConfig<V = FormValues> {
+    formId: string;
+    validate?: FieldValidator<V>;
+    defaultValue?: any;
+    parse?: Parser;
+    format?: Formatter;
+    errorWithTouched?: boolean;
+    exclude?: boolean;
+    [k: string]: any;
+  }
+
+  export interface ControlledReturn<E extends any[] = any[]> {
+    fieldProps?: {
+      name: string;
+      value: any;
+      onChange: (...args: E) => void;
+      onBlur: BlurHandler;
+      [k: string]: any;
+    };
+    meta: {
+      value: any;
+      error: any;
+      isTouched: boolean;
+      isDirty: boolean;
+    };
+    getState: GetState;
+    setValue: SetValue;
+    setTouched: SetTouched;
+    setDirty: SetDirty;
+    setError: SetError;
+    clearErrors: ClearErrors;
+    runValidation: RunValidation;
+  }
+
+  export function useControlled<V = FormValues, E extends any[] = any[]>(
+    name: string,
+    config: ControlledConfig<V>
+  ): ControlledReturn<E>;
+
+  // Utility functions
   export function get(object: any, path: string, defaultValue?: unknown): any;
 
   export function set(

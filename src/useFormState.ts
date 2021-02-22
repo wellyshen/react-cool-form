@@ -2,11 +2,11 @@
 
 import { useEffect, useReducer, useRef } from "react";
 
-import { get } from "./shared";
 import { Observer, Path, StateConfig } from "./types";
+import { get } from "./shared";
 import { warn } from "./utils";
 
-const useFormState = (path: Path, { formId, ...rest }: StateConfig): any => {
+export default (path: Path, { formId, ...rest }: StateConfig): any => {
   const methodName = "useFormState";
 
   if (!formId) {
@@ -25,9 +25,9 @@ const useFormState = (path: Path, { formId, ...rest }: StateConfig): any => {
     return undefined;
   }
 
-  const { getFormState, subscribeObserver, unsubscribeObserver } = methods;
-  const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const observerRef = useRef<Observer>();
+  const [, forceUpdate] = useReducer((c) => c + 1, 0);
+  const { getFormState, subscribeObserver, unsubscribeObserver } = methods;
 
   useEffect(() => {
     // @ts-expect-error
@@ -47,5 +47,3 @@ const useFormState = (path: Path, { formId, ...rest }: StateConfig): any => {
     },
   });
 };
-
-export default useFormState;

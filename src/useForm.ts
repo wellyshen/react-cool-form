@@ -6,7 +6,6 @@ import { dequal } from "dequal/lite";
 import * as shared from "./shared";
 import {
   ClearErrors,
-  Controller,
   Field,
   FieldElement,
   Fields,
@@ -17,7 +16,9 @@ import {
   FormState,
   FormValues,
   GetFormState,
+  GetNodeValue,
   GetState,
+  HandleChangeEvent,
   Handlers,
   Map,
   Parsers,
@@ -26,9 +27,11 @@ import {
   Reset,
   RunValidation,
   Select,
+  SetDefaultValue,
   SetDirty,
   SetError,
   SetTouched,
+  SetTouchedMaybeValidate,
   SetValue,
   Submit,
 } from "./types";
@@ -152,7 +155,7 @@ export default <V extends FormValues = FormValues>({
     []
   );
 
-  const getNodeValue = useCallback((name: string) => {
+  const getNodeValue = useCallback<GetNodeValue>((name) => {
     const { field, options } = fieldsRef.current[name];
     let value = field.value as any;
 
@@ -229,8 +232,8 @@ export default <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const setDefaultValue = useCallback(
-    (name: string, value: any) => {
+  const setDefaultValue = useCallback<SetDefaultValue>(
+    (name, value) => {
       if (!isUndefined(get(initialStateRef.current.values, name))) return;
 
       initialStateRef.current.values = set(
@@ -250,7 +253,7 @@ export default <V extends FormValues = FormValues>({
   const setNodesOrStateValue = useCallback(
     (
       values: V,
-      checkDefaultValues = false,
+      checkDefaultValues,
       fields: Field[] | string[] = Object.values(fieldsRef.current)
     ) =>
       fields.forEach((field: Field | string) => {
@@ -552,8 +555,8 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const setTouchedMaybeValidate = useCallback(
-    (name: string) =>
+  const setTouchedMaybeValidate = useCallback<SetTouchedMaybeValidate>(
+    (name) =>
       setTouched(
         name,
         true,
@@ -708,8 +711,8 @@ export default <V extends FormValues = FormValues>({
     [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
   );
 
-  const handleChangeEvent = useCallback(
-    (name: string, value: any) => {
+  const handleChangeEvent = useCallback<HandleChangeEvent>(
+    (name, value) => {
       setStateRef(`values.${name}`, value);
       setDirtyIfNeeded(name);
 
@@ -720,70 +723,6 @@ export default <V extends FormValues = FormValues>({
       setStateRef,
       validateFieldWithLowPriority,
       validateOnChange,
-    ]
-  );
-
-  const controller = useCallback<Controller<V>>(
-    (
-      name,
-      {
-        validate: validator,
-        value,
-        defaultValue,
-        parse,
-        format,
-        onChange,
-        onBlur,
-      } = {}
-    ) => {
-      if (!name) {
-        warn('💡 react-cool-form > controller: Missing the "name" parameter.');
-        return undefined;
-      }
-
-      controllersRef.current[name] = true;
-      if (validator) fieldValidatorsRef.current[name] = validator;
-
-      const val = get(defaultValuesRef.current, name);
-      defaultValue = !isUndefined(val) ? val : defaultValue;
-      if (!isUndefined(defaultValue)) setDefaultValue(name, defaultValue);
-
-      value = !isUndefined(value) ? value : select(`values.${name}`);
-      value = (format ? format(value) : value) ?? "";
-
-      return {
-        name,
-        value,
-        onChange: (...args) => {
-          let v;
-
-          if (parse) {
-            v = parse(...args);
-          } else {
-            const e = args[0];
-            v =
-              e?.nativeEvent instanceof Event && isFieldElement(e.target)
-                ? getNodeValue(name)
-                : e;
-          }
-
-          handleChangeEvent(name, v);
-          if (onChange) onChange(...args, v);
-          changedFieldRef.current = name;
-        },
-        onBlur: (e) => {
-          setTouchedMaybeValidate(name);
-          if (onBlur) onBlur(e);
-          changedFieldRef.current = undefined;
-        },
-      };
-    },
-    [
-      getNodeValue,
-      handleChangeEvent,
-      setDefaultValue,
-      setTouchedMaybeValidate,
-      select,
     ]
   );
 
@@ -932,7 +871,23 @@ export default <V extends FormValues = FormValues>({
 
   if (id)
     shared.set(id, {
+      controllersRef,
+      fieldValidatorsRef,
+      defaultValuesRef,
+      changedFieldRef,
+      excludeFieldsRef,
+      getNodeValue,
+      getState,
       getFormState,
+      setDefaultValue,
+      setValue,
+      setTouched,
+      setTouchedMaybeValidate,
+      setDirty,
+      setError,
+      clearErrors,
+      runValidation,
+      handleChangeEvent,
       subscribeObserver,
       unsubscribeObserver,
     });
@@ -967,6 +922,5 @@ export default <V extends FormValues = FormValues>({
     runValidation,
     reset,
     submit,
-    controller,
   };
 };
