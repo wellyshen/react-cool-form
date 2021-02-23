@@ -4,26 +4,26 @@ import { useEffect, useReducer, useRef } from "react";
 
 import { get } from "./shared";
 import { Observer, Path, StateConfig } from "./types";
-import { warn } from "./utils";
+import { invariant } from "./utils";
 
-const useFormState = (path: Path, { formId, ...rest }: StateConfig): any => {
+const useFormState = (
+  path: Path,
+  // @ts-expect-error
+  { formId, ...rest }: StateConfig = {}
+): any => {
   const methodName = "useFormState";
 
-  if (!formId) {
-    warn(
-      `💡 react-cool-form > ${methodName}: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-state#formid`
-    );
-    return undefined;
-  }
+  invariant(
+    !formId,
+    `💡 react-cool-form > ${methodName}: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-state#formid`
+  );
 
   const methods = get(formId);
 
-  if (!methods) {
-    warn(
-      `💡 react-cool-form > ${methodName}: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id`
-    );
-    return undefined;
-  }
+  invariant(
+    !methods,
+    `💡 react-cool-form > ${methodName}: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id`
+  );
 
   const { getFormState, subscribeObserver, unsubscribeObserver } = methods;
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
