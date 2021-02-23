@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.124
+
+### Patch Changes
+
+- [`ed388fb`](https://github.com/wellyshen/react-cool-form/commit/ed388fbd2691b91e1335e88bd5238bac36f3a76c) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useFormState): use error instead warn for form id related exceptions
+
 ## 0.0.123
 
 ### Patch Changes
