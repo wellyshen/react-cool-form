@@ -311,15 +311,13 @@ export interface ControlledConfig<V> {
   [k: string]: any;
 }
 
-export type FieldProps<E extends any[]> =
-  | {
-      name: string;
-      value: any;
-      onChange: (...args: E) => void;
-      onBlur: BlurHandler;
-      [k: string]: any;
-    }
-  | undefined;
+export interface FieldProps<E extends any[]> {
+  name: string;
+  value: any;
+  onChange: (...args: E) => void;
+  onBlur: BlurHandler;
+  [k: string]: any;
+}
 
 export interface ControlledReturn<E extends any[]> {
   fieldProps?: FieldProps<E>;

@@ -5,11 +5,12 @@ import {
   FormValues,
 } from "./types";
 import * as shared from "./shared";
-import { get, isFieldElement, isUndefined, warn } from "./utils";
+import { get, invariant, isFieldElement, isUndefined } from "./utils";
 import useFormState from "./useFormState";
 
 export default <V = FormValues, E extends any[] = any[]>(
   name: string,
+  // @ts-expect-error
   {
     formId,
     defaultValue,
@@ -19,24 +20,24 @@ export default <V = FormValues, E extends any[] = any[]>(
     errorWithTouched,
     exclude,
     ...props
-  }: ControlledConfig<V>
+  }: ControlledConfig<V> = {}
 ): ControlledReturn<E> => {
-  if (__DEV__ && !name)
-    throw new Error(
-      '💡 react-cool-form > useControlled: Missing the "name" parameter.'
-    );
+  invariant(
+    !name,
+    '💡 react-cool-form > useControlled: Missing the "name" parameter.'
+  );
 
-  if (__DEV__ && !formId)
-    throw new Error(
-      '💡 react-cool-form > useControlled: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-controlled#formid'
-    );
+  invariant(
+    !formId,
+    '💡 react-cool-form > useControlled: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-controlled#formid'
+  );
 
   const methods = shared.get(formId);
 
-  if (__DEV__ && !methods)
-    throw new Error(
-      '💡 react-cool-form > useControlled: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
-    );
+  invariant(
+    !methods,
+    '💡 react-cool-form > useControlled: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+  );
 
   const meta = useFormState(
     {
@@ -60,7 +61,7 @@ export default <V = FormValues, E extends any[] = any[]>(
     ...restMethods
   } = methods;
 
-  let fieldProps: FieldProps<E>;
+  let fieldProps: FieldProps<E> | undefined;
 
   if (exclude) {
     excludeFieldsRef.current[name] = true;

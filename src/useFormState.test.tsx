@@ -58,29 +58,18 @@ const renderHelper = (args: Omit<Props, "children"> = {}) => {
 };
 
 describe("useFormState", () => {
-  console.warn = jest.fn();
-
-  beforeEach(() => jest.clearAllMocks());
-
-  it("should warn missing form id", () => {
-    renderHelper({ id: "" });
-    expect(console.warn).toHaveBeenCalledWith(
+  it("should throw form id errors", () => {
+    expect(() => useFormState("values")).toThrow(
       '💡 react-cool-form > useFormState: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-state#formid'
     );
 
-    console.warn = jest.fn();
-    renderHelper({ id: "", formId: "form-1" });
-    expect(console.warn).toHaveBeenCalledWith(
+    expect(() => useFormState("values", { formId: "form-1" })).toThrow(
       '💡 react-cool-form > useFormState: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
     );
   });
 
-  it("should not warn missing form id", () => {
-    renderHelper();
-    expect(console.warn).not.toHaveBeenCalled();
-  });
-
   it('should warn select "values" alone', () => {
+    console.warn = jest.fn();
     renderHelper({ path: "values" });
     expect(console.warn).toHaveBeenCalledWith(
       '💡 react-cool-form > useFormState: Getting the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
@@ -88,6 +77,7 @@ describe("useFormState", () => {
   });
 
   it('should not warn select "values" alone', () => {
+    console.warn = jest.fn();
     renderHelper({ path: "values.foo" });
     expect(console.warn).not.toHaveBeenCalled();
   });

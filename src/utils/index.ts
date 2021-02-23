@@ -5,6 +5,7 @@ export { default as deepMerge } from "./deepMerge";
 export { default as filterErrors } from "./filterErrors";
 export { default as get } from "./get";
 export { default as getIsDirty } from "./getIsDirty";
+export { default as invariant } from "./invariant";
 export { default as isAsyncFunction } from "./isAsyncFunction";
 export { default as isCheckboxInput } from "./isCheckboxInput";
 export { default as isEmptyObject } from "./isEmptyObject";
