@@ -1,40 +1,39 @@
 /* eslint-disable no-console */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useControlled } from "react-cool-form";
 
 interface FormValues {
   foo: string;
 }
 
-const Field = ({
-  formId,
-  name,
-  defaultValue,
-  validate,
-  errorWithTouched,
-  ...props
-}: any) => {
+const Field = ({ name, formId, ...rest }: any) => {
   const { fieldProps, meta, setValue } = useControlled<FormValues>(name, {
     formId: "form-1",
-    defaultValue,
-    validate,
-    errorWithTouched,
-    ...props,
+    ...rest,
   });
-
-  setValue("foo", "hi");
 
   console.log("LOG ===> Field re-renders: ", meta);
 
-  return <input {...fieldProps} />;
+  /* useEffect(() => {
+    setValue("foo", undefined);
+  }, [setValue]); */
+
+  return (
+    <>
+      <button type="button" onClick={() => setValue("foo", undefined)}>
+        Clear Value
+      </button>
+      <input {...fieldProps} />
+    </>
+  );
 };
 
 export default () => {
   const [show, setShow] = useState(true);
   const { form } = useForm<FormValues>({
     id: "form-1",
-    defaultValues: { foo: "form test" },
+    // defaultValues: { foo: "form test" },
     shouldRemoveField: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
