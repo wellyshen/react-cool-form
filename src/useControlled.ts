@@ -58,7 +58,13 @@ export default <V = FormValues, E extends any[] = any[]>(
     setDefaultValue,
     setTouchedMaybeValidate,
     handleChangeEvent,
-    ...restMethods
+    getState,
+    setValue,
+    setTouched,
+    setDirty,
+    setError,
+    clearErrors,
+    runValidation,
   } = methods;
 
   let fieldProps: FieldProps<E> | undefined;
@@ -71,7 +77,10 @@ export default <V = FormValues, E extends any[] = any[]>(
 
     let dfValue = get(defaultValuesRef.current, name);
     dfValue = !isUndefined(dfValue) ? dfValue : defaultValue;
-    if (!isUndefined(defaultValue)) setDefaultValue(name, dfValue);
+    if (!isUndefined(dfValue))
+      setDefaultValue(name, dfValue, () => {
+        meta.value = defaultValue;
+      });
 
     const { onChange, onBlur, ...restProps } = props;
 
@@ -104,5 +113,15 @@ export default <V = FormValues, E extends any[] = any[]>(
     };
   }
 
-  return { fieldProps, meta, ...restMethods };
+  return {
+    fieldProps,
+    meta: { ...meta, isTouched: !!meta.isTouched, isDirty: !!meta.isDirty },
+    getState,
+    setValue,
+    setTouched,
+    setDirty,
+    setError,
+    clearErrors,
+    runValidation,
+  };
 };

@@ -166,7 +166,7 @@ export interface HandleChangeEvent {
 }
 
 export interface SetDefaultValue {
-  (name: string, value: any): void;
+  (name: string, value: any, callback?: () => void): void;
 }
 
 export interface SetTouchedMaybeValidate {
@@ -302,8 +302,8 @@ interface BlurHandler {
 
 export interface ControlledConfig<V> {
   formId: string;
-  validate?: FieldValidator<V>;
   defaultValue?: any;
+  validate?: FieldValidator<V>;
   parse?: Parser;
   format?: Formatter;
   errorWithTouched?: boolean;
