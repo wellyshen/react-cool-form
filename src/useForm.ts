@@ -233,7 +233,7 @@ export default <V extends FormValues = FormValues>({
   }, []);
 
   const setDefaultValue = useCallback<SetDefaultValue>(
-    (name, value) => {
+    (name, value, callback) => {
       if (!isUndefined(get(initialStateRef.current.values, name))) return;
 
       initialStateRef.current = set(
@@ -246,6 +246,8 @@ export default <V extends FormValues = FormValues>({
       setStateRef(`values.${name}`, value, {
         shouldUpdate: !isInitRef.current,
       });
+
+      if (callback) callback();
     },
     [setStateRef]
   );

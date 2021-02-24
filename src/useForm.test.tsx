@@ -35,7 +35,7 @@ const Form = ({
   onRender = () => null,
   ...config
 }: Props) => {
-  const { form, ...rest } = useForm({
+  const methods = useForm({
     ...config,
     onSubmit: (...args) =>
       onSubmitFull ? onSubmitFull(...args) : onSubmit(args[0]),
@@ -46,8 +46,8 @@ const Form = ({
   onRender();
 
   return (
-    <form data-testid="form" ref={form}>
-      {isFunction(children) ? children({ ...rest }) : children}
+    <form data-testid="form" ref={methods.form}>
+      {isFunction(children) ? children(methods) : children}
     </form>
   );
 };
@@ -204,6 +204,24 @@ describe("useForm", () => {
       global.__DEV__ = false;
       renderHelper({ children: <input /> });
       expect(console.warn).not.toHaveBeenCalled();
+    });
+  });
+
+  it("should return methods correctly", () => {
+    const methods = renderHelper();
+    expect(methods).toEqual({
+      form: expect.any(Function),
+      field: expect.any(Function),
+      select: expect.any(Function),
+      getState: expect.any(Function),
+      setValue: expect.any(Function),
+      setTouched: expect.any(Function),
+      setDirty: expect.any(Function),
+      setError: expect.any(Function),
+      clearErrors: expect.any(Function),
+      runValidation: expect.any(Function),
+      reset: expect.any(Function),
+      submit: expect.any(Function),
     });
   });
 

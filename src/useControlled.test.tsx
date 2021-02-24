@@ -1,9 +1,58 @@
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+
+import { ControlledConfig, ControlledReturn } from "./types";
+import useForm from "./useForm";
 import useControlled from "./useControlled";
+
+interface Config extends Omit<ControlledConfig<any>, "name | formId"> {
+  children: (props: ControlledReturn<any[]>) => JSX.Element | null;
+  name: string;
+  defaultValues: Record<string, any>;
+  onSubmit: (values: any) => void;
+}
+
+type Props = Partial<Config>;
+
+const Form = ({
+  children,
+  name = "foo",
+  defaultValues,
+  onSubmit = () => null,
+  ...rest
+}: Props) => {
+  const { form } = useForm({
+    id: "form-1",
+    defaultValues,
+    onSubmit: (values) => onSubmit(values),
+  });
+  const props = useControlled(name, { formId: "form-1", ...rest });
+
+  return (
+    <form data-testid="form" ref={form}>
+      {children ? children(props) : null}
+    </form>
+  );
+};
+
+const renderHelper = ({ children, ...rest }: Props = {}) => {
+  let api: ControlledReturn<any[]>;
+
+  render(
+    <Form {...rest}>
+      {(props) => {
+        api = props;
+        return children ? children(props) : null;
+      }}
+    </Form>
+  );
+
+  // @ts-expect-error
+  return api;
+};
 
 /* const CustomField = ({ value, onChange }: any) => (
   <button
     data-testid="custom"
-    // @ts-expect-error
     onClick={(e) => onChange(e.target.value)}
     type="button"
   >
@@ -12,59 +61,73 @@ import useControlled from "./useControlled";
 ); */
 
 describe("useControlled", () => {
+  const getByTestId = screen.getByTestId as any;
+  const onSubmit = jest.fn();
   const value = "🍎";
 
-  it("should warn for a missing name controller", () => {
-    renderHelper({
-      children: ({ controller }: Methods) => (
-        // @ts-expect-error
-        <input data-testid="foo" {...controller()} />
-      ),
-    });
-    fireEvent.input(getByTestId("foo"));
-    expect(console.warn).toHaveBeenCalledTimes(3);
-    expect(console.warn).toHaveBeenNthCalledWith(
-      1,
-      '💡 react-cool-form > controller: Missing the "name" parameter.'
+  it("should throw missing name error", () => {
+    // @ts-expect-error
+    expect(() => useControlled()).toThrow(
+      '💡 react-cool-form > useControlled: Missing the "name" parameter.'
     );
   });
 
-  it("should not warn for a missing name controller", () => {
-    renderHelper({
-      children: ({ controller }: Methods) => (
-        <input data-testid="foo" {...controller("foo")} />
-      ),
-    });
-    expect(console.warn).not.toHaveBeenCalled();
+  it("should throw form id errors", () => {
+    expect(() => useControlled("foo")).toThrow(
+      '💡 react-cool-form > useControlled: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-controlled#formid'
+    );
+
+    expect(() => useControlled("foo", { formId: "form-1" })).toThrow(
+      '💡 react-cool-form > useControlled: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+    );
   });
 
-  it("should not set default value automatically", async () => {
-    renderHelper({
-      onSubmit,
-      children: ({ controller }: Methods) => (
-        <input data-testid="foo" {...controller("foo")} />
-      ),
+  it("should return props correctly", () => {
+    const props = renderHelper({ anyProp: () => null });
+    expect(props).toEqual({
+      fieldProps: {
+        name: expect.any(String),
+        value: expect.anything(),
+        onChange: expect.any(Function),
+        onBlur: expect.any(Function),
+        anyProp: expect.any(Function),
+      },
+      meta: {
+        isTouched: expect.any(Boolean),
+        isDirty: expect.any(Boolean),
+      },
+      getState: expect.any(Function),
+      setValue: expect.any(Function),
+      setTouched: expect.any(Function),
+      setDirty: expect.any(Function),
+      setError: expect.any(Function),
+      clearErrors: expect.any(Function),
+      runValidation: expect.any(Function),
     });
-    fireEvent.submit(getByTestId("form"));
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({}));
   });
 
-  it.each(["form", "controller"])(
-    "should set default value via %s option",
+  it("should not set default value automatically", () => {
+    const { meta } = renderHelper({
+      children: ({ fieldProps }: ControlledReturn<any>) => (
+        <input {...fieldProps} />
+      ),
+    });
+    expect(meta.value).toBeUndefined();
+  });
+
+  it.each(["form", "controlled"])(
+    "should set default value from %s option",
     async (type) => {
-      renderHelper({
+      const { meta } = renderHelper({
         defaultValues: type === "form" ? { foo: value } : undefined,
+        defaultValue: type === "controlled" ? value : undefined,
         onSubmit,
-        children: ({ controller }: Methods) => (
-          <input
-            data-testid="foo"
-            {...controller("foo", {
-              defaultValue: type === "controller" ? value : undefined,
-            })}
-          />
+        children: ({ fieldProps }: ControlledReturn<any[]>) => (
+          <input data-testid="foo" {...fieldProps} />
         ),
       });
-      expect((getByTestId("foo") as HTMLInputElement).value).toBe(value);
+      expect(getByTestId("foo").value).toBe(value);
+      expect(meta.value).toBe(value);
       fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })
@@ -72,7 +135,7 @@ describe("useControlled", () => {
     }
   );
 
-  it("should handle native field(s) change correctly", async () => {
+  /* it("should handle native field(s) change correctly", async () => {
     renderHelper({
       defaultValues: { text: "", checkboxes: [], selects: [] },
       onSubmit,
@@ -164,5 +227,5 @@ describe("useControlled", () => {
     expect(getState("errors")).toEqual({});
     expect(getState("isValidating")).toBeFalsy();
     expect(getState("isValid")).toBeTruthy();
-  });
+  }); */
 });
