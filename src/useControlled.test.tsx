@@ -92,10 +92,7 @@ describe("useControlled", () => {
         onBlur: expect.any(Function),
         anyProp: expect.any(Function),
       },
-      meta: {
-        isTouched: expect.any(Boolean),
-        isDirty: expect.any(Boolean),
-      },
+      meta: expect.any(Object),
       getState: expect.any(Function),
       setValue: expect.any(Function),
       setTouched: expect.any(Function),
