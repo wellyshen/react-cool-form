@@ -365,25 +365,30 @@ describe("useForm", () => {
     const { reset, setValue, setError, getState } = renderHelper({
       defaultValues,
       onReset,
+      children: <input data-testid="foo" name="foo" />,
     });
+    const foo = getByTestId("foo");
 
     setValue("foo", "🍎");
     setError("foo", "Required");
     const e = {};
     // @ts-expect-error
     act(() => reset(null, null, e));
+    expect(foo.value).toBe(defaultValues.foo);
     expect(onReset).toHaveBeenCalledWith(defaultValues, options, e);
     expect(getState()).toEqual({ ...initialState, values: defaultValues });
 
     const values = { foo: "🍋" };
     // @ts-expect-error
     act(() => reset(values, null, e));
+    expect(foo.value).toBe(values.foo);
     expect(onReset).toHaveBeenCalledWith(values, options, e);
     expect(getState()).toEqual({ ...initialState, values });
 
     const value = "🍎";
     // @ts-expect-error
     act(() => reset((prevValues) => ({ ...prevValues, foo: value }), null, e));
+    expect(foo.value).toBe(value);
     expect(onReset).toHaveBeenCalledWith({ foo: value }, options, e);
     expect(getState()).toEqual({ ...initialState, values: { foo: value } });
 
@@ -392,6 +397,7 @@ describe("useForm", () => {
     setError("foo", error);
     // @ts-expect-error
     act(() => reset(null, ["values", "errors", "touched"], e));
+    expect(foo.value).toBe(value);
     expect(onReset).toHaveBeenCalledWith({ foo: value }, options, e);
     expect(getState()).toEqual({
       ...initialState,

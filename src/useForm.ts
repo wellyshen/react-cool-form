@@ -655,8 +655,13 @@ export default <V extends FormValues = FormValues>({
             initialStateRef.current.values;
 
           state[key] = nextValues;
-          initialStateRef.current.values = nextValues;
-          setNodesOrStateValue(initialStateRef.current.values, !!values);
+          initialStateRef.current = set(
+            initialStateRef.current,
+            "values",
+            nextValues,
+            true
+          );
+          setNodesOrStateValue(nextValues, !!values);
         } else {
           // @ts-expect-error
           state[key] = initialStateRef.current[key];
@@ -865,11 +870,12 @@ export default <V extends FormValues = FormValues>({
               name
             );
 
-            initialStateRef.current.values = unset(
-              initialStateRef.current.values,
-              name,
+            initialStateRef.current = unset(
+              initialStateRef.current,
+              `values.${name}`,
               true
             );
+
             delete fieldParsersRef.current[name];
             delete fieldValidatorsRef.current[name];
             delete controllersRef.current[name];
