@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.125
+
+### Patch Changes
+
+- [`eb767bd`](https://github.com/wellyshen/react-cool-form/commit/eb767bd4758ebbec37efde3975c1eab822d2de6b) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): fix set default values side-effect
+
 ## 0.0.124
 
 ### Patch Changes
