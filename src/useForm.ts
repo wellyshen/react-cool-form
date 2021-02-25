@@ -368,14 +368,12 @@ export default <V extends FormValues = FormValues>({
       if (!name) {
         setStateRef("errors", {});
       } else if (Array.isArray(name)) {
-        name.forEach((n) =>
-          handleUnset("errors", `errors.${n}`, stateRef.current.errors, n)
-        );
+        name.forEach((n) => setError(n));
       } else {
-        handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
+        setError(name);
       }
     },
-    [handleUnset, setStateRef, stateRef]
+    [setError, setStateRef]
   );
 
   const runBuiltInValidation = useCallback(
