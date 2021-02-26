@@ -98,9 +98,9 @@ declare module "react-cool-form" {
 
   export type FormValues = Map<any>;
 
-  export type FormErrors<E = FormValues> = DeepProps<E>;
+  export type FormErrors<E extends FormValues = FormValues> = DeepProps<E>;
 
-  export type FormState<V = FormValues> = Readonly<{
+  export type FormState<V extends FormValues = FormValues> = Readonly<{
     values: V;
     touched: DeepProps<V, boolean>;
     errors: FormErrors<V>;
@@ -113,7 +113,7 @@ declare module "react-cool-form" {
     submitCount: number;
   }>;
 
-  export interface PreviousValuesFn<V = FormValues> {
+  export interface PreviousValuesFn<V extends FormValues = FormValues> {
     (previousValues: V): V;
   }
 
@@ -125,7 +125,7 @@ declare module "react-cool-form" {
     (previousError?: any): any;
   }
 
-  export interface FormValidator<V = FormValues> {
+  export interface FormValidator<V extends FormValues = FormValues> {
     (values: V):
       | FormErrors<V>
       | false
@@ -133,15 +133,15 @@ declare module "react-cool-form" {
       | Promise<FormErrors<V> | false | void>;
   }
 
-  export interface FieldValidator<V = FormValues> {
+  export interface FieldValidator<V extends FormValues = FormValues> {
     (value: any, values: V): any | Promise<any>;
   }
 
-  export interface ResetHandler<V = FormValues> {
+  export interface ResetHandler<V extends FormValues = FormValues> {
     (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
   }
 
-  export interface SubmitHandler<V = FormValues> {
+  export interface SubmitHandler<V extends FormValues = FormValues> {
     (
       values: V,
       options: Options<V>,
@@ -149,7 +149,7 @@ declare module "react-cool-form" {
     ): void | Promise<void>;
   }
 
-  export interface ErrorHandler<V = FormValues> {
+  export interface ErrorHandler<V extends FormValues = FormValues> {
     (
       errors: FormErrors<V>,
       options: Options<V>,
@@ -157,11 +157,11 @@ declare module "react-cool-form" {
     ): void;
   }
 
-  export interface Debug<V = FormValues> {
+  export interface Debug<V extends FormValues = FormValues> {
     (formState: FormState<V>): void;
   }
 
-  export type FormConfig<V = FormValues> = Partial<{
+  export type FormConfig<V extends FormValues = FormValues> = Partial<{
     id: string;
     defaultValues: V;
     validate: FormValidator<V>;
@@ -176,7 +176,7 @@ declare module "react-cool-form" {
     debug: Debug<V>;
   }>;
 
-  export interface FormReturn<V = FormValues> {
+  export interface FormReturn<V extends FormValues = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
     select: Select;
@@ -193,6 +193,11 @@ declare module "react-cool-form" {
 
   export function useForm<V extends FormValues = FormValues>(
     config?: FormConfig<V>
+  ): FormReturn<V>;
+
+  // useFormMethods
+  export function useFormMethods<V extends FormValues = FormValues>(
+    formId: string
   ): FormReturn<V>;
 
   // useFormState
@@ -219,7 +224,7 @@ declare module "react-cool-form" {
     (event: FocusEvent): void;
   }
 
-  export interface ControlledConfig<V = FormValues> {
+  export interface ControlledConfig<V extends FormValues = FormValues> {
     formId: string;
     validate?: FieldValidator<V>;
     defaultValue?: any;
@@ -240,10 +245,10 @@ declare module "react-cool-form" {
     { error: any; isTouched: boolean; isDirty: boolean }
   ];
 
-  export function useControlled<V = FormValues, E extends any[] = any[]>(
-    name: string,
-    config: ControlledConfig<V>
-  ): ControlledReturn<E>;
+  export function useControlled<
+    V extends FormValues = FormValues,
+    E extends any[] = any[]
+  >(name: string, config: ControlledConfig<V>): ControlledReturn<E>;
 
   // Utility functions
   export function get(object: any, path: string, defaultValue?: unknown): any;
