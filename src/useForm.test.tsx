@@ -635,18 +635,6 @@ describe("useForm", () => {
         expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
       );
     });
-
-    it("should render once when set values via defaultValue attribute", () => {
-      renderHelper({
-        children: (
-          <>
-            <input name="foo" defaultValue="🍎" />
-            <input name="bar" defaultValue="🍋" />
-          </>
-        ),
-      });
-      expect(onRender).toHaveBeenCalledTimes(1);
-    });
   });
 
   describe("handle change", () => {
