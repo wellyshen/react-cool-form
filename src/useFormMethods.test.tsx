@@ -16,19 +16,19 @@ const Form = ({ children }: Props) => {
 };
 
 const renderHelper = () => {
-  let methods: FormReturn<any>;
+  let api: FormReturn<any>;
 
   render(
     <Form>
-      {(m) => {
-        methods = m;
+      {(methods) => {
+        api = methods;
         return null;
       }}
     </Form>
   );
 
   // @ts-expect-error
-  return methods;
+  return api;
 };
 
 describe("useFormMethods", () => {
