@@ -1253,6 +1253,19 @@ describe("useForm", () => {
       expect(select()).toBeUndefined();
     });
 
+    it("should get default value correctly", () => {
+      // eslint-disable-next-line prefer-destructuring
+      let select = renderHelper({ defaultValues: values }).select;
+      const defaultValues = { foo: "🍋" };
+      expect(select("values.foo", { defaultValues })).toBe(values.foo);
+
+      select = renderHelper().select;
+      expect(select("values.foo", { defaultValues })).toBe(defaultValues.foo);
+
+      select = renderHelper().select;
+      expect(select("values.foo")).toBeUndefined();
+    });
+
     it("should get state with correct format", () => {
       const { select } = renderHelper({ defaultValues: values });
 

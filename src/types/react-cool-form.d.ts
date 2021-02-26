@@ -21,10 +21,14 @@ declare module "react-cool-form" {
     submit: Submit<V>;
   }
 
-  interface Select {
+  interface Select<V> {
     (
       path: string | string[] | Map<string>,
-      options?: { target?: string; errorWithTouched?: boolean }
+      options?: {
+        target?: string;
+        errorWithTouched?: boolean;
+        defaultValues?: V;
+      }
     ): any;
   }
 
@@ -179,7 +183,7 @@ declare module "react-cool-form" {
   export interface FormReturn<V extends FormValues = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
-    select: Select;
+    select: Select<V>;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;

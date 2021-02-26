@@ -13,7 +13,7 @@ export type Methods = {
   fieldValidatorsRef: MutableRefObject<Map<FieldValidator<any>>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   getNodeValue: GetNodeValue;
-  getFormState: GetFormState;
+  getFormState: GetFormState<any>;
   setDefaultValue: SetDefaultValue;
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
   handleChangeEvent: HandleChangeEvent;
@@ -179,20 +179,24 @@ export interface GetNodeValue {
 
 export type Path = string | string[] | Map<string>;
 
-export interface GetFormState {
+export interface GetFormState<V> {
   (
     path: Path | undefined,
     options: {
       target?: string;
       errorWithTouched?: boolean;
+      defaultValues?: V;
       methodName?: string;
       callback?: (usedState: Map) => void;
     }
   ): any;
 }
 
-export interface Select {
-  (path: Path, options?: { target?: string; errorWithTouched?: boolean }): any;
+export interface Select<V> {
+  (
+    path: Path,
+    options?: { target?: string; errorWithTouched?: boolean; defaultValues?: V }
+  ): any;
 }
 
 export interface GetState {
@@ -272,7 +276,7 @@ export type FormConfig<V> = Partial<{
 export interface FormReturn<V> {
   form: RegisterForm;
   field: RegisterField<V>;
-  select: Select;
+  select: Select<V>;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;

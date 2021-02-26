@@ -273,8 +273,17 @@ export default <V extends FormValues = FormValues>({
     [getNodeValue, setDefaultValue, setNodeValue]
   );
 
-  const getFormState = useCallback<GetFormState>(
-    (path, { target, errorWithTouched, methodName = "select", callback }) => {
+  const getFormState = useCallback<GetFormState<V>>(
+    (
+      path,
+      {
+        target,
+        errorWithTouched,
+        defaultValues: dfValues,
+        methodName = "select",
+        callback,
+      }
+    ) => {
       if (!path) return callback ? undefined : stateRef.current;
 
       const usedState: Map = {};
@@ -292,7 +301,12 @@ export default <V extends FormValues = FormValues>({
 
         return p;
       };
-      const errorsEnhancer = (p: string, state: any) => {
+      const enhancers = (p: string, state: any) => {
+        if (p.startsWith("values"))
+          return !isUndefined(state) || !dfValues
+            ? state
+            : get(dfValues, p.replace("values.", ""));
+
         if (
           !errorWithTouched ||
           !p.startsWith("errors") ||
@@ -311,18 +325,18 @@ export default <V extends FormValues = FormValues>({
       if (Array.isArray(path)) {
         state = path.map((p) => {
           p = getPath(p);
-          return errorsEnhancer(p, get(stateRef.current, p));
+          return enhancers(p, get(stateRef.current, p));
         });
       } else if (isPlainObject(path)) {
         const paths = path as Map<string>;
         state = Object.keys(paths).reduce((s: Map<any>, key) => {
           path = getPath(paths[key]);
-          s[key] = errorsEnhancer(path, get(stateRef.current, path));
+          s[key] = enhancers(path, get(stateRef.current, path));
           return s;
         }, {});
       } else {
         path = getPath(path);
-        state = errorsEnhancer(path, get(stateRef.current, path));
+        state = enhancers(path, get(stateRef.current, path));
       }
 
       if (callback) callback(usedState);
@@ -332,11 +346,12 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const select = useCallback<Select>(
-    (path, { target, errorWithTouched } = {}) =>
+  const select = useCallback<Select<V>>(
+    (path, { target, errorWithTouched, defaultValues: dfValues } = {}) =>
       getFormState(path, {
         target,
         errorWithTouched,
+        defaultValues: dfValues,
         callback: (usedState) => setUsedState(usedState),
       }),
     [getFormState, setUsedState]
