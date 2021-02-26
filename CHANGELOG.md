@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.126
+
+### Patch Changes
+
+- [`fe7942d`](https://github.com/wellyshen/react-cool-form/commit/fe7942d36ee2410ad3be9dc74318836b850cb6cb) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): fix potential side-effect of the values of form state
+
 ## 0.0.125
 
 ### Patch Changes
