@@ -4,7 +4,7 @@ import { FocusEvent, MutableRefObject, SyntheticEvent } from "react";
 export type Map<T = boolean> = Record<string, T>;
 
 // Global
-export interface Methods {
+export type Methods = {
   shouldRemoveField: boolean;
   defaultValuesRef: MutableRefObject<any>;
   initialStateRef: MutableRefObject<FormState<any>>;
@@ -20,19 +20,7 @@ export interface Methods {
   removeField: RemoveField;
   subscribeObserver: ObserverHandler;
   unsubscribeObserver: ObserverHandler;
-  form: RegisterForm;
-  field: RegisterField<any>;
-  select: Select;
-  getState: GetState;
-  setValue: SetValue;
-  setTouched: SetTouched;
-  setDirty: SetDirty;
-  setError: SetError;
-  clearErrors: ClearErrors;
-  runValidation: RunValidation;
-  reset: Reset<any>;
-  submit: Submit<any>;
-}
+} & FormReturn<any>;
 
 // useState
 type DeepProps<V, T = any> = {

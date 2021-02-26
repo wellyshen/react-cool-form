@@ -10,7 +10,7 @@ import * as shared from "./shared";
 import { get, invariant, isFieldElement, isUndefined, warn } from "./utils";
 import useFormState from "./useFormState";
 
-export default <V = FormValues, E extends any[] = any[]>(
+export default <V extends FormValues = FormValues, E extends any[] = any[]>(
   name: string,
   // @ts-expect-error
   {

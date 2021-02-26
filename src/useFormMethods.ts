@@ -1,8 +1,10 @@
-import { FormReturn } from "./types";
+import { FormReturn, FormValues } from "./types";
 import { get } from "./shared";
 import { invariant } from "./utils";
 
-export default <V>(formId: string): FormReturn<V> => {
+export default <V extends FormValues = FormValues>(
+  formId: string
+): FormReturn<V> => {
   invariant(
     !formId,
     '💡 react-cool-form > useFormMethods: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-methods#formid'
