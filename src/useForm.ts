@@ -233,7 +233,7 @@ export default <V extends FormValues = FormValues>({
   }, []);
 
   const setDefaultValue = useCallback<SetDefaultValue>(
-    (name, value, shouldUpdate = true) => {
+    (name, value) => {
       initialStateRef.current = set(
         initialStateRef.current,
         `values.${name}`,
@@ -241,7 +241,7 @@ export default <V extends FormValues = FormValues>({
         true
       );
 
-      setStateRef(`values.${name}`, value, { shouldUpdate });
+      setStateRef(`values.${name}`, value, { shouldUpdate: false });
     },
     [setStateRef]
   );

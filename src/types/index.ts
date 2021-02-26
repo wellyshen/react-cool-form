@@ -174,7 +174,7 @@ export interface HandleChangeEvent {
 }
 
 export interface SetDefaultValue {
-  (name: string, value: any, shouldUpdate?: boolean): void;
+  (name: string, value: any): void;
 }
 
 export interface RemoveField {
