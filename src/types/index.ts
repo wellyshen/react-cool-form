@@ -13,20 +13,25 @@ export interface Methods {
   fieldValidatorsRef: MutableRefObject<Map<FieldValidator<any>>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   getNodeValue: GetNodeValue;
-  getState: GetState;
   getFormState: GetFormState;
   setDefaultValue: SetDefaultValue;
-  setValue: SetValue;
-  setTouched: SetTouched;
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
-  setDirty: SetDirty;
-  setError: SetError;
-  clearErrors: ClearErrors;
-  runValidation: RunValidation;
   handleChangeEvent: HandleChangeEvent;
   removeField: RemoveField;
   subscribeObserver: ObserverHandler;
   unsubscribeObserver: ObserverHandler;
+  form: RegisterForm;
+  field: RegisterField<any>;
+  select: Select;
+  getState: GetState;
+  setValue: SetValue;
+  setTouched: SetTouched;
+  setDirty: SetDirty;
+  setError: SetError;
+  clearErrors: ClearErrors;
+  runValidation: RunValidation;
+  reset: Reset<any>;
+  submit: Submit<any>;
 }
 
 // useState
