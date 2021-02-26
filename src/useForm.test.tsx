@@ -74,6 +74,7 @@ describe("useForm", () => {
   const onSubmit = jest.fn();
   const onError = jest.fn();
   const onReset = jest.fn();
+  const onRender = jest.fn();
   const builtInError = "Constraints not satisfied";
   const initialState = {
     values: {},
@@ -558,6 +559,21 @@ describe("useForm", () => {
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
 
+    it("should set nested values correctly via defaultValues option", async () => {
+      renderHelper({
+        defaultValues: defaultNestedValue,
+        onSubmit,
+        children: <input data-testid="text" name="text.a[0].b" />,
+      });
+
+      expect(getByTestId("text").value).toBe(defaultNestedValue.text.a[0].b);
+
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
+      );
+    });
+
     it("should set values correctly via defaultValue attribute", async () => {
       renderHelper({
         onSubmit,
@@ -604,21 +620,6 @@ describe("useForm", () => {
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
 
-    it("should set nested values correctly via defaultValues option", async () => {
-      renderHelper({
-        defaultValues: defaultNestedValue,
-        onSubmit,
-        children: <input data-testid="text" name="text.a[0].b" />,
-      });
-
-      expect(getByTestId("text").value).toBe(defaultNestedValue.text.a[0].b);
-
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
-      );
-    });
-
     it("should set nested values correctly via defaultValue attribute", async () => {
       renderHelper({
         onSubmit,
@@ -633,6 +634,18 @@ describe("useForm", () => {
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
       );
+    });
+
+    it("should render once when set values via defaultValue attribute", () => {
+      renderHelper({
+        children: (
+          <>
+            <input name="foo" defaultValue="🍎" />
+            <input name="bar" defaultValue="🍋" />
+          </>
+        ),
+      });
+      expect(onRender).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -1291,7 +1304,6 @@ describe("useForm", () => {
     });
 
     it("should trigger re-rendering", () => {
-      const onRender = jest.fn();
       const { select } = renderHelper({
         onRender,
         children: <input data-testid="foo" name="foo" />,
@@ -1343,7 +1355,6 @@ describe("useForm", () => {
     });
 
     it("should not trigger re-rendering", () => {
-      const onRender = jest.fn();
       const { getState } = renderHelper({
         onRender,
         children: <input data-testid="foo" name="foo" />,
