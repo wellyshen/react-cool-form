@@ -15,12 +15,12 @@ type Children = JSX.Element | JSX.Element[] | null;
 
 interface Methods extends Omit<FormReturn<any>, "form"> {
   // eslint-disable-next-line react/no-unused-prop-types
-  selected: any;
+  selectedVal: any;
 }
 
 interface Config extends FormConfig<any> {
   children: Children | ((methods: Methods) => Children);
-  path: string;
+  selectedPath: string;
   onSubmit: (values: any) => void;
   onSubmitFull: SubmitHandler<any>;
   onError: (errors: any) => void;
@@ -32,7 +32,7 @@ type Props = Partial<Config>;
 
 const Form = ({
   children,
-  path,
+  selectedPath,
   onSubmit = () => null,
   onSubmitFull,
   onError = () => null,
@@ -48,13 +48,13 @@ const Form = ({
       onErrorFull ? onErrorFull(...args) : onError(args[0]),
   });
 
-  const selected = path ? methods.select(path) : undefined;
+  const selectedVal = selectedPath ? methods.select(selectedPath) : undefined;
 
   onRender();
 
   return (
     <form data-testid="form" ref={methods.form}>
-      {isFunction(children) ? children({ ...methods, selected }) : children}
+      {isFunction(children) ? children({ ...methods, selectedVal }) : children}
     </form>
   );
 };
@@ -527,7 +527,12 @@ describe("useForm", () => {
     });
 
     it("should set values correctly via defaultValues option", async () => {
-      renderHelper({ defaultValues, onSubmit, children: getChildren() });
+      const { selectedVal } = renderHelper({
+        defaultValues,
+        selectedPath: "values",
+        onSubmit,
+        children: getChildren(),
+      });
       const {
         text,
         number,
@@ -562,6 +567,7 @@ describe("useForm", () => {
       const selects1 = getByTestId("selects-1");
       expect(selects1.selected).toBe(selects.includes(selects1.value));
 
+      expect(selectedVal).toEqual(defaultValues);
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
@@ -582,8 +588,8 @@ describe("useForm", () => {
     });
 
     it("should set values correctly via defaultValue attribute", async () => {
-      const { selected } = renderHelper({
-        path: "values",
+      const { selectedVal } = renderHelper({
+        selectedPath: "values",
         onSubmit,
         children: (
           <>
@@ -624,7 +630,7 @@ describe("useForm", () => {
           </>
         ),
       });
-      expect(selected).toEqual({});
+      expect(selectedVal).toEqual({});
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
