@@ -15,6 +15,7 @@ interface Config extends Omit<ControlledConfig<any>, "name | formId"> {
   name: string;
   defaultValues: Record<string, any>;
   onSubmit: (values: any) => void;
+  onError: (errors: any) => void;
 }
 
 type Props = Partial<Config>;
@@ -24,19 +25,26 @@ const Form = ({
   name = "foo",
   defaultValues,
   onSubmit = () => null,
+  onError = () => null,
   ...rest
 }: Props) => {
   const { form, getState } = useForm({
     id: "form-1",
     defaultValues,
     onSubmit: (values) => onSubmit(values),
+    onError: (errors) => onError(errors),
   });
   const [fieldProps, meta] = useControlled(name, { formId: "form-1", ...rest });
 
   return (
-    <form data-testid="form" ref={form}>
-      {children ? children({ fieldProps, meta, getState }) : null}
-    </form>
+    <>
+      <div>{meta.error ? meta.error : "not-error"}</div>
+      <div>{meta.isTouched ? "touched" : "not-touched"}</div>
+      <div>{meta.isDirty ? "dirty" : "not-dirty"}</div>
+      <form data-testid="form" ref={form}>
+        {children ? children({ fieldProps, meta, getState }) : null}
+      </form>
+    </>
   );
 };
 
@@ -132,7 +140,10 @@ describe("useControlled", () => {
       onBlur: expect.any(Function),
       anyProp: expect.any(Function),
     });
-    expect(meta).toEqual(expect.any(Object));
+    expect(meta).toEqual({
+      isTouched: expect.any(Boolean),
+      isDirty: expect.any(Boolean),
+    });
   });
 
   it.each(["form", "controlled"])(
@@ -156,6 +167,42 @@ describe("useControlled", () => {
       );
     }
   );
+
+  it("should run validation", async () => {
+    const onError = jest.fn();
+    const errors = { foo: "Required" };
+    const { getState } = renderHelper({
+      defaultValue: "",
+      validate: async (val: string) => (!val.length ? errors.foo : false),
+      onSubmit,
+      onError,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    const form = getByTestId("form");
+
+    fireEvent.submit(form);
+    expect(getState("isValidating")).toBeTruthy();
+    await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
+    const error = await screen.findByText(errors.foo);
+    expect(error).toBeDefined();
+    expect(getState("isValidating")).toBeFalsy();
+    expect(getState("isValid")).toBeFalsy();
+
+    fireEvent.input(getByTestId("foo"), { target: { value } });
+    fireEvent.submit(form);
+    expect(getState("isValidating")).toBeTruthy();
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith({ foo: value });
+      expect(onError).toHaveBeenCalledTimes(1);
+    });
+    const notError = await screen.findByText("not-error");
+    expect(notError).toBeDefined();
+    expect(getState("errors")).toEqual({});
+    expect(getState("isValidating")).toBeFalsy();
+    expect(getState("isValid")).toBeTruthy();
+  });
 
   /* it("should handle native field(s) change correctly", async () => {
     renderHelper({
@@ -213,41 +260,5 @@ describe("useControlled", () => {
     fireEvent.click(getByTestId("custom"), { target: { value } });
     fireEvent.submit(getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
-  });
-
-  it("should run controller validation", async () => {
-    const errors = { foo: "Required" };
-    const { getState } = renderHelper({
-      defaultValues: { foo: "" },
-      onSubmit,
-      onError,
-      children: ({ controller }: Methods) => (
-        <input
-          data-testid="foo"
-          {...controller("foo", {
-            validate: async (val: string) => (!val.length ? errors.foo : false),
-          })}
-        />
-      ),
-    });
-    const form = getByTestId("form");
-    const foo = getByTestId("foo");
-
-    fireEvent.submit(form);
-    expect(getState("isValidating")).toBeTruthy();
-    await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
-    expect(getState("isValidating")).toBeFalsy();
-    expect(getState("isValid")).toBeFalsy();
-
-    fireEvent.input(foo, { target: { value } });
-    fireEvent.submit(form);
-    expect(getState("isValidating")).toBeTruthy();
-    await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledWith({ foo: value });
-      expect(onError).toHaveBeenCalledTimes(1);
-    });
-    expect(getState("errors")).toEqual({});
-    expect(getState("isValidating")).toBeFalsy();
-    expect(getState("isValid")).toBeTruthy();
   }); */
 });
