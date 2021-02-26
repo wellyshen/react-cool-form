@@ -11,12 +11,16 @@ import { FormConfig, FormReturn, SubmitHandler, ErrorHandler } from "./types";
 import { isFunction } from "./utils";
 import useForm from "./useForm";
 
-type Methods = Omit<FormReturn<any>, "form">;
-
 type Children = JSX.Element | JSX.Element[] | null;
+
+interface Methods extends Omit<FormReturn<any>, "form"> {
+  // eslint-disable-next-line react/no-unused-prop-types
+  selected: any;
+}
 
 interface Config extends FormConfig<any> {
   children: Children | ((methods: Methods) => Children);
+  path: string;
   onSubmit: (values: any) => void;
   onSubmitFull: SubmitHandler<any>;
   onError: (errors: any) => void;
@@ -28,6 +32,7 @@ type Props = Partial<Config>;
 
 const Form = ({
   children,
+  path,
   onSubmit = () => null,
   onSubmitFull,
   onError = () => null,
@@ -43,11 +48,13 @@ const Form = ({
       onErrorFull ? onErrorFull(...args) : onError(args[0]),
   });
 
+  const selected = path ? methods.select(path) : undefined;
+
   onRender();
 
   return (
     <form data-testid="form" ref={methods.form}>
-      {isFunction(children) ? children(methods) : children}
+      {isFunction(children) ? children({ ...methods, selected }) : children}
     </form>
   );
 };
@@ -575,7 +582,8 @@ describe("useForm", () => {
     });
 
     it("should set values correctly via defaultValue attribute", async () => {
-      renderHelper({
+      const { selected } = renderHelper({
+        path: "values",
         onSubmit,
         children: (
           <>
@@ -616,6 +624,7 @@ describe("useForm", () => {
           </>
         ),
       });
+      expect(selected).toEqual({});
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
