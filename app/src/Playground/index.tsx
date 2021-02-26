@@ -1,35 +1,39 @@
 /* eslint-disable no-console */
 
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useForm, useControlled } from "react-cool-form";
 
 interface FormValues {
-  foo: string;
+  foo?: string;
+  bar?: string;
 }
 
-const Field = ({ name, ...rest }: any) => {
-  const [props, meta] = useControlled(name, { ...rest });
+const Field = memo(({ name, ...rest }: any) => {
+  const [props] = useControlled(name, { ...rest });
+
+  // console.log("LOG ====> Field re-renders");
 
   return <input {...props} />;
-};
+});
 
 export default () => {
   const [show, setShow] = useState(true);
   const { form, select, reset } = useForm<FormValues>({
     id: "form-1",
-    // defaultValues: { foo: "form test" },
+    // defaultValues: { foo: "form test", bar: "form test" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
   console.log(
     "LOG ===> Form re-renders: ",
-    // @ts-expect-error
-    select("values.bar", { defaultValues: { bar: "field test" } })
+    select(["values.bar", "values.foo"], {
+      defaultValues: { bar: "select test", foo: "select test" },
+    })
   );
 
   return (
     <form ref={form} noValidate>
-      {/* {show && <input name="foo" defaultValue="field test" />} */}
+      {show && <input name="foo" defaultValue="field test" />}
       {show && <Field name="bar" formId="form-1" defaultValue="field test" />}
       <input type="submit" />
       <input type="reset" />
