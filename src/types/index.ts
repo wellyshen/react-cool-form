@@ -5,10 +5,12 @@ export type Map<T = boolean> = Record<string, T>;
 
 // Global
 export interface Methods {
+  shouldRemoveField: boolean;
+  defaultValuesRef: MutableRefObject<any>;
+  initialStateRef: MutableRefObject<FormState<any>>;
   excludeFieldsRef: MutableRefObject<Map>;
   controllersRef: MutableRefObject<Map>;
   fieldValidatorsRef: MutableRefObject<Map<FieldValidator<any>>>;
-  defaultValuesRef: MutableRefObject<any>;
   changedFieldRef: MutableRefObject<string | undefined>;
   getNodeValue: GetNodeValue;
   getState: GetState;
@@ -22,6 +24,7 @@ export interface Methods {
   clearErrors: ClearErrors;
   runValidation: RunValidation;
   handleChangeEvent: HandleChangeEvent;
+  removeField: RemoveField;
   subscribeObserver: ObserverHandler;
   unsubscribeObserver: ObserverHandler;
 }
@@ -166,7 +169,11 @@ export interface HandleChangeEvent {
 }
 
 export interface SetDefaultValue {
-  (name: string, value: any, callback?: () => void): void;
+  (name: string, value: any, shouldUpdate?: boolean): void;
+}
+
+export interface RemoveField {
+  (name: string): void;
 }
 
 export interface SetTouchedMaybeValidate {
@@ -307,7 +314,6 @@ export interface ControlledConfig<V> {
   parse?: Parser;
   format?: Formatter;
   errorWithTouched?: boolean;
-  exclude?: boolean;
   [k: string]: any;
 }
 
@@ -319,19 +325,10 @@ export interface FieldProps<E extends any[]> {
   [k: string]: any;
 }
 
-export interface ControlledReturn<E extends any[]> {
-  fieldProps?: FieldProps<E>;
-  meta: {
-    value: any;
-    error: any;
-    isTouched: boolean;
-    isDirty: boolean;
-  };
-  getState: GetState;
-  setValue: SetValue;
-  setTouched: SetTouched;
-  setDirty: SetDirty;
-  setError: SetError;
-  clearErrors: ClearErrors;
-  runValidation: RunValidation;
+export interface Meta {
+  error: any;
+  isTouched: boolean;
+  isDirty: boolean;
 }
+
+export type ControlledReturn<E extends any[]> = [FieldProps<E>, Meta];

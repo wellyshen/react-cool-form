@@ -1,11 +1,17 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 
-import { ControlledConfig, ControlledReturn } from "./types";
+import { ControlledConfig, FieldProps, GetState, Meta } from "./types";
 import useForm from "./useForm";
 import useControlled from "./useControlled";
 
+interface API {
+  fieldProps: FieldProps<any[]>;
+  meta: Meta;
+  getState: GetState;
+}
+
 interface Config extends Omit<ControlledConfig<any>, "name | formId"> {
-  children: (props: ControlledReturn<any[]>) => JSX.Element | null;
+  children: (api: API) => JSX.Element | null;
   name: string;
   defaultValues: Record<string, any>;
   onSubmit: (values: any) => void;
@@ -20,28 +26,28 @@ const Form = ({
   onSubmit = () => null,
   ...rest
 }: Props) => {
-  const { form } = useForm({
+  const { form, getState } = useForm({
     id: "form-1",
     defaultValues,
     onSubmit: (values) => onSubmit(values),
   });
-  const props = useControlled(name, { formId: "form-1", ...rest });
+  const [fieldProps, meta] = useControlled(name, { formId: "form-1", ...rest });
 
   return (
     <form data-testid="form" ref={form}>
-      {children ? children(props) : null}
+      {children ? children({ fieldProps, meta, getState }) : null}
     </form>
   );
 };
 
 const renderHelper = ({ children, ...rest }: Props = {}) => {
-  let api: ControlledReturn<any[]>;
+  let api: API;
 
   render(
     <Form {...rest}>
-      {(props) => {
-        api = props;
-        return children ? children(props) : null;
+      {(a) => {
+        api = a;
+        return children ? children(a) : null;
       }}
     </Form>
   );
@@ -82,49 +88,68 @@ describe("useControlled", () => {
     );
   });
 
-  it("should return props correctly", () => {
-    const props = renderHelper({ anyProp: () => null });
-    expect(props).toEqual({
-      fieldProps: {
-        name: expect.any(String),
-        value: expect.anything(),
-        onChange: expect.any(Function),
-        onBlur: expect.any(Function),
-        anyProp: expect.any(Function),
-      },
-      meta: expect.any(Object),
-      getState: expect.any(Function),
-      setValue: expect.any(Function),
-      setTouched: expect.any(Function),
-      setDirty: expect.any(Function),
-      setError: expect.any(Function),
-      clearErrors: expect.any(Function),
-      runValidation: expect.any(Function),
-    });
-  });
-
-  it("should not set default value automatically", () => {
-    const { meta } = renderHelper({
-      children: ({ fieldProps }: ControlledReturn<any>) => (
-        <input {...fieldProps} />
+  it("should warn missing default value", () => {
+    console.warn = jest.fn();
+    renderHelper({
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
       ),
     });
-    expect(meta.value).toBeUndefined();
+    fireEvent.input(getByTestId("foo"), { target: { value } });
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledWith(
+      '💡 react-cool-form > useControlled: Please provide a default value for the "foo" field.'
+    );
+  });
+
+  it.each(["form", "controlled"])(
+    "should not warn missing default value",
+    (type) => {
+      console.warn = jest.fn();
+      renderHelper({
+        defaultValues: type === "form" ? { foo: value } : undefined,
+        defaultValue: type === "controlled" ? value : undefined,
+        children: ({ fieldProps }: API) => <input {...fieldProps} />,
+      });
+      expect(console.warn).not.toHaveBeenCalled();
+    }
+  );
+
+  it("should not set default value automatically", () => {
+    console.warn = jest.fn();
+    const { getState } = renderHelper({
+      children: ({ fieldProps }: API) => <input {...fieldProps} />,
+    });
+    expect(getState("values.foo")).toBeUndefined();
+  });
+
+  it("should return values correctly", () => {
+    const { fieldProps, meta } = renderHelper({ anyProp: () => null });
+    expect(fieldProps).toEqual({
+      name: expect.any(String),
+      value: expect.anything(),
+      onChange: expect.any(Function),
+      onBlur: expect.any(Function),
+      anyProp: expect.any(Function),
+    });
+    expect(meta).toEqual(expect.any(Object));
   });
 
   it.each(["form", "controlled"])(
     "should set default value from %s option",
     async (type) => {
-      const { meta } = renderHelper({
+      const format = jest.fn(() => value);
+      renderHelper({
         defaultValues: type === "form" ? { foo: value } : undefined,
         defaultValue: type === "controlled" ? value : undefined,
+        format,
         onSubmit,
-        children: ({ fieldProps }: ControlledReturn<any[]>) => (
+        children: ({ fieldProps }: API) => (
           <input data-testid="foo" {...fieldProps} />
         ),
       });
+      expect(format).toHaveBeenCalledWith(value);
       expect(getByTestId("foo").value).toBe(value);
-      expect(meta.value).toBe(value);
       fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })

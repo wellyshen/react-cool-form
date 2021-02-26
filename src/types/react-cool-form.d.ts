@@ -226,32 +226,19 @@ declare module "react-cool-form" {
     parse?: Parser;
     format?: Formatter;
     errorWithTouched?: boolean;
-    exclude?: boolean;
     [k: string]: any;
   }
 
-  export interface ControlledReturn<E extends any[] = any[]> {
-    fieldProps?: {
+  export type ControlledReturn<E extends any[] = any[]> = [
+    {
       name: string;
       value: any;
       onChange: (...args: E) => void;
       onBlur: BlurHandler;
       [k: string]: any;
-    };
-    meta: {
-      value: any;
-      error: any;
-      isTouched: boolean;
-      isDirty: boolean;
-    };
-    getState: GetState;
-    setValue: SetValue;
-    setTouched: SetTouched;
-    setDirty: SetDirty;
-    setError: SetError;
-    clearErrors: ClearErrors;
-    runValidation: RunValidation;
-  }
+    },
+    { error: any; isTouched: boolean; isDirty: boolean }
+  ];
 
   export function useControlled<V = FormValues, E extends any[] = any[]>(
     name: string,

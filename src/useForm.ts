@@ -24,6 +24,7 @@ import {
   Parsers,
   RegisterField,
   RegisterForm,
+  RemoveField,
   Reset,
   RunValidation,
   Select,
@@ -76,7 +77,6 @@ export default <V extends FormValues = FormValues>({
   onError,
   debug,
 }: FormConfig<V> = {}): FormReturn<V> => {
-  const isInitRef = useRef(true);
   const handlersRef = useRef<Handlers>({});
   const observerRef = useRef<MutationObserver>();
   const formRef = useRef<HTMLElement>();
@@ -233,9 +233,7 @@ export default <V extends FormValues = FormValues>({
   }, []);
 
   const setDefaultValue = useCallback<SetDefaultValue>(
-    (name, value, callback) => {
-      if (!isUndefined(get(initialStateRef.current.values, name))) return;
-
+    (name, value, shouldUpdate = true) => {
       initialStateRef.current = set(
         initialStateRef.current,
         `values.${name}`,
@@ -243,11 +241,7 @@ export default <V extends FormValues = FormValues>({
         true
       );
 
-      setStateRef(`values.${name}`, value, {
-        shouldUpdate: !isInitRef.current,
-      });
-
-      if (callback) callback();
+      setStateRef(`values.${name}`, value, { shouldUpdate });
     },
     [setStateRef]
   );
@@ -731,6 +725,26 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
+  const removeField = useCallback<RemoveField>(
+    (name) => {
+      handleUnset("values", `values.${name}`, stateRef.current.values, name);
+      handleUnset("touched", `touched.${name}`, stateRef.current.touched, name);
+      handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
+      handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
+
+      initialStateRef.current = unset(
+        initialStateRef.current,
+        `values.${name}`,
+        true
+      );
+
+      delete fieldParsersRef.current[name];
+      delete fieldValidatorsRef.current[name];
+      delete controllersRef.current[name];
+    },
+    [handleUnset, stateRef]
+  );
+
   const registerForm = useCallback<RegisterForm>(
     (el) => {
       if (!el) return;
@@ -740,7 +754,6 @@ export default <V extends FormValues = FormValues>({
 
       fieldsRef.current = getFields(form);
       setNodesOrStateValue(initialStateRef.current.values, true);
-      isInitRef.current = false;
 
       handlersRef.current.change = ({ target }: Event) => {
         const { name } = target as FieldElement;
@@ -787,37 +800,8 @@ export default <V extends FormValues = FormValues>({
 
         if (shouldRemoveField)
           Object.keys(fieldsRef.current).forEach((name) => {
-            if (fields[name]) return;
-
-            handleUnset(
-              "values",
-              `values.${name}`,
-              stateRef.current.values,
-              name
-            );
-            handleUnset(
-              "touched",
-              `touched.${name}`,
-              stateRef.current.touched,
-              name
-            );
-            handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
-            handleUnset(
-              "errors",
-              `errors.${name}`,
-              stateRef.current.errors,
-              name
-            );
-
-            initialStateRef.current = unset(
-              initialStateRef.current,
-              `values.${name}`,
-              true
-            );
-
-            delete fieldParsersRef.current[name];
-            delete fieldValidatorsRef.current[name];
-            delete controllersRef.current[name];
+            if (!fields[name] && !controllersRef.current[name])
+              removeField(name);
           });
 
         const addedNodes: string[] = [];
@@ -843,7 +827,7 @@ export default <V extends FormValues = FormValues>({
       getFields,
       getNodeValue,
       handleChangeEvent,
-      handleUnset,
+      removeField,
       reset,
       setNodesOrStateValue,
       setTouchedMaybeValidate,
@@ -877,9 +861,11 @@ export default <V extends FormValues = FormValues>({
 
   if (id)
     shared.set(id, {
+      shouldRemoveField,
+      defaultValuesRef,
+      initialStateRef,
       controllersRef,
       fieldValidatorsRef,
-      defaultValuesRef,
       changedFieldRef,
       excludeFieldsRef,
       getNodeValue,
@@ -894,6 +880,7 @@ export default <V extends FormValues = FormValues>({
       clearErrors,
       runValidation,
       handleChangeEvent,
+      removeField,
       subscribeObserver,
       unsubscribeObserver,
     });
