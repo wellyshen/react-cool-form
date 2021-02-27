@@ -81,97 +81,24 @@ const App = () => {
 };
 ```
 
-## 2. [Controller API](../api-reference/use-form#controller)
+## 2. [useControlled Hook](../api-reference/use-controlled)
 
-[Controlled components](https://reactjs.org/docs/forms.html#controlled-components) with highly customized and full features like [React Select](https://react-select.com) or [React Datepicker](https://reactdatepicker.com). We can use React Cool Form's [controller](../api-reference/use-form#controller) API for it.
+[Controlled components](https://reactjs.org/docs/forms.html#controlled-components) with highly customized and full features like [React Select](https://react-select.com) or [React Datepicker](https://reactdatepicker.com). We can use React Cool Form's [useControlled](../api-reference/use-controlled) hook to create a reusable controller component for them in a flexible and performant way.
 
 > 💡 We strongly advise to provide a default value for the controlled field.
 
 [![Edit RCF - React Select](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-react-select-djsl1?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
-import { useForm } from "react-cool-form";
+import { useForm, useControlled } from "react-cool-form";
 import Select from "react-select";
 
-const options = [
-  { label: "React", value: "react" },
-  { label: "Vue", value: "vue" },
-  { label: "Angular", value: "angular" },
-  { label: "Svelte", value: "svelte" },
-];
+const Field = ({ as, name, ...restProps }) => {
+  const [fieldProps] = useControlled(name, restProps);
+  const Component = as;
 
-const App = () => {
-  const { form, controller } = useForm({
-    // (Strongly advise) Provide a default value for the controlled field
-    defaultValues: { framework: "" },
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
-  });
-
-  return (
-    <form ref={form}>
-      <Select
-        {...controller("framework", {
-          // Parse the "option.value" and store it into the form's values
-          // So the values will be: { framework: "react" }
-          parse: ({ value }) => value,
-          // react-select's value prop receives the "option" object
-          // So we need to format it back
-          format: (value) => options.find((option) => option.value === value),
-        })}
-        options={options}
-        placeholder="I'm interesting in..."
-      />
-      <input type="submit" />
-    </form>
-  );
+  return <Component {...fieldProps} />;
 };
-```
-
-The `controller` will trigger re-renders whenever the value of the target component updated. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can create a reusable component to isolate re-rendering at the component level for better performance as below:
-
-```js
-import { memo, useState } from "react";
-import { useForm } from "react-cool-form";
-import Select from "react-select";
-
-// We can use React.memo to skip re-rendering for the same props (especially for a heavy-computational component)
-const Controller = memo(
-  ({
-    as,
-    name,
-    defaultValue,
-    parse = () => {},
-    format = () => {},
-    onChange = () => {},
-    onBlur = () => {},
-    controller,
-    ...rest
-  }) => {
-    const Component = as;
-    // Don't forget to assign the default value
-    const [value, setValue] = useState(defaultValue);
-
-    return (
-      <Component
-        {...controller(name, {
-          value,
-          parse,
-          format,
-          onChange: (...args) => {
-            // React Cool Form appends the field's value to the last parameter
-            // We can use it to set the state
-            const fieldValue = args.pop();
-            setValue(fieldValue);
-            // Pass the rest parameters to the callback
-            onChange(...args);
-          },
-          onBlur,
-        })}
-        {...rest}
-      />
-    );
-  }
-);
 
 const options = [
   { label: "React", value: "react" },
@@ -182,20 +109,20 @@ const options = [
 
 const App = () => {
   const { form, controller } = useForm({
-    defaultValues: { framework: "" },
+    id: "form-1", // The ID is used by the "useControlled" hook
+    defaultValues: { framework: "" }, // (Strongly advise) Provide a default value for the controlled field
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
   return (
     <form ref={form}>
-      <Controller
+      <Field
         as={Select}
+        formId="form-1" // Provide the corresponding ID of the "useForm" hook
         name="framework"
-        defaultValue=""
         options={options}
         parse={(option) => option.value}
         format={(value) => options.find((option) => option.value === value)}
-        controller={controller}
       />
       <input type="submit" />
     </form>
@@ -205,16 +132,38 @@ const App = () => {
 
 ## 3. Do It Yourself
 
-If the above solutions can't meet your needs then you can set up a custom field with the [API](../api-reference/use-form#return-values) of React Cool Form. The following example demonstrates how to implement a custom field with full validation UX.
+If the above solutions can't meet your needs then you can set up a custom field with the [API](../api-reference/use-form#return-values) of React Cool Form. The following example demonstrates how to combine the [useFormState](../api-reference/use-form-state) and [useFormMethods](../api-reference/use-form-methods) to DIY a custom field with full validation UX.
 
 [![Edit RCF - Custom Field](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-custom-field-p9lqi?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
-import { useForm } from "react-cool-form";
+import { useForm, useFormState, useFormMethods } from "react-cool-form";
 import { TextField } from "@material-ui/core";
 
+const Field = ({ as, name, formId, onChange, onBlur, ...restProps }) => {
+  const value = useFormState(`values.${name}`, { formId });
+  const { setValue, setTouched } = useFormMethods(formId);
+  const Component = as;
+
+  return (
+    <Component
+      name={name}
+      value={value}
+      onChange={(e) => {
+        setValue(name, e.target.value); // Update the field's value and set it as touched
+        onChange(e);
+      }}
+      onBlur={(e) => {
+        setTouched(name); // Set the field as touched for displaying error (if it's not touched)
+        onBlur(e);
+      }}
+      {...restProps}
+    />
+  );
+};
+
 const App = () => {
-  const { form, select, setValue, setTouched } = useForm({
+  const { form, select } = useForm({
     defaultValues: { username: "" },
     // excludeFields: ["username"], // You can also exclude the field by this option
     validate: ({ username }) => {
@@ -224,17 +173,15 @@ const App = () => {
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [value, errors] = select(["values.username", "errors"]);
+  const errors = select("errors");
 
   return (
     <form ref={form} noValidate>
-      <TextField
+      <Field
+        as={TextField}
         label="Username"
         name="username" // Used for the "excludeFields" option
-        value={value}
         required
-        onChange={(e) => setValue("username", e.target.value)} // Update the field's value and set it as touched
-        onBlur={() => setTouched("username")} // Set the field as touched for displaying error (if it's not touched)
         error={!!errors.username}
         helperText={errors.username}
         inputProps={{ "data-rcf-exclude": true }} // Exclude the field via the pre-defined data attribute

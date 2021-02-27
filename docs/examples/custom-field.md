@@ -4,7 +4,7 @@ title: Custom Field
 hide_table_of_contents: true
 ---
 
-This example demonstrates how to DIY a custom field with the [API](../api-reference/use-form#return-values) of React Cool Form.
+This example demonstrates how to combine the [useFormState](../api-reference/use-form-state) and [useFormMethods](../api-reference/use-form-methods) to DIY a custom field.
 
 <iframe src="https://codesandbox.io/embed/rcf-custom-field-p9lqi?fontsize=14&hidenavigation=1&theme=dark"
   style={{ width: "100%", height: "500px", border: "0", borderRadius: "4px",  overflow: "hidden" }}

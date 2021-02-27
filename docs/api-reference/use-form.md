@@ -33,7 +33,7 @@ Default field values of the form. In most case (especially working with TypeScri
 
 Tell React Cool Form to exclude field(s) by passing in the `name` of the field. You can also exclude a field via the pre-defined `data-rcf-exclude` attribute. Check the [Exclude Fields](../getting-started/integration-an-existing-form#exclude-fields) to learn more.
 
-- The `excludeFields` and `data-rcf-exclude` won't affect the operation of the [controller](#controller).
+- The `excludeFields` and `data-rcf-exclude` won't affect the functionality of the [useControlled](./use-controlled).
 
 ### shouldRemoveField
 
@@ -41,7 +41,7 @@ Tell React Cool Form to exclude field(s) by passing in the `name` of the field. 
 
 By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirty`) of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. Check the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
 
-- If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) or [controller](#controller)'s target. We need to clear the related state by ourselves.
+- If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) or [useControlled](./use-controlled)'s target. We need to clear the related state by ourselves.
 
 ### builtInValidationMode
 
@@ -180,7 +180,7 @@ This method allows us to integrate [an existing form](../getting-started/integra
 This method allows us to do [field-level validation](../getting-started/validation-guide#field-level-validation) and data type conversion via the `ref` attribute. For the data type conversion, React Cool Form supports the [valueAsNumber](https://www.w3.org/TR/2011/WD-html5-20110405/common-input-element-attributes.html#dom-input-valueasnumber), [valueAsDate](https://www.w3.org/TR/2011/WD-html5-20110405/common-input-element-attributes.html#dom-input-valueasdate), and custom parser.
 
 - For your convenience, the values of `<input type="number">` and `<input type="radio">` are converted to `number` by default.
-- When using this method with the [controller](#controller), the functionality of the method will be replaced.
+- When using this method with the [useControlled](./use-controlled), the functionality of the method will be replaced.
 
 ```js
 const { field } = useForm();
@@ -409,57 +409,3 @@ const handleFormReset = (e) => {
 ```
 
 👉🏻 Check the [Reset Form](../getting-started/reset-form) to learn more.
-
-### controller
-
-`(name: string, options?: Object) => Props`
-
-This method allows us to integrate with an existing component (usually a [controlled component](https://reactjs.org/docs/forms.html#controlled-components)) or 3rd-party UI library in React Cool Form. The API as follows:
-
-#### Parameters
-
-To use the `controller`, you **must pass in the field's name** to the first argument. The `options` containing the following optional properties:
-
-| Name         | Type       | Description                                                                                                                                                                                                                                                                                          |
-| ------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| validate     | `function` | A synchronous/asynchronous function that is used for the [field-level validation](../getting-started/validation-guide#field-level-validation).                                                                                                                                                       |
-| value        | `any`      | A given value of the field for UI rendering. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance.                                                                                                          |
-| defaultValue | `any`      | The default value of the field. Useful for dealing with the case of [conditional fields](../examples/conditional-fields).                                                                                                                                                                            |
-| parse        | `function` | A function that takes the event object (or arguments) of the target component's `onChange` handler and parses the value of the field that you want to store into the [form state](../getting-started/form-state). Useful for data type converting.                                                   |
-| format       | `function` | A function that takes the field's value from the [form state](../getting-started/form-state) and formats the value to give to the field. Usually used in conjunction with `parse`.                                                                                                                   |
-| onChange     | `function` | The `onChange` handler of the target component. React Cool Form appends the field's value to the last argument, i.e. `(...args, fieldValue) => void`. Useful for [isolating re-rendering at the component level](../getting-started/3rd-party-ui-libraries#2-controller-api) for better performance. |
-| onBlur       | `function` | The `onBlur` handler of the target component.                                                                                                                                                                                                                                                        |
-
-#### Return Props
-
-It returns the following props:
-
-| Name     | Type       | Description                                          |
-| -------- | ---------- | ---------------------------------------------------- |
-| name     | `string`   | The field's name.                                    |
-| value    | `any`      | The field's value.                                   |
-| onChange | `function` | Event handler called when the field's value changed. |
-| onChange | `function` | Event handler called when the field loses focus.     |
-
-#### Basic Usage
-
-The following code demonstrates a basic use case:
-
-```js
-// (Strongly advise) Provide a default value for the controlled field
-const { controller } = useForm({ defaultValues: { fieldName: "" } });
-
-// With built-in validation (if supported)
-<Component {...controller("fieldName")} required />;
-
-// With custom validation
-<Component
-  {...controller("fieldName", {
-    validate: (value, values /* Form's values */) =>
-      !value.length && "Required",
-  })}
-  required
-/>;
-```
-
-👉🏻 Check the [3rd-Party UI Libraries](../getting-started/3rd-party-ui-libraries) to learn more.
