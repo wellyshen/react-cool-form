@@ -6,7 +6,7 @@ title: useForm
 This is a custom React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook) that helps you with building forms. It takes `config` parameters and returns useful methods as follows.
 
 ```js
-const returnValues = useForm(config);
+const methods = useForm(config);
 ```
 
 ## Config
@@ -163,7 +163,7 @@ const returnValues = useForm({
 });
 ```
 
-## Return Values
+## Methods
 
 An `object` with the following methods:
 

@@ -3,7 +3,7 @@ id: use-form-methods
 title: useFormMethods
 ---
 
-This hook allows us to use all of the methods returned by the [useForm](./use-form#return-values) from a component at any level. Check the [Do It Yourself](../getting-started/3rd-party-ui-libraries#3-do-it-yourself) to learn more.
+This hook allows us to use [all of the methods](./use-form#methods) provided by React Cool Form from a component at any level. Check the [Do It Yourself](../getting-started/3rd-party-ui-libraries#3-do-it-yourself) to learn more.
 
 ```js
 const methods = useFormMethods(formId);
@@ -17,7 +17,7 @@ The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We m
 
 ## methods
 
-All the methods that returned by the [useForm](./use-form#return-values).
+The [methods](./use-form#methods) are the same as the `useForm` hook.
 
 ## Example
 
@@ -26,7 +26,7 @@ The example demonstrates the basic usage of this hook.
 ```js
 import { useFormMethods } from "react-cool-form";
 
-const Field = ({ as, name, formId, ...restProps }) => {
+const Field = ({ as, name, formId, onFocus, ...restProps }) => {
   // Provide the corresponding ID of the "useForm" hook
   const { clearErrors, ...moreMethods } = useFormMethods(formId);
   const Component = as;
@@ -36,7 +36,7 @@ const Field = ({ as, name, formId, ...restProps }) => {
       name={name}
       onFocus={(e) => {
         clearErrors(name);
-        restProps.onFocus(e);
+        onFocus(e);
       }}
       {...restProps}
     />
