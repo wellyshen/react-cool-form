@@ -11,7 +11,7 @@ interface FormValues {
 const Field = memo(({ name, ...rest }: any) => {
   const [props] = useControlled(name, { ...rest });
 
-  // console.log("LOG ====> Field re-renders");
+  console.log("LOG ====> Field re-renders");
 
   return <input {...props} />;
 });
@@ -20,20 +20,18 @@ export default () => {
   const [show, setShow] = useState(true);
   const { form, select, reset } = useForm<FormValues>({
     id: "form-1",
-    // defaultValues: { foo: "form test", bar: "form test" },
+    defaultValues: { bar: "form test" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
   console.log(
     "LOG ===> Form re-renders: ",
-    select(["values.bar", "values.foo"], {
-      defaultValues: { bar: "select test", foo: "select test" },
-    })
+    select("values.bar", { defaultValues: { bar: "field test" } })
   );
 
   return (
     <form ref={form} noValidate>
-      {show && <input name="foo" defaultValue="field test" />}
+      {/* {show && <input name="foo" defaultValue="field test" />} */}
       {show && <Field name="bar" formId="form-1" defaultValue="field test" />}
       <input type="submit" />
       <input type="reset" />
