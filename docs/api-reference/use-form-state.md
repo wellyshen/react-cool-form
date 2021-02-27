@@ -96,7 +96,9 @@ The example demonstrates the basic usage of this hook.
 import { useFormState } from "react-cool-form";
 
 const IsolatedComponent = () => {
-  const foo = useFormState("values.foo", { formId: "form-1" });
+  const foo = useFormState("values.foo", {
+    formId: "form-1", // Provide the corresponding ID of the "useForm" hook
+  });
 
   return <div>{foo}</div>;
 };
