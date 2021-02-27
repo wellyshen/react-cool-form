@@ -306,8 +306,9 @@ export default <V extends FormValues = FormValues>({
           if (!isUndefined(state)) return state;
 
           p = p.replace("values.", "");
+          state = get(defaultValuesRef.current, p);
 
-          return get(defaultValuesRef.current, p) || get(dfValues, p);
+          return !isUndefined(state) ? state : get(dfValues, p);
         }
 
         if (
