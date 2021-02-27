@@ -1254,13 +1254,18 @@ describe("useForm", () => {
     });
 
     it("should get default value correctly", () => {
+      const formValue = { foo: null };
+      const selectValue = { foo: "🍎" };
       // eslint-disable-next-line prefer-destructuring
-      let select = renderHelper({ defaultValues: values }).select;
-      const defaultValues = { foo: "🍋" };
-      expect(select("values.foo", { defaultValues })).toBe(values.foo);
+      let select = renderHelper({ defaultValues: formValue }).select;
+      expect(select("values.foo", { defaultValues: selectValue })).toBe(
+        formValue.foo
+      );
 
       select = renderHelper().select;
-      expect(select("values.foo", { defaultValues })).toBe(defaultValues.foo);
+      expect(select("values.foo", { defaultValues: selectValue })).toBe(
+        selectValue.foo
+      );
 
       select = renderHelper().select;
       expect(select("values.foo")).toBeUndefined();
