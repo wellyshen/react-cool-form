@@ -230,8 +230,8 @@ declare module "react-cool-form" {
 
   export interface ControlledConfig<V extends FormValues = FormValues> {
     formId: string;
-    validate?: FieldValidator<V>;
     defaultValue?: any;
+    validate?: FieldValidator<V>;
     parse?: Parser;
     format?: Formatter;
     errorWithTouched?: boolean;
