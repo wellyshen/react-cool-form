@@ -1266,6 +1266,8 @@ describe("useForm", () => {
       expect(select("values.foo")).toBeUndefined();
     });
 
+    it.todo("should get default value correctly with conditional field");
+
     it("should get state with correct format", () => {
       const { select } = renderHelper({ defaultValues: values });
 

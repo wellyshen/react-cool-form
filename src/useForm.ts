@@ -279,7 +279,7 @@ export default <V extends FormValues = FormValues>({
       {
         target,
         errorWithTouched,
-        defaultValues: dfValues,
+        defaultValues: dfValues = {},
         methodName = "select",
         callback,
       }
@@ -302,10 +302,13 @@ export default <V extends FormValues = FormValues>({
         return p;
       };
       const enhancers = (p: string, state: any) => {
-        if (p.startsWith("values"))
-          return !isUndefined(state) || !dfValues
-            ? state
-            : get(dfValues, p.replace("values.", ""));
+        if (p.startsWith("values")) {
+          if (!isUndefined(state)) return state;
+
+          p = p.replace("values.", "");
+
+          return get(defaultValuesRef.current, p) || get(dfValues, p);
+        }
 
         if (
           !errorWithTouched ||
