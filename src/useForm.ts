@@ -301,7 +301,7 @@ export default <V extends FormValues = FormValues>({
 
         return p;
       };
-      const enhancers = (p: string, state: any) => {
+      const helper = (p: string, state: any) => {
         if (p.startsWith("values")) {
           if (!isUndefined(state)) return state;
 
@@ -329,18 +329,18 @@ export default <V extends FormValues = FormValues>({
       if (Array.isArray(path)) {
         state = path.map((p) => {
           p = getPath(p);
-          return enhancers(p, get(stateRef.current, p));
+          return helper(p, get(stateRef.current, p));
         });
       } else if (isPlainObject(path)) {
         const paths = path as Map<string>;
         state = Object.keys(paths).reduce((s: Map<any>, key) => {
           path = getPath(paths[key]);
-          s[key] = enhancers(path, get(stateRef.current, path));
+          s[key] = helper(path, get(stateRef.current, path));
           return s;
         }, {});
       } else {
         path = getPath(path);
-        state = enhancers(path, get(stateRef.current, path));
+        state = helper(path, get(stateRef.current, path));
       }
 
       if (callback) callback(usedState);
