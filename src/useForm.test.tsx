@@ -931,12 +931,13 @@ describe("useForm", () => {
         expect(getState("isValidating")).toBeFalsy();
         expect(getState("isValid")).toBeFalsy();
 
+        onError.mockClear();
         fireEvent.input(foo, { target: { value } });
         fireEvent.submit(form);
         expect(getState("isValidating")).toBeTruthy();
         await waitFor(() => {
           expect(onSubmit).toHaveBeenCalledWith({ foo: value });
-          expect(onError).toHaveBeenCalledTimes(1);
+          expect(onError).not.toHaveBeenCalled();
         });
         expect(getState("errors")).toEqual({});
         expect(getState("isValidating")).toBeFalsy();
@@ -974,12 +975,13 @@ describe("useForm", () => {
       expect(getState("isValidating")).toBeFalsy();
       expect(getState("isValid")).toBeFalsy();
 
+      onError.mockClear();
       fireEvent.input(foo, { target: { value } });
       fireEvent.submit(form);
       expect(getState("isValidating")).toBeTruthy();
       await waitFor(() => {
         expect(onSubmit).toHaveBeenCalledWith({ foo: value });
-        expect(onError).toHaveBeenCalledTimes(1);
+        expect(onError).not.toHaveBeenCalled();
       });
       expect(getState("errors")).toEqual({});
       expect(getState("isValidating")).toBeFalsy();
@@ -1012,18 +1014,51 @@ describe("useForm", () => {
         expect(getState("isValidating")).toBeFalsy();
         expect(getState("isValid")).toBeFalsy();
 
+        onError.mockClear();
         fireEvent.input(foo, { target: { value } });
         fireEvent.submit(form);
         expect(getState("isValidating")).toBeTruthy();
         await waitFor(() => {
           expect(onSubmit).toHaveBeenCalledWith({ foo: value });
-          expect(onError).toHaveBeenCalledTimes(1);
+          expect(onError).not.toHaveBeenCalled();
         });
         expect(getState("errors")).toEqual({});
         expect(getState("isValidating")).toBeFalsy();
         expect(getState("isValid")).toBeTruthy();
       }
     );
+
+    it("should run field-level validation with dependent fields", async () => {
+      const errors = { foo: "Bar is required" };
+      renderHelper({
+        onSubmit,
+        onError,
+        children: ({ field }: Methods) => (
+          <>
+            <input
+              data-testid="foo"
+              name="foo"
+              ref={field((_, values) =>
+                !values.bar.length ? errors.foo : false
+              )}
+            />
+            <input data-testid="bar" name="bar" />
+          </>
+        ),
+      });
+      const form = getByTestId("form");
+
+      fireEvent.submit(form);
+      await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
+
+      onError.mockClear();
+      fireEvent.input(getByTestId("bar"), { target: { value } });
+      fireEvent.submit(form);
+      await waitFor(() => {
+        expect(onSubmit).toHaveBeenCalledWith({ foo: "", bar: value });
+        expect(onError).not.toHaveBeenCalled();
+      });
+    });
 
     it.each(["run", "disable"])(
       "should %s validation on change",
