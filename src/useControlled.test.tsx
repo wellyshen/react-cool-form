@@ -5,7 +5,7 @@ import useForm from "./useForm";
 import useControlled from "./useControlled";
 
 interface API {
-  fieldProps: FieldProps<any[]>;
+  fieldProps: FieldProps;
   meta: Meta;
   getState: GetState;
 }

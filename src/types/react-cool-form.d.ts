@@ -220,8 +220,8 @@ declare module "react-cool-form" {
   export function useFormState(path: Path, config: StateConfig): any;
 
   // useControlled
-  export interface Parser<A extends any[] = any[], R = any> {
-    (...args: A): R;
+  export interface Parser<E extends any[] = any[], R = any> {
+    (...event: E): R;
   }
 
   export interface Formatter<V = any, R = any> {
@@ -242,21 +242,21 @@ declare module "react-cool-form" {
     [k: string]: any;
   }
 
-  export type ControlledReturn<E extends any[] = any[]> = [
+  export type ControlledReturn = [
     {
       name: string;
       value: any;
-      onChange: (...args: E) => void;
+      onChange: (...event: any[]) => void;
       onBlur: BlurHandler;
       [k: string]: any;
     },
     { error: any; isTouched: boolean; isDirty: boolean }
   ];
 
-  export function useControlled<
-    V extends FormValues = FormValues,
-    E extends any[] = any[]
-  >(name: string, config: ControlledConfig<V>): ControlledReturn<E>;
+  export function useControlled<V extends FormValues = FormValues>(
+    name: string,
+    config: ControlledConfig<V>
+  ): ControlledReturn;
 
   // Utility functions
   export function get(object: any, path: string, defaultValue?: unknown): any;

@@ -10,7 +10,7 @@ import * as shared from "./shared";
 import { get, invariant, isFieldElement, isUndefined, warn } from "./utils";
 import useFormState from "./useFormState";
 
-export default <V extends FormValues = FormValues, E extends any[] = any[]>(
+export default <V extends FormValues = FormValues>(
   name: string,
   // @ts-expect-error
   {
@@ -22,7 +22,7 @@ export default <V extends FormValues = FormValues, E extends any[] = any[]>(
     errorWithTouched,
     ...props
   }: ControlledConfig<V> = {}
-): ControlledReturn<E> => {
+): ControlledReturn => {
   invariant(
     !name,
     '💡 react-cool-form > useControlled: Missing the "name" parameter.'
@@ -94,16 +94,16 @@ export default <V extends FormValues = FormValues, E extends any[] = any[]>(
   value = (format ? format(value) : value) ?? "";
   const { onChange, onBlur, ...restProps } = props;
 
-  const fieldProps: FieldProps<E> = {
+  const fieldProps: FieldProps = {
     name,
     value,
-    onChange: (...args) => {
+    onChange: (...event) => {
       let val;
 
       if (parse) {
-        val = parse(...args);
+        val = parse(...event);
       } else {
-        const e = args[0];
+        const e = event[0];
         val =
           e?.nativeEvent instanceof Event && isFieldElement(e.target)
             ? getNodeValue(name)
@@ -111,7 +111,7 @@ export default <V extends FormValues = FormValues, E extends any[] = any[]>(
       }
 
       handleChangeEvent(name, val);
-      if (onChange) onChange(...args);
+      if (onChange) onChange(...event);
       changedFieldRef.current = name;
     },
     onBlur: (e) => {

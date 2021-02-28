@@ -318,10 +318,10 @@ export interface ControlledConfig<V> {
   [k: string]: any;
 }
 
-export interface FieldProps<E extends any[]> {
+export interface FieldProps {
   name: string;
   value: any;
-  onChange: (...args: E) => void;
+  onChange: (...event: any[]) => void;
   onBlur: BlurHandler;
   [k: string]: any;
 }
@@ -332,4 +332,4 @@ export interface Meta {
   isDirty: boolean;
 }
 
-export type ControlledReturn<E extends any[]> = [FieldProps<E>, Meta];
+export type ControlledReturn = [FieldProps, Meta];

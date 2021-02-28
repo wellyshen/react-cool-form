@@ -99,7 +99,7 @@ The value of the field.
 
 ### onChange
 
-`(...args: any[]) => void`
+`(...event: any[]) => void`
 
 An event handler called when the field's value changed.
 
