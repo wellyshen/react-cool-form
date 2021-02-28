@@ -136,12 +136,16 @@ interface FormValidator<V> {
     | Promise<FormErrors<V> | false | void>;
 }
 
+export interface RegisterForm {
+  (element: HTMLElement | null): void;
+}
+
 export interface FieldValidator<V> {
   (value: any, values: V): any | Promise<any>;
 }
 
-export interface RegisterForm {
-  (element: HTMLElement | null): void;
+interface FieldParser {
+  (value: any): any;
 }
 
 export interface RegisterField<V> {
@@ -152,7 +156,7 @@ export interface RegisterField<V> {
           validate?: FieldValidator<V>;
           valueAsNumber?: boolean;
           valueAsDate?: boolean;
-          parse?: Parser;
+          parse?: FieldParser;
         }
   ): (field: FieldElement | null) => void;
 }
@@ -248,14 +252,10 @@ export interface Submit<V> {
   }>;
 }
 
-interface Parser {
-  (...args: any[]): any;
-}
-
 export type Parsers = Map<{
   valueAsNumber?: boolean;
   valueAsDate?: boolean;
-  parse?: Parser;
+  parse?: FieldParser;
 }>;
 
 export type FormConfig<V> = Partial<{
@@ -296,6 +296,10 @@ export interface StateConfig {
 }
 
 // useControlled
+interface Parser {
+  (...args: any[]): any;
+}
+
 interface Formatter {
   (value: any): any;
 }

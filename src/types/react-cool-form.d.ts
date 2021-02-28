@@ -74,7 +74,7 @@ declare module "react-cool-form" {
             validate?: FieldValidator<V>;
             valueAsNumber?: boolean;
             valueAsDate?: boolean;
-            parse?: Parser;
+            parse?: FieldParser;
           }
     ): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
@@ -139,6 +139,10 @@ declare module "react-cool-form" {
 
   export interface FieldValidator<V extends FormValues = FormValues> {
     (value: any, values: V): any | Promise<any>;
+  }
+
+  export interface FieldParser<V = any, R = any> {
+    (value: V): R;
   }
 
   export interface ResetHandler<V extends FormValues = FormValues> {
