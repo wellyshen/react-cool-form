@@ -36,7 +36,7 @@ const Field = ({ as, name, formId, onFocus, ...restProps }) => {
       name={name}
       onFocus={(e) => {
         clearErrors(name);
-        onFocus(e);
+        if (onFocus) onFocus(e);
       }}
       {...restProps}
     />

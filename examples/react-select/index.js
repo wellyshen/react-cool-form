@@ -1,8 +1,15 @@
 import { render } from "react-dom";
-import { useForm } from "react-cool-form";
+import { useForm, useControlled } from "react-cool-form";
 import Select from "react-select";
 
 import "./styles.scss";
+
+const Field = ({ as, name, ...restProps }) => {
+  const [fieldProps] = useControlled(name, restProps);
+  const Component = as;
+
+  return <Component {...fieldProps} />;
+};
 
 const options = [
   { label: "React", value: "react" },
@@ -12,25 +19,21 @@ const options = [
 ];
 
 function App() {
-  const { form, controller } = useForm({
-    // (Strongly advise) Provide a default value for the controlled field
-    defaultValues: { framework: "" },
+  const { form } = useForm({
+    id: "form-1", // The ID is used by the "useControlled" hook
+    defaultValues: { framework: "" }, // (Strongly advise) Provide a default value for the controlled field
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
 
   return (
     <form ref={form}>
-      <Select
-        {...controller("framework", {
-          // Parse the "option.value" and store it into the form's values
-          // So the values will be: { framework: "react" }
-          parse: ({ value }) => value,
-          // react-select's value prop receives the "option" object
-          // So we need to format it back
-          format: (value) => options.find((option) => option.value === value)
-        })}
+      <Field
+        as={Select}
+        formId="form-1" // Provide the corresponding ID of the "useForm" hook
+        name="framework"
         options={options}
-        placeholder="I'm interesting in..."
+        parse={(option) => option.value}
+        format={(value) => options.find((option) => option.value === value)}
       />
       <input type="submit" />
     </form>
