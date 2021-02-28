@@ -1,11 +1,34 @@
 import { render } from "react-dom";
-import { useForm } from "react-cool-form";
+import { useForm, useFormState, useFormMethods } from "react-cool-form";
 import { TextField, Button } from "@material-ui/core";
 
 import "./styles.scss";
 
+const Field = ({ as, name, formId, onChange, onBlur, ...restProps }) => {
+  const value = useFormState(`values.${name}`, { formId });
+  const { setValue, setTouched } = useFormMethods(formId);
+  const Component = as;
+
+  return (
+    <Component
+      name={name}
+      value={value}
+      onChange={(e) => {
+        setValue(name, e.target.value); // Update the field's value and set it as touched
+        if (onChange) onChange(e);
+      }}
+      onBlur={(e) => {
+        setTouched(name); // Set the field as touched for displaying error (if it's not touched)
+        if (onBlur) onBlur(e);
+      }}
+      {...restProps}
+    />
+  );
+};
+
 function App() {
-  const { form, select, setValue, setTouched } = useForm({
+  const { form, select } = useForm({
+    id: "form-1", // The ID is used by the "useFormState" and "useFormMethods" hook
     defaultValues: { username: "" },
     // excludeFields: ["username"], // You can also exclude the field by this option
     validate: ({ username }) => {
@@ -13,19 +36,18 @@ function App() {
       if (!username.length) errors.username = "Required";
       return errors;
     },
-    onSubmit: (values) => console.log("onSubmit: ", values)
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
-  const [value, errors] = select(["values.username", "errors"]);
+  const errors = select("errors");
 
   return (
     <form ref={form} noValidate>
-      <TextField
+      <Field
+        as={TextField}
+        formId="form-1" // Provide the corresponding ID of the "useForm" hook
         label="Username"
         name="username" // Used for the "excludeFields" option
-        value={value}
         required
-        onChange={(e) => setValue("username", e.target.value)} // Update the field's value and set it as touched
-        onBlur={() => setTouched("username")} // Set the field as touched for displaying error (if it's not touched)
         error={!!errors.username}
         helperText={errors.username}
         inputProps={{ "data-rcf-exclude": true }} // Exclude the field via the pre-defined data attribute
