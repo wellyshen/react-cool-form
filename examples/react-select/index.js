@@ -22,7 +22,7 @@ function App() {
   const { form } = useForm({
     id: "form-1", // The ID is used by the "useControlled" hook
     defaultValues: { framework: "" }, // (Strongly advise) Provide a default value for the controlled field
-    onSubmit: (values) => console.log("onSubmit: ", values)
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
 
   return (
