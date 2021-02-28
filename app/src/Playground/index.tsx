@@ -1,46 +1,42 @@
 /* eslint-disable no-console */
 
-import { useState, memo } from "react";
 import { useForm, useControlled } from "react-cool-form";
+import Select from "react-select";
 
-interface FormValues {
-  foo?: string;
-  bar?: string;
-}
+const Field = ({ as, name, ...restProps }: any) => {
+  const [fieldProps] = useControlled(name, restProps);
+  const Component = as;
 
-const Field = memo(({ name, ...rest }: any) => {
-  const [props] = useControlled(name, { ...rest });
+  return <Component {...fieldProps} />;
+};
 
-  console.log("LOG ====> Field re-renders");
-
-  return <input {...props} />;
-});
+const options = [
+  { label: "React", value: "react" },
+  { label: "Vue", value: "vue" },
+  { label: "Angular", value: "angular" },
+  { label: "Svelte", value: "svelte" },
+];
 
 export default () => {
-  const [show, setShow] = useState(true);
-  const { form, select, reset } = useForm<FormValues>({
-    id: "form-1",
-    defaultValues: { bar: "form test" },
+  const { form } = useForm({
+    id: "form-1", // The ID is used by the "useControlled" hook
+    defaultValues: { framework: "" }, // (Strongly advise) Provide a default value for the controlled field
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
-  console.log(
-    "LOG ===> Form re-renders: ",
-    select("values.bar", { defaultValues: { bar: "field test" } })
-  );
-
   return (
-    <form ref={form} noValidate>
-      {/* {show && <input name="foo" defaultValue="field test" />} */}
-      {show && <Field name="bar" formId="form-1" defaultValue="field test" />}
+    <form ref={form}>
+      <Field
+        as={Select}
+        formId="form-1" // Provide the corresponding ID of the "useForm" hook
+        name="framework"
+        options={options}
+        parse={(option: any) => option.value}
+        format={(value: any) =>
+          options.find((option) => option.value === value)
+        }
+      />
       <input type="submit" />
-      <input type="reset" />
-      <button type="button" onClick={() => reset()}>
-        Reset
-      </button>
-      <button type="button" onClick={() => setShow(!show)}>
-        Toggle
-      </button>
     </form>
   );
 };
