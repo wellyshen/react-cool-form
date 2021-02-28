@@ -31,7 +31,7 @@ Form state is an `object` containing the following properties:
 
 ## Using the Form State
 
-React Cool Form provides a powerful method: [select](../api-reference/use-form#select) to help us avoid unnecessary re-renders when using the form state.
+React Cool Form provides a powerful [select](../api-reference/use-form#select) method to help us avoid unnecessary re-renders when using the form state.
 
 ### Accessing the State
 
@@ -124,7 +124,7 @@ const errors = select("errors", {
 
 👉🏻 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
 
-### Isolating Re-rendering
+## Isolating Re-rendering
 
 Whenever a [selected value](#accessing-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via the [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to the `select` method that maintain a consistent DX for us.
 
@@ -174,7 +174,7 @@ const App = () => {
 };
 ```
 
-### Reading the State
+## Reading the State
 
 If you just want to read the form state without triggering re-renders, here's the [getState](../api-reference/use-form#getstate) method for you.
 
