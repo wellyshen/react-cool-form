@@ -13,14 +13,10 @@ import useForm from "./useForm";
 
 type Children = JSX.Element | JSX.Element[] | null;
 
-interface Methods extends Omit<FormReturn<any>, "form"> {
-  // eslint-disable-next-line react/no-unused-prop-types
-  selectedVal: any;
-}
+type Methods = Omit<FormReturn<any>, "form">;
 
 interface Config extends FormConfig<any> {
   children: Children | ((methods: Methods) => Children);
-  selectedPath: string;
   onSubmit: (values: any) => void;
   onSubmitFull: SubmitHandler<any>;
   onError: (errors: any) => void;
@@ -32,7 +28,6 @@ type Props = Partial<Config>;
 
 const Form = ({
   children,
-  selectedPath,
   onSubmit = () => null,
   onSubmitFull,
   onError = () => null,
@@ -48,13 +43,11 @@ const Form = ({
       onErrorFull ? onErrorFull(...args) : onError(args[0]),
   });
 
-  const selectedVal = selectedPath ? methods.select(selectedPath) : undefined;
-
   onRender();
 
   return (
     <form data-testid="form" ref={methods.form}>
-      {isFunction(children) ? children({ ...methods, selectedVal }) : children}
+      {isFunction(children) ? children(methods) : children}
     </form>
   );
 };
@@ -527,9 +520,8 @@ describe("useForm", () => {
     });
 
     it("should set values correctly via defaultValues option", async () => {
-      const { selectedVal } = renderHelper({
+      renderHelper({
         defaultValues,
-        selectedPath: "values",
         onSubmit,
         children: getChildren(),
       });
@@ -567,7 +559,6 @@ describe("useForm", () => {
       const selects1 = getByTestId("selects-1");
       expect(selects1.selected).toBe(selects.includes(selects1.value));
 
-      expect(selectedVal).toEqual(defaultValues);
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
@@ -588,8 +579,7 @@ describe("useForm", () => {
     });
 
     it("should set values correctly via defaultValue attribute", async () => {
-      const { selectedVal } = renderHelper({
-        selectedPath: "values",
+      renderHelper({
         onSubmit,
         children: (
           <>
@@ -630,7 +620,6 @@ describe("useForm", () => {
           </>
         ),
       });
-      expect(selectedVal).toEqual({});
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
@@ -1258,6 +1247,8 @@ describe("useForm", () => {
       const selectValue = { foo: "🍎" };
       // eslint-disable-next-line prefer-destructuring
       let select = renderHelper({ defaultValues: formValue }).select;
+      expect(select("values.foo")).toBe(formValue.foo);
+
       expect(select("values.foo", { defaultValues: selectValue })).toBe(
         formValue.foo
       );
@@ -1267,7 +1258,6 @@ describe("useForm", () => {
         selectValue.foo
       );
 
-      select = renderHelper().select;
       expect(select("values.foo")).toBeUndefined();
     });
 
