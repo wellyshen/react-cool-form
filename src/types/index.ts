@@ -199,7 +199,7 @@ export interface GetFormState<V> {
 export interface Select<V> {
   (
     path: Path,
-    options?: { target?: string; errorWithTouched?: boolean; defaultValues?: V }
+    options?: { target?: string; defaultValues?: V; errorWithTouched?: boolean }
   ): any;
 }
 
@@ -289,9 +289,10 @@ export interface FormReturn<V> {
 }
 
 // useFormState
-export interface StateConfig {
+export interface StateConfig<V> {
   formId: string;
   target?: string;
+  defaultValues?: V;
   errorWithTouched?: boolean;
 }
 

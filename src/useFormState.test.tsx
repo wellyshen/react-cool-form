@@ -8,11 +8,11 @@ import useFormState from "./useFormState";
 const defaultValues = { foo: "🍎" };
 const error = "Required";
 
-interface Props extends Partial<StateConfig> {
+interface Props extends Partial<StateConfig<any>> {
   children: (state: any) => JSX.Element;
   path?: Path;
   id?: string;
-  formId?: string;
+  formDefaultValues?: any;
   isError?: boolean;
   isTouched?: boolean;
   onRender?: () => void;
@@ -23,12 +23,16 @@ const Form = ({
   path,
   id = "form-1",
   formId,
+  formDefaultValues = defaultValues,
   isError,
   isTouched,
   onRender = () => null,
   ...rest
 }: Props) => {
-  const { form, setError, setTouched } = useForm({ id, defaultValues });
+  const { form, setError, setTouched } = useForm({
+    id,
+    defaultValues: formDefaultValues,
+  });
   // @ts-expect-error
   const state = useFormState(path, { formId: formId || id, ...rest });
 
@@ -85,6 +89,29 @@ describe("useFormState", () => {
   it('should return undefined if "path" isn\'t set', () => {
     const state = renderHelper();
     expect(state).toBeUndefined();
+  });
+
+  it("should get default value correctly", () => {
+    const formDefaultValues = { foo: null };
+    expect(renderHelper({ path: "values.foo", formDefaultValues })).toBe(
+      formDefaultValues.foo
+    );
+
+    expect(
+      renderHelper({
+        path: "values.foo",
+        formDefaultValues,
+        defaultValues,
+      })
+    ).toBe(formDefaultValues.foo);
+
+    expect(renderHelper({ path: "values.foo", defaultValues })).toBe(
+      defaultValues.foo
+    );
+
+    expect(
+      renderHelper({ path: "values.foo", formDefaultValues: null })
+    ).toBeUndefined();
   });
 
   it("should get state with correct format", () => {

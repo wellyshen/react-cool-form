@@ -2,14 +2,14 @@
 
 import { useEffect, useReducer, useRef } from "react";
 
-import { Observer, Path, StateConfig } from "./types";
+import { FormValues, Observer, Path, StateConfig } from "./types";
 import { get } from "./shared";
 import { invariant } from "./utils";
 
-export default (
+export default <V extends FormValues = FormValues>(
   path: Path,
   // @ts-expect-error
-  { formId, ...rest }: StateConfig = {}
+  { formId, ...rest }: StateConfig<V> = {}
 ): any => {
   const methodName = "useFormState";
 

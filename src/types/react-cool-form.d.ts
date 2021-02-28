@@ -26,8 +26,8 @@ declare module "react-cool-form" {
       path: string | string[] | Map<string>,
       options?: {
         target?: string;
-        errorWithTouched?: boolean;
         defaultValues?: V;
+        errorWithTouched?: boolean;
       }
     ): any;
   }
@@ -211,13 +211,17 @@ declare module "react-cool-form" {
   // useFormState
   export type Path = string | string[] | Map<string>;
 
-  export interface StateConfig {
+  export interface StateConfig<V> {
     formId: string;
     target?: string;
+    defaultValues?: V;
     errorWithTouched?: boolean;
   }
 
-  export function useFormState(path: Path, config: StateConfig): any;
+  export function useFormState<V extends FormValues = FormValues>(
+    path: Path,
+    config: StateConfig<V>
+  ): any;
 
   // useControlled
   export interface Parser<E extends any[] = any[], R = any> {
