@@ -96,6 +96,31 @@ const fooError = select("errors.foo");
 const [touched, dirty] = select(["touched", "dirty"]);
 ```
 
+### Missing Default Values?
+
+If we didn't initialize the default value of a field via the [defaultValues option](../api-reference/use-form#defaultvalues) of the `useForm`. The `select` method will lose the value. Because the method is called before the field's initial render. For such cases, we can provide an alternative default value for the `select` method to return as below:
+
+```js
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const { form, select } = useForm({
+    // Some options...
+  });
+
+  cosnole.log(select("values.foo")); // Returns undefined
+  cosnole.log(select("values.foo", { defaultValues: { foo: "🍎" } })); // Returns "🍎"
+
+  return (
+    <form ref={form}>
+      {/* The same case as the useControlled's defaultValue option */}
+      <input name="foo" defaultValue="🍎" />
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
 ### Filter Untouched Field Errors
 
 Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `select`'s `errorWithTouched` option (default is `false`).
@@ -169,6 +194,7 @@ const App = () => {
         minLength={6}
       />
       <FieldMessage />
+      <input type="submit" />
     </form>
   );
 };
