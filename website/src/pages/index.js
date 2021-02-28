@@ -165,13 +165,13 @@ function Home() {
             Form eliminates unnecessary re-renders throughout the development
             process. Now dive into the following example to learn more.
           </p>
-          <iframe
+          <i
             className={styles.iframe}
             src="https://codesandbox.io/embed/rcf-showbox-8b0qn?fontsize=14&hidenavigation=1&theme=dark"
             title="RCF - Showbox"
             allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
             sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-          ></iframe>
+          />
         </section>
       </main>
     </Layout>

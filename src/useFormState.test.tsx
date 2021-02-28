@@ -8,11 +8,11 @@ import useFormState from "./useFormState";
 const defaultValues = { foo: "🍎" };
 const error = "Required";
 
-interface Props extends Partial<StateConfig> {
+interface Props extends Partial<StateConfig<any>> {
   children: (state: any) => JSX.Element;
   path?: Path;
   id?: string;
-  formId?: string;
+  formDefaultValues?: any;
   isError?: boolean;
   isTouched?: boolean;
   onRender?: () => void;
@@ -23,12 +23,16 @@ const Form = ({
   path,
   id = "form-1",
   formId,
+  formDefaultValues = defaultValues,
   isError,
   isTouched,
   onRender = () => null,
   ...rest
 }: Props) => {
-  const { form, setError, setTouched } = useForm({ id, defaultValues });
+  const { form, setError, setTouched } = useForm({
+    id,
+    defaultValues: formDefaultValues,
+  });
   // @ts-expect-error
   const state = useFormState(path, { formId: formId || id, ...rest });
 
@@ -58,36 +62,26 @@ const renderHelper = (args: Omit<Props, "children"> = {}) => {
 };
 
 describe("useFormState", () => {
-  console.warn = jest.fn();
-
-  beforeEach(() => jest.clearAllMocks());
-
-  it("should warn missing form id", () => {
-    renderHelper({ id: "" });
-    expect(console.warn).toHaveBeenCalledWith(
+  it("should throw form id errors", () => {
+    expect(() => useFormState("values")).toThrow(
       '💡 react-cool-form > useFormState: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-state#formid'
     );
 
-    console.warn = jest.fn();
-    renderHelper({ id: "", formId: "form-1" });
-    expect(console.warn).toHaveBeenCalledWith(
+    expect(() => useFormState("values", { formId: "form-1" })).toThrow(
       '💡 react-cool-form > useFormState: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
     );
   });
 
-  it("should not warn missing form id", () => {
-    renderHelper();
-    expect(console.warn).not.toHaveBeenCalled();
-  });
-
   it('should warn select "values" alone', () => {
+    console.warn = jest.fn();
     renderHelper({ path: "values" });
     expect(console.warn).toHaveBeenCalledWith(
-      '💡 react-cool-form > useFormState: Getting the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+      '💡 react-cool-form > useFormState: Getting the "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
     );
   });
 
   it('should not warn select "values" alone', () => {
+    console.warn = jest.fn();
     renderHelper({ path: "values.foo" });
     expect(console.warn).not.toHaveBeenCalled();
   });
@@ -95,6 +89,29 @@ describe("useFormState", () => {
   it('should return undefined if "path" isn\'t set', () => {
     const state = renderHelper();
     expect(state).toBeUndefined();
+  });
+
+  it("should get default value correctly", () => {
+    const formDefaultValues = { foo: null };
+    expect(renderHelper({ path: "values.foo", formDefaultValues })).toBe(
+      formDefaultValues.foo
+    );
+
+    expect(
+      renderHelper({
+        path: "values.foo",
+        formDefaultValues,
+        defaultValues,
+      })
+    ).toBe(formDefaultValues.foo);
+
+    expect(renderHelper({ path: "values.foo", defaultValues })).toBe(
+      defaultValues.foo
+    );
+
+    expect(
+      renderHelper({ path: "values.foo", formDefaultValues: null })
+    ).toBeUndefined();
   });
 
   it("should get state with correct format", () => {

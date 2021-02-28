@@ -60,6 +60,15 @@ const [foo, bar, baz] = useFormState(["foo", "bar", "baz"], {
 });
 ```
 
+### defaultValues
+
+`FormValues`
+
+The alternative default values for this hook to return when we didn't provide them via the [defaultValues option](./use-form#defaultvalues) of the `useForm`. Two common use cases of this option are as follows:
+
+- Setting a default value for a field via the `defaultValue` attribute.
+- Setting a default value for a field via the `useControlled`'s [defaultValue option](./use-controlled#defaultvalue).
+
 ### errorWithTouched
 
 `boolean`
@@ -96,7 +105,9 @@ The example demonstrates the basic usage of this hook.
 import { useFormState } from "react-cool-form";
 
 const IsolatedComponent = () => {
-  const foo = useFormState("values.foo", { formId: "form-1" });
+  const foo = useFormState("values.foo", {
+    formId: "form-1", // Provide the corresponding ID of the "useForm" hook
+  });
 
   return <div>{foo}</div>;
 };

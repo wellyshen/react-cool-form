@@ -1,5 +1,29 @@
 # react-cool-form
 
+## 0.0.126
+
+### Patch Changes
+
+- [`fe7942d`](https://github.com/wellyshen/react-cool-form/commit/fe7942d36ee2410ad3be9dc74318836b850cb6cb) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): fix potential side-effect of the values of form state
+
+## 0.0.125
+
+### Patch Changes
+
+- [`eb767bd`](https://github.com/wellyshen/react-cool-form/commit/eb767bd4758ebbec37efde3975c1eab822d2de6b) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): fix set default values side-effect
+
+## 0.0.124
+
+### Patch Changes
+
+- [`ed388fb`](https://github.com/wellyshen/react-cool-form/commit/ed388fbd2691b91e1335e88bd5238bac36f3a76c) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useFormState): use error instead warn for form id related exceptions
+
+## 0.0.123
+
+### Patch Changes
+
+- [`e7795c3`](https://github.com/wellyshen/react-cool-form/commit/e7795c30c36b26e402d4b07e458ee2f5f2617063) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFormState): correct the URL of warnings
+
 ## 0.0.122
 
 ### Patch Changes

@@ -1,14 +1,26 @@
 import { FocusEvent, MutableRefObject, SyntheticEvent } from "react";
 
 // Utils
-export type Map = Record<string, boolean>;
+export type Map<T = boolean> = Record<string, T>;
 
 // Global
-export interface Methods {
-  getFormState: GetFormState;
+export type Methods = {
+  shouldRemoveField: boolean;
+  defaultValuesRef: MutableRefObject<any>;
+  initialStateRef: MutableRefObject<FormState<any>>;
+  excludeFieldsRef: MutableRefObject<Map>;
+  controllersRef: MutableRefObject<Map>;
+  fieldValidatorsRef: MutableRefObject<Map<FieldValidator<any>>>;
+  changedFieldRef: MutableRefObject<string | undefined>;
+  getNodeValue: GetNodeValue;
+  getFormState: GetFormState<any>;
+  setDefaultValue: SetDefaultValue;
+  setTouchedMaybeValidate: SetTouchedMaybeValidate;
+  handleChangeEvent: HandleChangeEvent;
+  removeField: RemoveField;
   subscribeObserver: ObserverHandler;
   unsubscribeObserver: ObserverHandler;
-}
+} & FormReturn<any>;
 
 // useState
 type DeepProps<V, T = any> = {
@@ -62,7 +74,7 @@ export interface FormStateReturn<V> {
 }
 
 // useForm
-export type FormValues = Record<string, any>;
+export type FormValues = Map<any>;
 
 export type Handlers = {
   [k in "change" | "blur" | "submit" | "reset"]?: (event: Event) => void;
@@ -73,21 +85,12 @@ export type FieldElement =
   | HTMLTextAreaElement
   | HTMLSelectElement;
 
-export interface FieldsValue {
+export interface Field {
   field: FieldElement;
   options?: FieldElement[];
 }
 
-export type Fields = Record<string, FieldsValue>;
-
-export type FieldArgs = Record<
-  string,
-  {
-    valueAsNumber?: boolean;
-    valueAsDate?: boolean;
-    parse?: Parser;
-  }
->;
+export type Fields = Map<Field>;
 
 interface Options<V> {
   getState: GetState;
@@ -133,12 +136,16 @@ interface FormValidator<V> {
     | Promise<FormErrors<V> | false | void>;
 }
 
+export interface RegisterForm {
+  (element: HTMLElement | null): void;
+}
+
 export interface FieldValidator<V> {
   (value: any, values: V): any | Promise<any>;
 }
 
-export interface RegisterForm {
-  (element: HTMLElement | null): void;
+interface FieldParser {
+  (value: any): any;
 }
 
 export interface RegisterField<V> {
@@ -149,31 +156,55 @@ export interface RegisterField<V> {
           validate?: FieldValidator<V>;
           valueAsNumber?: boolean;
           valueAsDate?: boolean;
-          parse?: Parser;
+          parse?: FieldParser;
         }
   ): (field: FieldElement | null) => void;
 }
 
-export type Path = string | string[] | Record<string, string>;
+export interface HandleChangeEvent {
+  (name: string, value: any): void;
+}
 
-export interface GetFormState {
+export interface SetDefaultValue {
+  (name: string, value: any): void;
+}
+
+export interface RemoveField {
+  (name: string): void;
+}
+
+export interface SetTouchedMaybeValidate {
+  (name: string): void;
+}
+
+export interface GetNodeValue {
+  (name: string): any;
+}
+
+export type Path = string | string[] | Map<string>;
+
+export interface GetFormState<V> {
   (
     path: Path | undefined,
     options: {
       target?: string;
       errorWithTouched?: boolean;
+      defaultValues?: V;
       methodName?: string;
       callback?: (usedState: Map) => void;
     }
   ): any;
 }
 
-export interface Select {
-  (path: Path, options?: { target?: string; errorWithTouched?: boolean }): any;
+export interface Select<V> {
+  (
+    path: Path,
+    options?: { target?: string; defaultValues?: V; errorWithTouched?: boolean }
+  ): any;
 }
 
 export interface GetState {
-  (path?: string | string[] | Record<string, string>, target?: string): any;
+  (path?: string | string[] | Map<string>, target?: string): any;
 }
 
 export interface SetValue {
@@ -221,41 +252,11 @@ export interface Submit<V> {
   }>;
 }
 
-interface ChangeHandler {
-  (...args: any[]): void;
-}
-
-interface BlurHandler {
-  (event: FocusEvent): void;
-}
-
-interface Parser {
-  (...args: any[]): any;
-}
-
-interface Formatter {
-  (value: any): any;
-}
-
-export interface Controller<V> {
-  (
-    name: string,
-    options?: {
-      validate?: FieldValidator<V>;
-      value?: any;
-      defaultValue?: any;
-      parse?: Parser;
-      format?: Formatter;
-      onChange?: ChangeHandler;
-      onBlur?: BlurHandler;
-    }
-  ): {
-    name: string;
-    value: any;
-    onChange: ChangeHandler;
-    onBlur: BlurHandler;
-  } | void;
-}
+export type Parsers = Map<{
+  valueAsNumber?: boolean;
+  valueAsDate?: boolean;
+  parse?: FieldParser;
+}>;
 
 export type FormConfig<V> = Partial<{
   id: string;
@@ -275,7 +276,7 @@ export type FormConfig<V> = Partial<{
 export interface FormReturn<V> {
   form: RegisterForm;
   field: RegisterField<V>;
-  select: Select;
+  select: Select<V>;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;
@@ -285,12 +286,51 @@ export interface FormReturn<V> {
   runValidation: RunValidation;
   reset: Reset<V>;
   submit: Submit<V>;
-  controller: Controller<V>;
 }
 
 // useFormState
-export interface StateConfig {
+export interface StateConfig<V> {
   formId: string;
   target?: string;
+  defaultValues?: V;
   errorWithTouched?: boolean;
 }
+
+// useControlled
+interface Parser {
+  (...args: any[]): any;
+}
+
+interface Formatter {
+  (value: any): any;
+}
+
+interface BlurHandler {
+  (event: FocusEvent): void;
+}
+
+export interface ControlledConfig<V> {
+  formId: string;
+  defaultValue?: any;
+  validate?: FieldValidator<V>;
+  parse?: Parser;
+  format?: Formatter;
+  errorWithTouched?: boolean;
+  [k: string]: any;
+}
+
+export interface FieldProps {
+  name: string;
+  value: any;
+  onChange: (...event: any[]) => void;
+  onBlur: BlurHandler;
+  [k: string]: any;
+}
+
+export interface Meta {
+  error: any;
+  isTouched: boolean;
+  isDirty: boolean;
+}
+
+export type ControlledReturn = [FieldProps, Meta];

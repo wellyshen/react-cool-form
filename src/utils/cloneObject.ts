@@ -1,3 +1,4 @@
+import { Map } from "../types";
 import isFileList from "./isFileList";
 import isObject from "./isObject";
 
@@ -11,8 +12,8 @@ const cloneObject = (object: unknown): any => {
   if (Array.isArray(object)) return object.map((val) => cloneObject(val));
 
   if (isObject(object))
-    return Object.keys(object).reduce((obj: Record<string, any>, key) => {
-      obj[key] = cloneObject((object as Record<string, any>)[key]);
+    return Object.keys(object).reduce((obj: Map<any>, key) => {
+      obj[key] = cloneObject((object as Map<any>)[key]);
       return obj;
     }, {});
 

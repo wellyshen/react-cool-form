@@ -11,9 +11,9 @@ import { FormConfig, FormReturn, SubmitHandler, ErrorHandler } from "./types";
 import { isFunction } from "./utils";
 import useForm from "./useForm";
 
-type Methods = Omit<FormReturn<any>, "form">;
-
 type Children = JSX.Element | JSX.Element[] | null;
+
+type Methods = Omit<FormReturn<any>, "form">;
 
 interface Config extends FormConfig<any> {
   children: Children | ((methods: Methods) => Children);
@@ -35,7 +35,7 @@ const Form = ({
   onRender = () => null,
   ...config
 }: Props) => {
-  const { form, ...rest } = useForm({
+  const methods = useForm({
     ...config,
     onSubmit: (...args) =>
       onSubmitFull ? onSubmitFull(...args) : onSubmit(args[0]),
@@ -46,22 +46,11 @@ const Form = ({
   onRender();
 
   return (
-    <form data-testid="form" ref={form}>
-      {isFunction(children) ? children({ ...rest }) : children}
+    <form data-testid="form" ref={methods.form}>
+      {isFunction(children) ? children(methods) : children}
     </form>
   );
 };
-
-const CustomField = ({ value, onChange }: any) => (
-  <button
-    data-testid="custom"
-    // @ts-expect-error
-    onClick={(e) => onChange(e.target.value)}
-    type="button"
-  >
-    {value}
-  </button>
-);
 
 const renderHelper = ({ children = null, ...rest }: Props = {}) => {
   let api: Methods;
@@ -85,6 +74,7 @@ describe("useForm", () => {
   const onSubmit = jest.fn();
   const onError = jest.fn();
   const onReset = jest.fn();
+  const onRender = jest.fn();
   const builtInError = "Constraints not satisfied";
   const initialState = {
     values: {},
@@ -140,7 +130,7 @@ describe("useForm", () => {
       const { select } = renderHelper();
       select("values");
       expect(console.warn).toHaveBeenCalledWith(
-        '💡 react-cool-form > select: Getting the "values" alone may cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+        '💡 react-cool-form > select: Getting the "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
       );
     });
 
@@ -215,6 +205,24 @@ describe("useForm", () => {
       global.__DEV__ = false;
       renderHelper({ children: <input /> });
       expect(console.warn).not.toHaveBeenCalled();
+    });
+  });
+
+  it("should return methods correctly", () => {
+    const methods = renderHelper();
+    expect(methods).toEqual({
+      form: expect.any(Function),
+      field: expect.any(Function),
+      select: expect.any(Function),
+      getState: expect.any(Function),
+      setValue: expect.any(Function),
+      setTouched: expect.any(Function),
+      setDirty: expect.any(Function),
+      setError: expect.any(Function),
+      clearErrors: expect.any(Function),
+      runValidation: expect.any(Function),
+      reset: expect.any(Function),
+      submit: expect.any(Function),
     });
   });
 
@@ -365,25 +373,30 @@ describe("useForm", () => {
     const { reset, setValue, setError, getState } = renderHelper({
       defaultValues,
       onReset,
+      children: <input data-testid="foo" name="foo" />,
     });
+    const foo = getByTestId("foo");
 
     setValue("foo", "🍎");
     setError("foo", "Required");
     const e = {};
     // @ts-expect-error
     act(() => reset(null, null, e));
+    expect(foo.value).toBe(defaultValues.foo);
     expect(onReset).toHaveBeenCalledWith(defaultValues, options, e);
     expect(getState()).toEqual({ ...initialState, values: defaultValues });
 
     const values = { foo: "🍋" };
     // @ts-expect-error
     act(() => reset(values, null, e));
+    expect(foo.value).toBe(values.foo);
     expect(onReset).toHaveBeenCalledWith(values, options, e);
     expect(getState()).toEqual({ ...initialState, values });
 
     const value = "🍎";
     // @ts-expect-error
     act(() => reset((prevValues) => ({ ...prevValues, foo: value }), null, e));
+    expect(foo.value).toBe(value);
     expect(onReset).toHaveBeenCalledWith({ foo: value }, options, e);
     expect(getState()).toEqual({ ...initialState, values: { foo: value } });
 
@@ -392,6 +405,7 @@ describe("useForm", () => {
     setError("foo", error);
     // @ts-expect-error
     act(() => reset(null, ["values", "errors", "touched"], e));
+    expect(foo.value).toBe(value);
     expect(onReset).toHaveBeenCalledWith({ foo: value }, options, e);
     expect(getState()).toEqual({
       ...initialState,
@@ -506,7 +520,11 @@ describe("useForm", () => {
     });
 
     it("should set values correctly via defaultValues option", async () => {
-      renderHelper({ defaultValues, onSubmit, children: getChildren() });
+      renderHelper({
+        defaultValues,
+        onSubmit,
+        children: getChildren(),
+      });
       const {
         text,
         number,
@@ -543,6 +561,21 @@ describe("useForm", () => {
 
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
+    });
+
+    it("should set nested values correctly via defaultValues option", async () => {
+      renderHelper({
+        defaultValues: defaultNestedValue,
+        onSubmit,
+        children: <input data-testid="text" name="text.a[0].b" />,
+      });
+
+      expect(getByTestId("text").value).toBe(defaultNestedValue.text.a[0].b);
+
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
+      );
     });
 
     it("should set values correctly via defaultValue attribute", async () => {
@@ -589,21 +622,6 @@ describe("useForm", () => {
       });
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
-    });
-
-    it("should set nested values correctly via defaultValues option", async () => {
-      renderHelper({
-        defaultValues: defaultNestedValue,
-        onSubmit,
-        children: <input data-testid="text" name="text.a[0].b" />,
-      });
-
-      expect(getByTestId("text").value).toBe(defaultNestedValue.text.a[0].b);
-
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
-      );
     });
 
     it("should set nested values correctly via defaultValue attribute", async () => {
@@ -1224,6 +1242,27 @@ describe("useForm", () => {
       expect(select()).toBeUndefined();
     });
 
+    it("should get default value correctly", () => {
+      const formValue = { foo: null };
+      const selectValue = { foo: "🍎" };
+      // eslint-disable-next-line prefer-destructuring
+      let select = renderHelper({ defaultValues: formValue }).select;
+      expect(select("values.foo")).toBe(formValue.foo);
+
+      expect(select("values.foo", { defaultValues: selectValue })).toBe(
+        formValue.foo
+      );
+
+      select = renderHelper().select;
+      expect(select("values.foo", { defaultValues: selectValue })).toBe(
+        selectValue.foo
+      );
+
+      expect(select("values.foo")).toBeUndefined();
+    });
+
+    it.todo("should get default value correctly with conditional field");
+
     it("should get state with correct format", () => {
       const { select } = renderHelper({ defaultValues: values });
 
@@ -1278,7 +1317,6 @@ describe("useForm", () => {
     });
 
     it("should trigger re-rendering", () => {
-      const onRender = jest.fn();
       const { select } = renderHelper({
         onRender,
         children: <input data-testid="foo" name="foo" />,
@@ -1330,7 +1368,6 @@ describe("useForm", () => {
     });
 
     it("should not trigger re-rendering", () => {
-      const onRender = jest.fn();
       const { getState } = renderHelper({
         onRender,
         children: <input data-testid="foo" name="foo" />,
@@ -1517,165 +1554,6 @@ describe("useForm", () => {
       );
     }
   );
-
-  describe("controller", () => {
-    const value = "🍎";
-
-    it("should warn for a missing name controller", () => {
-      renderHelper({
-        children: ({ controller }: Methods) => (
-          // @ts-expect-error
-          <input data-testid="foo" {...controller()} />
-        ),
-      });
-      fireEvent.input(getByTestId("foo"));
-      expect(console.warn).toHaveBeenCalledTimes(3);
-      expect(console.warn).toHaveBeenNthCalledWith(
-        1,
-        '💡 react-cool-form > controller: Missing the "name" parameter.'
-      );
-    });
-
-    it("should not warn for a missing name controller", () => {
-      renderHelper({
-        children: ({ controller }: Methods) => (
-          <input data-testid="foo" {...controller("foo")} />
-        ),
-      });
-      expect(console.warn).not.toHaveBeenCalled();
-    });
-
-    it("should not set default value automatically", async () => {
-      renderHelper({
-        onSubmit,
-        children: ({ controller }: Methods) => (
-          <input data-testid="foo" {...controller("foo")} />
-        ),
-      });
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({}));
-    });
-
-    it.each(["form", "controller"])(
-      "should set default value via %s option",
-      async (type) => {
-        renderHelper({
-          defaultValues: type === "form" ? { foo: value } : undefined,
-          onSubmit,
-          children: ({ controller }: Methods) => (
-            <input
-              data-testid="foo"
-              {...controller("foo", {
-                defaultValue: type === "controller" ? value : undefined,
-              })}
-            />
-          ),
-        });
-        expect((getByTestId("foo") as HTMLInputElement).value).toBe(value);
-        fireEvent.submit(getByTestId("form"));
-        await waitFor(() =>
-          expect(onSubmit).toHaveBeenCalledWith({ foo: value })
-        );
-      }
-    );
-
-    it("should handle native field(s) change correctly", async () => {
-      renderHelper({
-        defaultValues: { text: "", checkboxes: [], selects: [] },
-        onSubmit,
-        children: ({ controller }: Methods) => (
-          <>
-            <input data-testid="text" {...controller("text")} />
-            <input
-              data-testid="checkboxes-0"
-              {...controller("checkboxes")}
-              type="checkbox"
-              value="🍎"
-            />
-            <input
-              data-testid="checkboxes-1"
-              {...controller("checkboxes")}
-              type="checkbox"
-              value="🍋"
-            />
-            <select data-testid="selects" name="selects" multiple>
-              <option data-testid="selects-0" value="🍎">
-                🍎
-              </option>
-              <option data-testid="selects-1" value="🍋">
-                🍋
-              </option>
-            </select>
-          </>
-        ),
-      });
-      fireEvent.input(getByTestId("text"), { target: { value } });
-      const checkboxes0 = getByTestId("checkboxes-0");
-      userEvent.click(checkboxes0);
-      const selects0 = getByTestId("selects-0");
-      userEvent.selectOptions(getByTestId("selects"), [selects0.value]);
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith({
-          text: value,
-          checkboxes: [checkboxes0.value],
-          selects: [selects0.value],
-        })
-      );
-    });
-
-    it("should handle custom field change correctly", async () => {
-      renderHelper({
-        defaultValues: { foo: 0 },
-        onSubmit,
-        children: ({ controller }: Methods) => (
-          <CustomField {...controller("foo")} />
-        ),
-      });
-      fireEvent.click(getByTestId("custom"), { target: { value } });
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
-      );
-    });
-
-    it("should run controller validation", async () => {
-      const errors = { foo: "Required" };
-      const { getState } = renderHelper({
-        defaultValues: { foo: "" },
-        onSubmit,
-        onError,
-        children: ({ controller }: Methods) => (
-          <input
-            data-testid="foo"
-            {...controller("foo", {
-              validate: async (val: string) =>
-                !val.length ? errors.foo : false,
-            })}
-          />
-        ),
-      });
-      const form = getByTestId("form");
-      const foo = getByTestId("foo");
-
-      fireEvent.submit(form);
-      expect(getState("isValidating")).toBeTruthy();
-      await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
-      expect(getState("isValidating")).toBeFalsy();
-      expect(getState("isValid")).toBeFalsy();
-
-      fireEvent.input(foo, { target: { value } });
-      fireEvent.submit(form);
-      expect(getState("isValidating")).toBeTruthy();
-      await waitFor(() => {
-        expect(onSubmit).toHaveBeenCalledWith({ foo: value });
-        expect(onError).toHaveBeenCalledTimes(1);
-      });
-      expect(getState("errors")).toEqual({});
-      expect(getState("isValidating")).toBeFalsy();
-      expect(getState("isValid")).toBeTruthy();
-    });
-  });
 
   it("should call debug callback", async () => {
     const debug = jest.fn();
