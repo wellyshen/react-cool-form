@@ -138,7 +138,7 @@ If the above solutions can't meet your needs then you can set up a custom field 
 
 ```js
 import { useForm, useFormState, useFormMethods } from "react-cool-form";
-import { TextField } from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 
 const Field = ({ as, name, formId, onChange, onBlur, ...restProps }) => {
   const value = useFormState(`values.${name}`, { formId });
@@ -151,11 +151,11 @@ const Field = ({ as, name, formId, onChange, onBlur, ...restProps }) => {
       value={value}
       onChange={(e) => {
         setValue(name, e.target.value); // Update the field's value and set it as touched
-        onChange(e);
+        if (onChange) onChange(e);
       }}
       onBlur={(e) => {
         setTouched(name); // Set the field as touched for displaying error (if it's not touched)
-        onBlur(e);
+        if (onBlur) onBlur(e);
       }}
       {...restProps}
     />
@@ -164,6 +164,7 @@ const Field = ({ as, name, formId, onChange, onBlur, ...restProps }) => {
 
 const App = () => {
   const { form, select } = useForm({
+    id: "form-1", // The ID is used by the "useFormState" and "useFormMethods" hooks
     defaultValues: { username: "" },
     // excludeFields: ["username"], // You can also exclude the field by this option
     validate: ({ username }) => {
@@ -179,6 +180,7 @@ const App = () => {
     <form ref={form} noValidate>
       <Field
         as={TextField}
+        formId="form-1" // Provide the corresponding ID of the "useForm" hook
         label="Username"
         name="username" // Used for the "excludeFields" option
         required
@@ -186,7 +188,9 @@ const App = () => {
         helperText={errors.username}
         inputProps={{ "data-rcf-exclude": true }} // Exclude the field via the pre-defined data attribute
       />
-      <input type="submit" />
+      <Button type="submit" variant="contained" color="primary">
+        Submit
+      </Button>
     </form>
   );
 };
