@@ -2,14 +2,14 @@
 
 import { useEffect, useReducer, useRef } from "react";
 
+import { FormValues, Observer, Path, StateConfig } from "./types";
 import { get } from "./shared";
-import { Observer, Path, StateConfig } from "./types";
 import { invariant } from "./utils";
 
-const useFormState = (
+export default <V extends FormValues = FormValues>(
   path: Path,
   // @ts-expect-error
-  { formId, ...rest }: StateConfig = {}
+  { formId, ...rest }: StateConfig<V> = {}
 ): any => {
   const methodName = "useFormState";
 
@@ -25,9 +25,9 @@ const useFormState = (
     `💡 react-cool-form > ${methodName}: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id`
   );
 
-  const { getFormState, subscribeObserver, unsubscribeObserver } = methods;
-  const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const observerRef = useRef<Observer>();
+  const [, forceUpdate] = useReducer((c) => c + 1, 0);
+  const { getFormState, subscribeObserver, unsubscribeObserver } = methods;
 
   useEffect(() => {
     // @ts-expect-error
@@ -47,5 +47,3 @@ const useFormState = (
     },
   });
 };
-
-export default useFormState;

@@ -4,7 +4,7 @@ title: React Select
 hide_table_of_contents: true
 ---
 
-This example demonstrates how to use React Cool Form's [controller](../api-reference/use-form#controller) API to integrate [React Select](https://react-select.com) with your form.
+This example demonstrates how to use React Cool Form's [useControlled](../api-reference/use-controlled) hook to integrate [React Select](https://react-select.com) with your form.
 
 <iframe src="https://codesandbox.io/embed/rcf-react-select-djsl1?fontsize=14&hidenavigation=1&theme=dark"
   style={{ width: "100%", height: "500px", border: "0", borderRadius: "4px",  overflow: "hidden" }}

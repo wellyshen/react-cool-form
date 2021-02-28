@@ -35,7 +35,9 @@ module.exports = {
     ],
     "API Reference": [
       "api-reference/use-form",
+      "api-reference/use-form-methods",
       "api-reference/use-form-state",
+      "api-reference/use-controlled",
       "api-reference/utility-functions",
     ],
   },

@@ -55,4 +55,11 @@ describe("get", () => {
       "🍎"
     );
   });
+
+  it("should return falsy values correctly", () => {
+    expect(get({ foo: null }, "foo")).toBeNull();
+    expect(get({ foo: false }, "foo")).toBeFalsy();
+    expect(get({ foo: 0 }, "foo")).toBe(0);
+    expect(get({ foo: "" }, "foo")).toBe("");
+  });
 });

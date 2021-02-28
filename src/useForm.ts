@@ -6,7 +6,6 @@ import { dequal } from "dequal/lite";
 import * as shared from "./shared";
 import {
   ClearErrors,
-  Controller,
   Field,
   FieldElement,
   Fields,
@@ -17,18 +16,23 @@ import {
   FormState,
   FormValues,
   GetFormState,
+  GetNodeValue,
   GetState,
+  HandleChangeEvent,
   Handlers,
   Map,
   Parsers,
   RegisterField,
   RegisterForm,
+  RemoveField,
   Reset,
   RunValidation,
   Select,
+  SetDefaultValue,
   SetDirty,
   SetError,
   SetTouched,
+  SetTouchedMaybeValidate,
   SetValue,
   Submit,
 } from "./types";
@@ -73,7 +77,6 @@ export default <V extends FormValues = FormValues>({
   onError,
   debug,
 }: FormConfig<V> = {}): FormReturn<V> => {
-  const isInitRef = useRef(true);
   const handlersRef = useRef<Handlers>({});
   const observerRef = useRef<MutationObserver>();
   const formRef = useRef<HTMLElement>();
@@ -152,7 +155,7 @@ export default <V extends FormValues = FormValues>({
     []
   );
 
-  const getNodeValue = useCallback((name: string) => {
+  const getNodeValue = useCallback<GetNodeValue>((name) => {
     const { field, options } = fieldsRef.current[name];
     let value = field.value as any;
 
@@ -229,10 +232,8 @@ export default <V extends FormValues = FormValues>({
     }
   }, []);
 
-  const setDefaultValue = useCallback(
-    (name: string, value: any) => {
-      if (!isUndefined(get(initialStateRef.current.values, name))) return;
-
+  const setDefaultValue = useCallback<SetDefaultValue>(
+    (name, value) => {
       initialStateRef.current = set(
         initialStateRef.current,
         `values.${name}`,
@@ -240,9 +241,7 @@ export default <V extends FormValues = FormValues>({
         true
       );
 
-      setStateRef(`values.${name}`, value, {
-        shouldUpdate: !isInitRef.current,
-      });
+      setStateRef(`values.${name}`, value, { shouldUpdate: false });
     },
     [setStateRef]
   );
@@ -274,8 +273,17 @@ export default <V extends FormValues = FormValues>({
     [getNodeValue, setDefaultValue, setNodeValue]
   );
 
-  const getFormState = useCallback<GetFormState>(
-    (path, { target, errorWithTouched, methodName = "select", callback }) => {
+  const getFormState = useCallback<GetFormState<V>>(
+    (
+      path,
+      {
+        target,
+        errorWithTouched,
+        defaultValues: dfValues = {},
+        methodName = "select",
+        callback,
+      }
+    ) => {
       if (!path) return callback ? undefined : stateRef.current;
 
       const usedState: Map = {};
@@ -285,7 +293,7 @@ export default <V extends FormValues = FormValues>({
         if (callback) {
           if (p === "values")
             warn(
-              `💡 react-cool-form > ${methodName}: Getting the "values" alone may cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
+              `💡 react-cool-form > ${methodName}: Getting the "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
             );
 
           usedState[p] = true;
@@ -293,7 +301,16 @@ export default <V extends FormValues = FormValues>({
 
         return p;
       };
-      const errorsEnhancer = (p: string, state: any) => {
+      const helper = (p: string, state: any) => {
+        if (p.startsWith("values")) {
+          if (!isUndefined(state)) return state;
+
+          p = p.replace("values.", "");
+          state = get(defaultValuesRef.current, p);
+
+          return !isUndefined(state) ? state : get(dfValues, p);
+        }
+
         if (
           !errorWithTouched ||
           !p.startsWith("errors") ||
@@ -312,18 +329,18 @@ export default <V extends FormValues = FormValues>({
       if (Array.isArray(path)) {
         state = path.map((p) => {
           p = getPath(p);
-          return errorsEnhancer(p, get(stateRef.current, p));
+          return helper(p, get(stateRef.current, p));
         });
       } else if (isPlainObject(path)) {
         const paths = path as Map<string>;
         state = Object.keys(paths).reduce((s: Map<any>, key) => {
           path = getPath(paths[key]);
-          s[key] = errorsEnhancer(path, get(stateRef.current, path));
+          s[key] = helper(path, get(stateRef.current, path));
           return s;
         }, {});
       } else {
         path = getPath(path);
-        state = errorsEnhancer(path, get(stateRef.current, path));
+        state = helper(path, get(stateRef.current, path));
       }
 
       if (callback) callback(usedState);
@@ -333,11 +350,12 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const select = useCallback<Select>(
-    (path, { target, errorWithTouched } = {}) =>
+  const select = useCallback<Select<V>>(
+    (path, { target, errorWithTouched, defaultValues: dfValues } = {}) =>
       getFormState(path, {
         target,
         errorWithTouched,
+        defaultValues: dfValues,
         callback: (usedState) => setUsedState(usedState),
       }),
     [getFormState, setUsedState]
@@ -550,8 +568,8 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const setTouchedMaybeValidate = useCallback(
-    (name: string) =>
+  const setTouchedMaybeValidate = useCallback<SetTouchedMaybeValidate>(
+    (name) =>
       setTouched(
         name,
         true,
@@ -711,8 +729,8 @@ export default <V extends FormValues = FormValues>({
     [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
   );
 
-  const handleChangeEvent = useCallback(
-    (name: string, value: any) => {
+  const handleChangeEvent = useCallback<HandleChangeEvent>(
+    (name, value) => {
       setStateRef(`values.${name}`, value);
       setDirtyIfNeeded(name);
 
@@ -726,68 +744,24 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const controller = useCallback<Controller<V>>(
-    (
-      name,
-      {
-        validate: validator,
-        value,
-        defaultValue,
-        parse,
-        format,
-        onChange,
-        onBlur,
-      } = {}
-    ) => {
-      if (!name) {
-        warn('💡 react-cool-form > controller: Missing the "name" parameter.');
-        return undefined;
-      }
+  const removeField = useCallback<RemoveField>(
+    (name) => {
+      handleUnset("values", `values.${name}`, stateRef.current.values, name);
+      handleUnset("touched", `touched.${name}`, stateRef.current.touched, name);
+      handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
+      handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
 
-      controllersRef.current[name] = true;
-      if (validator) fieldValidatorsRef.current[name] = validator;
+      initialStateRef.current = unset(
+        initialStateRef.current,
+        `values.${name}`,
+        true
+      );
 
-      const val = get(defaultValuesRef.current, name);
-      defaultValue = !isUndefined(val) ? val : defaultValue;
-      if (!isUndefined(defaultValue)) setDefaultValue(name, defaultValue);
-
-      value = !isUndefined(value) ? value : select(`values.${name}`);
-      value = (format ? format(value) : value) ?? "";
-
-      return {
-        name,
-        value,
-        onChange: (...args) => {
-          let v;
-
-          if (parse) {
-            v = parse(...args);
-          } else {
-            const e = args[0];
-            v =
-              e?.nativeEvent instanceof Event && isFieldElement(e.target)
-                ? getNodeValue(name)
-                : e;
-          }
-
-          handleChangeEvent(name, v);
-          if (onChange) onChange(...args, v);
-          changedFieldRef.current = name;
-        },
-        onBlur: (e) => {
-          setTouchedMaybeValidate(name);
-          if (onBlur) onBlur(e);
-          changedFieldRef.current = undefined;
-        },
-      };
+      delete fieldParsersRef.current[name];
+      delete fieldValidatorsRef.current[name];
+      delete controllersRef.current[name];
     },
-    [
-      getNodeValue,
-      handleChangeEvent,
-      setDefaultValue,
-      setTouchedMaybeValidate,
-      select,
-    ]
+    [handleUnset, stateRef]
   );
 
   const registerForm = useCallback<RegisterForm>(
@@ -799,7 +773,6 @@ export default <V extends FormValues = FormValues>({
 
       fieldsRef.current = getFields(form);
       setNodesOrStateValue(initialStateRef.current.values, true);
-      isInitRef.current = false;
 
       handlersRef.current.change = ({ target }: Event) => {
         const { name } = target as FieldElement;
@@ -846,37 +819,8 @@ export default <V extends FormValues = FormValues>({
 
         if (shouldRemoveField)
           Object.keys(fieldsRef.current).forEach((name) => {
-            if (fields[name]) return;
-
-            handleUnset(
-              "values",
-              `values.${name}`,
-              stateRef.current.values,
-              name
-            );
-            handleUnset(
-              "touched",
-              `touched.${name}`,
-              stateRef.current.touched,
-              name
-            );
-            handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
-            handleUnset(
-              "errors",
-              `errors.${name}`,
-              stateRef.current.errors,
-              name
-            );
-
-            initialStateRef.current = unset(
-              initialStateRef.current,
-              `values.${name}`,
-              true
-            );
-
-            delete fieldParsersRef.current[name];
-            delete fieldValidatorsRef.current[name];
-            delete controllersRef.current[name];
+            if (!fields[name] && !controllersRef.current[name])
+              removeField(name);
           });
 
         const addedNodes: string[] = [];
@@ -902,7 +846,7 @@ export default <V extends FormValues = FormValues>({
       getFields,
       getNodeValue,
       handleChangeEvent,
-      handleUnset,
+      removeField,
       reset,
       setNodesOrStateValue,
       setTouchedMaybeValidate,
@@ -936,9 +880,33 @@ export default <V extends FormValues = FormValues>({
 
   if (id)
     shared.set(id, {
+      shouldRemoveField,
+      defaultValuesRef,
+      initialStateRef,
+      controllersRef,
+      fieldValidatorsRef,
+      changedFieldRef,
+      excludeFieldsRef,
+      getNodeValue,
       getFormState,
+      setDefaultValue,
+      setTouchedMaybeValidate,
+      handleChangeEvent,
+      removeField,
       subscribeObserver,
       unsubscribeObserver,
+      form: registerForm,
+      field: registerField,
+      select,
+      getState,
+      setValue,
+      setTouched,
+      setDirty,
+      setError,
+      clearErrors,
+      runValidation,
+      reset,
+      submit,
     });
 
   useEffect(
@@ -971,6 +939,5 @@ export default <V extends FormValues = FormValues>({
     runValidation,
     reset,
     submit,
-    controller,
   };
 };

@@ -1,41 +1,46 @@
 /* eslint-disable no-console */
 
-import { useState } from "react";
-import { useForm, useFormState } from "react-cool-form";
+import { useState, memo } from "react";
+import { useForm, useControlled } from "react-cool-form";
 
-const Field = (props: any) => {
-  const foo = useFormState("values.foo", { formId: "form-1" });
+interface FormValues {
+  foo?: string;
+  bar?: string;
+}
 
-  console.log("Field re-renders: ", foo);
+const Field = memo(({ name, ...rest }: any) => {
+  const [props] = useControlled(name, { ...rest });
+
+  console.log("LOG ====> Field re-renders");
 
   return <input {...props} />;
-};
-
-const Form = (): any => {
-  const { form } = useForm({
-    id: "form-1",
-    onSubmit: (values) => console.log("onSubmit: ", values),
-  });
-
-  console.log("Form re-renders");
-
-  return (
-    <form ref={form}>
-      <Field name="foo" />
-      <input type="submit" />
-    </form>
-  );
-};
+});
 
 export default () => {
   const [show, setShow] = useState(true);
+  const { form, select, reset } = useForm<FormValues>({
+    id: "form-1",
+    defaultValues: { bar: "form test" },
+    onSubmit: (values) => console.log("onSubmit: ", values),
+  });
+
+  console.log(
+    "LOG ===> Form re-renders: ",
+    select("values.bar", { defaultValues: { bar: "field test" } })
+  );
 
   return (
-    <>
+    <form ref={form} noValidate>
+      {/* {show && <input name="foo" defaultValue="field test" />} */}
+      {show && <Field name="bar" formId="form-1" defaultValue="field test" />}
+      <input type="submit" />
+      <input type="reset" />
+      <button type="button" onClick={() => reset()}>
+        Reset
+      </button>
       <button type="button" onClick={() => setShow(!show)}>
         Toggle
       </button>
-      {show && <Form />}
-    </>
+    </form>
   );
 };

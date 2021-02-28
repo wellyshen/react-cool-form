@@ -3,7 +3,7 @@ id: reset-form
 title: Reset Form
 ---
 
-There're two common ways to reset all form data: [reset after form submission](#reset-after-form-submission) and [reset form manually](#reset-form-manually). You may ask "how about the reset button?" Well... according to the [UX research](https://www.nngroup.com/articles/reset-and-cancel-buttons), which summarized: **"Most Web forms would have improved usability if the Reset button was removed."** So, generally not recommend but [still supported](#reset-button-not-recommended).
+There're two common ways to reset all form data: [reset after form submission](#reset-after-form-submission) and [reset form manually](#reset-form-manually). You might ask "how about the reset button?" Well... according to the [UX research](https://www.nngroup.com/articles/reset-and-cancel-buttons), which summarized: **"Most Web forms would have improved usability if the Reset button was removed."** So, generally not recommend but [still supported](#reset-button-not-recommended).
 
 ## Reset After Form Submission
 

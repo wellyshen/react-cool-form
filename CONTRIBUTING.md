@@ -50,7 +50,7 @@ There're several useful commands that you can use during the development:
 
 ## Style Guide
 
-We use [ESLint](https://eslint.org), [StyleLint](https://stylelint.io) and [Prettier](https://prettier.io) for code style and formatting. Run `yarn lint` after making any changes to the code. Then, our linter will catch most issues that may exist in your code.
+We use [ESLint](https://eslint.org), [StyleLint](https://stylelint.io) and [Prettier](https://prettier.io) for code style and formatting. Run `yarn lint` after making any changes to the code. Then, our linter will catch most issues that might exist in your code.
 
 However, there are still some styles that the linter cannot pick up. If you are unsure about something, looking at [Airbnb’s Style Guide](https://github.com/airbnb/javascript) will guide you in the right direction.
 
