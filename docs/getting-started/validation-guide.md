@@ -40,7 +40,7 @@ Some validation attributes such as [minLength](https://developer.mozilla.org/en-
 
 ## Form-level Validation
 
-The [validate](../api-reference/use-form#validate) option provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state#about-the-form-state)), which is useful to validate dependent fields at the same time.
+The [validate](../api-reference/use-form#validate) option provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state#about-the-form-state)), which is useful to validate by dependent fields **during both editing (e.g. onChange, onBlur) and submission phases**.
 
 > 💡 Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex structures](./complex-structures), we've provided a set of [utility functions](../api-reference/utility-functions) to help you get shit done 💩.
 
@@ -147,7 +147,7 @@ const App = () => {
 
 ## Field-level Validation
 
-React Cool Form provides the [field](../api-reference/use-form#field) method for field-level validation. Simply register your validator via the `ref` attribute of a field like the following example:
+React Cool Form provides the [field](../api-reference/use-form#field) method for field-level validation. We can also access the form `values` with the method to validate by dependent fields **during the submission phase**. Simply register your validator via the `ref` attribute of a field like the following example:
 
 [![Edit RCF - Field-level validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-field-level-validation-dbklg?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -164,8 +164,8 @@ const validateEmail = (value, values /* Form values */) => {
 };
 
 // Asynchronous validation
-const validateUsername = async (values, values /* Form values */) => {
-  const hasUser = await validateOnServer(values);
+const validateUsername = async (value, values /* Form values */) => {
+  const hasUser = await validateOnServer(value);
   if (!hasUser) return "User doesn't exist";
 };
 
