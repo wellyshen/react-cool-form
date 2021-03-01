@@ -125,18 +125,31 @@ export default <V extends FormValues = FormValues>({
           const {
             type,
             name,
+            id: fieldId,
+            classList,
             dataset: { rcfExclude },
           } = field;
 
-          if (/button|image|submit|reset/.test(type)) return false;
+          const classes = Array.from(classList);
+          const { current: exclude } = excludeFieldsRef;
+
+          if (
+            /button|image|submit|reset/.test(type) ||
+            (fieldId && exclude[`#${fieldId}`]) ||
+            classes.find((n) => exclude[`.${n}`])
+          )
+            return false;
+
           if (rcfExclude !== "true" && !name) {
-            warn('💡 react-cool-form > field: Missing the "name" attribute.');
+            warn(
+              '💡 react-cool-form > field: Missing the "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
+            );
             return false;
           }
 
           return (
             controllersRef.current[name] ||
-            (rcfExclude !== "true" && !excludeFieldsRef.current[name])
+            (rcfExclude !== "true" && !exclude[name])
           );
         })
         .reduce((acc: Map<any>, cur) => {

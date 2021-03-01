@@ -147,7 +147,7 @@ import { useForm } from "react-cool-form";
 const App = () => {
   const { from } = useForm({
     defaultValues: { username: "", email: "" },
-    // excludeFields: ["more"], // You can also exclude the fields by this option
+    // excludeFields: ["more"], // You can also exclude the field here by passing in name/id/class
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
   const [toggle, setToggle] = useState(false);
