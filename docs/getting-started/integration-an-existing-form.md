@@ -136,7 +136,7 @@ const App = () => {
 
 ## Exclude Fields
 
-You can tell React Cool Form to exclude field(s) via the pre-defined `data-rcf-exclude` attribute or the [excludeFields](../api-reference/use-form#excludefields) option, depends on your case.
+You can tell React Cool Form to exclude field(s) via the pre-defined `data-rcf-exclude` attribute or the [excludeFields](../api-reference/use-form#excludefields) option depends on your case.
 
 [![Edit RCF - Conditional Fields](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-conditional-fields-rnxe6?fontsize=14&hidenavigation=1&theme=dark)
 
