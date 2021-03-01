@@ -31,9 +31,31 @@ Default field values of the form. In most case (especially working with TypeScri
 
 `string[]`
 
-Tell React Cool Form to exclude field(s) by passing in the `name` of the field. You can also exclude a field via the pre-defined `data-rcf-exclude` attribute. Check the [Exclude Fields](../getting-started/integration-an-existing-form#exclude-fields) to learn more.
+Tell React Cool Form to exclude field(s) by passing in the `name`/`id`/`class` of the field. You can also exclude a field via the pre-defined `data-rcf-exclude` attribute.
 
 - The `excludeFields` and `data-rcf-exclude` won't affect the functionality of the [useControlled](./use-controlled).
+
+```js
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const { form } = useForm({
+    excludeFields: ["foo", "#bar", ".baz"],
+  });
+
+  return (
+    <form ref={form}>
+      <input name="foo" />
+      <input id="bar" />
+      <input className="baz" />
+      {/* Excluding via the pre-defined data attribute */}
+      <input data-rcf-exclude />
+    </form>
+  );
+};
+```
+
+👉🏻 Check the [Exclude Fields](../getting-started/integration-an-existing-form#exclude-fields) to learn more.
 
 ### shouldRemoveField
 
