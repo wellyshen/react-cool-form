@@ -1,7 +1,6 @@
 ---
 id: typescript-support
 title: TypeScript Support
-hide_table_of_contents: true
 ---
 
 React Cool Form is written in [TypeScript](https://www.typescriptlang.org), so the library's types will always be up-to-date. When working with TypeScript, we can define a `FormValues` type to support the form's values.
@@ -37,6 +36,27 @@ const App = () => {
   );
 };
 ```
+
+## TypeScript and Hooks
+
+We can provide the `FormValues` type to the following hooks:
+
+```tsx
+interface FormValues {
+  firstName: string;
+  lastName: string;
+}
+
+const methods = useForm<FormValues>();
+
+const methods = useFormMethods<FormValues>();
+
+const values = useFormState<FormValues>();
+
+const props = useControlled<FormValues>();
+```
+
+## Making Field's Name Type-safe
 
 Some folks are asking about the type-safe of a field's name, however we can achieve that via TypeScript's [Enums](https://www.typescriptlang.org/docs/handbook/enums.html).
 

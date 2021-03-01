@@ -100,7 +100,7 @@ A synchronous/asynchronous function that is used for the [form-level validation]
 The form submission handler that is called when the form is submitted (or when the [submit](#submit) method is called) and validated successfully. It takes the following parameters:
 
 ```js
-const returnValues = useForm({
+const methods = useForm({
   onSubmit: async (values, options, e) => {
     const {
       getState,
@@ -126,7 +126,7 @@ const returnValues = useForm({
 The form error handler that is called when the form is submitted (or when the [submit](#submit) method is called) and validated failed. It takes the following parameters:
 
 ```js
-const returnValues = useForm({
+const methods = useForm({
   onError: (errors, options, e) => {
     const {
       getState,
@@ -152,7 +152,7 @@ const returnValues = useForm({
 The form reset handler that is called when the form is reset (or when the [reset](#reset) method is called). It takes the following parameters:
 
 ```js
-const returnValues = useForm({
+const methods = useForm({
   onReset: (values, options, e) => {
     const {
       getState,
@@ -180,7 +180,7 @@ A callback for debugging that receives the form state. It's called on every stat
 - `formState` is readonly and should not be mutated directly.
 
 ```js
-const returnValues = useForm({
+const methods = useForm({
   debug: (formState) => console.log("Debug: ", formState),
 });
 ```
