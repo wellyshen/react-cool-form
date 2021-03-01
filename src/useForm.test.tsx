@@ -111,7 +111,12 @@ describe("useForm", () => {
       renderHelper({ children: <input data-testid="foo" /> });
       fireEvent.input(getByTestId("foo"));
       expect(console.warn).toHaveBeenCalledTimes(2);
-      expect(console.warn).toHaveBeenCalledWith(
+      expect(console.warn).toHaveBeenNthCalledWith(
+        1,
+        '💡 react-cool-form > field: Missing the "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
+      );
+      expect(console.warn).toHaveBeenNthCalledWith(
+        2,
         '💡 react-cool-form > field: Missing the "name" attribute.'
       );
     });
@@ -1123,13 +1128,25 @@ describe("useForm", () => {
     it("should exclude a field via excludeFields option", async () => {
       renderHelper({
         defaultValues,
-        excludeFields: ["foo"],
+        excludeFields: ["foo", "#bar", ".baz"],
         onSubmit,
-        children: <input data-testid="foo" name="foo" />,
+        children: (
+          <>
+            <input data-testid="foo" name="foo" />
+            <input data-testid="bar" name="bar" id="bar" />
+            <input data-testid="baz" name="baz" className="baz" />
+          </>
+        ),
       });
       const foo = getByTestId("foo") as HTMLInputElement;
+      const bar = getByTestId("bar") as HTMLInputElement;
+      const baz = getByTestId("baz") as HTMLInputElement;
       expect(foo.value).toBe("");
+      expect(bar.value).toBe("");
+      expect(baz.value).toBe("");
       fireEvent.input(foo, e);
+      fireEvent.input(bar, e);
+      fireEvent.input(baz, e);
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });

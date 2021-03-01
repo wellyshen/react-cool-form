@@ -111,6 +111,7 @@ const App = () => {
   const { form } = useForm({
     id: "form-1", // The ID is used by the "useControlled" hook
     defaultValues: { framework: "" }, // (Strongly advise) Provide a default value for the controlled field
+    excludeFields: ["#framework"], // Exclude the internal input element of React-Select by ID
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
@@ -120,6 +121,7 @@ const App = () => {
         as={Select}
         formId="form-1" // Provide the corresponding ID of the "useForm" hook
         name="framework"
+        inputId="framework" // Used for excluding the internal input element of React-Select
         options={options}
         parse={(option) => option.value}
         format={(value) => options.find((option) => option.value === value)}
@@ -166,7 +168,7 @@ const App = () => {
   const { form, select } = useForm({
     id: "form-1", // The ID is used by the "useFormState" and "useFormMethods" hooks
     defaultValues: { username: "" },
-    // excludeFields: ["username"], // You can also exclude the field by this option
+    // excludeFields: ["username"], // You can also exclude the field here
     validate: ({ username }) => {
       const errors = {};
       if (!username.length) errors.username = "Required";
