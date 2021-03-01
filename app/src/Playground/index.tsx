@@ -21,15 +21,18 @@ export default () => {
   const { form } = useForm({
     id: "form-1", // The ID is used by the "useControlled" hook
     defaultValues: { framework: "" }, // (Strongly advise) Provide a default value for the controlled field
+    excludeFields: ["#framework", ".framework"],
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
   return (
     <form ref={form}>
+      <input className="framework" />
       <Field
         as={Select}
         formId="form-1" // Provide the corresponding ID of the "useForm" hook
         name="framework"
+        inputId="framework"
         options={options}
         parse={(option: any) => option.value}
         format={(value: any) =>
