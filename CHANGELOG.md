@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.128
+
+### Patch Changes
+
+- [`b3554f2`](https://github.com/wellyshen/react-cool-form/commit/b3554f28ed13e4d89ac437e42d4c370b1431ec09) [#433](https://github.com/wellyshen/react-cool-form/pull/433) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): add `id` and `class` for the `excludeFields` option
+
 ## 0.0.126
 
 ### Patch Changes
