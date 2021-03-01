@@ -7,7 +7,7 @@ import "./styles.scss";
 function App() {
   const { form } = useForm({
     defaultValues: { username: "", email: "" },
-    // excludeFields: ["more"], // You can also exclude the fields by this option
+    // excludeFields: ["more"], // You can also exclude the field here by passing in name/id/class
     // shouldRemoveField: false, // To maintain the state of the unmouned fields (default = true)
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
