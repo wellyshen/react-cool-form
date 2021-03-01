@@ -275,4 +275,29 @@ describe("useControlled", () => {
     fireEvent.submit(getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
   });
+
+  it("should parse value correctly", async () => {
+    renderHelper({
+      defaultValue: "",
+      parse: ({ target }: any) => `${target.value}🍋`,
+      onSubmit,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    fireEvent.input(getByTestId("foo"), { target: { value } });
+    fireEvent.submit(getByTestId("form"));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: "🍎🍋" }));
+  });
+
+  it("should format value correctly", async () => {
+    renderHelper({
+      defaultValue: "🍎🍋",
+      format: (val: string) => val.replace("🍋", ""),
+      onSubmit,
+      children: ({ fieldProps }: API) => <input {...fieldProps} />,
+    });
+    fireEvent.submit(getByTestId("form"));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
+  });
 });
