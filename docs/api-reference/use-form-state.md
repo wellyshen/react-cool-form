@@ -6,7 +6,7 @@ title: useFormState
 This hook helps us to isolate re-rendering at the component level for performance optimization. The hook has the similar API design to the [select](../api-reference/use-form#select) method of the `useForm` that maintain a consistent DX for us. Check the [Isolating Re-rendering](../getting-started/form-state#isolating-re-rendering) to learn more.
 
 ```js
-const returnValues = useFormState(path, config);
+const values = useFormState(path, config);
 ```
 
 ## Path
