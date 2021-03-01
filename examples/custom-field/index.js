@@ -30,7 +30,7 @@ function App() {
   const { form, select } = useForm({
     id: "form-1", // The ID is used by the "useFormState" and "useFormMethods" hooks
     defaultValues: { username: "" },
-    // excludeFields: ["username"], // You can also exclude the field by this option
+    // excludeFields: ["username"], // You can also exclude the field here
     validate: ({ username }) => {
       const errors = {};
       if (!username.length) errors.username = "Required";
