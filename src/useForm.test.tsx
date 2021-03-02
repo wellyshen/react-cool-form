@@ -662,7 +662,7 @@ describe("useForm", () => {
 
   describe("handle change", () => {
     it.each(["text", "number", "range"])(
-      "should handle %s change correctly",
+      "should handle %s correctly",
       async (type) => {
         renderHelper({
           defaultValues: { foo: "" },
@@ -684,7 +684,7 @@ describe("useForm", () => {
       }
     );
 
-    it("should handle checkbox change correctly", async () => {
+    it("should handle checkbox with boolean correctly", async () => {
       const { getState } = renderHelper({
         defaultValues: { foo: false },
         onSubmit,
@@ -711,7 +711,43 @@ describe("useForm", () => {
       expect(getState("isDirty")).toBeFalsy();
     });
 
-    it("should handle checkboxes change correctly", async () => {
+    it.each(["valid", "invalid"])(
+      "should handle checkbox with array correctly",
+      async (type) => {
+        const value = "🍎";
+        renderHelper({
+          onSubmit,
+          children: (
+            <input
+              data-testid="foo"
+              name="foo"
+              type="checkbox"
+              defaultValue={type === "valid" ? value : undefined}
+            />
+          ),
+        });
+        const foo = getByTestId("foo");
+        const form = getByTestId("form");
+
+        userEvent.click(foo);
+        fireEvent.submit(form);
+        await waitFor(() =>
+          expect(onSubmit).toHaveBeenCalledWith({
+            foo: type === "valid" ? [value] : foo.checked,
+          })
+        );
+
+        userEvent.click(foo);
+        fireEvent.submit(form);
+        await waitFor(() =>
+          expect(onSubmit).toHaveBeenCalledWith({
+            foo: type === "valid" ? [] : foo.checked,
+          })
+        );
+      }
+    );
+
+    it("should handle checkboxes correctly", async () => {
       const { getState } = renderHelper({
         defaultValues: { foo: [] },
         onSubmit,
@@ -754,7 +790,7 @@ describe("useForm", () => {
       expect(getState("isDirty")).toBeFalsy();
     });
 
-    it("should handle radio buttons change correctly", async () => {
+    it("should handle radio buttons correctly", async () => {
       renderHelper({
         defaultValues: { foo: "" },
         onSubmit,
@@ -782,7 +818,7 @@ describe("useForm", () => {
       );
     });
 
-    it("should handle textarea change correctly", async () => {
+    it("should handle textarea correctly", async () => {
       renderHelper({
         defaultValues: { foo: "" },
         onSubmit,
@@ -798,7 +834,7 @@ describe("useForm", () => {
       );
     });
 
-    it("should handle select change correctly", async () => {
+    it("should handle select correctly", async () => {
       renderHelper({
         defaultValues: { foo: "🍎" },
         onSubmit,
@@ -833,7 +869,7 @@ describe("useForm", () => {
       );
     });
 
-    it("should handle multiple select change correctly", async () => {
+    it("should handle multiple select correctly", async () => {
       renderHelper({
         defaultValues: { foo: [] },
         onSubmit,
@@ -880,7 +916,7 @@ describe("useForm", () => {
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: [] }));
     });
 
-    it("should handle file change correctly", async () => {
+    it("should handle file correctly", async () => {
       renderHelper({
         defaultValues: { foo: null },
         onSubmit,
@@ -902,7 +938,7 @@ describe("useForm", () => {
       );
     });
 
-    it("should handle files change correctly", async () => {
+    it("should handle files correctly", async () => {
       renderHelper({
         defaultValues: { foo: null },
         onSubmit,
