@@ -205,7 +205,7 @@ describe("useControlled", () => {
     expect(getState("isValid")).toBeTruthy();
   });
 
-  it("should handle text change correctly", async () => {
+  it("should handle text correctly", async () => {
     renderHelper({
       name: "text",
       defaultValue: "",
@@ -219,7 +219,7 @@ describe("useControlled", () => {
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ text: value }));
   });
 
-  it("should handle checkboxes change correctly", async () => {
+  it("should handle checkboxes correctly", async () => {
     renderHelper({
       name: "checkboxes",
       type: "checkbox",
@@ -240,7 +240,7 @@ describe("useControlled", () => {
     );
   });
 
-  it("should handle selects change correctly", async () => {
+  it("should handle multiple select correctly", async () => {
     renderHelper({
       name: "selects",
       defaultValue: [],
@@ -265,7 +265,7 @@ describe("useControlled", () => {
     );
   });
 
-  it("should handle custom field change correctly", async () => {
+  it("should handle custom field correctly", async () => {
     renderHelper({
       defaultValue: 0,
       onSubmit,
