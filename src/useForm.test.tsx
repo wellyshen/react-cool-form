@@ -644,6 +644,20 @@ describe("useForm", () => {
         expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
       );
     });
+
+    it("should use form-level default value first", async () => {
+      const value = "🍎";
+      renderHelper({
+        defaultValues: { foo: value },
+        onSubmit,
+        children: <input data-testid="foo" name="foo" defaultValue="🍋" />,
+      });
+      expect(getByTestId("foo").value).toBe(value);
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
+    });
   });
 
   describe("handle change", () => {
@@ -1119,6 +1133,43 @@ describe("useForm", () => {
       fireEvent.focusOut(foo);
       await waitFor(() => expect(getState("errors")).toEqual({}));
     });
+
+    it("should merge form-level error correctly", async () => {
+      const error = "Field required";
+      const { getState } = renderHelper({
+        onSubmit,
+        onError,
+        children: ({ field }: Methods) => (
+          <input
+            data-testid="foo"
+            name="foo"
+            ref={field(() => error)}
+            required
+          />
+        ),
+      });
+      fireEvent.input(getByTestId("foo"));
+      await waitFor(() => expect(getState("errors.foo")).toBe(error));
+    });
+
+    it("should merge field-level error correctly", async () => {
+      const error = "Form required";
+      const { getState } = renderHelper({
+        validate: async () => ({ foo: error }),
+        onSubmit,
+        onError,
+        children: ({ field }: Methods) => (
+          <input
+            data-testid="foo"
+            name="foo"
+            ref={field(() => "Field required")}
+            required
+          />
+        ),
+      });
+      fireEvent.input(getByTestId("foo"));
+      await waitFor(() => expect(getState("errors.foo")).toBe(error));
+    });
   });
 
   describe("exclude fields", () => {
@@ -1297,8 +1348,7 @@ describe("useForm", () => {
     it("should get default value correctly", () => {
       const formValue = { foo: null };
       const selectValue = { foo: "🍎" };
-      // eslint-disable-next-line prefer-destructuring
-      let select = renderHelper({ defaultValues: formValue }).select;
+      let { select } = renderHelper({ defaultValues: formValue });
       expect(select("values.foo")).toBe(formValue.foo);
 
       expect(select("values.foo", { defaultValues: selectValue })).toBe(
