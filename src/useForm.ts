@@ -188,13 +188,15 @@ export default <V extends FormValues = FormValues>({
 
     if (isCheckboxInput(field)) {
       const checkboxes = options as HTMLInputElement[];
+      const checkbox = checkboxes[0];
 
-      value =
-        checkboxes.length > 1
-          ? checkboxes
-              .filter((checkbox) => checkbox.checked)
-              .map((checkbox) => checkbox.value)
-          : checkboxes[0].checked;
+      if (checkboxes.length > 1) {
+        value = checkboxes.filter((c) => c.checked).map((c) => c.value);
+      } else if (checkbox.hasAttribute("value") && checkbox.value) {
+        value = checkbox.checked ? [checkbox.value] : [];
+      } else {
+        value = checkbox.checked;
+      }
     }
 
     if (isRadioInput(field))

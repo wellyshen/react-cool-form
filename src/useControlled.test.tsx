@@ -1,4 +1,5 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { ControlledConfig, FieldProps, GetState, Meta } from "./types";
 import useForm from "./useForm";
@@ -48,6 +49,16 @@ const Form = ({
   );
 };
 
+const CustomField = ({ value, onChange }: any) => (
+  <button
+    data-testid="foo"
+    type="button"
+    onClick={(e: any) => onChange(e.target.value)}
+  >
+    {value}
+  </button>
+);
+
 const renderHelper = ({ children, ...rest }: Props = {}) => {
   let api: API;
 
@@ -63,16 +74,6 @@ const renderHelper = ({ children, ...rest }: Props = {}) => {
   // @ts-expect-error
   return api;
 };
-
-/* const CustomField = ({ value, onChange }: any) => (
-  <button
-    data-testid="custom"
-    onClick={(e) => onChange(e.target.value)}
-    type="button"
-  >
-    {value}
-  </button>
-); */
 
 describe("useControlled", () => {
   const getByTestId = screen.getByTestId as any;
@@ -204,61 +205,99 @@ describe("useControlled", () => {
     expect(getState("isValid")).toBeTruthy();
   });
 
-  /* it("should handle native field(s) change correctly", async () => {
+  it("should handle text correctly", async () => {
     renderHelper({
-      defaultValues: { text: "", checkboxes: [], selects: [] },
+      name: "text",
+      defaultValue: "",
       onSubmit,
-      children: ({ controller }: Methods) => (
-        <>
-          <input data-testid="text" {...controller("text")} />
-          <input
-            data-testid="checkboxes-0"
-            {...controller("checkboxes")}
-            type="checkbox"
-            value="🍎"
-          />
-          <input
-            data-testid="checkboxes-1"
-            {...controller("checkboxes")}
-            type="checkbox"
-            value="🍋"
-          />
-          <select data-testid="selects" name="selects" multiple>
-            <option data-testid="selects-0" value="🍎">
-              🍎
-            </option>
-            <option data-testid="selects-1" value="🍋">
-              🍋
-            </option>
-          </select>
-        </>
+      children: ({ fieldProps }: API) => (
+        <input data-testid="text" {...fieldProps} />
       ),
     });
     fireEvent.input(getByTestId("text"), { target: { value } });
+    fireEvent.submit(getByTestId("form"));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ text: value }));
+  });
+
+  it("should handle checkboxes correctly", async () => {
+    renderHelper({
+      name: "checkboxes",
+      type: "checkbox",
+      defaultValue: [],
+      onSubmit,
+      children: ({ fieldProps }: API) => (
+        <>
+          <input data-testid="checkboxes-0" {...fieldProps} value="🍎" />
+          <input data-testid="checkboxes-1" {...fieldProps} value="🍋" />
+        </>
+      ),
+    });
     const checkboxes0 = getByTestId("checkboxes-0");
     userEvent.click(checkboxes0);
+    fireEvent.submit(getByTestId("form"));
+    await waitFor(() =>
+      expect(onSubmit).toHaveBeenCalledWith({ checkboxes: [checkboxes0.value] })
+    );
+  });
+
+  it("should handle multiple select correctly", async () => {
+    renderHelper({
+      name: "selects",
+      defaultValue: [],
+      multiple: true,
+      onSubmit,
+      children: ({ fieldProps }: API) => (
+        <select data-testid="selects" {...fieldProps}>
+          <option data-testid="selects-0" value="🍎">
+            🍎
+          </option>
+          <option data-testid="selects-1" value="🍋">
+            🍋
+          </option>
+        </select>
+      ),
+    });
     const selects0 = getByTestId("selects-0");
     userEvent.selectOptions(getByTestId("selects"), [selects0.value]);
     fireEvent.submit(getByTestId("form"));
     await waitFor(() =>
-      expect(onSubmit).toHaveBeenCalledWith({
-        text: value,
-        checkboxes: [checkboxes0.value],
-        selects: [selects0.value],
-      })
+      expect(onSubmit).toHaveBeenCalledWith({ selects: [selects0.value] })
     );
   });
 
-  it("should handle custom field change correctly", async () => {
+  it("should handle custom field correctly", async () => {
     renderHelper({
-      defaultValues: { foo: 0 },
+      defaultValue: 0,
       onSubmit,
-      children: ({ controller }: Methods) => (
-        <CustomField {...controller("foo")} />
-      ),
+      children: ({ fieldProps }: API) => <CustomField {...fieldProps} />,
     });
-    fireEvent.click(getByTestId("custom"), { target: { value } });
+    fireEvent.click(getByTestId("foo"), { target: { value } });
     fireEvent.submit(getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
-  }); */
+  });
+
+  it("should parse value correctly", async () => {
+    renderHelper({
+      defaultValue: "",
+      parse: ({ target }: any) => `${target.value}🍋`,
+      onSubmit,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    fireEvent.input(getByTestId("foo"), { target: { value } });
+    fireEvent.submit(getByTestId("form"));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: "🍎🍋" }));
+  });
+
+  it("should format value correctly", async () => {
+    renderHelper({
+      defaultValue: "🍎🍋",
+      format: (val: string) => val.replace("🍋", ""),
+      onSubmit,
+      children: ({ fieldProps }: API) => <input {...fieldProps} />,
+    });
+    fireEvent.submit(getByTestId("form"));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
+  });
 });

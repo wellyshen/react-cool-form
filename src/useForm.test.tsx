@@ -644,11 +644,25 @@ describe("useForm", () => {
         expect(onSubmit).toHaveBeenCalledWith(defaultNestedValue)
       );
     });
+
+    it("should use form-level default value first", async () => {
+      const value = "🍎";
+      renderHelper({
+        defaultValues: { foo: value },
+        onSubmit,
+        children: <input data-testid="foo" name="foo" defaultValue="🍋" />,
+      });
+      expect(getByTestId("foo").value).toBe(value);
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
+    });
   });
 
   describe("handle change", () => {
     it.each(["text", "number", "range"])(
-      "should handle %s change correctly",
+      "should handle %s correctly",
       async (type) => {
         renderHelper({
           defaultValues: { foo: "" },
@@ -670,7 +684,7 @@ describe("useForm", () => {
       }
     );
 
-    it("should handle checkbox change correctly", async () => {
+    it("should handle checkbox with boolean correctly", async () => {
       const { getState } = renderHelper({
         defaultValues: { foo: false },
         onSubmit,
@@ -697,7 +711,43 @@ describe("useForm", () => {
       expect(getState("isDirty")).toBeFalsy();
     });
 
-    it("should handle checkboxes change correctly", async () => {
+    it.each(["valid", "invalid"])(
+      "should handle checkbox with array correctly",
+      async (type) => {
+        const value = "🍎";
+        renderHelper({
+          onSubmit,
+          children: (
+            <input
+              data-testid="foo"
+              name="foo"
+              type="checkbox"
+              defaultValue={type === "valid" ? value : undefined}
+            />
+          ),
+        });
+        const foo = getByTestId("foo");
+        const form = getByTestId("form");
+
+        userEvent.click(foo);
+        fireEvent.submit(form);
+        await waitFor(() =>
+          expect(onSubmit).toHaveBeenCalledWith({
+            foo: type === "valid" ? [value] : foo.checked,
+          })
+        );
+
+        userEvent.click(foo);
+        fireEvent.submit(form);
+        await waitFor(() =>
+          expect(onSubmit).toHaveBeenCalledWith({
+            foo: type === "valid" ? [] : foo.checked,
+          })
+        );
+      }
+    );
+
+    it("should handle checkboxes correctly", async () => {
       const { getState } = renderHelper({
         defaultValues: { foo: [] },
         onSubmit,
@@ -740,7 +790,7 @@ describe("useForm", () => {
       expect(getState("isDirty")).toBeFalsy();
     });
 
-    it("should handle radio buttons change correctly", async () => {
+    it("should handle radio buttons correctly", async () => {
       renderHelper({
         defaultValues: { foo: "" },
         onSubmit,
@@ -768,7 +818,7 @@ describe("useForm", () => {
       );
     });
 
-    it("should handle textarea change correctly", async () => {
+    it("should handle textarea correctly", async () => {
       renderHelper({
         defaultValues: { foo: "" },
         onSubmit,
@@ -784,7 +834,7 @@ describe("useForm", () => {
       );
     });
 
-    it("should handle select change correctly", async () => {
+    it("should handle select correctly", async () => {
       renderHelper({
         defaultValues: { foo: "🍎" },
         onSubmit,
@@ -819,7 +869,7 @@ describe("useForm", () => {
       );
     });
 
-    it("should handle multiple select change correctly", async () => {
+    it("should handle multiple select correctly", async () => {
       renderHelper({
         defaultValues: { foo: [] },
         onSubmit,
@@ -866,7 +916,7 @@ describe("useForm", () => {
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: [] }));
     });
 
-    it("should handle file change correctly", async () => {
+    it("should handle file correctly", async () => {
       renderHelper({
         defaultValues: { foo: null },
         onSubmit,
@@ -888,7 +938,7 @@ describe("useForm", () => {
       );
     });
 
-    it("should handle files change correctly", async () => {
+    it("should handle files correctly", async () => {
       renderHelper({
         defaultValues: { foo: null },
         onSubmit,
@@ -1119,6 +1169,43 @@ describe("useForm", () => {
       fireEvent.focusOut(foo);
       await waitFor(() => expect(getState("errors")).toEqual({}));
     });
+
+    it("should merge form-level error correctly", async () => {
+      const error = "Field required";
+      const { getState } = renderHelper({
+        onSubmit,
+        onError,
+        children: ({ field }: Methods) => (
+          <input
+            data-testid="foo"
+            name="foo"
+            ref={field(() => error)}
+            required
+          />
+        ),
+      });
+      fireEvent.input(getByTestId("foo"));
+      await waitFor(() => expect(getState("errors.foo")).toBe(error));
+    });
+
+    it("should merge field-level error correctly", async () => {
+      const error = "Form required";
+      const { getState } = renderHelper({
+        validate: async () => ({ foo: error }),
+        onSubmit,
+        onError,
+        children: ({ field }: Methods) => (
+          <input
+            data-testid="foo"
+            name="foo"
+            ref={field(() => "Field required")}
+            required
+          />
+        ),
+      });
+      fireEvent.input(getByTestId("foo"));
+      await waitFor(() => expect(getState("errors.foo")).toBe(error));
+    });
   });
 
   describe("exclude fields", () => {
@@ -1297,8 +1384,7 @@ describe("useForm", () => {
     it("should get default value correctly", () => {
       const formValue = { foo: null };
       const selectValue = { foo: "🍎" };
-      // eslint-disable-next-line prefer-destructuring
-      let select = renderHelper({ defaultValues: formValue }).select;
+      let { select } = renderHelper({ defaultValues: formValue });
       expect(select("values.foo")).toBe(formValue.foo);
 
       expect(select("values.foo", { defaultValues: selectValue })).toBe(

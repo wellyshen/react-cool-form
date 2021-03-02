@@ -22,7 +22,7 @@
 - 🧱 Seamless integration with existing HTML form inputs or [3rd-party UI libraries](https://react-cool-form.netlify.app/docs/getting-started/3rd-party-ui-libraries).
 - 🎛 Super flexible [API](https://react-cool-form.netlify.app/docs/api-reference/use-form) design, built with [DX and UX](https://react-cool-form.netlify.app/docs) in mind.
 - 🔩 Provides useful [utility functions](https://react-cool-form.netlify.app/docs/api-reference/utility-functions) to boost forms development.
-- 📜 Supports [TypeScript](https://www.typescriptlang.org) type definition.
+- 📜 Supports [TypeScript](https://react-cool-form.netlify.app/docs/getting-started/typescript-support) type definition.
 - ☁️ Server-side rendering compatibility.
 - 🦔 A [tiny size](https://react-cool-form.netlify.app/docs/getting-started/bundle-size-overview) library but powerful.
 

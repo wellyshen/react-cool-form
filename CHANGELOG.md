@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.129
+
+### Patch Changes
+
+- [`8ae1f76`](https://github.com/wellyshen/react-cool-form/commit/8ae1f76a065a94375e2bf0143f8adcd981a63230) [#436](https://github.com/wellyshen/react-cool-form/pull/436) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): single checkbox input with valid `value` attribute, the value will be a string array
+
 ## 0.0.128
 
 ### Patch Changes
