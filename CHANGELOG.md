@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.130
+
+### Patch Changes
+
+- [`723dceb`](https://github.com/wellyshen/react-cool-form/commit/723dcebb8f08fd3393ddcaa06ebf317c700ff337) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useControlled): use React.FocusEventHandler for the return props
+
 ## 0.0.129
 
 ### Patch Changes
