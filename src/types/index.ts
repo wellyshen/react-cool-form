@@ -1,4 +1,4 @@
-import { FocusEvent, MutableRefObject, SyntheticEvent } from "react";
+import { FocusEventHandler, MutableRefObject, SyntheticEvent } from "react";
 
 // Utils
 export type Map<T = boolean> = Record<string, T>;
@@ -305,10 +305,6 @@ interface Formatter {
   (value: any): any;
 }
 
-interface BlurHandler {
-  (event: FocusEvent): void;
-}
-
 export interface ControlledConfig<V> {
   formId: string;
   defaultValue?: any;
@@ -323,7 +319,7 @@ export interface FieldProps {
   name: string;
   value: any;
   onChange: (...event: any[]) => void;
-  onBlur: BlurHandler;
+  onBlur: FocusEventHandler;
   [k: string]: any;
 }
 

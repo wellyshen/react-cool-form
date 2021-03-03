@@ -1,5 +1,5 @@
 declare module "react-cool-form" {
-  import { FocusEvent, SyntheticEvent } from "react";
+  import { FocusEventHandler, SyntheticEvent } from "react";
 
   // Type utils
   type Map<T = boolean> = Record<string, T>;
@@ -232,10 +232,6 @@ declare module "react-cool-form" {
     (value: V): R;
   }
 
-  export interface BlurHandler {
-    (event: FocusEvent): void;
-  }
-
   export interface ControlledConfig<V extends FormValues = FormValues> {
     formId: string;
     defaultValue?: any;
@@ -251,7 +247,7 @@ declare module "react-cool-form" {
       name: string;
       value: any;
       onChange: (...event: any[]) => void;
-      onBlur: BlurHandler;
+      onBlur: FocusEventHandler;
       [k: string]: any;
     },
     { error: any; isTouched: boolean; isDirty: boolean }
