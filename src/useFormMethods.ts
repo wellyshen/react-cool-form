@@ -3,13 +3,8 @@ import { get } from "./shared";
 import { invariant } from "./utils";
 
 export default <V extends FormValues = FormValues>(
-  formId: string
+  formId?: string
 ): FormReturn<V> => {
-  invariant(
-    !formId,
-    '💡 react-cool-form > useFormMethods: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-methods#formid'
-  );
-
   const methods = get(formId);
 
   invariant(

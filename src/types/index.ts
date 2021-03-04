@@ -289,12 +289,12 @@ export interface FormReturn<V> {
 }
 
 // useFormState
-export interface StateConfig<V> {
+export type StateConfig<V> = Partial<{
   formId: string;
-  target?: string;
-  defaultValues?: V;
-  errorWithTouched?: boolean;
-}
+  target: string;
+  defaultValues: V;
+  errorWithTouched: boolean;
+}>;
 
 // useControlled
 interface Parser {
@@ -305,15 +305,15 @@ interface Formatter {
   (value: any): any;
 }
 
-export interface ControlledConfig<V> {
+export type ControlledConfig<V> = Partial<{
   formId: string;
-  defaultValue?: any;
-  validate?: FieldValidator<V>;
-  parse?: Parser;
-  format?: Formatter;
-  errorWithTouched?: boolean;
+  defaultValue: any;
+  validate: FieldValidator<V>;
+  parse: Parser;
+  format: Formatter;
+  errorWithTouched: boolean;
   [k: string]: any;
-}
+}>;
 
 export interface FieldProps {
   name: string;

@@ -8,10 +8,9 @@ import useFormState from "./useFormState";
 const defaultValues = { foo: "🍎" };
 const error = "Required";
 
-interface Props extends Partial<StateConfig<any>> {
+interface Props extends StateConfig<any> {
   children: (state: any) => JSX.Element;
   path?: Path;
-  id?: string;
   formDefaultValues?: any;
   isError?: boolean;
   isTouched?: boolean;
@@ -21,8 +20,6 @@ interface Props extends Partial<StateConfig<any>> {
 const Form = ({
   children,
   path,
-  id = "form-1",
-  formId,
   formDefaultValues = defaultValues,
   isError,
   isTouched,
@@ -30,11 +27,10 @@ const Form = ({
   ...rest
 }: Props) => {
   const { form, setError, setTouched } = useForm({
-    id,
     defaultValues: formDefaultValues,
   });
   // @ts-expect-error
-  const state = useFormState(path, { formId: formId || id, ...rest });
+  const state = useFormState(path, rest);
 
   onRender();
 
@@ -63,10 +59,6 @@ const renderHelper = (args: Omit<Props, "children"> = {}) => {
 
 describe("useFormState", () => {
   it("should throw form id errors", () => {
-    expect(() => useFormState("values")).toThrow(
-      '💡 react-cool-form > useFormState: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-state#formid'
-    );
-
     expect(() => useFormState("values", { formId: "form-1" })).toThrow(
       '💡 react-cool-form > useFormState: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
     );

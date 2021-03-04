@@ -12,7 +12,6 @@ import useFormState from "./useFormState";
 
 export default <V extends FormValues = FormValues>(
   name: string,
-  // @ts-expect-error
   {
     formId,
     defaultValue,
@@ -26,11 +25,6 @@ export default <V extends FormValues = FormValues>(
   invariant(
     !name,
     '💡 react-cool-form > useControlled: Missing the "name" parameter.'
-  );
-
-  invariant(
-    !formId,
-    '💡 react-cool-form > useControlled: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-controlled#formid'
   );
 
   const methods = shared.get(formId);

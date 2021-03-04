@@ -1,13 +1,22 @@
 import { Map, Methods } from "./types";
 
-const shared: Map<Methods> = {};
+let one: Methods | undefined;
+const all: Map<Methods> = {};
 
-export const get = (id: string): Methods => shared[id];
+export const get = (id?: string): Methods => (id ? all[id] : (one as Methods));
 
-export const set = (id: string, methods: Methods): void => {
-  shared[id] = methods;
+export const set = (id: string | undefined, methods: Methods): void => {
+  if (id) {
+    all[id] = methods;
+  } else {
+    one = methods;
+  }
 };
 
-export const remove = (id: string): void => {
-  delete shared[id];
+export const remove = (id?: string): void => {
+  if (id) {
+    delete all[id];
+  } else {
+    one = undefined;
+  }
 };

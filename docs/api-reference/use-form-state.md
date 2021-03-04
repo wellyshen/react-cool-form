@@ -3,7 +3,7 @@ id: use-form-state
 title: useFormState
 ---
 
-This hook helps us to isolate re-rendering at the component level for performance optimization. The hook has the similar API design to the [select](../api-reference/use-form#select) method of the `useForm` that maintain a consistent DX for us. Check the [Isolating Re-rendering](../getting-started/form-state#isolating-re-rendering) to learn more.
+This hook helps us to isolate re-rendering at the component level for performance optimization (see [related article](https://overreacted.io/before-you-memo)). The hook has the similar API design to the [select](../api-reference/use-form#select) method of the `useForm` that maintain a consistent DX for us. Check the [Isolating Re-rendering](../getting-started/form-state#isolating-re-rendering) to learn more.
 
 ```js
 const values = useFormState(path, config);
@@ -38,7 +38,7 @@ An `object` with the following options:
 
 `string`
 
-The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We must provide it when using this hook.
+The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We only need it when using multiple form hooks at the same time.
 
 ### target
 
@@ -105,9 +105,7 @@ The example demonstrates the basic usage of this hook.
 import { useFormState } from "react-cool-form";
 
 const IsolatedComponent = () => {
-  const foo = useFormState("values.foo", {
-    formId: "form-1", // Provide the corresponding ID of the "useForm" hook
-  });
+  const foo = useFormState("values.foo");
 
   return <div>{foo}</div>;
 };

@@ -8,17 +8,10 @@ import { invariant } from "./utils";
 
 export default <V extends FormValues = FormValues>(
   path: Path,
-  // @ts-expect-error
   { formId, ...rest }: StateConfig<V> = {}
 ): any => {
-  const methodName = "useFormState";
-
-  invariant(
-    !formId,
-    `💡 react-cool-form > ${methodName}: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-state#formid`
-  );
-
   const methods = get(formId);
+  const methodName = "useFormState";
 
   invariant(
     !methods,
