@@ -11,7 +11,7 @@ interface API {
   getState: GetState;
 }
 
-interface Config extends Omit<ControlledConfig<any>, "name | formId"> {
+interface Config extends ControlledConfig<any> {
   children: (api: API) => JSX.Element | null;
   name: string;
   defaultValues: Record<string, any>;
@@ -30,12 +30,11 @@ const Form = ({
   ...rest
 }: Props) => {
   const { form, getState } = useForm({
-    id: "form-1",
     defaultValues,
     onSubmit: (values) => onSubmit(values),
     onError: (errors) => onError(errors),
   });
-  const [fieldProps, meta] = useControlled(name, { formId: "form-1", ...rest });
+  const [fieldProps, meta] = useControlled(name, rest);
 
   return (
     <>
@@ -88,10 +87,6 @@ describe("useControlled", () => {
   });
 
   it("should throw form id errors", () => {
-    expect(() => useControlled("foo")).toThrow(
-      '💡 react-cool-form > useControlled: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-controlled#formid'
-    );
-
     expect(() => useControlled("foo", { formId: "form-1" })).toThrow(
       '💡 react-cool-form > useControlled: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
     );

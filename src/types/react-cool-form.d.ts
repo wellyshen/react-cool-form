@@ -205,22 +205,22 @@ declare module "react-cool-form" {
 
   // useFormMethods
   export function useFormMethods<V extends FormValues = FormValues>(
-    formId: string
+    formId?: string
   ): FormReturn<V>;
 
   // useFormState
   export type Path = string | string[] | Map<string>;
 
-  export interface StateConfig<V> {
+  export type StateConfig<V> = Partial<{
     formId: string;
-    target?: string;
-    defaultValues?: V;
-    errorWithTouched?: boolean;
-  }
+    target: string;
+    defaultValues: V;
+    errorWithTouched: boolean;
+  }>;
 
   export function useFormState<V extends FormValues = FormValues>(
     path: Path,
-    config: StateConfig<V>
+    config?: StateConfig<V>
   ): any;
 
   // useControlled
@@ -232,15 +232,15 @@ declare module "react-cool-form" {
     (value: V): R;
   }
 
-  export interface ControlledConfig<V extends FormValues = FormValues> {
+  export type ControlledConfig<V extends FormValues = FormValues> = Partial<{
     formId: string;
-    defaultValue?: any;
-    validate?: FieldValidator<V>;
-    parse?: Parser;
-    format?: Formatter;
-    errorWithTouched?: boolean;
+    defaultValue: any;
+    validate: FieldValidator<V>;
+    parse: Parser;
+    format: Formatter;
+    errorWithTouched: boolean;
     [k: string]: any;
-  }
+  }>;
 
   export type ControlledReturn = [
     {
@@ -255,7 +255,7 @@ declare module "react-cool-form" {
 
   export function useControlled<V extends FormValues = FormValues>(
     name: string,
-    config: ControlledConfig<V>
+    config?: ControlledConfig<V>
   ): ControlledReturn;
 
   // Utility functions

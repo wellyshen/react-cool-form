@@ -23,7 +23,7 @@ An `object` with the following options:
 
 `string`
 
-The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We must provide it when using this hook.
+The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We only need it when using multiple form hooks at the same time.
 
 ### defaultValue
 
@@ -145,7 +145,6 @@ import { useControlled } from "react-cool-form";
 const Field = ({
   as,
   name,
-  formId,
   defaultValue,
   validate,
   parse,
@@ -154,7 +153,6 @@ const Field = ({
   ...restProps
 }) => {
   const [fieldProps, { error, isTouched, isDirty }] = useControlled(name, {
-    formId, // Provide the corresponding ID of the "useForm" hook
     defaultValue,
     validate,
     parse,
