@@ -8,8 +8,11 @@ import {
 import userEvent from "@testing-library/user-event";
 
 import { FormConfig, FormReturn, SubmitHandler, ErrorHandler } from "./types";
+import { set, remove } from "./shared";
 import { isFunction } from "./utils";
 import useForm from "./useForm";
+
+jest.mock("./shared", () => ({ set: jest.fn(), remove: jest.fn() }));
 
 type Children = JSX.Element | JSX.Element[] | null;
 
@@ -53,19 +56,19 @@ const Form = ({
 };
 
 const renderHelper = ({ children = null, ...rest }: Props = {}) => {
-  let api: Methods;
+  let methods: Methods;
 
-  render(
+  const { unmount } = render(
     <Form {...rest}>
-      {(methods) => {
-        api = methods;
-        return isFunction(children) ? children(methods) : children;
+      {(m) => {
+        methods = m;
+        return isFunction(children) ? children(m) : children;
       }}
     </Form>
   );
 
   // @ts-expect-error
-  return api;
+  return { unmount, ...methods };
 };
 
 describe("useForm", () => {
@@ -214,7 +217,7 @@ describe("useForm", () => {
   });
 
   it("should return methods correctly", () => {
-    const methods = renderHelper();
+    const { unmount, ...methods } = renderHelper();
     expect(methods).toEqual({
       form: expect.any(Function),
       field: expect.any(Function),
@@ -229,6 +232,13 @@ describe("useForm", () => {
       reset: expect.any(Function),
       submit: expect.any(Function),
     });
+  });
+
+  it("should handle global methods correctly", () => {
+    const { unmount } = renderHelper();
+    expect(set).toHaveBeenCalled();
+    unmount();
+    expect(remove).toHaveBeenCalled();
   });
 
   describe("event callbacks", () => {
