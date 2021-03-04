@@ -4,9 +4,9 @@ import { TextField, Button } from "@material-ui/core";
 
 import "./styles.scss";
 
-const Field = ({ as, name, formId, onChange, onBlur, ...restProps }) => {
-  const value = useFormState(`values.${name}`, { formId });
-  const { setValue, setTouched } = useFormMethods(formId);
+const Field = ({ as, name, onChange, onBlur, ...restProps }) => {
+  const value = useFormState(`values.${name}`);
+  const { setValue, setTouched } = useFormMethods();
   const Component = as;
 
   return (
@@ -28,7 +28,6 @@ const Field = ({ as, name, formId, onChange, onBlur, ...restProps }) => {
 
 function App() {
   const { form, select } = useForm({
-    id: "form-1", // The ID is used by the "useFormState" and "useFormMethods" hooks
     defaultValues: { username: "" },
     // excludeFields: ["username"], // You can also exclude the field here
     validate: ({ username }) => {
@@ -44,7 +43,6 @@ function App() {
     <form ref={form} noValidate>
       <Field
         as={TextField}
-        formId="form-1" // Provide the corresponding ID of the "useForm" hook
         label="Username"
         name="username" // Used for the "excludeFields" option
         required
