@@ -169,16 +169,13 @@ const checkStrength = (pwd) => {
 
 const FieldMessage = () => {
   // Supports single-value-pick, array-pick, and object-pick data formats
-  const [error, value] = useFormState(["errors.password", "values.password"], {
-    formId: "form-1", // Provide the corresponding ID of the "useForm" hook
-  });
+  const [error, value] = useFormState(["errors.password", "values.password"]);
 
   return <p>{error || checkStrength(value)}</p>;
 };
 
 const App = () => {
   const {} = useForm({
-    id: "form-1", // The ID is used by the "useFormState" hook
     defaultValues: { password: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });

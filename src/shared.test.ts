@@ -1,13 +1,13 @@
 import { get, set, remove } from "./shared";
 
 describe("shared", () => {
-  it("should work correctly", () => {
-    expect(get("test")).toBeUndefined();
+  it.each(["form-1", undefined])("should work correctly", (id) => {
+    expect(get(id)).toBeUndefined();
     const methods = { method: "🍎" };
     // @ts-expect-error
-    set("test", methods);
-    expect(get("test")).toEqual(methods);
-    remove("test");
-    expect(get("test")).toBeUndefined();
+    set(id, methods);
+    expect(get(id)).toEqual(methods);
+    remove(id);
+    expect(get(id)).toBeUndefined();
   });
 });
