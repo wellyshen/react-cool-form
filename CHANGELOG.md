@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.131
+
+### Patch Changes
+
+- [`0e14ea7`](https://github.com/wellyshen/react-cool-form/commit/0e14ea76ea61e7025cc76b84b37c64b9b70d7fdd) [#444](https://github.com/wellyshen/react-cool-form/pull/444) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat: when only on form hook is using, the form id is not required anymore
+
 ## 0.0.130
 
 ### Patch Changes
