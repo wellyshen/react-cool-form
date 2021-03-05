@@ -29,12 +29,12 @@ describe("unset", () => {
     expect(unset({ foo: { a: [] }, ...other }, "foo.a")).toEqual(other);
     expect(unset({ foo: { a: "🍎" }, ...other }, "foo.a")).toEqual(other);
     expect(
-      unset({ foo: { a: "🍎", b: undefined }, ...other }, "foo.a")
-    ).toEqual({ foo: { b: undefined }, ...other });
-    expect(
-      unset({ foo: { a: "🍎", b: false, c: "" }, ...other }, "foo.a")
+      unset(
+        { foo: { a: "🍎", b: undefined, c: null, d: false, e: "" }, ...other },
+        "foo.a"
+      )
     ).toEqual({
-      foo: { b: false, c: "" },
+      foo: { b: undefined, c: null, d: false, e: "" },
       ...other,
     });
     expect(unset({ foo: { a: "🍎", b: "🍋" }, ...other }, "foo.a")).toEqual({
