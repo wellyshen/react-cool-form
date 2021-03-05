@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.133
+
+### Patch Changes
+
+- [`6dc3cca`](https://github.com/wellyshen/react-cool-form/commit/6dc3ccaaae66b11e5069084610143f760a387fc1) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): clear the `empty` element from the array type of form values
+
 ## 0.0.132
 
 ### Patch Changes
