@@ -1,12 +1,13 @@
 /* eslint-disable no-prototype-builtins */
 
 import cloneObject from "./cloneObject";
-import isPlainObject from "./isPlainObject";
 import isObject from "./isObject";
+import isPlainObject from "./isPlainObject";
+import isUndefined from "./isUndefined";
 import stringToPath from "./stringToPath";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default (object: any, path: string, immutable = false): any => {
+const unset = (object: any, path: string, immutable = false): any => {
   if (!isPlainObject(object)) throw new TypeError("Expected an object.");
 
   const refObject = immutable ? cloneObject(object) : object;
@@ -26,5 +27,11 @@ export default (object: any, path: string, immutable = false): any => {
 
   if (isObject(target) && target.hasOwnProperty(last)) delete target[last];
 
-  return refObject;
+  return (isPlainObject(target) &&
+    Object.values(target).every((value) => isUndefined(value))) ||
+    (Array.isArray(target) && target.every((value) => isUndefined(value)))
+    ? unset(refObject, segs.join("."))
+    : refObject;
 };
+
+export default unset;
