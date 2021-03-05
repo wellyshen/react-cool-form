@@ -30,7 +30,7 @@ describe("unset", () => {
     expect(unset({ foo: { a: "🍎" }, ...other }, "foo.a")).toEqual(other);
     expect(
       unset({ foo: { a: "🍎", b: undefined }, ...other }, "foo.a")
-    ).toEqual(other);
+    ).toEqual({ foo: { b: undefined }, ...other });
     expect(
       unset({ foo: { a: "🍎", b: false, c: "" }, ...other }, "foo.a")
     ).toEqual({
@@ -57,27 +57,24 @@ describe("unset", () => {
     expect(unset({ foo: {}, ...other }, "foo.0")).toEqual(other);
     expect(unset({ foo: [], ...other }, "foo.0")).toEqual(other);
     expect(unset({ foo: ["🍎"], ...other }, "foo.0")).toEqual(other);
-    expect(unset({ foo: ["🍎", undefined], ...other }, "foo.0")).toEqual(other);
-    expect(unset({ foo: ["🍎", false, ""], ...other }, "foo.0")).toEqual({
-      foo: [, false, ""],
-      ...other,
-    });
-    expect(unset({ foo: ["🍎", {}], ...other }, "foo.0")).toEqual({
-      foo: [, {}],
+    expect(
+      unset({ foo: ["🍎", undefined, null, false, ""], ...other }, "foo.0")
+    ).toEqual({
+      foo: [undefined, null, false, ""],
       ...other,
     });
     expect(unset({ foo: ["🍋", "🍎"], ...other }, "foo.1")).toEqual({
-      foo: ["🍋", ,],
+      foo: ["🍋"],
       ...other,
     });
     expect(unset({ foo: [["🍎"]], ...other }, "foo.0.0")).toEqual(other);
     expect(unset({ foo: [["🍎"], ["🍋"]], ...other }, "foo.0.0")).toEqual({
-      foo: [, ["🍋"]],
+      foo: [["🍋"]],
       ...other,
     });
     expect(unset({ foo: [["🍋", "🍎"], ["🥝"]], ...other }, "foo.0.1")).toEqual(
       {
-        foo: [["🍋", ,], ["🥝"]],
+        foo: [["🍋"], ["🥝"]],
         ...other,
       }
     );
@@ -92,55 +89,53 @@ describe("unset", () => {
     expect(unset({ foo: {}, ...other }, "foo[0]")).toEqual(other);
     expect(unset({ foo: [], ...other }, "foo[0]")).toEqual(other);
     expect(unset({ foo: ["🍎"], ...other }, "foo[0]")).toEqual(other);
-    expect(unset({ foo: ["🍎", undefined], ...other }, "foo[0]")).toEqual(
-      other
-    );
-    expect(unset({ foo: ["🍎", false, ""], ...other }, "foo[0]")).toEqual({
-      foo: [, false, ""],
-      ...other,
-    });
-    expect(unset({ foo: ["🍎", {}], ...other }, "foo[0]")).toEqual({
-      foo: [, {}],
+    expect(
+      unset({ foo: ["🍎", undefined, null, false, ""], ...other }, "foo[0]")
+    ).toEqual({
+      foo: [undefined, null, false, ""],
       ...other,
     });
     expect(unset({ foo: ["🍋", "🍎"], ...other }, "foo[1]")).toEqual({
-      foo: ["🍋", ,],
+      foo: ["🍋"],
       ...other,
     });
     expect(unset({ foo: [["🍎"]], ...other }, "foo[0][0]")).toEqual(other);
     expect(unset({ foo: [["🍎"], ["🍋"]], ...other }, "foo[0][0]")).toEqual({
-      foo: [, ["🍋"]],
+      foo: [["🍋"]],
       ...other,
     });
     expect(
       unset({ foo: [["🍋", "🍎"], ["🥝"]], ...other }, "foo[0][1]")
     ).toEqual({
-      foo: [["🍋", ,], ["🥝"]],
+      foo: [["🍋"], ["🥝"]],
       ...other,
     });
   });
 
   it("should unset value by mixed", () => {
     expect(
-      unset({ foo: { a: [{ b: { c: [, "🍎"] } }] } }, "foo.a[0].b.c.1")
+      unset({ foo: { a: [{ b: { c: ["🍎"] } }] } }, "foo.a[0].b.c.0")
     ).toEqual({});
     expect(
+      unset({ foo: { a: { b: [{ c: ["🍎"] }] } }, bar: "🍋" }, "foo.a.b[0].c.0")
+    ).toEqual({ bar: "🍋" });
+    expect(
       unset({ foo: { a: { b: ["🍋", ["🍎", "🥝"]] } } }, "foo.a.b.1[0]")
-    ).toEqual({ foo: { a: { b: ["🍋", [, "🥝"]] } } });
+    ).toEqual({ foo: { a: { b: ["🍋", ["🥝"]] } } });
     expect(
       unset(
         { foo: [{ a: ["🍋", "🍎", false, null, ""], ...other }] },
         "foo.0.a[1]"
       )
     ).toEqual({
-      foo: [{ a: ["🍋", , false, null, ""], ...other }],
+      foo: [{ a: ["🍋", false, null, ""], ...other }],
     });
     expect(
       unset(
         { foo: { a: ["🍋", { b: [{ c: "🥝" }, "🍎"] }] }, ...other },
         "foo.a[1].b.0.c"
       )
-    ).toEqual({ foo: { a: ["🍋", { b: [, "🍎"] }] }, ...other });
+    ).toEqual({ foo: { a: ["🍋", { b: ["🍎"] }] }, ...other });
     expect(
       unset({ foo: ["🍋", { a: [[{ b: "🍎" }]], ...other }] }, "foo.1.a[0].0.b")
     ).toEqual({ foo: ["🍋", other] });
