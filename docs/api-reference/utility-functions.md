@@ -64,7 +64,7 @@ const { form } = useForm({
 
 `(object: Record<string, any>, path: string, immutable?: boolean) => any`
 
-Removes the property at `path` of `object`. If the remaining property is empty, the ancestry path of the property will be removed as well.
+Removes the property at `path` of `object`. If it remains empty, the parent properties will be removed as well.
 
 ```js {12,14}
 import { useForm, unset } from "react-cool-form";

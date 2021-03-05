@@ -1,9 +1,8 @@
 /* eslint-disable no-prototype-builtins */
 
 import cloneObject from "./cloneObject";
-import isObject from "./isObject";
+import isEmptyObject from "./isEmptyObject";
 import isPlainObject from "./isPlainObject";
-import isUndefined from "./isUndefined";
 import stringToPath from "./stringToPath";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -25,11 +24,13 @@ const unset = (object: any, path: string, immutable = false): any => {
   const last = segs.pop() as string;
   const target = segs.reduce((obj, key) => (obj || {})[key], newObject);
 
-  if (isObject(target) && target.hasOwnProperty(last)) delete target[last];
+  if (Array.isArray(target)) {
+    target.splice(parseInt(last, 10), 1);
+  } else if (isPlainObject(target)) {
+    delete target[last];
+  }
 
-  return (isPlainObject(target) &&
-    Object.values(target).every((value) => isUndefined(value))) ||
-    (Array.isArray(target) && target.every((value) => isUndefined(value)))
+  return isEmptyObject(target) || (Array.isArray(target) && !target.length)
     ? unset(refObject, segs.join("."))
     : refObject;
 };
