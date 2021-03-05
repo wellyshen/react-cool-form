@@ -2,23 +2,16 @@
 
 import { useEffect, useReducer, useRef } from "react";
 
-import { FormValues, Observer, Path, StateConfig } from "./types";
+import { FormStateConfig, FormValues, Observer, Path } from "./types";
 import { get } from "./shared";
 import { invariant } from "./utils";
 
 export default <V extends FormValues = FormValues>(
   path: Path,
-  // @ts-expect-error
-  { formId, ...rest }: StateConfig<V> = {}
+  { formId, ...rest }: FormStateConfig<V> = {}
 ): any => {
-  const methodName = "useFormState";
-
-  invariant(
-    !formId,
-    `💡 react-cool-form > ${methodName}: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-state#formid`
-  );
-
   const methods = get(formId);
+  const methodName = "useFormState";
 
   invariant(
     !methods,

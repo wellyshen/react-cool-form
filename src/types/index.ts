@@ -1,4 +1,4 @@
-import { FocusEvent, MutableRefObject, SyntheticEvent } from "react";
+import { FocusEventHandler, MutableRefObject, SyntheticEvent } from "react";
 
 // Utils
 export type Map<T = boolean> = Record<string, T>;
@@ -20,7 +20,7 @@ export type Methods = {
   removeField: RemoveField;
   subscribeObserver: ObserverHandler;
   unsubscribeObserver: ObserverHandler;
-} & FormReturn<any>;
+} & FormMethods<any>;
 
 // useState
 type DeepProps<V, T = any> = {
@@ -273,7 +273,7 @@ export type FormConfig<V> = Partial<{
   debug: Debug<V>;
 }>;
 
-export interface FormReturn<V> {
+export interface FormMethods<V> {
   form: RegisterForm;
   field: RegisterField<V>;
   select: Select<V>;
@@ -289,41 +289,37 @@ export interface FormReturn<V> {
 }
 
 // useFormState
-export interface StateConfig<V> {
+export type FormStateConfig<V> = Partial<{
   formId: string;
-  target?: string;
-  defaultValues?: V;
-  errorWithTouched?: boolean;
-}
+  target: string;
+  defaultValues: V;
+  errorWithTouched: boolean;
+}>;
 
 // useControlled
-interface Parser {
+interface ControlledParser {
   (...args: any[]): any;
 }
 
-interface Formatter {
+interface ControlledFormatter {
   (value: any): any;
 }
 
-interface BlurHandler {
-  (event: FocusEvent): void;
-}
-
-export interface ControlledConfig<V> {
+export type ControlledConfig<V> = Partial<{
   formId: string;
-  defaultValue?: any;
-  validate?: FieldValidator<V>;
-  parse?: Parser;
-  format?: Formatter;
-  errorWithTouched?: boolean;
+  defaultValue: any;
+  validate: FieldValidator<V>;
+  parse: ControlledParser;
+  format: ControlledFormatter;
+  errorWithTouched: boolean;
   [k: string]: any;
-}
+}>;
 
 export interface FieldProps {
   name: string;
   value: any;
   onChange: (...event: any[]) => void;
-  onBlur: BlurHandler;
+  onBlur: FocusEventHandler;
   [k: string]: any;
 }
 

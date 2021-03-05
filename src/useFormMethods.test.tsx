@@ -1,22 +1,22 @@
 import { render } from "@testing-library/react";
 
-import { FormReturn } from "./types";
+import { FormMethods } from "./types";
 import useForm from "./useForm";
 import useFormMethods from "./useFormMethods";
 
 interface Props {
-  children: (methods: FormReturn<any>) => JSX.Element | null;
+  children: (methods: FormMethods<any>) => JSX.Element | null;
 }
 
 const Form = ({ children }: Props) => {
-  const { form } = useForm({ id: "form-1" });
-  const methods = useFormMethods("form-1");
+  const { form } = useForm();
+  const methods = useFormMethods();
 
   return <form ref={form}>{children(methods)}</form>;
 };
 
 const renderHelper = () => {
-  let api: FormReturn<any>;
+  let api: FormMethods<any>;
 
   render(
     <Form>
@@ -33,11 +33,6 @@ const renderHelper = () => {
 
 describe("useFormMethods", () => {
   it("should throw form id errors", () => {
-    // @ts-expect-error
-    expect(() => useFormMethods()).toThrow(
-      '💡 react-cool-form > useFormMethods: Missing the "formId" option. See: https://react-cool-form.netlify.app/docs/api-reference/use-form-methods#formid'
-    );
-
     expect(() => useFormMethods("form-1")).toThrow(
       '💡 react-cool-form > useFormMethods: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
     );

@@ -12,7 +12,7 @@ import {
   FieldValidator,
   FormConfig,
   FormErrors,
-  FormReturn,
+  FormMethods,
   FormState,
   FormValues,
   GetFormState,
@@ -76,7 +76,7 @@ export default <V extends FormValues = FormValues>({
   onSubmit,
   onError,
   debug,
-}: FormConfig<V> = {}): FormReturn<V> => {
+}: FormConfig<V> = {}): FormMethods<V> => {
   const handlersRef = useRef<Handlers>({});
   const observerRef = useRef<MutationObserver>();
   const formRef = useRef<HTMLElement>();
@@ -893,36 +893,35 @@ export default <V extends FormValues = FormValues>({
     []
   );
 
-  if (id)
-    shared.set(id, {
-      shouldRemoveField,
-      defaultValuesRef,
-      initialStateRef,
-      controllersRef,
-      fieldValidatorsRef,
-      changedFieldRef,
-      excludeFieldsRef,
-      getNodeValue,
-      getFormState,
-      setDefaultValue,
-      setTouchedMaybeValidate,
-      handleChangeEvent,
-      removeField,
-      subscribeObserver,
-      unsubscribeObserver,
-      form: registerForm,
-      field: registerField,
-      select,
-      getState,
-      setValue,
-      setTouched,
-      setDirty,
-      setError,
-      clearErrors,
-      runValidation,
-      reset,
-      submit,
-    });
+  shared.set(id, {
+    shouldRemoveField,
+    defaultValuesRef,
+    initialStateRef,
+    controllersRef,
+    fieldValidatorsRef,
+    changedFieldRef,
+    excludeFieldsRef,
+    getNodeValue,
+    getFormState,
+    setDefaultValue,
+    setTouchedMaybeValidate,
+    handleChangeEvent,
+    removeField,
+    subscribeObserver,
+    unsubscribeObserver,
+    form: registerForm,
+    field: registerField,
+    select,
+    getState,
+    setValue,
+    setTouched,
+    setDirty,
+    setError,
+    clearErrors,
+    runValidation,
+    reset,
+    submit,
+  });
 
   useEffect(
     () => () => {
@@ -936,7 +935,7 @@ export default <V extends FormValues = FormValues>({
         observerRef.current?.disconnect();
       }
 
-      if (id) shared.remove(id);
+      shared.remove(id);
     },
     [id]
   );

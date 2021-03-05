@@ -1,5 +1,5 @@
 declare module "react-cool-form" {
-  import { FocusEvent, SyntheticEvent } from "react";
+  import { FocusEventHandler, SyntheticEvent } from "react";
 
   // Type utils
   type Map<T = boolean> = Record<string, T>;
@@ -184,7 +184,7 @@ declare module "react-cool-form" {
     debug: Debug<V>;
   }>;
 
-  export interface FormReturn<V extends FormValues = FormValues> {
+  export interface FormMethods<V extends FormValues = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
     select: Select<V>;
@@ -201,57 +201,53 @@ declare module "react-cool-form" {
 
   export function useForm<V extends FormValues = FormValues>(
     config?: FormConfig<V>
-  ): FormReturn<V>;
+  ): FormMethods<V>;
 
   // useFormMethods
   export function useFormMethods<V extends FormValues = FormValues>(
-    formId: string
-  ): FormReturn<V>;
+    formId?: string
+  ): FormMethods<V>;
 
   // useFormState
   export type Path = string | string[] | Map<string>;
 
-  export interface StateConfig<V> {
+  export type FormStateConfig<V> = Partial<{
     formId: string;
-    target?: string;
-    defaultValues?: V;
-    errorWithTouched?: boolean;
-  }
+    target: string;
+    defaultValues: V;
+    errorWithTouched: boolean;
+  }>;
 
   export function useFormState<V extends FormValues = FormValues>(
     path: Path,
-    config: StateConfig<V>
+    config?: FormStateConfig<V>
   ): any;
 
   // useControlled
-  export interface Parser<E extends any[] = any[], R = any> {
+  export interface ControlledParser<E extends any[] = any[], R = any> {
     (...event: E): R;
   }
 
-  export interface Formatter<V = any, R = any> {
+  export interface ControlledFormatter<V = any, R = any> {
     (value: V): R;
   }
 
-  export interface BlurHandler {
-    (event: FocusEvent): void;
-  }
-
-  export interface ControlledConfig<V extends FormValues = FormValues> {
+  export type ControlledConfig<V extends FormValues = FormValues> = Partial<{
     formId: string;
-    defaultValue?: any;
-    validate?: FieldValidator<V>;
-    parse?: Parser;
-    format?: Formatter;
-    errorWithTouched?: boolean;
+    defaultValue: any;
+    validate: FieldValidator<V>;
+    parse: ControlledParser;
+    format: ControlledFormatter;
+    errorWithTouched: boolean;
     [k: string]: any;
-  }
+  }>;
 
   export type ControlledReturn = [
     {
       name: string;
       value: any;
       onChange: (...event: any[]) => void;
-      onBlur: BlurHandler;
+      onBlur: FocusEventHandler;
       [k: string]: any;
     },
     { error: any; isTouched: boolean; isDirty: boolean }
@@ -259,7 +255,7 @@ declare module "react-cool-form" {
 
   export function useControlled<V extends FormValues = FormValues>(
     name: string,
-    config: ControlledConfig<V>
+    config?: ControlledConfig<V>
   ): ControlledReturn;
 
   // Utility functions

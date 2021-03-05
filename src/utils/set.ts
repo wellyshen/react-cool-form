@@ -15,8 +15,12 @@ export default (
   const newObject = immutable ? cloneObject(object) : object;
 
   segs.slice(0, -1).reduce((obj, key, idx) => {
-    const nextIsNumber = !Number.isNaN(Number(segs[idx + 1]));
-    if (isPlainObject(obj[key]) && !nextIsNumber) return obj[key];
+    const nextIsNumber = !Number.isNaN(+segs[idx + 1]);
+    if (
+      (isPlainObject(obj[key]) && !nextIsNumber) ||
+      (Array.isArray(obj[key]) && nextIsNumber)
+    )
+      return obj[key];
     obj[key] = nextIsNumber ? [] : {};
     return obj[key];
   }, newObject)[segs[segs.length - 1] || ""] = value;

@@ -20,7 +20,6 @@ const options = [
 
 function App() {
   const { form } = useForm({
-    id: "form-1", // The ID is used by the "useControlled" hook
     defaultValues: { framework: "" }, // (Strongly advise) Provide a default value for the controlled field
     excludeFields: ["#framework"], // Exclude the internal input element of React-Select by ID
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
@@ -30,7 +29,6 @@ function App() {
     <form ref={form}>
       <Field
         as={Select}
-        formId="form-1" // Provide the corresponding ID of the "useForm" hook
         name="framework"
         inputId="framework" // Used for excluding the internal input element of React-Select
         options={options}

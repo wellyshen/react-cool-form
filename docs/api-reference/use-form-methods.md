@@ -13,7 +13,7 @@ const methods = useFormMethods(formId);
 
 `string`
 
-The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We must provide it when using this hook.
+The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We only need it when using multiple form hooks at the same time.
 
 ## methods
 
@@ -26,9 +26,8 @@ The example demonstrates the basic usage of this hook.
 ```js
 import { useFormMethods } from "react-cool-form";
 
-const Field = ({ as, name, formId, onFocus, ...restProps }) => {
-  // Provide the corresponding ID of the "useForm" hook
-  const { clearErrors, ...moreMethods } = useFormMethods(formId);
+const Field = ({ as, name, onFocus, ...restProps }) => {
+  const { clearErrors, ...moreMethods } = useFormMethods();
   const Component = as;
 
   return (

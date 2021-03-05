@@ -109,7 +109,6 @@ const options = [
 
 const App = () => {
   const { form } = useForm({
-    id: "form-1", // The ID is used by the "useControlled" hook
     defaultValues: { framework: "" }, // (Strongly advise) Provide a default value for the controlled field
     excludeFields: ["#framework"], // Exclude the internal input element of React-Select by ID
     onSubmit: (values) => console.log("onSubmit: ", values),
@@ -119,7 +118,6 @@ const App = () => {
     <form ref={form}>
       <Field
         as={Select}
-        formId="form-1" // Provide the corresponding ID of the "useForm" hook
         name="framework"
         inputId="framework" // Used for excluding the internal input element of React-Select
         options={options}
@@ -142,9 +140,9 @@ If the above solutions can't meet your needs then you can set up a custom field 
 import { useForm, useFormState, useFormMethods } from "react-cool-form";
 import { TextField, Button } from "@material-ui/core";
 
-const Field = ({ as, name, formId, onChange, onBlur, ...restProps }) => {
-  const value = useFormState(`values.${name}`, { formId });
-  const { setValue, setTouched } = useFormMethods(formId);
+const Field = ({ as, name, onChange, onBlur, ...restProps }) => {
+  const value = useFormState(`values.${name}`);
+  const { setValue, setTouched } = useFormMethods();
   const Component = as;
 
   return (
@@ -166,7 +164,6 @@ const Field = ({ as, name, formId, onChange, onBlur, ...restProps }) => {
 
 const App = () => {
   const { form, select } = useForm({
-    id: "form-1", // The ID is used by the "useFormState" and "useFormMethods" hooks
     defaultValues: { username: "" },
     // excludeFields: ["username"], // You can also exclude the field here
     validate: ({ username }) => {
@@ -182,7 +179,6 @@ const App = () => {
     <form ref={form} noValidate>
       <Field
         as={TextField}
-        formId="form-1" // Provide the corresponding ID of the "useForm" hook
         label="Username"
         name="username" // Used for the "excludeFields" option
         required
