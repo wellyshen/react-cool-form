@@ -184,7 +184,7 @@ declare module "react-cool-form" {
     debug: Debug<V>;
   }>;
 
-  export interface FormReturn<V extends FormValues = FormValues> {
+  export interface FormMethods<V extends FormValues = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
     select: Select<V>;
@@ -201,17 +201,17 @@ declare module "react-cool-form" {
 
   export function useForm<V extends FormValues = FormValues>(
     config?: FormConfig<V>
-  ): FormReturn<V>;
+  ): FormMethods<V>;
 
   // useFormMethods
   export function useFormMethods<V extends FormValues = FormValues>(
     formId?: string
-  ): FormReturn<V>;
+  ): FormMethods<V>;
 
   // useFormState
   export type Path = string | string[] | Map<string>;
 
-  export type StateConfig<V> = Partial<{
+  export type FormStateConfig<V> = Partial<{
     formId: string;
     target: string;
     defaultValues: V;
@@ -220,15 +220,15 @@ declare module "react-cool-form" {
 
   export function useFormState<V extends FormValues = FormValues>(
     path: Path,
-    config?: StateConfig<V>
+    config?: FormStateConfig<V>
   ): any;
 
   // useControlled
-  export interface Parser<E extends any[] = any[], R = any> {
+  export interface ControlledParser<E extends any[] = any[], R = any> {
     (...event: E): R;
   }
 
-  export interface Formatter<V = any, R = any> {
+  export interface ControlledFormatter<V = any, R = any> {
     (value: V): R;
   }
 
@@ -236,8 +236,8 @@ declare module "react-cool-form" {
     formId: string;
     defaultValue: any;
     validate: FieldValidator<V>;
-    parse: Parser;
-    format: Formatter;
+    parse: ControlledParser;
+    format: ControlledFormatter;
     errorWithTouched: boolean;
     [k: string]: any;
   }>;

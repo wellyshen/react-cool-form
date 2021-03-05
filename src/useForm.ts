@@ -12,7 +12,7 @@ import {
   FieldValidator,
   FormConfig,
   FormErrors,
-  FormReturn,
+  FormMethods,
   FormState,
   FormValues,
   GetFormState,
@@ -76,7 +76,7 @@ export default <V extends FormValues = FormValues>({
   onSubmit,
   onError,
   debug,
-}: FormConfig<V> = {}): FormReturn<V> => {
+}: FormConfig<V> = {}): FormMethods<V> => {
   const handlersRef = useRef<Handlers>({});
   const observerRef = useRef<MutationObserver>();
   const formRef = useRef<HTMLElement>();

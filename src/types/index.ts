@@ -20,7 +20,7 @@ export type Methods = {
   removeField: RemoveField;
   subscribeObserver: ObserverHandler;
   unsubscribeObserver: ObserverHandler;
-} & FormReturn<any>;
+} & FormMethods<any>;
 
 // useState
 type DeepProps<V, T = any> = {
@@ -273,7 +273,7 @@ export type FormConfig<V> = Partial<{
   debug: Debug<V>;
 }>;
 
-export interface FormReturn<V> {
+export interface FormMethods<V> {
   form: RegisterForm;
   field: RegisterField<V>;
   select: Select<V>;
@@ -289,7 +289,7 @@ export interface FormReturn<V> {
 }
 
 // useFormState
-export type StateConfig<V> = Partial<{
+export type FormStateConfig<V> = Partial<{
   formId: string;
   target: string;
   defaultValues: V;
@@ -297,11 +297,11 @@ export type StateConfig<V> = Partial<{
 }>;
 
 // useControlled
-interface Parser {
+interface ControlledParser {
   (...args: any[]): any;
 }
 
-interface Formatter {
+interface ControlledFormatter {
   (value: any): any;
 }
 
@@ -309,8 +309,8 @@ export type ControlledConfig<V> = Partial<{
   formId: string;
   defaultValue: any;
   validate: FieldValidator<V>;
-  parse: Parser;
-  format: Formatter;
+  parse: ControlledParser;
+  format: ControlledFormatter;
   errorWithTouched: boolean;
   [k: string]: any;
 }>;

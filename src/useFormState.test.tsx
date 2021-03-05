@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 
-import { Path, StateConfig } from "./types";
+import { FormStateConfig, Path } from "./types";
 import useForm from "./useForm";
 import useFormState from "./useFormState";
 
 const defaultValues = { foo: "🍎" };
 const error = "Required";
 
-interface Props extends StateConfig<any> {
+interface Props extends FormStateConfig<any> {
   children: (state: any) => JSX.Element;
   path?: Path;
   formDefaultValues?: any;

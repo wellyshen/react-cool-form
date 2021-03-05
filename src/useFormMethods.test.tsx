@@ -1,11 +1,11 @@
 import { render } from "@testing-library/react";
 
-import { FormReturn } from "./types";
+import { FormMethods } from "./types";
 import useForm from "./useForm";
 import useFormMethods from "./useFormMethods";
 
 interface Props {
-  children: (methods: FormReturn<any>) => JSX.Element | null;
+  children: (methods: FormMethods<any>) => JSX.Element | null;
 }
 
 const Form = ({ children }: Props) => {
@@ -16,7 +16,7 @@ const Form = ({ children }: Props) => {
 };
 
 const renderHelper = () => {
-  let api: FormReturn<any>;
+  let api: FormMethods<any>;
 
   render(
     <Form>

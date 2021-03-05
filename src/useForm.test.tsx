@@ -7,7 +7,7 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { FormConfig, FormReturn, SubmitHandler, ErrorHandler } from "./types";
+import { FormConfig, FormMethods, SubmitHandler, ErrorHandler } from "./types";
 import { set, remove } from "./shared";
 import { isFunction } from "./utils";
 import useForm from "./useForm";
@@ -16,7 +16,7 @@ jest.mock("./shared", () => ({ set: jest.fn(), remove: jest.fn() }));
 
 type Children = JSX.Element | JSX.Element[] | null;
 
-type Methods = Omit<FormReturn<any>, "form">;
+type Methods = Omit<FormMethods<any>, "form">;
 
 interface Config extends FormConfig<any> {
   children: Children | ((methods: Methods) => Children);
