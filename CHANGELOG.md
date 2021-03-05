@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.132
+
+### Patch Changes
+
+- [`91cfe37`](https://github.com/wellyshen/react-cool-form/commit/91cfe37e794a1a6f1d4129c995598964173d39a9) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix: empty array values for `useForm` hook and `set` utility function
+
+* [`ada163b`](https://github.com/wellyshen/react-cool-form/commit/ada163b04922341575a9b979530f31006bfb9203) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(types): enhance the readability of type
+
+- [`d723cf0`](https://github.com/wellyshen/react-cool-form/commit/d723cf058cfab68a0c694b84553422617d2cafab) [#447](https://github.com/wellyshen/react-cool-form/pull/447) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(unset): remove the ancestry path of the unset property if needed
+
 ## 0.0.131
 
 ### Patch Changes
