@@ -63,6 +63,14 @@ describe("set", () => {
       foo: [, [, "🍎"]],
       ...other,
     });
+    expect(set({ foo: ["🍋"], ...other }, "foo.1", "🍎")).toEqual({
+      foo: ["🍋", "🍎"],
+      ...other,
+    });
+    expect(set({ foo: ["🍋"], ...other }, "foo.2", "🍎")).toEqual({
+      foo: ["🍋", , "🍎"],
+      ...other,
+    });
 
     expect(set({ ...other }, "foo[0]", "🍎")).toEqual({
       foo: ["🍎"],
@@ -88,6 +96,14 @@ describe("set", () => {
       foo: [, [, "🍎"]],
       ...other,
     });
+    expect(set({ foo: ["🍋"], ...other }, "foo[1]", "🍎")).toEqual({
+      foo: ["🍋", "🍎"],
+      ...other,
+    });
+    expect(set({ foo: ["🍋"], ...other }, "foo[2]", "🍎")).toEqual({
+      foo: ["🍋", , "🍎"],
+      ...other,
+    });
   });
 
   it("should get value by mixed", () => {
@@ -109,9 +125,9 @@ describe("set", () => {
       foo: [{ a: { b: "🍎" } }],
     });
     expect(
-      set({ foo: { a: [, { b: "" }], ...other } }, "foo.a[1].b.0[1]", "🍎")
+      set({ foo: { a: ["🍋", { b: "" }], ...other } }, "foo.a[1].b.0[1]", "🍎")
     ).toEqual({
-      foo: { a: [, { b: [[, "🍎"]] }], ...other },
+      foo: { a: ["🍋", { b: [[, "🍎"]] }], ...other },
     });
   });
 
