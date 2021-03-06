@@ -152,16 +152,16 @@ export default <V extends FormValues = FormValues>({
             (rcfExclude !== "true" && !exclude[name])
           );
         })
-        .reduce((acc: Map<any>, cur) => {
-          const field = cur as FieldElement;
+        .reduce((acc: Fields, elm) => {
+          const field = elm as FieldElement;
           const { name } = field;
 
-          acc[name] = { ...acc[name], field: acc[name]?.field || cur };
+          acc[name] = { ...acc[name], field: acc[name]?.field || field };
 
           if (isCheckboxInput(field) || isRadioInput(field))
             acc[name].options = acc[name].options
-              ? [...acc[name].options, cur]
-              : [cur];
+              ? [...(acc[name].options as HTMLInputElement[]), field]
+              : [field];
 
           return acc;
         }, {}),

@@ -87,7 +87,7 @@ export type FieldElement =
 
 export interface Field {
   field: FieldElement;
-  options?: FieldElement[];
+  options?: HTMLInputElement[];
 }
 
 export type Fields = Map<Field>;
