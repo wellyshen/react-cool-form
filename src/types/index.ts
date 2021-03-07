@@ -87,7 +87,7 @@ export type FieldElement =
 
 export interface Field {
   field: FieldElement;
-  options?: HTMLInputElement[];
+  options?: (HTMLInputElement | HTMLOptionElement)[];
 }
 
 export type Fields = Map<Field>;
@@ -178,7 +178,7 @@ export interface SetTouchedMaybeValidate {
 }
 
 export interface GetNodeValue {
-  (name: string): any;
+  (name: string, fields?: Fields): any;
 }
 
 export type Path = string | string[] | Map<string>;
