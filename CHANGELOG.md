@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.134
+
+### Patch Changes
+
+- [`742ac71`](https://github.com/wellyshen/react-cool-form/commit/742ac71d7f2126745c10c044427bd31e2edb5cf0) [#451](https://github.com/wellyshen/react-cool-form/pull/451) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): conditional `checkbox`, `radio`, and `select` not working properly
+
+* [`cdf5808`](https://github.com/wellyshen/react-cool-form/commit/cdf580863bb0b9a096b7f6838040f7dd57f9eb37) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(utils): clear the redundant `empty` or `undefined` element(s) of an array
+
 ## 0.0.133
 
 ### Patch Changes

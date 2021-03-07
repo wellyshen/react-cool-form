@@ -64,7 +64,10 @@ const { form } = useForm({
 
 `(object: Record<string, any>, path: string, immutable?: boolean) => any`
 
-Removes the property at `path` of `object`. If it remains empty, the parent properties will be removed as well.
+Removes the property at `path` of `object`.
+
+- If the property remains empty, the parent properties will be removed as well.
+- It will clear the redundant `empty` or `undefined` element(s) of an array.
 
 ```js {12,14}
 import { useForm, unset } from "react-cool-form";

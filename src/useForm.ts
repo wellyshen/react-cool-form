@@ -51,11 +51,12 @@ import {
   isFileList,
   isFunction,
   isInputElement,
-  isMultipleSelect,
   isNumberInput,
   isPlainObject,
   isRadioInput,
   isRangeInput,
+  isSelectMultiple,
+  isSelectOne,
   isUndefined,
   runWithLowPriority,
   set,
@@ -152,100 +153,109 @@ export default <V extends FormValues = FormValues>({
             (rcfExclude !== "true" && !exclude[name])
           );
         })
-        .reduce((acc: Map<any>, cur) => {
-          const field = cur as FieldElement;
+        .reduce((acc: Fields, elm) => {
+          const field = elm as FieldElement;
           const { name } = field;
 
-          acc[name] = { ...acc[name], field: acc[name]?.field || cur };
+          acc[name] = { ...acc[name], field: acc[name]?.field || field };
 
-          if (isCheckboxInput(field) || isRadioInput(field))
+          if (isCheckboxInput(field) || isRadioInput(field)) {
             acc[name].options = acc[name].options
-              ? [...acc[name].options, cur]
-              : [cur];
+              ? [...(acc[name].options as HTMLInputElement[]), field]
+              : [field];
+          } else if (isSelectOne(field) || isSelectMultiple(field)) {
+            acc[name].options = Array.from(field.options);
+          }
 
           return acc;
         }, {}),
     []
   );
 
-  const getNodeValue = useCallback<GetNodeValue>((name) => {
-    const { field, options } = fieldsRef.current[name];
-    let value = field.value as any;
+  const getNodeValue = useCallback<GetNodeValue>(
+    (name, fields = fieldsRef.current) => {
+      const { field, options } = fields[name];
+      let value = field.value as any;
 
-    if (isInputElement(field)) {
-      if (fieldParsersRef.current[name]?.valueAsNumber) {
-        value = field.valueAsNumber;
-        return value;
+      if (isInputElement(field)) {
+        if (fieldParsersRef.current[name]?.valueAsNumber) {
+          value = field.valueAsNumber;
+          return value;
+        }
+        if (fieldParsersRef.current[name]?.valueAsDate) {
+          value = field.valueAsDate;
+          return value;
+        }
       }
-      if (fieldParsersRef.current[name]?.valueAsDate) {
-        value = field.valueAsDate;
-        return value;
+
+      if (isNumberInput(field) || isRangeInput(field))
+        value = field.valueAsNumber || "";
+
+      if (isCheckboxInput(field)) {
+        const checkboxes = options as HTMLInputElement[];
+        const checkbox = checkboxes[0];
+
+        if (checkboxes.length > 1) {
+          value = checkboxes.filter((c) => c.checked).map((c) => c.value);
+        } else if (checkbox.hasAttribute("value") && checkbox.value) {
+          value = checkbox.checked ? [checkbox.value] : [];
+        } else {
+          value = checkbox.checked;
+        }
       }
-    }
 
-    if (isNumberInput(field) || isRangeInput(field))
-      value = field.valueAsNumber || "";
+      if (isRadioInput(field))
+        value =
+          (options as HTMLInputElement[]).find((radio) => radio.checked)
+            ?.value || "";
 
-    if (isCheckboxInput(field)) {
-      const checkboxes = options as HTMLInputElement[];
-      const checkbox = checkboxes[0];
+      if (isSelectMultiple(field))
+        value = (options as HTMLOptionElement[])
+          .filter((option) => option.selected)
+          .map((option) => option.value);
 
-      if (checkboxes.length > 1) {
-        value = checkboxes.filter((c) => c.checked).map((c) => c.value);
-      } else if (checkbox.hasAttribute("value") && checkbox.value) {
-        value = checkbox.checked ? [checkbox.value] : [];
-      } else {
-        value = checkbox.checked;
-      }
-    }
+      if (isFileInput(field)) value = field.files;
 
-    if (isRadioInput(field))
-      value =
-        (options as HTMLInputElement[]).find((radio) => radio.checked)?.value ||
-        "";
+      return value;
+    },
+    []
+  );
 
-    if (isMultipleSelect(field))
-      value = Array.from(field.options)
-        .filter((option) => option.selected)
-        .map((option) => option.value);
+  const setNodeValue = useCallback(
+    (name: string, value: any, fields: Fields = fieldsRef.current) => {
+      if (!fields[name] || controllersRef.current[name]) return;
 
-    if (isFileInput(field)) value = field.files;
+      const { field, options } = fields[name];
 
-    return value;
-  }, []);
+      if (isCheckboxInput(field)) {
+        const checkboxes = options as HTMLInputElement[];
 
-  const setNodeValue = useCallback((name: string, value: any) => {
-    if (!fieldsRef.current[name] || controllersRef.current[name]) return;
-
-    const { field, options } = fieldsRef.current[name];
-
-    if (isCheckboxInput(field)) {
-      const checkboxes = options as HTMLInputElement[];
-
-      if (checkboxes.length > 1) {
-        checkboxes.forEach((checkbox) => {
-          checkbox.checked = Array.isArray(value)
-            ? value.includes(checkbox.value)
-            : !!value;
+        if (checkboxes.length > 1) {
+          checkboxes.forEach((checkbox) => {
+            checkbox.checked = Array.isArray(value)
+              ? value.includes(checkbox.value)
+              : !!value;
+          });
+        } else {
+          checkboxes[0].checked = !!value;
+        }
+      } else if (isRadioInput(field)) {
+        (options as HTMLInputElement[]).forEach((radio) => {
+          radio.checked = radio.value === value;
         });
+      } else if (isSelectMultiple(field) && Array.isArray(value)) {
+        (options as HTMLOptionElement[]).forEach((option) => {
+          option.selected = !!value.includes(option.value);
+        });
+      } else if (isFileInput(field)) {
+        if (isFileList(value)) field.files = value;
+        if (!value) field.value = "";
       } else {
-        checkboxes[0].checked = !!value;
+        field.value = value ?? "";
       }
-    } else if (isRadioInput(field)) {
-      (options as HTMLInputElement[]).forEach((radio) => {
-        radio.checked = radio.value === value;
-      });
-    } else if (isMultipleSelect(field) && Array.isArray(value)) {
-      Array.from(field.options).forEach((option) => {
-        option.selected = !!value.includes(option.value);
-      });
-    } else if (isFileInput(field)) {
-      if (isFileList(value)) field.files = value;
-      if (!value) field.value = "";
-    } else {
-      field.value = value ?? "";
-    }
-  }, []);
+    },
+    []
+  );
 
   const setDefaultValue = useCallback<SetDefaultValue>(
     (name, value) => {
@@ -264,7 +274,7 @@ export default <V extends FormValues = FormValues>({
   const setNodesOrStateValue = useCallback(
     (
       values: V,
-      checkDefaultValues,
+      shouldUpdateDefaultValues: boolean,
       fields: Field[] | string[] = Object.values(fieldsRef.current)
     ) =>
       fields.forEach((field: Field | string) => {
@@ -272,16 +282,16 @@ export default <V extends FormValues = FormValues>({
 
         if (controllersRef.current[name]) return;
 
-        const value = get(values, name);
+        let value = get(values, name);
 
         if (!isUndefined(value)) setNodeValue(name, value);
 
-        if (checkDefaultValues) {
-          const defaultValue = get(defaultValuesRef.current, name);
+        if (shouldUpdateDefaultValues) {
+          value = get(defaultValuesRef.current, name);
 
           setDefaultValue(
             name,
-            !isUndefined(defaultValue) ? defaultValue : getNodeValue(name)
+            !isUndefined(value) ? value : getNodeValue(name)
           );
         }
       }),
@@ -834,8 +844,28 @@ export default <V extends FormValues = FormValues>({
 
         if (shouldRemoveField)
           Object.keys(fieldsRef.current).forEach((name) => {
-            if (!fields[name] && !controllersRef.current[name])
+            if (controllersRef.current[name]) return;
+
+            if (!fields[name]) {
               removeField(name);
+              return;
+            }
+
+            const currOptions = fieldsRef.current[name].options
+              ?.length as number;
+            const nextOptions = fields[name].options?.length as number;
+
+            if (currOptions > nextOptions) {
+              setStateRef(`values.${name}`, getNodeValue(name, fields), {
+                shouldUpdate: false,
+              });
+            } else if (currOptions < nextOptions) {
+              setNodeValue(
+                name,
+                get(initialStateRef.current.values, name),
+                fields
+              );
+            }
           });
 
         const addedNodes: string[] = [];
@@ -863,7 +893,9 @@ export default <V extends FormValues = FormValues>({
       handleChangeEvent,
       removeField,
       reset,
+      setNodeValue,
       setNodesOrStateValue,
+      setStateRef,
       setTouchedMaybeValidate,
       shouldRemoveField,
       stateRef,

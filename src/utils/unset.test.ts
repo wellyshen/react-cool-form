@@ -19,15 +19,16 @@ describe("unset", () => {
   });
 
   it("should unset value by keys", () => {
-    expect(unset({}, "foo.a.b")).toEqual({});
     expect(unset({ foo: undefined }, "foo")).toEqual({});
     expect(unset(other, "foo")).toEqual(other);
-    expect(unset({ foo: "🍎", ...other }, "foo")).toEqual(other);
     expect(unset({ foo: {}, ...other }, "foo")).toEqual(other);
     expect(unset({ foo: [], ...other }, "foo")).toEqual(other);
-    expect(unset({ foo: { a: {} }, ...other }, "foo.a")).toEqual(other);
-    expect(unset({ foo: { a: [] }, ...other }, "foo.a")).toEqual(other);
+    expect(unset({ foo: "🍎", ...other }, "foo")).toEqual(other);
     expect(unset({ foo: { a: "🍎" }, ...other }, "foo.a")).toEqual(other);
+    expect(unset({ foo: { a: "🍎", b: "🍋" }, ...other }, "foo.a")).toEqual({
+      foo: { b: "🍋" },
+      ...other,
+    });
     expect(
       unset(
         { foo: { a: "🍎", b: undefined, c: null, d: false, e: "" }, ...other },
@@ -37,10 +38,6 @@ describe("unset", () => {
       foo: { b: undefined, c: null, d: false, e: "" },
       ...other,
     });
-    expect(unset({ foo: { a: "🍎", b: "🍋" }, ...other }, "foo.a")).toEqual({
-      foo: { b: "🍋" },
-      ...other,
-    });
     expect(unset({ foo: { a: { b: "🍎", ...other } } }, "foo.a.b")).toEqual({
       foo: { a: other },
     });
@@ -48,28 +45,50 @@ describe("unset", () => {
 
   it("should unset value by indexes", () => {
     expect(unset({ foo: [undefined] }, "foo.0")).toEqual({});
-    expect(unset({ foo: { a: [undefined] } }, "foo.a.0")).toEqual({});
     expect(unset(other, "foo.0")).toEqual(other);
+    expect(unset({ foo: {}, ...other }, "foo.0")).toEqual(other);
+    expect(unset({ foo: [], ...other }, "foo.0")).toEqual(other);
     expect(unset({ foo: "🍎", ...other }, "foo.0")).toEqual({
       foo: "🍎",
       ...other,
     });
-    expect(unset({ foo: {}, ...other }, "foo.0")).toEqual(other);
-    expect(unset({ foo: [], ...other }, "foo.0")).toEqual(other);
     expect(unset({ foo: ["🍎"], ...other }, "foo.0")).toEqual(other);
-    expect(
-      unset({ foo: ["🍎", undefined, null, false, ""], ...other }, "foo.0")
-    ).toEqual({
-      foo: [undefined, null, false, ""],
+    expect(unset({ foo: ["🍎", "🍋"], ...other }, "foo.1")).toEqual({
+      foo: ["🍎"],
       ...other,
     });
-    expect(unset({ foo: ["🍋", "🍎"], ...other }, "foo.1")).toEqual({
-      foo: ["🍋"],
+    expect(unset({ foo: ["🍎", undefined], ...other }, "foo.0")).toEqual({
+      foo: [undefined],
+      ...other,
+    });
+    expect(unset({ foo: [undefined, "🍎"], ...other }, "foo.1")).toEqual(other);
+    expect(
+      unset(
+        {
+          foo: [null, false, "", undefined, "🍎"],
+          ...other,
+        },
+        "foo.4"
+      )
+    ).toEqual({
+      foo: [null, false, ""],
+      ...other,
+    });
+    expect(
+      unset(
+        {
+          foo: [null, false, "", undefined, "🍎", "🍋"],
+          ...other,
+        },
+        "foo.4"
+      )
+    ).toEqual({
+      foo: [null, false, "", undefined, "🍋"],
       ...other,
     });
     expect(unset({ foo: [["🍎"]], ...other }, "foo.0.0")).toEqual(other);
-    expect(unset({ foo: [["🍎"], ["🍋"]], ...other }, "foo.0.0")).toEqual({
-      foo: [["🍋"]],
+    expect(unset({ foo: [["🍎"], ["🍋"]], ...other }, "foo.1.0")).toEqual({
+      foo: [["🍎"]],
       ...other,
     });
     expect(unset({ foo: [["🍋", "🍎"], ["🥝"]], ...other }, "foo.0.1")).toEqual(
@@ -80,28 +99,52 @@ describe("unset", () => {
     );
 
     expect(unset({ foo: [undefined] }, "foo[0]")).toEqual({});
-    expect(unset({ foo: { a: [undefined] } }, "foo.a[0]")).toEqual({});
     expect(unset(other, "foo[0]")).toEqual(other);
+    expect(unset({ foo: {}, ...other }, "foo[0]")).toEqual(other);
+    expect(unset({ foo: [], ...other }, "foo[0]")).toEqual(other);
     expect(unset({ foo: "🍎", ...other }, "foo[0]")).toEqual({
       foo: "🍎",
       ...other,
     });
-    expect(unset({ foo: {}, ...other }, "foo[0]")).toEqual(other);
-    expect(unset({ foo: [], ...other }, "foo[0]")).toEqual(other);
     expect(unset({ foo: ["🍎"], ...other }, "foo[0]")).toEqual(other);
-    expect(
-      unset({ foo: ["🍎", undefined, null, false, ""], ...other }, "foo[0]")
-    ).toEqual({
-      foo: [undefined, null, false, ""],
+    expect(unset({ foo: ["🍎", "🍋"], ...other }, "foo[1]")).toEqual({
+      foo: ["🍎"],
       ...other,
     });
-    expect(unset({ foo: ["🍋", "🍎"], ...other }, "foo[1]")).toEqual({
-      foo: ["🍋"],
+    expect(unset({ foo: ["🍎", undefined], ...other }, "foo[0]")).toEqual({
+      foo: [undefined],
+      ...other,
+    });
+    expect(unset({ foo: [undefined, "🍎"], ...other }, "foo[1]")).toEqual(
+      other
+    );
+    expect(
+      unset(
+        {
+          foo: [null, false, "", undefined, "🍎"],
+          ...other,
+        },
+        "foo[4]"
+      )
+    ).toEqual({
+      foo: [null, false, ""],
+      ...other,
+    });
+    expect(
+      unset(
+        {
+          foo: [null, false, "", undefined, "🍎", "🍋"],
+          ...other,
+        },
+        "foo[4]"
+      )
+    ).toEqual({
+      foo: [null, false, "", undefined, "🍋"],
       ...other,
     });
     expect(unset({ foo: [["🍎"]], ...other }, "foo[0][0]")).toEqual(other);
-    expect(unset({ foo: [["🍎"], ["🍋"]], ...other }, "foo[0][0]")).toEqual({
-      foo: [["🍋"]],
+    expect(unset({ foo: [["🍎"], ["🍋"]], ...other }, "foo[1][0]")).toEqual({
+      foo: [["🍎"]],
       ...other,
     });
     expect(
@@ -114,31 +157,48 @@ describe("unset", () => {
 
   it("should unset value by mixed", () => {
     expect(
-      unset({ foo: { a: [{ b: { c: ["🍎"] } }] } }, "foo.a[0].b.c.0")
+      unset(
+        { foo: [{ a: [{ b: [undefined, { c: "🍎" }] }] }] },
+        "foo.0.a[0].b.1.c"
+      )
     ).toEqual({});
     expect(
-      unset({ foo: { a: { b: [{ c: ["🍎"] }] } }, bar: "🍋" }, "foo.a.b[0].c.0")
-    ).toEqual({ bar: "🍋" });
-    expect(
-      unset({ foo: { a: { b: ["🍋", ["🍎", "🥝"]] } } }, "foo.a.b.1[0]")
+      unset({ foo: { a: { b: ["🍋", ["🥝", "🍎"]] } } }, "foo.a.b.1[1]")
     ).toEqual({ foo: { a: { b: ["🍋", ["🥝"]] } } });
     expect(
       unset(
-        { foo: [{ a: ["🍋", "🍎", false, null, ""], ...other }] },
-        "foo.0.a[1]"
+        { foo: [{ a: ["🍋", false, undefined, "🍎", null, ""], ...other }] },
+        "foo[0].a.3"
       )
     ).toEqual({
-      foo: [{ a: ["🍋", false, null, ""], ...other }],
+      foo: [{ a: ["🍋", false, undefined, null, ""], ...other }],
     });
     expect(
       unset(
-        { foo: { a: ["🍋", { b: [{ c: "🥝" }, "🍎"] }] }, ...other },
-        "foo.a[1].b.0.c"
+        { foo: { a: ["🍋", { b: [{ c: "🍎" }, { d: "🥝" }] }] }, ...other },
+        "foo.a.1.b[0].c"
       )
-    ).toEqual({ foo: { a: ["🍋", { b: ["🍎"] }] }, ...other });
+    ).toEqual({ foo: { a: ["🍋", { b: [{ d: "🥝" }] }] }, ...other });
     expect(
-      unset({ foo: ["🍋", { a: [[{ b: "🍎" }]], ...other }] }, "foo.1.a[0].0.b")
-    ).toEqual({ foo: ["🍋", other] });
+      unset(
+        { foo: ["🍋", { a: ["🥝", [[{ b: "🍎" }]]], ...other }] },
+        "foo.1.a[1].0[0].b"
+      )
+    ).toEqual({ foo: ["🍋", { a: ["🥝"], ...other }] });
+    expect(
+      unset(
+        { foo: [{ a: [{ b: [{ c: [undefined, "🍎"] }] }] }] },
+        "foo[0].a.0.b[0].c.1"
+      )
+    ).toEqual({});
+    expect(
+      unset(
+        {
+          foo: [{ a: [{ b: [{ c: [undefined, "🍎"] }] }], ...other }],
+        },
+        "foo[0].a.0.b[0].c.1"
+      )
+    ).toEqual({ foo: [other] });
   });
 
   it("should unset value with mutable way", () => {

@@ -1,6 +1,7 @@
 module.exports = {
   extends: ["welly"],
   rules: {
+    eqeqeq: "off",
     camelcase: "off",
     "no-shadow": "off",
     "no-console": [

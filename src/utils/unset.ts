@@ -3,6 +3,7 @@
 import cloneObject from "./cloneObject";
 import isEmptyObject from "./isEmptyObject";
 import isPlainObject from "./isPlainObject";
+import isUndefined from "./isUndefined";
 import stringToPath from "./stringToPath";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -25,7 +26,21 @@ const unset = (object: any, path: string, immutable = false): any => {
   const target = segs.reduce((obj, key) => (obj || {})[key], newObject);
 
   if (Array.isArray(target)) {
-    target.splice(parseInt(last, 10), 1);
+    let index = +last;
+
+    if (index < target.length - 1) {
+      target.splice(index, 1);
+    } else {
+      while (index >= 0) {
+        // @ts-expect-error
+        if (index == last || isUndefined(target[index])) {
+          target.splice(index, 1);
+          index -= 1;
+        } else {
+          break;
+        }
+      }
+    }
   } else if (isPlainObject(target)) {
     delete target[last];
   }
