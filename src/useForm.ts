@@ -274,7 +274,7 @@ export default <V extends FormValues = FormValues>({
   const setNodesOrStateValue = useCallback(
     (
       values: V,
-      checkDefaultValues,
+      shouldUpdateDefaultValues: boolean,
       fields: Field[] | string[] = Object.values(fieldsRef.current)
     ) =>
       fields.forEach((field: Field | string) => {
@@ -282,16 +282,16 @@ export default <V extends FormValues = FormValues>({
 
         if (controllersRef.current[name]) return;
 
-        const value = get(values, name);
+        let value = get(values, name);
 
         if (!isUndefined(value)) setNodeValue(name, value);
 
-        if (checkDefaultValues) {
-          const defaultValue = get(defaultValuesRef.current, name);
+        if (shouldUpdateDefaultValues) {
+          value = get(defaultValuesRef.current, name);
 
           setDefaultValue(
             name,
-            !isUndefined(defaultValue) ? defaultValue : getNodeValue(name)
+            !isUndefined(value) ? value : getNodeValue(name)
           );
         }
       }),
