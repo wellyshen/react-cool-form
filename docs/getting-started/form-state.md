@@ -100,6 +100,8 @@ const [touched, dirty] = select(["touched", "dirty"]);
 
 If we didn't initialize the default value of a field via the [defaultValues option](../api-reference/use-form#defaultvalues) of the `useForm`. The `select` method will lose the value. Because the method is called before the field's initial render. For such cases, we can provide an alternative default value for the `select` method to return as below:
 
+> 💡 If you need to refer to the status of a [conditional field](../examples/conditional-fields), we recommend to use React state instead.
+
 ```js
 import { useForm } from "react-cool-form";
 
