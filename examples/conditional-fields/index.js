@@ -1,8 +1,22 @@
 import { useState } from "react";
 import { render } from "react-dom";
-import { useForm } from "react-cool-form";
+import { useForm, useControlled } from "react-cool-form";
 
 import "./styles.scss";
+
+const RadioButtons = ({ name, buttons }) => {
+  const [fieldProps] = useControlled(name, {
+    defaultValue: buttons.filter(({ checked }) => checked)[0]?.value,
+    type: "radio"
+  });
+
+  return buttons.map(({ id, value, checked }) => (
+    <span key={id}>
+      <input {...fieldProps} id={id} value={value} defaultChecked={checked} />
+      <label htmlFor={id}>{value}</label>
+    </span>
+  ));
+};
 
 function App() {
   const { form } = useForm({
@@ -31,16 +45,25 @@ function App() {
         <>
           <input
             id="apple"
-            name="option"
+            name="fruit"
             type="radio"
             value="🍎"
             defaultChecked // Set default check (or value)
           />
           <label htmlFor="apple">🍎</label>
-          <input id="kiwi" name="option" type="radio" value="🥝" />
+          <input id="kiwi" name="fruit" type="radio" value="🥝" />
           <label htmlFor="kiwi">🥝</label>
-          <input id="lemon" name="option" type="radio" value="🍋" />
+          <input id="lemon" name="fruit" type="radio" value="🍋" />
           <label htmlFor="lemon">🍋</label>
+          {/* When working with conditional fields, please ensure the "useControlled" hook is wrapped in a component */}
+          {/* <RadioButtons
+            name="fruit"
+            buttons={[
+              { id: "apple", value: "🍎", checked: true },
+              { id: "kiwi", value: "🥝" },
+              { id: "lemon", value: "🍋" }
+            ]}
+          /> */}
         </>
       )}
       <input type="submit" />
