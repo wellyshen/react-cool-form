@@ -8,7 +8,7 @@ import useFormState from "./useFormState";
 const defaultValues = { foo: "🍎" };
 const error = "Required";
 
-interface Props extends FormStateConfig<any> {
+interface Props extends FormStateConfig {
   children: (state: any) => JSX.Element;
   path?: Path;
   formDefaultValues?: any;

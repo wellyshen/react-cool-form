@@ -5,7 +5,7 @@ import useForm from "./useForm";
 import useFormMethods from "./useFormMethods";
 
 interface Props {
-  children: (methods: FormMethods<any>) => JSX.Element | null;
+  children: (methods: FormMethods) => JSX.Element | null;
 }
 
 const Form = ({ children }: Props) => {
@@ -16,7 +16,7 @@ const Form = ({ children }: Props) => {
 };
 
 const renderHelper = () => {
-  let api: FormMethods<any>;
+  let api: FormMethods;
 
   render(
     <Form>

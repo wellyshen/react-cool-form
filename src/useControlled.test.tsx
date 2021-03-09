@@ -11,7 +11,7 @@ interface API {
   getState: GetState;
 }
 
-interface Config extends ControlledConfig<any> {
+interface Config extends ControlledConfig {
   children: (api: API) => JSX.Element | null;
   name: string;
   defaultValues: Record<string, any>;

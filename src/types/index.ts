@@ -7,20 +7,20 @@ export type Map<T = boolean> = Record<string, T>;
 export type Methods = {
   shouldRemoveField: boolean;
   defaultValuesRef: MutableRefObject<any>;
-  initialStateRef: MutableRefObject<FormState<any>>;
+  initialStateRef: MutableRefObject<FormState>;
   excludeFieldsRef: MutableRefObject<Map>;
   controllersRef: MutableRefObject<Map>;
-  fieldValidatorsRef: MutableRefObject<Map<FieldValidator<any>>>;
+  fieldValidatorsRef: MutableRefObject<Map<FieldValidator>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   getNodeValue: GetNodeValue;
-  getFormState: GetFormState<any>;
+  getFormState: GetFormState;
   setDefaultValue: SetDefaultValue;
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
   handleChangeEvent: HandleChangeEvent;
   removeField: RemoveField;
   subscribeObserver: ObserverHandler;
   unsubscribeObserver: ObserverHandler;
-} & FormMethods<any>;
+} & FormMethods;
 
 // useState
 type DeepProps<V, T = any> = {
@@ -29,7 +29,7 @@ type DeepProps<V, T = any> = {
 
 export type FormErrors<V> = DeepProps<V>;
 
-export interface FormState<V> {
+export interface FormState<V = any> {
   values: V;
   touched: DeepProps<V, boolean>;
   errors: FormErrors<V>;
@@ -108,7 +108,7 @@ interface ResetHandler<V> {
   (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
 }
 
-export interface SubmitHandler<V> {
+export interface SubmitHandler<V = any> {
   (
     values: V,
     options: Options<V>,
@@ -116,7 +116,7 @@ export interface SubmitHandler<V> {
   ): void | Promise<void>;
 }
 
-export interface ErrorHandler<V> {
+export interface ErrorHandler<V = any> {
   (
     errors: FormErrors<V>,
     options: Options<V>,
@@ -140,7 +140,7 @@ export interface RegisterForm {
   (element: HTMLElement | null): void;
 }
 
-export interface FieldValidator<V> {
+export interface FieldValidator<V = any> {
   (value: any, values: V): any | Promise<any>;
 }
 
@@ -183,7 +183,7 @@ export interface GetNodeValue {
 
 export type Path = string | string[] | Map<string>;
 
-export interface GetFormState<V> {
+export interface GetFormState<V = any> {
   (
     path: Path | undefined,
     options: {
@@ -258,7 +258,7 @@ export type Parsers = Map<{
   parse?: FieldParser;
 }>;
 
-export type FormConfig<V> = Partial<{
+export type FormConfig<V = any> = Partial<{
   id: string;
   defaultValues: V;
   validate: FormValidator<V>;
@@ -273,7 +273,7 @@ export type FormConfig<V> = Partial<{
   debug: Debug<V>;
 }>;
 
-export interface FormMethods<V> {
+export interface FormMethods<V = any> {
   form: RegisterForm;
   field: RegisterField<V>;
   select: Select<V>;
@@ -289,7 +289,7 @@ export interface FormMethods<V> {
 }
 
 // useFormState
-export type FormStateConfig<V> = Partial<{
+export type FormStateConfig<V = any> = Partial<{
   formId: string;
   target: string;
   defaultValues: V;
@@ -305,7 +305,7 @@ interface ControlledFormatter {
   (value: any): any;
 }
 
-export type ControlledConfig<V> = Partial<{
+export type ControlledConfig<V = any> = Partial<{
   formId: string;
   defaultValue: any;
   validate: FieldValidator<V>;

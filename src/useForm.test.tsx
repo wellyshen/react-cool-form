@@ -16,14 +16,14 @@ jest.mock("./shared", () => ({ set: jest.fn(), remove: jest.fn() }));
 
 type Children = JSX.Element | JSX.Element[] | null;
 
-type Methods = Omit<FormMethods<any>, "form">;
+type Methods = Omit<FormMethods, "form">;
 
-interface Config extends FormConfig<any> {
+interface Config extends FormConfig {
   children: Children | ((methods: Methods) => Children);
   onSubmit: (values: any) => void;
-  onSubmitFull: SubmitHandler<any>;
+  onSubmitFull: SubmitHandler;
   onError: (errors: any) => void;
-  onErrorFull: ErrorHandler<any>;
+  onErrorFull: ErrorHandler;
   onRender: () => void;
 }
 
