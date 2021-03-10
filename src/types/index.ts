@@ -42,8 +42,6 @@ export interface FormState<V = any> {
   submitCount: number;
 }
 
-export type StateRef<V> = MutableRefObject<FormState<V>>;
-
 export interface SetStateRef {
   (
     path: string,
@@ -66,7 +64,7 @@ export interface ObserverHandler {
 }
 
 export interface FormStateReturn<V> {
-  stateRef: StateRef<V>;
+  stateRef: MutableRefObject<FormState<V>>;
   setStateRef: SetStateRef;
   setUsedState: SetUsedState;
   subscribeObserver: ObserverHandler;
