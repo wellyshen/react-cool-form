@@ -840,7 +840,6 @@ export default <V extends FormValues = FormValues>({
         if (type !== "childList") return;
 
         const fields = getFields(form);
-        let { values } = stateRef.current;
 
         if (shouldRemoveField)
           Object.keys(fieldsRef.current).forEach((name) => {
@@ -868,15 +867,14 @@ export default <V extends FormValues = FormValues>({
             }
           });
 
+        let values = defaultValuesRef.current;
         const addedNodes: string[] = [];
 
         Object.keys(fields).forEach((name) => {
           if (fieldsRef.current[name] || controllersRef.current[name]) return;
 
-          const defaultValue = get(defaultValuesRef.current, name);
-
-          if (!isUndefined(defaultValue))
-            values = set(values, name, defaultValue, true);
+          const value = get(stateRef.current.values, name);
+          if (!isUndefined(value)) values = set(values, name, value, true);
 
           addedNodes.push(name);
         });
