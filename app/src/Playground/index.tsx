@@ -1,35 +1,32 @@
 /* eslint-disable no-console */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-cool-form";
 
 export default () => {
   const [t0, setT0] = useState(true);
   const [t1, setT1] = useState(true);
-  const { form, select } = useForm({
-    defaultValues: { bar: "test", foo: "v1" },
+  const { form, select, setValue } = useForm({
+    // defaultValues: { foo: "test" },
+    shouldRemoveField: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  console.log("LOG ===> ", select("values.foo"));
+  // console.log("LOG ===> ", select("values.foo"));
+
+  useEffect(() => {
+    // setValue("foo", "new test");
+  }, [setValue]);
 
   return (
     <form ref={form}>
-      <select name="foo">
-        {t0 && <option value="v0">v0</option>}
-        {t1 && <option value="v1">v1</option>}
-      </select>
-      {/* {t0 && <input name="bar" />}
-      {t0 && <input name="foo" type="checkbox" value="v1" />}
-      {t1 && <input name="foo" type="checkbox" value="v2" />} */}
-      <br />
+      {t0 && <input name="foo" defaultValue="test" />}
       <input type="submit" />
-      <input type="reset" />
       <button type="button" onClick={() => setT0(!t0)}>
         T0
       </button>
-      <button type="button" onClick={() => setT1(!t1)}>
+      {/* <button type="button" onClick={() => setT1(!t1)}>
         T1
-      </button>
+      </button> */}
     </form>
   );
 };
