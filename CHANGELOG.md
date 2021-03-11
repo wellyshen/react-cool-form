@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.135
+
+### Patch Changes
+
+- [`c4724a0`](https://github.com/wellyshen/react-cool-form/commit/c4724a04a1d60c767f501bc74f35393e835c31d1) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): skip unnecessary set state logic for `reset` method
+
+* [`573ab7b`](https://github.com/wellyshen/react-cool-form/commit/573ab7b6f29d2a7e9b503bd1cdaf772d903b5952) [#461](https://github.com/wellyshen/react-cool-form/pull/461) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): keep the value of a conditional field when `shouldRemoveField` option set to `false`'
+
+- [`ae11590`](https://github.com/wellyshen/react-cool-form/commit/ae115903890ee8d1b8f8d79d4acb399a375244c6) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: refine missing "name" warnings
+
 ## 0.0.134
 
 ### Patch Changes
