@@ -147,7 +147,7 @@ export default <V extends FormValues = FormValues>({
 
           if (rcfExclude !== "true" && !name) {
             warn(
-              '💡 react-cool-form > field: Missing the "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
+              '💡 react-cool-form > field: Missing "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
             );
             return false;
           }
@@ -803,7 +803,7 @@ export default <V extends FormValues = FormValues>({
         const { name } = target as FieldElement;
 
         if (!name) {
-          warn('💡 react-cool-form > field: Missing the "name" attribute.');
+          warn('💡 react-cool-form > field: Missing "name" attribute.');
           return;
         }
 

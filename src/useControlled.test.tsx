@@ -82,7 +82,7 @@ describe("useControlled", () => {
   it("should throw missing name error", () => {
     // @ts-expect-error
     expect(() => useControlled()).toThrow(
-      '💡 react-cool-form > useControlled: Missing the "name" parameter.'
+      '💡 react-cool-form > useControlled: Missing "name" parameter.'
     );
   });
 

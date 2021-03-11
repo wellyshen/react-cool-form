@@ -116,11 +116,11 @@ describe("useForm", () => {
       expect(console.warn).toHaveBeenCalledTimes(2);
       expect(console.warn).toHaveBeenNthCalledWith(
         1,
-        '💡 react-cool-form > field: Missing the "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
+        '💡 react-cool-form > field: Missing "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
       );
       expect(console.warn).toHaveBeenNthCalledWith(
         2,
-        '💡 react-cool-form > field: Missing the "name" attribute.'
+        '💡 react-cool-form > field: Missing "name" attribute.'
       );
     });
 
