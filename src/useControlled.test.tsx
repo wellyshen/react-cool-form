@@ -295,4 +295,6 @@ describe("useControlled", () => {
     fireEvent.submit(getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
   });
+
+  it.todo("should reset form correctly");
 });
