@@ -274,8 +274,13 @@ export default <V extends FormValues = FormValues>({
   const setNodesOrStateValue = useCallback(
     (
       values: V,
-      shouldUpdateDefaultValues: boolean,
-      fields: Field[] | string[] = Object.values(fieldsRef.current)
+      {
+        shouldUpdateDefaultValues = true,
+        fields = Object.values(fieldsRef.current),
+      }: {
+        shouldUpdateDefaultValues?: boolean;
+        fields?: Field[] | string[];
+      } = {}
     ) =>
       fields.forEach((field: Field | string) => {
         const name = isPlainObject(field) ? (field as Field).field.name : field;
@@ -702,7 +707,9 @@ export default <V extends FormValues = FormValues>({
             nextValues,
             true
           );
-          setNodesOrStateValue(nextValues, !!values);
+          setNodesOrStateValue(nextValues, {
+            shouldUpdateDefaultValues: false,
+          });
         } else {
           // @ts-expect-error
           state[key] = initialStateRef.current[key];
@@ -797,7 +804,7 @@ export default <V extends FormValues = FormValues>({
       const form = formRef.current;
 
       fieldsRef.current = getFields(form);
-      setNodesOrStateValue(initialStateRef.current.values, true);
+      setNodesOrStateValue(initialStateRef.current.values);
 
       handlersRef.current.change = ({ target }: Event) => {
         const { name } = target as FieldElement;
@@ -880,7 +887,8 @@ export default <V extends FormValues = FormValues>({
         });
 
         fieldsRef.current = fields;
-        if (addedNodes.length) setNodesOrStateValue(values, true, addedNodes);
+        if (addedNodes.length)
+          setNodesOrStateValue(values, { fields: addedNodes });
       });
 
       observerRef.current.observe(form, { childList: true, subtree: true });
