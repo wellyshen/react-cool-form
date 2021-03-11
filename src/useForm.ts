@@ -113,9 +113,13 @@ export default <V extends FormValues = FormValues>({
   } = useState<V>(initialStateRef.current, debug);
 
   const handleUnset = useCallback(
-    (path: string, fieldPath: string, target: any, name: string) =>
-      setStateRef(path, unset(target, name, true), { fieldPath }),
-    [setStateRef]
+    (path: string) => {
+      const [t, n] = path.split(".");
+      setStateRef(t, unset(stateRef.current[t as keyof FormState], n, true), {
+        fieldPath: path,
+      });
+    },
+    [setStateRef, stateRef]
   );
 
   const getFields = useCallback(
@@ -405,7 +409,7 @@ export default <V extends FormValues = FormValues>({
       if (error) {
         setStateRef(`errors.${name}`, error);
       } else {
-        handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
+        handleUnset(`errors.${name}`);
       }
     },
     [handleUnset, setStateRef, stateRef]
@@ -579,23 +583,12 @@ export default <V extends FormValues = FormValues>({
       if (isTouched) {
         setStateRef(`touched.${name}`, true);
       } else {
-        handleUnset(
-          "touched",
-          `touched.${name}`,
-          stateRef.current.touched,
-          name
-        );
+        handleUnset(`touched.${name}`);
       }
 
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
-    [
-      handleUnset,
-      setStateRef,
-      stateRef,
-      validateFieldWithLowPriority,
-      validateOnBlur,
-    ]
+    [handleUnset, setStateRef, validateFieldWithLowPriority, validateOnBlur]
   );
 
   const setTouchedMaybeValidate = useCallback<SetTouchedMaybeValidate>(
@@ -613,10 +606,10 @@ export default <V extends FormValues = FormValues>({
       if (isDirty) {
         setStateRef(`dirty.${name}`, true);
       } else {
-        handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
+        handleUnset(`dirty.${name}`);
       }
     },
-    [handleUnset, setStateRef, stateRef]
+    [handleUnset, setStateRef]
   );
 
   const setDirtyIfNeeded = useCallback(
@@ -648,7 +641,7 @@ export default <V extends FormValues = FormValues>({
       if (!isUndefined(value)) {
         setStateRef(`values.${name}`, value);
       } else {
-        handleUnset("values", `values.${name}`, stateRef.current.values, name);
+        handleUnset(`values.${name}`);
       }
       setNodeValue(name, value);
 
@@ -778,10 +771,10 @@ export default <V extends FormValues = FormValues>({
 
   const removeField = useCallback<RemoveField>(
     (name) => {
-      handleUnset("values", `values.${name}`, stateRef.current.values, name);
-      handleUnset("touched", `touched.${name}`, stateRef.current.touched, name);
-      handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
-      handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
+      handleUnset(`values.${name}`);
+      handleUnset(`touched.${name}`);
+      handleUnset(`dirty.${name}`);
+      handleUnset(`errors.${name}`);
 
       initialStateRef.current = unset(
         initialStateRef.current,
@@ -793,7 +786,7 @@ export default <V extends FormValues = FormValues>({
       delete fieldValidatorsRef.current[name];
       delete controllersRef.current[name];
     },
-    [handleUnset, stateRef]
+    [handleUnset]
   );
 
   const registerForm = useCallback<RegisterForm>(
