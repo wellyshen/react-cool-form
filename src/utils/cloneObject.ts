@@ -1,4 +1,3 @@
-import { Map } from "../types";
 import isFileList from "./isFileList";
 import isObject from "./isObject";
 
@@ -9,15 +8,12 @@ const cloneObject = (object: unknown): any => {
 
   if (object instanceof Date) return new Date(object.getTime());
 
-  if (Array.isArray(object)) return object.map((val) => cloneObject(val));
+  const obj = (Array.isArray(object) ? [] : {}) as any;
 
-  if (isObject(object))
-    return Object.keys(object).reduce((obj: Map<any>, key) => {
-      obj[key] = cloneObject((object as Map<any>)[key]);
-      return obj;
-    }, {});
+  // eslint-disable-next-line guard-for-in
+  for (const key in object) obj[key] = cloneObject((object as any)[key]);
 
-  throw new Error("Unable to clone object.");
+  return obj;
 };
 
 export default cloneObject;
