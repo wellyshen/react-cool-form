@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.136
+
+### Patch Changes
+
+- [`c066ecc`](https://github.com/wellyshen/react-cool-form/commit/c066ecc5004d6b29d9d649a41f99290d5f52234f) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: reduce bundle size
+
 ## 0.0.135
 
 ### Patch Changes
