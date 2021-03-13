@@ -9,9 +9,11 @@ export type Methods = {
   defaultValuesRef: MutableRefObject<any>;
   initialStateRef: MutableRefObject<FormState>;
   excludeFieldsRef: MutableRefObject<Map>;
+  fieldArrayRef: MutableRefObject<Map>;
   controllersRef: MutableRefObject<Map>;
   fieldValidatorsRef: MutableRefObject<Map<FieldValidator>>;
   changedFieldRef: MutableRefObject<string | undefined>;
+  setStateRef: SetStateRef;
   getNodeValue: GetNodeValue;
   getFormState: GetFormState;
   setDefaultValue: SetDefaultValue;
@@ -90,7 +92,7 @@ export interface Field {
 
 export type Fields = Map<Field>;
 
-interface Options<V> {
+interface EventOptions<V> {
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;
@@ -103,13 +105,13 @@ interface Options<V> {
 }
 
 interface ResetHandler<V> {
-  (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
+  (values: V, options: EventOptions<V>, event?: Event | SyntheticEvent): void;
 }
 
 export interface SubmitHandler<V = any> {
   (
     values: V,
-    options: Options<V>,
+    options: EventOptions<V>,
     event?: Event | SyntheticEvent
   ): void | Promise<void>;
 }
@@ -117,7 +119,7 @@ export interface SubmitHandler<V = any> {
 export interface ErrorHandler<V = any> {
   (
     errors: FormErrors<V>,
-    options: Options<V>,
+    options: EventOptions<V>,
     event?: Event | SyntheticEvent
   ): void;
 }
@@ -328,3 +330,19 @@ export interface Meta {
 }
 
 export type ControlledReturn = [FieldProps, Meta];
+
+// useFieldArray
+type HelperOptions = Partial<{
+  isTouched: boolean;
+  isDirty: boolean;
+}>;
+
+export interface Push<T> {
+  (value: T, options?: HelperOptions): void;
+}
+
+export type FieldArrayConfig = Partial<{
+  formId: string;
+}>;
+
+export type FieldArrayReturn<T> = [T[], { push: Push<T> }];

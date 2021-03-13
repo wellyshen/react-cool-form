@@ -3,6 +3,7 @@ module.exports = {
   rules: {
     eqeqeq: "off",
     camelcase: "off",
+    "guard-for-in": "off",
     "no-shadow": "off",
     "no-console": [
       "warn",

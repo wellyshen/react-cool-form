@@ -10,7 +10,6 @@ const cloneObject = (object: unknown): any => {
 
   const obj = (Array.isArray(object) ? [] : {}) as any;
 
-  // eslint-disable-next-line guard-for-in
   for (const key in object) obj[key] = cloneObject((object as any)[key]);
 
   return obj;

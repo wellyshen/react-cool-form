@@ -46,6 +46,7 @@ import {
   isAsyncFunction,
   isCheckboxInput,
   isEmptyObject,
+  isFieldArray,
   isFieldElement,
   isFileInput,
   isFileList,
@@ -83,6 +84,7 @@ export default <V extends FormValues = FormValues>({
   const formRef = useRef<HTMLElement>();
   const fieldsRef = useRef<Fields>({});
   const fieldParsersRef = useRef<Parsers>({});
+  const fieldArrayRef = useRef<Map>({});
   const controllersRef = useRef<Map>({});
   const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
   const changedFieldRef = useRef<string>();
@@ -270,9 +272,10 @@ export default <V extends FormValues = FormValues>({
         true
       );
 
-      setStateRef(`values.${name}`, value, { shouldUpdate: false });
+      if (!dequal(get(stateRef.current.values, name), value))
+        setStateRef(`values.${name}`, value, { shouldUpdate: false });
     },
-    [setStateRef]
+    [setStateRef, stateRef]
   );
 
   const setNodesOrStateValue = useCallback(
@@ -771,10 +774,12 @@ export default <V extends FormValues = FormValues>({
 
   const removeField = useCallback<RemoveField>(
     (name) => {
-      handleUnset(`values.${name}`);
-      handleUnset(`touched.${name}`);
-      handleUnset(`dirty.${name}`);
-      handleUnset(`errors.${name}`);
+      const { values, touched, dirty, errors } = stateRef.current;
+
+      if (!isUndefined(get(values, name))) handleUnset(`values.${name}`);
+      if (!isUndefined(get(touched, name))) handleUnset(`touched.${name}`);
+      if (!isUndefined(get(dirty, name))) handleUnset(`dirty.${name}`);
+      if (!isUndefined(get(errors, name))) handleUnset(`errors.${name}`);
 
       initialStateRef.current = unset(
         initialStateRef.current,
@@ -786,7 +791,7 @@ export default <V extends FormValues = FormValues>({
       delete fieldValidatorsRef.current[name];
       delete controllersRef.current[name];
     },
-    [handleUnset]
+    [handleUnset, stateRef]
   );
 
   const registerForm = useCallback<RegisterForm>(
@@ -841,31 +846,33 @@ export default <V extends FormValues = FormValues>({
 
         const fields = getFields(form);
 
-        if (shouldRemoveField)
-          Object.keys(fieldsRef.current).forEach((name) => {
-            if (controllersRef.current[name]) return;
+        Object.keys(fieldsRef.current).forEach((name) => {
+          if (
+            !isFieldArray(fieldArrayRef.current, name) &&
+            (shouldRemoveField || controllersRef.current[name])
+          )
+            return;
 
-            if (!fields[name]) {
-              removeField(name);
-              return;
-            }
+          if (!fields[name]) {
+            removeField(name);
+            return;
+          }
 
-            const currOptions = fieldsRef.current[name].options
-              ?.length as number;
-            const nextOptions = fields[name].options?.length as number;
+          const currOptions = fieldsRef.current[name].options?.length as number;
+          const nextOptions = fields[name].options?.length as number;
 
-            if (currOptions > nextOptions) {
-              setStateRef(`values.${name}`, getNodeValue(name, fields), {
-                shouldUpdate: false,
-              });
-            } else if (currOptions < nextOptions) {
-              setNodeValue(
-                name,
-                get(initialStateRef.current.values, name),
-                fields
-              );
-            }
-          });
+          if (currOptions > nextOptions) {
+            setStateRef(`values.${name}`, getNodeValue(name, fields), {
+              shouldUpdate: false,
+            });
+          } else if (currOptions < nextOptions) {
+            setNodeValue(
+              name,
+              get(initialStateRef.current.values, name),
+              fields
+            );
+          }
+        });
 
         let values = defaultValuesRef.current;
         const addedNodes: string[] = [];
@@ -928,10 +935,12 @@ export default <V extends FormValues = FormValues>({
     shouldRemoveField,
     defaultValuesRef,
     initialStateRef,
+    fieldArrayRef,
     controllersRef,
     fieldValidatorsRef,
     changedFieldRef,
     excludeFieldsRef,
+    setStateRef,
     getNodeValue,
     getFormState,
     setDefaultValue,

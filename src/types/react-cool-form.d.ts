@@ -9,7 +9,7 @@ declare module "react-cool-form" {
     [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
   };
 
-  interface Options<V> {
+  interface EventOptions<V> {
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
@@ -146,13 +146,13 @@ declare module "react-cool-form" {
   }
 
   export interface ResetHandler<V extends FormValues = FormValues> {
-    (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
+    (values: V, options: EventOptions<V>, event?: Event | SyntheticEvent): void;
   }
 
   export interface SubmitHandler<V extends FormValues = FormValues> {
     (
       values: V,
-      options: Options<V>,
+      options: EventOptions<V>,
       event?: Event | SyntheticEvent
     ): void | Promise<void>;
   }
@@ -160,7 +160,7 @@ declare module "react-cool-form" {
   export interface ErrorHandler<V extends FormValues = FormValues> {
     (
       errors: FormErrors<V>,
-      options: Options<V>,
+      options: EventOptions<V>,
       event?: Event | SyntheticEvent
     ): void;
   }
@@ -257,6 +257,27 @@ declare module "react-cool-form" {
     name: string,
     config?: ControlledConfig<V>
   ): ControlledReturn;
+
+  // useFieldArray
+  type HelperOptions = Partial<{
+    isTouched: boolean;
+    isDirty: boolean;
+  }>;
+
+  interface Push<T> {
+    (value: T, options?: HelperOptions): void;
+  }
+
+  export type FieldArrayConfig = Partial<{
+    formId: string;
+  }>;
+
+  export type FieldArrayReturn<T = any> = [T[], { push: Push<T> }];
+
+  export function useFieldArray<T = any>(
+    name: string,
+    config?: FieldArrayConfig
+  ): FieldArrayReturn<T>;
 
   // Utility functions
   export function get(object: any, path: string, defaultValue?: unknown): any;
