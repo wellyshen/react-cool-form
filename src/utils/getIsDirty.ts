@@ -1,4 +1,4 @@
-import isPlainObject from "./isPlainObject";
+import isObject from "./isObject";
 
 const getIsDirty = (dirty: object): boolean => {
   const search = (dty: object, found: any[] = []) => {
@@ -8,7 +8,7 @@ const getIsDirty = (dirty: object): boolean => {
         return found;
       }
 
-      if (isPlainObject(val)) search(val, found);
+      if (isObject(val)) search(val, found);
     }
 
     return found;
