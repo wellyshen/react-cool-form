@@ -1,14 +1,18 @@
 /* eslint-disable no-console */
 
+import { useRef } from "react";
 import { useForm, useFieldArray } from "react-cool-form";
 
+const getId = () => Math.floor(Math.random() * 10000);
+
 export default () => {
+  const rmRef = useRef<HTMLInputElement>(null);
   const { form, select } = useForm({
-    defaultValues: { foo: [{ val: "0" }] },
+    defaultValues: { foo: [{ id: getId(), val: getId() }] },
     shouldRemoveField: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [fields, { push }] = useFieldArray("foo");
+  const [fields, { push, remove }] = useFieldArray("foo");
 
   console.log(
     "LOG ===> ",
@@ -23,18 +27,26 @@ export default () => {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => push({ val: "1" }, { isDirty: true })}
-      >
+      <button type="button" onClick={() => push({ id: getId(), val: getId() })}>
         Push
       </button>
+      <br />
+      <button
+        type="button"
+        onClick={() =>
+          // @ts-expect-error
+          console.log("LOG ===> Remove: ", remove(+rmRef.current.value))
+        }
+      >
+        Remove
+      </button>
+      <input ref={rmRef} />
       <form ref={form}>
-        {fields.map(({ val }, idx) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <input key={idx} name={`foo[${idx}].val`} />
+        {fields.map(({ id }, idx) => (
+          <input key={id} name={`foo[${idx}].val`} />
         ))}
         <input type="submit" />
+        <input type="reset" />
       </form>
     </>
   );
