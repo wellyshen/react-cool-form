@@ -8,12 +8,12 @@ const cloneObject = (object: unknown): any => {
 
   if (object instanceof Date) return new Date(object.getTime());
 
-  const obj = (Array.isArray(object) ? [] : {}) as any;
+  if (Array.isArray(object)) return object.map((val) => cloneObject(val));
 
-  // eslint-disable-next-line guard-for-in
-  for (const key in object) obj[key] = cloneObject((object as any)[key]);
-
-  return obj;
+  return Object.keys(object).reduce((obj: Record<string, any>, key) => {
+    obj[key] = cloneObject((object as Record<string, any>)[key]);
+    return obj;
+  }, {});
 };
 
 export default cloneObject;
