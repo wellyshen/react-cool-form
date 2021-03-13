@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.138
+
+### Patch Changes
+
+- [`889e331`](https://github.com/wellyshen/react-cool-form/commit/889e3319d5f064607cef4dec42a3e5fb32cdadb4) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(utils): the side-effect of `cloneObject`
+
 ## 0.0.137
 
 ### Patch Changes
