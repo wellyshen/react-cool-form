@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.137
+
+### Patch Changes
+
+- [`d808960`](https://github.com/wellyshen/react-cool-form/commit/d80896022c8322dfe4aed5facc57b40874151a82) [#466](https://github.com/wellyshen/react-cool-form/pull/466) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): `isDirty` not working with array type form values
+
 ## 0.0.136
 
 ### Patch Changes
