@@ -1,13 +1,20 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { ControlledConfig, FieldProps, GetState, Meta } from "./types";
+import {
+  ControlledConfig,
+  FieldProps,
+  GetState,
+  Meta,
+  RegisterField,
+} from "./types";
 import useForm from "./useForm";
 import useControlled from "./useControlled";
 
 interface API {
   fieldProps: FieldProps;
   meta: Meta;
+  field: RegisterField;
   getState: GetState;
 }
 
@@ -29,7 +36,7 @@ const Form = ({
   onError = () => null,
   ...rest
 }: Props) => {
-  const { form, getState } = useForm({
+  const { form, field, getState } = useForm({
     defaultValues,
     onSubmit: (values) => onSubmit(values),
     onError: (errors) => onError(errors),
@@ -42,7 +49,7 @@ const Form = ({
       <div>{meta.isTouched ? "touched" : "not-touched"}</div>
       <div>{meta.isDirty ? "dirty" : "not-dirty"}</div>
       <form data-testid="form" ref={form}>
-        {children ? children({ fieldProps, meta, getState }) : null}
+        {children ? children({ fieldProps, meta, field, getState }) : null}
       </form>
     </>
   );
@@ -77,7 +84,10 @@ const renderHelper = ({ children, ...rest }: Props = {}) => {
 describe("useControlled", () => {
   const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
+  const onError = jest.fn();
   const value = "🍎";
+
+  beforeEach(() => jest.clearAllMocks());
 
   it("should throw missing name error", () => {
     // @ts-expect-error
@@ -165,7 +175,6 @@ describe("useControlled", () => {
   );
 
   it("should run validation", async () => {
-    const onError = jest.fn();
     const errors = { foo: "Required" };
     const { getState } = renderHelper({
       defaultValue: "",
@@ -198,6 +207,28 @@ describe("useControlled", () => {
     expect(getState("errors")).toEqual({});
     expect(getState("isValidating")).toBeFalsy();
     expect(getState("isValid")).toBeTruthy();
+  });
+
+  it('should ignore "field" method', async () => {
+    const mockDate = "2050-01-09";
+    renderHelper({
+      defaultValue: mockDate,
+      type: "date",
+      onSubmit,
+      onError,
+      children: ({ fieldProps, field }: API) => (
+        <input
+          data-testid="foo"
+          {...fieldProps}
+          ref={field({ validate: () => "Required", valueAsNumber: true })}
+        />
+      ),
+    });
+    fireEvent.submit(getByTestId("form"));
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith({ foo: mockDate });
+      expect(onError).not.toHaveBeenCalled();
+    });
   });
 
   it("should handle text correctly", async () => {
@@ -285,15 +316,16 @@ describe("useControlled", () => {
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: "🍎🍋" }));
   });
 
-  it("should format value correctly", async () => {
+  it("should format value correctly", () => {
     renderHelper({
       defaultValue: "🍎🍋",
       format: (val: string) => val.replace("🍋", ""),
       onSubmit,
-      children: ({ fieldProps }: API) => <input {...fieldProps} />,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
     });
-    fireEvent.submit(getByTestId("form"));
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
+    expect(getByTestId("foo").value).toBe(value);
   });
 
   it.todo("should reset form correctly");

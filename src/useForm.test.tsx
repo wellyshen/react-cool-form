@@ -1260,6 +1260,31 @@ describe("useForm", () => {
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
     });
+
+    it('should ignore "field" method', async () => {
+      const mockDate = "2050-01-09";
+      renderHelper({
+        defaultValues: { foo: mockDate },
+        excludeFields: ["foo"],
+        onSubmit,
+        children: ({ field }: Methods) => (
+          <input
+            data-testid="foo"
+            name="foo"
+            type="date"
+            ref={field({
+              validate: () => "Required",
+              valueAsNumber: true,
+            })}
+          />
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => {
+        expect(onSubmit).toHaveBeenCalledWith({ foo: mockDate });
+        expect(onError).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe("runValidation", () => {

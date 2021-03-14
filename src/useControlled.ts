@@ -56,7 +56,7 @@ export default <V extends FormValues = FormValues>(
     defaultValuesRef,
     initialStateRef,
     fieldArrayRef,
-    controllersRef,
+    controlledsRef,
     fieldValidatorsRef,
     changedFieldRef,
     getNodeValue,
@@ -74,7 +74,7 @@ export default <V extends FormValues = FormValues>(
     [fieldArrayRef, name, removeField, shouldRemoveField]
   );
 
-  controllersRef.current[name] = true;
+  controlledsRef.current[name] = true;
   if (validate) fieldValidatorsRef.current[name] = validate;
 
   let value;

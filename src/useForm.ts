@@ -85,7 +85,7 @@ export default <V extends FormValues = FormValues>({
   const fieldsRef = useRef<Fields>({});
   const fieldParsersRef = useRef<Parsers>({});
   const fieldArrayRef = useRef<Map>({});
-  const controllersRef = useRef<Map>({});
+  const controlledsRef = useRef<Map>({});
   const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
@@ -155,7 +155,7 @@ export default <V extends FormValues = FormValues>({
           }
 
           return (
-            controllersRef.current[name] ||
+            controlledsRef.current[name] ||
             (rcfExclude !== "true" && !exclude[name])
           );
         })
@@ -229,7 +229,7 @@ export default <V extends FormValues = FormValues>({
 
   const setNodeValue = useCallback(
     (name: string, value: any, fields: Fields = fieldsRef.current) => {
-      if (!fields[name] || controllersRef.current[name]) return;
+      if (!fields[name] || controlledsRef.current[name]) return;
 
       const { field, options } = fields[name];
 
@@ -292,7 +292,7 @@ export default <V extends FormValues = FormValues>({
       fields.forEach((field: Field | string) => {
         const name = isPlainObject(field) ? (field as Field).field.name : field;
 
-        if (controllersRef.current[name]) return;
+        if (controlledsRef.current[name]) return;
 
         let value = get(values, name);
 
@@ -725,7 +725,7 @@ export default <V extends FormValues = FormValues>({
 
       const nextTouched = Object.keys({
         ...fieldsRef.current,
-        ...controllersRef.current,
+        ...controlledsRef.current,
       }).reduce((touched, name) => {
         touched = set(touched, name, true, true);
         return touched;
@@ -789,7 +789,7 @@ export default <V extends FormValues = FormValues>({
 
       delete fieldParsersRef.current[name];
       delete fieldValidatorsRef.current[name];
-      delete controllersRef.current[name];
+      delete controlledsRef.current[name];
     },
     [handleUnset, stateRef]
   );
@@ -812,7 +812,7 @@ export default <V extends FormValues = FormValues>({
           return;
         }
 
-        if (fieldsRef.current[name] && !controllersRef.current[name]) {
+        if (fieldsRef.current[name] && !controlledsRef.current[name]) {
           const parse = fieldParsersRef.current[name]?.parse;
           const value = getNodeValue(name);
 
@@ -826,7 +826,7 @@ export default <V extends FormValues = FormValues>({
 
         const { name } = target as FieldElement;
 
-        if (fieldsRef.current[name] && !controllersRef.current[name]) {
+        if (fieldsRef.current[name] && !controlledsRef.current[name]) {
           setTouchedMaybeValidate(name);
           changedFieldRef.current = undefined;
         }
@@ -849,7 +849,7 @@ export default <V extends FormValues = FormValues>({
         Object.keys(fieldsRef.current).forEach((name) => {
           if (
             !isFieldArray(fieldArrayRef.current, name) &&
-            (shouldRemoveField || controllersRef.current[name])
+            (shouldRemoveField || controlledsRef.current[name])
           )
             return;
 
@@ -878,7 +878,7 @@ export default <V extends FormValues = FormValues>({
         const addedNodes: string[] = [];
 
         Object.keys(fields).forEach((name) => {
-          if (fieldsRef.current[name] || controllersRef.current[name]) return;
+          if (fieldsRef.current[name] || controlledsRef.current[name]) return;
 
           const value = get(stateRef.current.values, name);
           if (!isUndefined(value)) values = set(values, name, value, true);
@@ -913,7 +913,7 @@ export default <V extends FormValues = FormValues>({
     (validateOrOptions) => (field) => {
       if (
         !field?.name ||
-        controllersRef.current[field.name] ||
+        controlledsRef.current[field.name] ||
         excludeFieldsRef.current[field.name]
       )
         return;
@@ -936,7 +936,7 @@ export default <V extends FormValues = FormValues>({
     defaultValuesRef,
     initialStateRef,
     fieldArrayRef,
-    controllersRef,
+    controlledsRef,
     fieldValidatorsRef,
     changedFieldRef,
     excludeFieldsRef,
