@@ -210,8 +210,9 @@ describe("useControlled", () => {
   });
 
   it('should ignore "field" method', async () => {
+    const mockDate = "2050-01-09";
     renderHelper({
-      defaultValue: "",
+      defaultValue: mockDate,
       type: "date",
       onSubmit,
       onError,
@@ -219,25 +220,15 @@ describe("useControlled", () => {
         <input
           data-testid="foo"
           {...fieldProps}
-          ref={field({
-            validate: (val) => (!val.length ? "Required" : false),
-            valueAsNumber: true,
-          })}
+          ref={field({ validate: () => "Required", valueAsNumber: true })}
         />
       ),
     });
-    const form = getByTestId("form");
-
-    fireEvent.submit(form);
+    fireEvent.submit(getByTestId("form"));
     await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalled();
+      expect(onSubmit).toHaveBeenCalledWith({ foo: mockDate });
       expect(onError).not.toHaveBeenCalled();
     });
-
-    const date = "2050-01-09";
-    fireEvent.input(getByTestId("foo"), { target: { value: date } });
-    fireEvent.submit(form);
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: date }));
   });
 
   it("should handle text correctly", async () => {
