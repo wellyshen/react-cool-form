@@ -9,7 +9,7 @@ export type Methods = {
   defaultValuesRef: MutableRefObject<any>;
   initialStateRef: MutableRefObject<FormState>;
   excludeFieldsRef: MutableRefObject<Map>;
-  controllersRef: MutableRefObject<Map>;
+  controlledsRef: MutableRefObject<Map>;
   fieldValidatorsRef: MutableRefObject<Map<FieldValidator>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   getNodeValue: GetNodeValue;
@@ -146,7 +146,7 @@ interface FieldParser {
   (value: any): any;
 }
 
-export interface RegisterField<V> {
+export interface RegisterField<V = any> {
   (
     validateOrOptions:
       | FieldValidator<V>
