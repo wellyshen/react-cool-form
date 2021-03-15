@@ -26,7 +26,7 @@ export default <V extends FormValues = FormValues>(
 
   invariant(
     !methods,
-    '💡 react-cool-form > useControlled: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+    '💡 react-cool-form > useControlled: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
   );
 
   const hasWarn = useRef(false);
@@ -73,7 +73,7 @@ export default <V extends FormValues = FormValues>(
       setDefaultValue(name, value);
     } else if (!hasWarn.current) {
       warn(
-        `💡 react-cool-form > useControlled: Please provide a default value for the "${name}" field.`
+        `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
       );
       hasWarn.current = true;
     }

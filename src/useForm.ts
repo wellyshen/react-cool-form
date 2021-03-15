@@ -348,7 +348,7 @@ export default <V extends FormValues = FormValues>({
         if (callback) {
           if (p === "values")
             warn(
-              `💡 react-cool-form > ${methodName}: Getting the "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
+              `💡 react-cool-form > ${methodName}: Getting "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
             );
 
           usedState[p] = true;

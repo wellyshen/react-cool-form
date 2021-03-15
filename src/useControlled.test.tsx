@@ -98,7 +98,7 @@ describe("useControlled", () => {
 
   it("should throw form id errors", () => {
     expect(() => useControlled("foo", { formId: "form-1" })).toThrow(
-      '💡 react-cool-form > useControlled: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+      '💡 react-cool-form > useControlled: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
     );
   });
 
@@ -112,7 +112,7 @@ describe("useControlled", () => {
     fireEvent.input(getByTestId("foo"), { target: { value } });
     expect(console.warn).toHaveBeenCalledTimes(1);
     expect(console.warn).toHaveBeenCalledWith(
-      '💡 react-cool-form > useControlled: Please provide a default value for the "foo" field.'
+      '💡 react-cool-form > useControlled: Please provide a default value for "foo" field.'
     );
   });
 

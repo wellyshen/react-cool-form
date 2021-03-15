@@ -34,7 +34,7 @@ const renderHelper = () => {
 describe("useFormMethods", () => {
   it("should throw form id errors", () => {
     expect(() => useFormMethods("form-1")).toThrow(
-      '💡 react-cool-form > useFormMethods: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+      '💡 react-cool-form > useFormMethods: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
     );
   });
 
