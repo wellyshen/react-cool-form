@@ -64,7 +64,7 @@ export default <V extends FormValues = FormValues>(
   const warnDefaultValue = useCallback(() => {
     if (!hasWarn.current) {
       warn(
-        `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
+        `💡 react-cool-form > useControlled: Please provide a default value for the "${name}" field.`
       );
       hasWarn.current = true;
     }
