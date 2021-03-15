@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm, useFieldArray, useControlled } from "react-cool-form";
 
 const getId = () => Math.floor(Math.random() * 10000).toString();
@@ -11,6 +11,7 @@ const Field = ({ name, ...rest }: any) => {
 };
 
 export default () => {
+  const [show, setShow] = useState(false);
   const inRef = useRef<HTMLInputElement>(null);
   const rmRef = useRef<HTMLInputElement>(null);
   const swARef = useRef<HTMLInputElement>(null);
@@ -113,10 +114,14 @@ export default () => {
         {fields.map(({ id, val }, idx) => (
           <div key={id}>
             <Field name={`foo[${idx}].val`} defaultValue={val} />
+            {show && <Field name={`foo[${idx}].test`} defaultValue="test" />}
           </div>
         ))}
         <input type="submit" />
         <input type="reset" />
+        <button type="button" onClick={() => setShow(!show)}>
+          Toggle
+        </button>
       </form>
     </>
   );
