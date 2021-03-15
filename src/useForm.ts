@@ -117,9 +117,13 @@ export default <V extends FormValues = FormValues>({
   const handleUnset = useCallback(
     (path: string) => {
       const [t, n] = path.split(".");
-      setStateRef(t, unset(stateRef.current[t as keyof FormState], n, true), {
-        fieldPath: path,
-      });
+      setStateRef(
+        t,
+        unset(stateRef.current[t as keyof FormState<V>], n, true),
+        {
+          fieldPath: path,
+        }
+      );
     },
     [setStateRef, stateRef]
   );
