@@ -16,6 +16,7 @@ describe("cloneObject", () => {
       corge: { foo: "🍎" },
       fred: new Date(),
       waldo: () => null,
+      xyzzy: NaN,
     };
     expect(cloneObject(target)).toEqual(target);
 

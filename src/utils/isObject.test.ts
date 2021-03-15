@@ -4,6 +4,7 @@ describe("isObject", () => {
   it("should work correctly", () => {
     expect(isObject(undefined)).toBeFalsy();
     expect(isObject(null)).toBeFalsy();
+    expect(isObject(NaN)).toBeFalsy();
     expect(isObject(true)).toBeFalsy();
     expect(isObject(1)).toBeFalsy();
     expect(isObject("")).toBeFalsy();
