@@ -1,11 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import {
-  ControlledConfig,
-  ControlledReturn,
-  FieldProps,
-  FormValues,
-} from "./types";
+import { ControlledConfig, ControlledReturn, FormValues } from "./types";
 import * as shared from "./shared";
 import { get, invariant, isFieldElement, isUndefined, warn } from "./utils";
 import useFormState from "./useFormState";
@@ -88,36 +83,34 @@ export default <V extends FormValues = FormValues>(
   value = (format ? format(value) : value) ?? "";
   const { onChange, onBlur, ...restProps } = props;
 
-  const fieldProps: FieldProps = {
-    name,
-    value,
-    onChange: (...event) => {
-      let val;
-
-      if (parse) {
-        val = parse(...event);
-      } else {
-        const e = event[0];
-        val =
-          e?.nativeEvent instanceof Event && isFieldElement(e.target)
-            ? getNodeValue(name)
-            : e;
-      }
-
-      handleChangeEvent(name, val);
-      if (onChange) onChange(...event);
-      changedFieldRef.current = name;
-    },
-    onBlur: (e) => {
-      setTouchedMaybeValidate(name);
-      if (onBlur) onBlur(e);
-      changedFieldRef.current = undefined;
-    },
-    ...restProps,
-  };
-
   return [
-    fieldProps,
+    {
+      name,
+      value,
+      onChange: (...event) => {
+        let val;
+
+        if (parse) {
+          val = parse(...event);
+        } else {
+          const e = event[0];
+          val =
+            e?.nativeEvent instanceof Event && isFieldElement(e.target)
+              ? getNodeValue(name)
+              : e;
+        }
+
+        handleChangeEvent(name, val);
+        if (onChange) onChange(...event);
+        changedFieldRef.current = name;
+      },
+      onBlur: (e) => {
+        setTouchedMaybeValidate(name);
+        if (onBlur) onBlur(e);
+        changedFieldRef.current = undefined;
+      },
+      ...restProps,
+    },
     { error: meta.error, isTouched: !!meta.isTouched, isDirty: !!meta.isDirty },
   ];
 };

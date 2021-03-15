@@ -10,6 +10,11 @@ const Field = ({ name, ...rest }: any) => {
   return <input {...props} />;
 };
 
+const Field = ({ name, ...rest }: any) => {
+  const [props] = useControlled(name, rest);
+  return <input {...props} />;
+};
+
 export default () => {
   const inRef = useRef<HTMLInputElement>(null);
   const rmRef = useRef<HTMLInputElement>(null);
