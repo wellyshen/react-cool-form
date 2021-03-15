@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.139
+
+### Patch Changes
+
+- [`9bb9992`](https://github.com/wellyshen/react-cool-form/commit/9bb9992c666d52c17ce929d7d273b2fd885766b3) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: refine warning messages
+
 ## 0.0.138
 
 ### Patch Changes
