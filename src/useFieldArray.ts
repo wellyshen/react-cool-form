@@ -116,7 +116,7 @@ export default <V = any>(
 
   const push = useCallback<Push<V>>(
     (value, { shouldTouched, shouldDirty = true } = {}) => {
-      const handler = (values: any[], type: Keys = "values", lastIndex = 0) => {
+      const handler = (values: any[], type: Keys, lastIndex = 0) => {
         if (type === "values") {
           values.push(value);
         } else if (
@@ -136,7 +136,7 @@ export default <V = any>(
 
   const insert = useCallback<Insert<V>>(
     (index, value, { shouldTouched, shouldDirty = true } = {}) => {
-      const handler = (values: any[], type: Keys = "values") => {
+      const handler = (values: any[], type: Keys) => {
         if (type === "values") {
           values.splice(index, 0, value);
         } else if (
