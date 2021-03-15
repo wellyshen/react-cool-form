@@ -7,14 +7,7 @@ import {
   FormValues,
 } from "./types";
 import * as shared from "./shared";
-import {
-  get,
-  invariant,
-  isFieldArray,
-  isFieldElement,
-  isUndefined,
-  warn,
-} from "./utils";
+import { get, invariant, isFieldElement, isUndefined, warn } from "./utils";
 import useFormState from "./useFormState";
 
 export default <V extends FormValues = FormValues>(
@@ -55,7 +48,6 @@ export default <V extends FormValues = FormValues>(
     shouldRemoveField,
     defaultValuesRef,
     initialStateRef,
-    fieldArrayRef,
     controlledsRef,
     fieldValidatorsRef,
     changedFieldRef,
@@ -68,10 +60,9 @@ export default <V extends FormValues = FormValues>(
 
   useEffect(
     () => () => {
-      if (isFieldArray(fieldArrayRef.current, name) || shouldRemoveField)
-        removeField(name);
+      if (shouldRemoveField) removeField(name);
     },
-    [fieldArrayRef, name, removeField, shouldRemoveField]
+    [name, removeField, shouldRemoveField]
   );
 
   controlledsRef.current[name] = true;

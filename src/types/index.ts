@@ -9,7 +9,7 @@ export type Methods = {
   defaultValuesRef: MutableRefObject<any>;
   initialStateRef: MutableRefObject<FormState>;
   excludeFieldsRef: MutableRefObject<Map>;
-  fieldArrayRef: MutableRefObject<Map>;
+  fieldArrayRef: MutableRefObject<FieldArray>;
   controlledsRef: MutableRefObject<Map>;
   fieldValidatorsRef: MutableRefObject<Map<FieldValidator>>;
   changedFieldRef: MutableRefObject<string | undefined>;
@@ -91,6 +91,8 @@ export interface Field {
 }
 
 export type Fields = Map<Field>;
+
+export type FieldArray = Map<{ reset: () => void }>;
 
 interface EventOptions<V> {
   getState: GetState;
@@ -333,16 +335,41 @@ export type ControlledReturn = [FieldProps, Meta];
 
 // useFieldArray
 type HelperOptions = Partial<{
-  isTouched: boolean;
-  isDirty: boolean;
+  shouldTouched: boolean;
+  shouldDirty: boolean;
 }>;
 
-export interface Push<T> {
-  (value: T, options?: HelperOptions): void;
+export interface Push<V> {
+  (value: V, options?: HelperOptions): void;
+}
+
+export interface Insert<V> {
+  (index: number, value: V, options?: HelperOptions): void;
+}
+
+export interface Remove<V> {
+  (index: number): Partial<V> | void;
+}
+
+export interface Swap {
+  (indexA: number, indexB: number): void;
+}
+
+export interface Move {
+  (from: number, to: number): void;
 }
 
 export type FieldArrayConfig = Partial<{
   formId: string;
 }>;
 
-export type FieldArrayReturn<T> = [T[], { push: Push<T> }];
+export type FieldArrayReturn<V> = [
+  V[],
+  {
+    push: Push<V>;
+    insert: Insert<V>;
+    remove: Remove<V>;
+    swap: Swap;
+    move: Move;
+  }
+];

@@ -1,21 +1,37 @@
 /* eslint-disable no-console */
 
 import { useRef } from "react";
-import { useForm, useFieldArray } from "react-cool-form";
+import { useForm, useFieldArray, useControlled } from "react-cool-form";
 
-const getId = () => Math.floor(Math.random() * 10000);
+const getId = () => Math.floor(Math.random() * 10000).toString();
+
+const Field = ({ name, ...rest }: any) => {
+  const [props] = useControlled(name, rest);
+  return <input {...props} />;
+};
 
 export default () => {
+  const inRef = useRef<HTMLInputElement>(null);
   const rmRef = useRef<HTMLInputElement>(null);
-  const { form, select } = useForm({
-    defaultValues: { foo: [{ id: getId(), val: getId() }] },
+  const swARef = useRef<HTMLInputElement>(null);
+  const swBRef = useRef<HTMLInputElement>(null);
+  const mvARef = useRef<HTMLInputElement>(null);
+  const mvBRef = useRef<HTMLInputElement>(null);
+  const { form, select, reset, setValue } = useForm({
+    defaultValues: {
+      foo: [
+        { id: "0", val: "" },
+        { id: "1", val: "" },
+      ],
+    },
     shouldRemoveField: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [fields, { push, remove }] = useFieldArray("foo");
+  const [fields, { push, insert, remove, swap, move }] = useFieldArray("foo");
 
+  // console.log("LOG ===> Re-renders");
   console.log(
-    "LOG ===> ",
+    "LOG ===> State: ",
     select({
       values: "values.foo",
       touched: "touched.foo",
@@ -27,9 +43,41 @@ export default () => {
 
   return (
     <>
-      <button type="button" onClick={() => push({ id: getId(), val: getId() })}>
+      <button
+        type="button"
+        onClick={() =>
+          setValue("foo", [
+            { id: "0", val: "0" },
+            { id: "1", val: "1" },
+          ])
+        }
+      >
+        Set Value
+      </button>
+      <br />
+      <button
+        type="button"
+        onClick={() =>
+          push({ id: getId(), val: getId() }, { shouldDirty: false })
+        }
+      >
         Push
       </button>
+      <br />
+      <button
+        type="button"
+        onClick={() =>
+          insert(
+            // @ts-expect-error
+            +inRef.current.value,
+            { id: getId(), val: getId() }
+            // { shouldDirty: true, shouldTouched: true }
+          )
+        }
+      >
+        Insert
+      </button>
+      <input ref={inRef} />
       <br />
       <button
         type="button"
@@ -41,9 +89,29 @@ export default () => {
         Remove
       </button>
       <input ref={rmRef} />
+      <br />
+      <button
+        type="button"
+        // @ts-expect-error
+        onClick={() => swap(+swARef.current.value, +swBRef.current.value)}
+      >
+        Swap
+      </button>
+      <input ref={swARef} />
+      <input ref={swBRef} />
+      <br />
+      <button
+        type="button"
+        // @ts-expect-error
+        onClick={() => move(+mvARef.current.value, +mvBRef.current.value)}
+      >
+        Move
+      </button>
+      <input ref={mvARef} />
+      <input ref={mvBRef} />
       <form ref={form}>
-        {fields.map(({ id }, idx) => (
-          <input key={id} name={`foo[${idx}].val`} />
+        {fields.map(({ id, val }, idx) => (
+          <input key={id} name={`foo[${idx}].val`} defaultValue={val} />
         ))}
         <input type="submit" />
         <input type="reset" />

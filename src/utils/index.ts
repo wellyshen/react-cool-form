@@ -9,7 +9,6 @@ export { default as invariant } from "./invariant";
 export { default as isAsyncFunction } from "./isAsyncFunction";
 export { default as isCheckboxInput } from "./isCheckboxInput";
 export { default as isEmptyObject } from "./isEmptyObject";
-export { default as isFieldArray } from "./isFieldArray";
 export { default as isFieldElement } from "./isFieldElement";
 export { default as isFileInput } from "./isFileInput";
 export { default as isFileList } from "./isFileList";

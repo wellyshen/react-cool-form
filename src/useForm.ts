@@ -7,6 +7,7 @@ import * as shared from "./shared";
 import {
   ClearErrors,
   Field,
+  FieldArray,
   FieldElement,
   Fields,
   FieldValidator,
@@ -46,7 +47,6 @@ import {
   isAsyncFunction,
   isCheckboxInput,
   isEmptyObject,
-  isFieldArray,
   isFieldElement,
   isFileInput,
   isFileList,
@@ -84,7 +84,7 @@ export default <V extends FormValues = FormValues>({
   const formRef = useRef<HTMLElement>();
   const fieldsRef = useRef<Fields>({});
   const fieldParsersRef = useRef<Parsers>({});
-  const fieldArrayRef = useRef<Map>({});
+  const fieldArrayRef = useRef<FieldArray>({});
   const controlledsRef = useRef<Map>({});
   const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
   const changedFieldRef = useRef<string>();
@@ -122,6 +122,19 @@ export default <V extends FormValues = FormValues>({
       });
     },
     [setStateRef, stateRef]
+  );
+
+  const isFieldArray = useCallback(
+    (name: string, callback?: (key: string) => void): boolean =>
+      Object.keys(fieldArrayRef.current).some((key) => {
+        if (name.startsWith(key)) {
+          if (callback) callback(key);
+          return true;
+        }
+
+        return false;
+      }),
+    []
   );
 
   const getFields = useCallback(
@@ -265,17 +278,18 @@ export default <V extends FormValues = FormValues>({
 
   const setDefaultValue = useCallback<SetDefaultValue>(
     (name, value) => {
-      initialStateRef.current = set(
-        initialStateRef.current,
-        `values.${name}`,
-        value,
-        true
-      );
+      if (!isFieldArray(name))
+        initialStateRef.current = set(
+          initialStateRef.current,
+          `values.${name}`,
+          value,
+          true
+        );
 
       if (!dequal(get(stateRef.current.values, name), value))
         setStateRef(`values.${name}`, value, { shouldUpdate: false });
     },
-    [setStateRef, stateRef]
+    [isFieldArray, setStateRef, stateRef]
   );
 
   const setNodesOrStateValue = useCallback(
@@ -651,11 +665,23 @@ export default <V extends FormValues = FormValues>({
       if (shouldTouched) setTouched(name, true, false);
       if (shouldDirty) setDirtyIfNeeded(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
+
+      isFieldArray(name, (key) => {
+        setNodesOrStateValue(initialStateRef.current.values, {
+          shouldUpdateDefaultValues: false,
+          fields: Object.keys(fieldsRef.current).filter((k) =>
+            k.startsWith(key)
+          ),
+        });
+        fieldArrayRef.current[key].reset();
+      });
     },
     [
       handleUnset,
+      isFieldArray,
       setDirtyIfNeeded,
       setNodeValue,
+      setNodesOrStateValue,
       setStateRef,
       setTouched,
       stateRef,
@@ -714,6 +740,8 @@ export default <V extends FormValues = FormValues>({
 
       setStateRef("", state);
       onResetRef.current(state.values, getOptions(), e);
+
+      Object.values(fieldArrayRef.current).forEach((field) => field.reset());
     },
     [getOptions, onResetRef, setNodesOrStateValue, setStateRef, stateRef]
   );
@@ -846,33 +874,31 @@ export default <V extends FormValues = FormValues>({
 
         const fields = getFields(form);
 
-        Object.keys(fieldsRef.current).forEach((name) => {
-          if (
-            !isFieldArray(fieldArrayRef.current, name) &&
-            (shouldRemoveField || controlledsRef.current[name])
-          )
-            return;
+        if (shouldRemoveField)
+          Object.keys(fieldsRef.current).forEach((name) => {
+            if (controlledsRef.current[name]) return;
 
-          if (!fields[name]) {
-            removeField(name);
-            return;
-          }
+            if (!fields[name]) {
+              removeField(name);
+              return;
+            }
 
-          const currOptions = fieldsRef.current[name].options?.length as number;
-          const nextOptions = fields[name].options?.length as number;
+            const currOptions = fieldsRef.current[name].options
+              ?.length as number;
+            const nextOptions = fields[name].options?.length as number;
 
-          if (currOptions > nextOptions) {
-            setStateRef(`values.${name}`, getNodeValue(name, fields), {
-              shouldUpdate: false,
-            });
-          } else if (currOptions < nextOptions) {
-            setNodeValue(
-              name,
-              get(initialStateRef.current.values, name),
-              fields
-            );
-          }
-        });
+            if (currOptions > nextOptions) {
+              setStateRef(`values.${name}`, getNodeValue(name, fields), {
+                shouldUpdate: false,
+              });
+            } else if (currOptions < nextOptions) {
+              setNodeValue(
+                name,
+                get(initialStateRef.current.values, name),
+                fields
+              );
+            }
+          });
 
         let values = defaultValuesRef.current;
         const addedNodes: string[] = [];

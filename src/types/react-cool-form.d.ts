@@ -260,24 +260,49 @@ declare module "react-cool-form" {
 
   // useFieldArray
   type HelperOptions = Partial<{
-    isTouched: boolean;
-    isDirty: boolean;
+    shouldTouched: boolean;
+    shouldDirty: boolean;
   }>;
 
-  interface Push<T> {
-    (value: T, options?: HelperOptions): void;
+  interface Push<V> {
+    (value: V, options?: HelperOptions): void;
+  }
+
+  interface Insert<V> {
+    (index: number, value: V, options?: HelperOptions): void;
+  }
+
+  interface Remove<V> {
+    (index: number): Partial<V> | void;
+  }
+
+  interface Swap {
+    (indexA: number, indexB: number): void;
+  }
+
+  interface Move {
+    (from: number, to: number): void;
   }
 
   export type FieldArrayConfig = Partial<{
     formId: string;
   }>;
 
-  export type FieldArrayReturn<T = any> = [T[], { push: Push<T> }];
+  export type FieldArrayReturn<V = any> = [
+    V[],
+    {
+      push: Push<V>;
+      insert: Insert<V>;
+      remove: Remove<V>;
+      swap: Swap;
+      move: Move;
+    }
+  ];
 
-  export function useFieldArray<T = any>(
+  export function useFieldArray<V = any>(
     name: string,
     config?: FieldArrayConfig
-  ): FieldArrayReturn<T>;
+  ): FieldArrayReturn<V>;
 
   // Utility functions
   export function get(object: any, path: string, defaultValue?: unknown): any;
