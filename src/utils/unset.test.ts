@@ -6,6 +6,7 @@ describe("unset", () => {
   it("should throw error when input is invalid", () => {
     expect(() => unset(null, "foo")).toThrow(TypeError);
     expect(() => unset(undefined, "foo")).toThrow(TypeError);
+    expect(() => unset(NaN, "foo")).toThrow(TypeError);
     expect(() => unset(true, "foo")).toThrow(TypeError);
     expect(() => unset("", "foo")).toThrow(TypeError);
     expect(() => unset(1, "foo")).toThrow(TypeError);

@@ -4,6 +4,7 @@ describe("isFunction", () => {
   it("should work correctly", () => {
     expect(isFunction(undefined)).toBeFalsy();
     expect(isFunction(null)).toBeFalsy();
+    expect(isFunction(NaN)).toBeFalsy();
     expect(isFunction(true)).toBeFalsy();
     expect(isFunction(1)).toBeFalsy();
     expect(isFunction("")).toBeFalsy();
