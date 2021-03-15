@@ -1,8 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { ControlledConfig, ControlledReturn, FormValues } from "./types";
 import * as shared from "./shared";
-import { get, invariant, isFieldElement, isUndefined, warn } from "./utils";
+import {
+  get,
+  invariant,
+  isFieldArray,
+  isFieldElement,
+  isUndefined,
+  warn,
+} from "./utils";
 import useFormState from "./useFormState";
 
 export default <V extends FormValues = FormValues>(
@@ -29,7 +36,6 @@ export default <V extends FormValues = FormValues>(
     '💡 react-cool-form > useControlled: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
   );
 
-  const hasWarn = useRef(false);
   const meta = useFormState(
     {
       value: `values.${name}`,
@@ -43,6 +49,7 @@ export default <V extends FormValues = FormValues>(
     shouldRemoveField,
     defaultValuesRef,
     initialStateRef,
+    fieldArrayRef,
     controlledsRef,
     fieldValidatorsRef,
     changedFieldRef,
@@ -52,6 +59,16 @@ export default <V extends FormValues = FormValues>(
     handleChangeEvent,
     removeField,
   } = methods;
+  const hasWarn = useRef(false);
+
+  const warnDefaultValue = useCallback(() => {
+    if (!hasWarn.current) {
+      warn(
+        `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
+      );
+      hasWarn.current = true;
+    }
+  }, [name]);
 
   useEffect(
     () => () => {
@@ -65,17 +82,25 @@ export default <V extends FormValues = FormValues>(
 
   let value;
 
-  if (isUndefined(get(initialStateRef.current.values, name))) {
+  const fieldArrayName = isFieldArray(fieldArrayRef.current, name);
+
+  if (fieldArrayName) {
+    if (!fieldArrayRef.current[fieldArrayName].fields[name]) {
+      if (!isUndefined(defaultValue)) {
+        setDefaultValue(name, defaultValue);
+        fieldArrayRef.current[fieldArrayName].fields[name] = true;
+      } else {
+        warnDefaultValue();
+      }
+    }
+  } else if (isUndefined(get(initialStateRef.current.values, name))) {
     value = get(defaultValuesRef.current, name);
     value = !isUndefined(value) ? value : defaultValue;
 
     if (!isUndefined(value)) {
       setDefaultValue(name, value);
-    } else if (!hasWarn.current) {
-      warn(
-        `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
-      );
-      hasWarn.current = true;
+    } else {
+      warnDefaultValue();
     }
   }
 

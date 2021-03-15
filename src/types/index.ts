@@ -92,7 +92,7 @@ export interface Field {
 
 export type Fields = Map<Field>;
 
-export type FieldArray = Map<{ reset: () => void }>;
+export type FieldArray = Map<{ fields: Map; reset: () => void }>;
 
 interface EventOptions<V> {
   getState: GetState;

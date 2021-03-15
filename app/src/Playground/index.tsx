@@ -10,11 +10,6 @@ const Field = ({ name, ...rest }: any) => {
   return <input {...props} />;
 };
 
-const Field = ({ name, ...rest }: any) => {
-  const [props] = useControlled(name, rest);
-  return <input {...props} />;
-};
-
 export default () => {
   const inRef = useRef<HTMLInputElement>(null);
   const rmRef = useRef<HTMLInputElement>(null);
@@ -116,7 +111,9 @@ export default () => {
       <input ref={mvBRef} />
       <form ref={form}>
         {fields.map(({ id, val }, idx) => (
-          <input key={id} name={`foo[${idx}].val`} defaultValue={val} />
+          <div key={id}>
+            <Field name={`foo[${idx}].val`} defaultValue={val} />
+          </div>
         ))}
         <input type="submit" />
         <input type="reset" />

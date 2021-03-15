@@ -67,6 +67,7 @@ export default <V = any>(
 
           return nextFields;
         }),
+      fields: {},
     };
 
     return () => {

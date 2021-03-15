@@ -47,6 +47,7 @@ import {
   isAsyncFunction,
   isCheckboxInput,
   isEmptyObject,
+  isFieldArray,
   isFieldElement,
   isFileInput,
   isFileList,
@@ -126,19 +127,6 @@ export default <V extends FormValues = FormValues>({
       );
     },
     [setStateRef, stateRef]
-  );
-
-  const isFieldArray = useCallback(
-    (name: string, callback?: (key: string) => void): boolean =>
-      Object.keys(fieldArrayRef.current).some((key) => {
-        if (name.startsWith(key)) {
-          if (callback) callback(key);
-          return true;
-        }
-
-        return false;
-      }),
-    []
   );
 
   const getFields = useCallback(
@@ -282,7 +270,7 @@ export default <V extends FormValues = FormValues>({
 
   const setDefaultValue = useCallback<SetDefaultValue>(
     (name, value) => {
-      if (!isFieldArray(name))
+      if (!isFieldArray(fieldArrayRef.current, name))
         initialStateRef.current = set(
           initialStateRef.current,
           `values.${name}`,
@@ -293,7 +281,7 @@ export default <V extends FormValues = FormValues>({
       if (!dequal(get(stateRef.current.values, name), value))
         setStateRef(`values.${name}`, value, { shouldUpdate: false });
     },
-    [isFieldArray, setStateRef, stateRef]
+    [setStateRef, stateRef]
   );
 
   const setNodesOrStateValue = useCallback(
@@ -670,7 +658,7 @@ export default <V extends FormValues = FormValues>({
       if (shouldDirty) setDirtyIfNeeded(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
 
-      isFieldArray(name, (key) => {
+      isFieldArray(fieldArrayRef.current, name, (key) => {
         setNodesOrStateValue(initialStateRef.current.values, {
           shouldUpdateDefaultValues: false,
           fields: Object.keys(fieldsRef.current).filter((k) =>
@@ -682,7 +670,6 @@ export default <V extends FormValues = FormValues>({
     },
     [
       handleUnset,
-      isFieldArray,
       setDirtyIfNeeded,
       setNodeValue,
       setNodesOrStateValue,
