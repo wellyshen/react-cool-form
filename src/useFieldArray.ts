@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { dequal } from "dequal/lite";
 
 import {
@@ -50,10 +50,15 @@ export default <V = any>(
 
   const [fields, setFields] = useState<V[]>(getValues());
 
-  useEffect(() => {
-    const { current: fieldArray } = fieldArrayRef;
+  useEffect(
+    () => () => {
+      delete fieldArrayRef.current[name];
+    },
+    [fieldArrayRef, name]
+  );
 
-    fieldArray[name] = {
+  fieldArrayRef.current[name] = useMemo(
+    () => ({
       reset: () =>
         setFields((prevFields) => {
           let nextFields = [...prevFields];
@@ -68,12 +73,9 @@ export default <V = any>(
           return nextFields;
         }),
       fields: {},
-    };
-
-    return () => {
-      delete fieldArray[name];
-    };
-  }, [fieldArrayRef, getState, getValues, name]);
+    }),
+    [getState, getValues, name]
+  );
 
   const setFormState = useCallback(
     (
