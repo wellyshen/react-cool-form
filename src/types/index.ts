@@ -361,6 +361,7 @@ export interface Move {
 
 export type FieldArrayConfig = Partial<{
   formId: string;
+  validateOnChange: boolean;
 }>;
 
 export type FieldArrayReturn<V> = [

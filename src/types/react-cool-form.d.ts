@@ -286,6 +286,7 @@ declare module "react-cool-form" {
 
   export type FieldArrayConfig = Partial<{
     formId: string;
+    validateOnChange: boolean;
   }>;
 
   export type FieldArrayReturn<V = any> = [

@@ -23,7 +23,7 @@ type Keys = "values" | "touched" | "errors" | "dirty";
 
 export default <V = any>(
   name: string,
-  { formId }: FieldArrayConfig = {}
+  { formId, validateOnChange = true }: FieldArrayConfig = {}
 ): FieldArrayReturn<V> => {
   invariant(
     !name,
@@ -37,7 +37,7 @@ export default <V = any>(
     '💡 react-cool-form > useFieldArray: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
   );
 
-  const { fieldArrayRef, getState, setStateRef } = methods;
+  const { fieldArrayRef, getState, setStateRef, runValidation } = methods;
 
   const getValue = useCallback(
     () =>
@@ -112,8 +112,10 @@ export default <V = any>(
 
       setFields(handler([...fields], "values"));
       setStateRef("", { ...state, shouldDirty: getIsDirty(state.dirty) });
+
+      if (validateOnChange) runValidation(name);
     },
-    [fields, getState, name, setStateRef]
+    [fields, getState, name, runValidation, setStateRef, validateOnChange]
   );
 
   const push = useCallback<Push<V>>(
