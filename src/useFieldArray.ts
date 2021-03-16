@@ -7,6 +7,7 @@ import {
   Move,
   Push,
   Remove,
+  Replace,
   Swap,
 } from "./types";
 import * as shared from "./shared";
@@ -160,6 +161,33 @@ export default <V = any>(
     [setState]
   );
 
+  const replace = useCallback<Replace<V>>(
+    (index, value, { shouldTouched, shouldDirty = true } = {}) => {
+      const fieldValue = getState(`values.${name}`);
+      if (!Array.isArray(fieldValue) || index > fieldValue.length - 1) return;
+
+      const handler = (values: any[], type: Keys) => {
+        if (type === "values") {
+          values[index] = value;
+        } else if (
+          (type === "touched" && shouldTouched) ||
+          (type === "dirty" && shouldDirty)
+        ) {
+          values[index] = setValuesAsTrue(value);
+        } else if (index < values.length - 1) {
+          delete values[index];
+        } else {
+          values.splice(index, 1);
+        }
+
+        return compact(values).length ? values : [];
+      };
+
+      setState(handler, { shouldTouched, shouldDirty });
+    },
+    [getState, name, setState]
+  );
+
   const remove = useCallback<Remove<V>>(
     (index) => {
       const handler = (values: any[]) => {
@@ -199,5 +227,5 @@ export default <V = any>(
     [setState]
   );
 
-  return [fields, { push, insert, remove, swap, move }];
+  return [fields, { push, insert, replace, remove, swap, move }];
 };

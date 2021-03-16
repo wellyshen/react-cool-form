@@ -272,6 +272,8 @@ declare module "react-cool-form" {
     (index: number, value: V, options?: HelperOptions): void;
   }
 
+  type Replace<V> = Insert<V>;
+
   interface Remove<V> {
     (index: number): Partial<V> | void;
   }
@@ -294,6 +296,7 @@ declare module "react-cool-form" {
     {
       push: Push<V>;
       insert: Insert<V>;
+      replace: Replace<V>;
       remove: Remove<V>;
       swap: Swap;
       move: Move;

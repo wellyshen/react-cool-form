@@ -343,6 +343,8 @@ export interface Push<V> {
   (value: V, options?: HelperOptions): void;
 }
 
+export type Replace<V> = Insert<V>;
+
 export interface Insert<V> {
   (index: number, value: V, options?: HelperOptions): void;
 }
@@ -369,6 +371,7 @@ export type FieldArrayReturn<V> = [
   {
     push: Push<V>;
     insert: Insert<V>;
+    replace: Replace<V>;
     remove: Remove<V>;
     swap: Swap;
     move: Move;

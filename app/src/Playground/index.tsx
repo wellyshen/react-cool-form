@@ -13,21 +13,21 @@ const Field = ({ name, ...rest }: any) => {
 export default () => {
   const [show, setShow] = useState(false);
   const inRef = useRef<HTMLInputElement>(null);
+  const reRef = useRef<HTMLInputElement>(null);
   const rmRef = useRef<HTMLInputElement>(null);
   const swARef = useRef<HTMLInputElement>(null);
   const swBRef = useRef<HTMLInputElement>(null);
   const mvARef = useRef<HTMLInputElement>(null);
   const mvBRef = useRef<HTMLInputElement>(null);
   const { form, select, reset, setValue, field } = useForm({
-    defaultValues: {
-      foo: [
-        { id: "0", val: "" },
-        { id: "1", val: "" },
-      ],
-    },
+    // defaultValues: {
+    //   foo: [
+    //     { id: "0", val: "" },
+    //     { id: "1", val: "" },
+    //   ],
+    // },
     shouldRemoveField: false,
     validate: (values) => {
-      console.log("LOG ===> ", values);
       const errors: { foo?: string } = {};
       if (!values.foo.length) errors.foo = "Required";
       return errors;
@@ -35,7 +35,9 @@ export default () => {
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
-  const [fields, { push, insert, remove, swap, move }] = useFieldArray("foo");
+  const [fields, { push, insert, replace, remove, swap, move }] = useFieldArray(
+    "foo"
+  );
 
   // console.log("LOG ===> Re-renders");
   console.log(
@@ -86,6 +88,21 @@ export default () => {
         Insert
       </button>
       <input ref={inRef} />
+      <br />
+      <button
+        type="button"
+        onClick={() =>
+          replace(
+            // @ts-expect-error
+            +reRef.current.value,
+            { id: getId(), val: getId() },
+            // { shouldDirty: false, shouldTouched: false }
+          )
+        }
+      >
+        Replace
+      </button>
+      <input ref={reRef} />
       <br />
       <button
         type="button"
