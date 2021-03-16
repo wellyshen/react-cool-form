@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { dequal } from "dequal/lite";
 
 import {
   FieldArrayConfig,
@@ -40,7 +39,7 @@ export default <V = any>(
 
   const { fieldArrayRef, getState, setStateRef } = methods;
 
-  const getValues = useCallback(
+  const getValue = useCallback(
     () =>
       Array.isArray(getState(`values.${name}`))
         ? [...getState(`values.${name}`)]
@@ -48,7 +47,7 @@ export default <V = any>(
     [getState, name]
   );
 
-  const [fields, setFields] = useState<V[]>(getValues());
+  const [fields, setFields] = useState<V[]>(getValue());
 
   useEffect(
     () => () => {
@@ -62,22 +61,22 @@ export default <V = any>(
       reset: () =>
         setFields((prevFields) => {
           let nextFields = [...prevFields];
-          const valuesLength = getState(`values.${name}`)?.length || 0;
+          const valueLength = getState(`values.${name}`)?.length || 0;
 
-          if (nextFields.length > valuesLength) {
-            nextFields.length = valuesLength;
+          if (nextFields.length > valueLength) {
+            nextFields.length = valueLength;
           } else {
-            nextFields = getValues();
+            nextFields = getValue();
           }
 
           return nextFields;
         }),
       fields: {},
     }),
-    [getState, getValues, name]
+    [getState, getValue, name]
   );
 
-  const setFormState = useCallback(
+  const setState = useCallback(
     (
       handler: (values: any[], type: Keys, lastIndex?: number) => any[],
       {
@@ -132,9 +131,9 @@ export default <V = any>(
         return values;
       };
 
-      setFormState(handler, { shouldTouched, shouldDirty });
+      setState(handler, { shouldTouched, shouldDirty });
     },
-    [setFormState]
+    [setState]
   );
 
   const insert = useCallback<Insert<V>>(
@@ -154,9 +153,9 @@ export default <V = any>(
         return values;
       };
 
-      setFormState(handler, { shouldTouched, shouldDirty });
+      setState(handler, { shouldTouched, shouldDirty });
     },
-    [setFormState]
+    [setState]
   );
 
   const remove = useCallback<Remove<V>>(
@@ -167,27 +166,23 @@ export default <V = any>(
       };
       const value = (getState(`values.${name}`) || [])[index];
 
-      setFormState(handler);
+      setState(handler);
 
       return value;
     },
-    [getState, name, setFormState]
+    [getState, name, setState]
   );
 
   const swap = useCallback<Swap>(
     (indexA, indexB) => {
-      const value = getState(`values.${name}`);
-
-      if (dequal(value[indexA], value[indexB])) return;
-
       const handler = (values: any[]) => {
         [values[indexA], values[indexB]] = [values[indexB], values[indexA]];
         return values;
       };
 
-      setFormState(handler);
+      setState(handler);
     },
-    [getState, name, setFormState]
+    [setState]
   );
 
   const move = useCallback<Move>(
@@ -197,9 +192,9 @@ export default <V = any>(
         return values;
       };
 
-      setFormState(handler);
+      setState(handler);
     },
-    [setFormState]
+    [setState]
   );
 
   return [fields, { push, insert, remove, swap, move }];
