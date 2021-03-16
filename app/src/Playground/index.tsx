@@ -18,7 +18,7 @@ export default () => {
   const swBRef = useRef<HTMLInputElement>(null);
   const mvARef = useRef<HTMLInputElement>(null);
   const mvBRef = useRef<HTMLInputElement>(null);
-  const { form, select, reset, setValue } = useForm({
+  const { form, select, reset, setValue, field } = useForm({
     defaultValues: {
       foo: [
         { id: "0", val: "" },
@@ -27,6 +27,7 @@ export default () => {
     },
     shouldRemoveField: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (errors) => console.log("onError: ", errors),
   });
   const [fields, { push, insert, remove, swap, move }] = useFieldArray("foo");
 
@@ -113,7 +114,11 @@ export default () => {
       <form ref={form}>
         {fields.map(({ id, val }, idx) => (
           <div key={id}>
-            <Field name={`foo[${idx}].val`} defaultValue={val} />
+            <input
+              name={`foo[${idx}].val`}
+              defaultValue={val}
+              ref={field((value) => (!value.length ? "Required" : false))}
+            />
             {show && <Field name={`foo[${idx}].test`} defaultValue="test" />}
           </div>
         ))}
