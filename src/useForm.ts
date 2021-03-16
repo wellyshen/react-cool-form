@@ -466,11 +466,14 @@ export default <V extends FormValues = FormValues>({
 
   const runFieldValidation = useCallback(
     async (name: string): Promise<any> => {
-      if (!fieldValidatorsRef.current[name]) return undefined;
+      const value = get(stateRef.current.values, name);
+
+      if (!fieldValidatorsRef.current[name] || isUndefined(value))
+        return undefined;
 
       try {
         const error = await fieldValidatorsRef.current[name](
-          get(stateRef.current.values, name),
+          value,
           stateRef.current.values
         );
 
