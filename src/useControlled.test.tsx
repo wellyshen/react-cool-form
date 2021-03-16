@@ -9,6 +9,7 @@ import {
   RegisterField,
 } from "./types";
 import useForm from "./useForm";
+import useFieldArray from "./useFieldArray";
 import useControlled from "./useControlled";
 
 interface API {
@@ -21,6 +22,7 @@ interface API {
 interface Config extends ControlledConfig {
   children: (api: API) => JSX.Element | null;
   name: string;
+  isFieldArray: boolean;
   defaultValues: Record<string, any>;
   onSubmit: (values: any) => void;
   onError: (errors: any) => void;
@@ -31,6 +33,7 @@ type Props = Partial<Config>;
 const Form = ({
   children,
   name = "foo",
+  isFieldArray,
   defaultValues,
   onSubmit = () => null,
   onError = () => null,
@@ -42,6 +45,7 @@ const Form = ({
     onError: (errors) => onError(errors),
   });
   const [fieldProps, meta] = useControlled(name, rest);
+  useFieldArray(isFieldArray ? name : "x");
 
   return (
     <>
@@ -82,6 +86,7 @@ const renderHelper = ({ children, ...rest }: Props = {}) => {
 };
 
 describe("useControlled", () => {
+  console.warn = jest.fn();
   const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
   const onError = jest.fn();
@@ -103,8 +108,21 @@ describe("useControlled", () => {
   });
 
   it("should warn missing default value", () => {
-    console.warn = jest.fn();
     renderHelper({
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    fireEvent.input(getByTestId("foo"), { target: { value } });
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledWith(
+      '💡 react-cool-form > useControlled: Please provide a default value for "foo" field.'
+    );
+  });
+
+  it("should warn missing default value for field-array", () => {
+    renderHelper({
+      isFieldArray: true,
       children: ({ fieldProps }: API) => (
         <input data-testid="foo" {...fieldProps} />
       ),
@@ -119,7 +137,6 @@ describe("useControlled", () => {
   it.each(["form", "controlled"])(
     "should not warn missing default value",
     (type) => {
-      console.warn = jest.fn();
       renderHelper({
         defaultValues: type === "form" ? { foo: value } : undefined,
         defaultValue: type === "controlled" ? value : undefined,
@@ -129,10 +146,30 @@ describe("useControlled", () => {
     }
   );
 
-  it("should not set default value automatically", () => {
-    console.warn = jest.fn();
+  it("should not set default value", () => {
     const { getState } = renderHelper({
       children: ({ fieldProps }: API) => <input {...fieldProps} />,
+    });
+    expect(getState("values.foo")).toBeUndefined();
+  });
+
+  it("should set default value for field-array", () => {
+    const { getState } = renderHelper({
+      isFieldArray: true,
+      defaultValue: value,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    expect(getState("values.foo")).toBe(value);
+  });
+
+  it("should not set default value for field-array", () => {
+    const { getState } = renderHelper({
+      isFieldArray: true,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
     });
     expect(getState("values.foo")).toBeUndefined();
   });
@@ -174,7 +211,7 @@ describe("useControlled", () => {
     }
   );
 
-  it("should run validation", async () => {
+  it("should run validation on change", async () => {
     const errors = { foo: "Required" };
     const { getState } = renderHelper({
       defaultValue: "",
@@ -208,6 +245,8 @@ describe("useControlled", () => {
     expect(getState("isValidating")).toBeFalsy();
     expect(getState("isValid")).toBeTruthy();
   });
+
+  it.todo("should run validation on blur");
 
   it('should ignore "field" method', async () => {
     const mockDate = "2050-01-09";
@@ -329,4 +368,8 @@ describe("useControlled", () => {
   });
 
   it.todo("should reset form correctly");
+
+  it.todo('should call "onChange" event correctly');
+
+  it.todo('should call "onBlur" event correctly');
 });
