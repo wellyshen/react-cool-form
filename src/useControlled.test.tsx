@@ -211,7 +211,7 @@ describe("useControlled", () => {
     }
   );
 
-  it("should run validation on change", async () => {
+  it("should run validation on submit", async () => {
     const errors = { foo: "Required" };
     const { getState } = renderHelper({
       defaultValue: "",
@@ -246,7 +246,33 @@ describe("useControlled", () => {
     expect(getState("isValid")).toBeTruthy();
   });
 
-  it.todo("should run validation on blur");
+  it("should run validation on change", async () => {
+    const error = "Too short";
+    const { getState } = renderHelper({
+      defaultValue: "",
+      validate: (val: string) => (val.length < 5 ? error : false),
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+
+    fireEvent.input(getByTestId("foo"), { target: { value: "123" } });
+    await waitFor(() => expect(getState("errors")).toEqual({ foo: error }));
+  });
+
+  it("should run validation on blur", async () => {
+    const error = "Required";
+    const { getState } = renderHelper({
+      defaultValue: "",
+      validate: (val: string) => (!val.length ? error : false),
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+
+    fireEvent.focusOut(getByTestId("foo"));
+    await waitFor(() => expect(getState("errors")).toEqual({ foo: error }));
+  });
 
   it('should ignore "field" method', async () => {
     const mockDate = "2050-01-09";
