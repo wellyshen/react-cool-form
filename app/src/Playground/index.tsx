@@ -26,6 +26,12 @@ export default () => {
       ],
     },
     shouldRemoveField: false,
+    validate: (values) => {
+      console.log("LOG ===> ", values);
+      const errors: { foo?: string } = {};
+      if (!values.foo.length) errors.foo = "Required";
+      return errors;
+    },
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
@@ -113,14 +119,14 @@ export default () => {
       <input ref={mvBRef} />
       <form ref={form}>
         {fields.map(({ id, val }, idx) => (
-          <div key={id}>
+          <span key={id}>
             <input
               name={`foo[${idx}].val`}
               defaultValue={val}
-              ref={field((value) => (!value.length ? "Required" : false))}
+              // ref={field((value) => (!value.length ? "Required" : false))}
             />
             {show && <Field name={`foo[${idx}].test`} defaultValue="test" />}
-          </div>
+          </span>
         ))}
         <input type="submit" />
         <input type="reset" />
