@@ -80,9 +80,8 @@ export default <V extends FormValues = FormValues>(
   controlledsRef.current[name] = true;
   if (validate) fieldValidatorsRef.current[name] = validate;
 
-  let value;
-
   const fieldArrayName = isFieldArray(fieldArrayRef.current, name);
+  let value;
 
   if (fieldArrayName) {
     if (!fieldArrayRef.current[fieldArrayName].fields[name]) {
