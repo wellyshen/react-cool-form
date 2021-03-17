@@ -134,17 +134,17 @@ describe("useForm", () => {
       expect(console.warn).not.toHaveBeenCalled();
     });
 
-    it('should warn select "values" alone', () => {
-      const { select } = renderHelper();
-      select("values");
+    it('should warn mon "values" alone', () => {
+      const { mon } = renderHelper();
+      mon("values");
       expect(console.warn).toHaveBeenCalledWith(
-        '💡 react-cool-form > select: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+        '💡 react-cool-form > mon: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
       );
     });
 
-    it('should not warn select "values" alone', () => {
-      const { select } = renderHelper();
-      select("values.foo");
+    it('should not warn mon "values" alone', () => {
+      const { mon } = renderHelper();
+      mon("values.foo");
       expect(console.warn).not.toHaveBeenCalled();
     });
 
@@ -221,7 +221,7 @@ describe("useForm", () => {
     expect(methods).toEqual({
       form: expect.any(Function),
       field: expect.any(Function),
-      select: expect.any(Function),
+      mon: expect.any(Function),
       getState: expect.any(Function),
       setValue: expect.any(Function),
       setTouched: expect.any(Function),
@@ -1407,50 +1407,50 @@ describe("useForm", () => {
     });
   });
 
-  describe("select", () => {
+  describe("mon", () => {
     const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
 
     it('should return undefined if "path" isn\'t set', () => {
-      const { select } = renderHelper();
+      const { mon } = renderHelper();
       // @ts-expect-error
-      expect(select()).toBeUndefined();
+      expect(mon()).toBeUndefined();
     });
 
     it("should get default value correctly", () => {
       const formValue = { foo: null };
       const selectValue = { foo: "🍎" };
-      let { select } = renderHelper({ defaultValues: formValue });
-      expect(select("values.foo")).toBe(formValue.foo);
+      let { mon } = renderHelper({ defaultValues: formValue });
+      expect(mon("values.foo")).toBe(formValue.foo);
 
-      expect(select("values.foo", { defaultValues: selectValue })).toBe(
+      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
         formValue.foo
       );
 
-      select = renderHelper().select;
-      expect(select("values.foo", { defaultValues: selectValue })).toBe(
+      mon = renderHelper().mon;
+      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
         selectValue.foo
       );
 
-      expect(select("values.foo")).toBeUndefined();
+      expect(mon("values.foo")).toBeUndefined();
     });
 
     it.todo("should get default value correctly with conditional field");
 
     it("should get state with correct format", () => {
-      const { select } = renderHelper({ defaultValues: values });
+      const { mon } = renderHelper({ defaultValues: values });
 
-      expect(select("values")).toEqual(values);
-      expect(select("values.foo")).toBe(values.foo);
-      expect(select("isValid")).toBe(isValid);
+      expect(mon("values")).toEqual(values);
+      expect(mon("values.foo")).toBe(values.foo);
+      expect(mon("isValid")).toBe(isValid);
 
-      expect(select(["values", "values.foo", "isValid"])).toEqual([
+      expect(mon(["values", "values.foo", "isValid"])).toEqual([
         values,
         values.foo,
         isValid,
       ]);
 
       expect(
-        select({
+        mon({
           values: "values",
           foo: "values.foo",
           isValid: "isValid",
@@ -1459,42 +1459,40 @@ describe("useForm", () => {
     });
 
     it("should get state with specific target", () => {
-      const { select } = renderHelper({ defaultValues: values });
+      const { mon } = renderHelper({ defaultValues: values });
       const option = { target: "values" };
       const { foo } = values;
-      expect(select("foo", option)).toBe(foo);
-      expect(select(["foo"], option)).toEqual([foo]);
-      expect(select({ foo: "foo" }, option)).toEqual({ foo });
+      expect(mon("foo", option)).toBe(foo);
+      expect(mon(["foo"], option)).toEqual([foo]);
+      expect(mon({ foo: "foo" }, option)).toEqual({ foo });
     });
 
     it("should get error with touched", async () => {
-      const { select } = renderHelper({
+      const { mon } = renderHelper({
         children: <input data-testid="foo" name="foo" required />,
       });
       const foo = getByTestId("foo");
 
       fireEvent.input(foo, { target: { value: "" } });
       await waitFor(() => {
-        expect(select("errors.foo")).not.toBeUndefined();
-        expect(
-          select("errors.foo", { errorWithTouched: true })
-        ).toBeUndefined();
+        expect(mon("errors.foo")).not.toBeUndefined();
+        expect(mon("errors.foo", { errorWithTouched: true })).toBeUndefined();
       });
 
       fireEvent.focusOut(foo);
       await waitFor(() => {
         expect(
-          select("errors.foo", { errorWithTouched: true })
+          mon("errors.foo", { errorWithTouched: true })
         ).not.toBeUndefined();
       });
     });
 
     it("should trigger re-rendering", () => {
-      const { select } = renderHelper({
+      const { mon } = renderHelper({
         onRender,
         children: <input data-testid="foo" name="foo" />,
       });
-      select("values.foo");
+      mon("values.foo");
       fireEvent.input(getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(2);
     });

@@ -198,7 +198,7 @@ export interface GetFormState<V = any> {
   ): any;
 }
 
-export interface Select<V> {
+export interface Watch<V> {
   (
     path: Path,
     options?: { target?: string; defaultValues?: V; errorWithTouched?: boolean }
@@ -278,7 +278,7 @@ export type FormConfig<V = any> = Partial<{
 export interface FormMethods<V = any> {
   form: RegisterForm;
   field: RegisterField<V>;
-  select: Select<V>;
+  mon: Watch<V>;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;

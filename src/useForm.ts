@@ -28,7 +28,6 @@ import {
   RemoveField,
   Reset,
   RunValidation,
-  Select,
   SetDefaultValue,
   SetDirty,
   SetError,
@@ -36,6 +35,7 @@ import {
   SetTouchedMaybeValidate,
   SetValue,
   Submit,
+  Watch,
 } from "./types";
 import { useLatest, useState } from "./hooks";
 import {
@@ -325,7 +325,7 @@ export default <V extends FormValues = FormValues>({
         target,
         errorWithTouched,
         defaultValues: dfValues = {},
-        methodName = "select",
+        methodName = "mon",
         callback,
       }
     ) => {
@@ -395,7 +395,7 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const select = useCallback<Select<V>>(
+  const mon = useCallback<Watch<V>>(
     (path, { target, errorWithTouched, defaultValues: dfValues } = {}) =>
       getFormState(path, {
         target,
@@ -974,7 +974,7 @@ export default <V extends FormValues = FormValues>({
     unsubscribeObserver,
     form: registerForm,
     field: registerField,
-    select,
+    mon,
     getState,
     setValue,
     setTouched,
@@ -1006,7 +1006,7 @@ export default <V extends FormValues = FormValues>({
   return {
     form: registerForm,
     field: registerField,
-    select,
+    mon,
     getState,
     setValue,
     setTouched,
