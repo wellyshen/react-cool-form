@@ -38,7 +38,14 @@ export default <V = any>(
     '💡 react-cool-form > useFieldArray: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
   );
 
-  const { fieldArrayRef, getState, setStateRef, runValidation } = methods;
+  const {
+    shouldRemoveField,
+    fieldArrayRef,
+    getState,
+    setStateRef,
+    runValidation,
+    removeField,
+  } = methods;
 
   const getValue = useCallback(
     () =>
@@ -52,9 +59,9 @@ export default <V = any>(
 
   useEffect(
     () => () => {
-      delete fieldArrayRef.current[name];
+      if (shouldRemoveField) removeField(name);
     },
-    [fieldArrayRef, name]
+    [name, removeField, shouldRemoveField]
   );
 
   fieldArrayRef.current[name] = useMemo(

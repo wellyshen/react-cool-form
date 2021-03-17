@@ -813,6 +813,7 @@ export default <V extends FormValues = FormValues>({
 
       delete fieldParsersRef.current[name];
       delete fieldValidatorsRef.current[name];
+      delete fieldArrayRef.current[name];
       delete controlledsRef.current[name];
     },
     [handleUnset, stateRef]
