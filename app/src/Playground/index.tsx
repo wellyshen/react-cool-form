@@ -20,13 +20,13 @@ export default () => {
   const mvARef = useRef<HTMLInputElement>(null);
   const mvBRef = useRef<HTMLInputElement>(null);
   const { form, select, reset, setValue, field } = useForm({
-    // defaultValues: {
-    //   foo: [
-    //     { id: "0", val: "" },
-    //     { id: "1", val: "" },
-    //   ],
-    // },
-    shouldRemoveField: false,
+    defaultValues: {
+      foo: [
+        { id: "0", val: "0" },
+        { id: "1", val: "1" },
+      ],
+    },
+    // shouldRemoveField: false,
     validate: (values) => {
       const errors: { foo?: string } = {};
       if (!values.foo.length) errors.foo = "Required";
@@ -40,7 +40,7 @@ export default () => {
   );
 
   // console.log("LOG ===> Re-renders");
-  console.log(
+  /* console.log(
     "LOG ===> State: ",
     select({
       values: "values.foo",
@@ -49,7 +49,7 @@ export default () => {
       dirty: "dirty.foo",
       isDirty: "isDirty",
     })
-  );
+  ); */
 
   return (
     <>
@@ -95,7 +95,7 @@ export default () => {
           replace(
             // @ts-expect-error
             +reRef.current.value,
-            { id: getId(), val: getId() },
+            { id: getId(), val: getId() }
             // { shouldDirty: false, shouldTouched: false }
           )
         }
@@ -142,7 +142,7 @@ export default () => {
               defaultValue={val}
               // ref={field((value) => (!value.length ? "Required" : false))}
             />
-            {show && <Field name={`foo[${idx}].test`} defaultValue="test" />}
+            {show && <input name={`foo[${idx}].test`} defaultValue="test" />}
           </span>
         ))}
         <input type="submit" />
