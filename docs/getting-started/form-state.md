@@ -77,7 +77,7 @@ const [foo, bar, baz] = select(["foo", "bar", "baz"], { target: "values.nest" })
 
 ### Best Practices
 
-Every time we access a value from the form state via the `select` method, it will watch the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
+Every time we access a value from the form state via the `select` method, it will listen the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
 
 ```js
 const { select } = useForm();
