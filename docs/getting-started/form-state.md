@@ -82,17 +82,17 @@ Every time we access a value from the form state via the `watch` method, it will
 ```js
 const { watch } = useForm();
 
-// �🏻 You can, but not recommended because it will cause the component to update on every value change
+// 👎🏻 You can, but not recommended because it will cause the component to update on every value change
 const values = watch("values");
-// �🏻 For the form's values, we always recommended getting the target value as specific as possible
+// 👍🏻 For the form's values, we always recommended getting the target value as specific as possible
 const fooValue = watch("values.foo");
 
-// �🏻 It's OK, in most case the form's validation will be triggered less frequently
+// 👍🏻 It's OK, in most case the form's validation will be triggered less frequently
 const errors = watch("errors");
-// �🏻 But if a validation is triggered frequently, get the target error instead
+// 👍🏻 But if a validation is triggered frequently, get the target error instead
 const fooError = watch("errors.foo");
 
-// �🏻 It's OK, they are triggered less frequently
+// 👍🏻 It's OK, they are triggered less frequently
 const [touched, dirty] = watch(["touched", "dirty"]);
 ```
 
