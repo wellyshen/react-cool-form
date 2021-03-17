@@ -10,6 +10,21 @@ const Field = ({ name, ...rest }: any) => {
   return <input {...props} />;
 };
 
+const FieldArray = ({ name }: any) => {
+  const [fields, { push }] = useFieldArray(name);
+
+  return (
+    <>
+      {fields.map(({ id, val }, idx) => (
+        <input key={id} name={`${name}[${idx}].val`} defaultValue={val} />
+      ))}
+      <button type="button" onClick={() => push({ id: "3", val: "3" })}>
+        Push
+      </button>
+    </>
+  );
+};
+
 export default () => {
   const [show, setShow] = useState(false);
   const inRef = useRef<HTMLInputElement>(null);
@@ -25,6 +40,10 @@ export default () => {
         { id: "0", val: "0" },
         { id: "1", val: "1" },
       ],
+      // bar: [
+      //   { id: "0", val: "0" },
+      //   { id: "1", val: "1" },
+      // ],
     },
     // shouldRemoveField: false,
     validate: (values) => {
@@ -142,9 +161,10 @@ export default () => {
               defaultValue={val}
               // ref={field((value) => (!value.length ? "Required" : false))}
             />
-            {show && <input name={`foo[${idx}].test`} defaultValue="test" />}
+            {/* {show && <input name={`foo[${idx}].test`} defaultValue="test" />} */}
           </span>
         ))}
+        {show && <FieldArray name="bar" />}
         <input type="submit" />
         <input type="reset" />
         <button type="button" onClick={() => setShow(!show)}>
