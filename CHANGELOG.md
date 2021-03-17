@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.140
+
+### Patch Changes
+
+- [#474](https://github.com/wellyshen/react-cool-form/pull/474) [`b6f7589`](https://github.com/wellyshen/react-cool-form/commit/b6f758990a59969c947158727a82789087f2566c) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): rename `select` method to `watch` for better understanding
+
+* [#474](https://github.com/wellyshen/react-cool-form/pull/474) [`3cdcd1b`](https://github.com/wellyshen/react-cool-form/commit/3cdcd1bd3a6c2bcdaab69846ac60f9c02ef597cf) Thanks [@wellyshen](https://github.com/wellyshen)! - Change `select` method to `mon` (a.k.a monitor)
+
+- [`2d0ba41`](https://github.com/wellyshen/react-cool-form/commit/2d0ba41c00036ed1526c8d92cff7dcd25cbfd0d7) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): wrong form values due to automatically remove a field
+
 ## 0.0.139
 
 ### Patch Changes
