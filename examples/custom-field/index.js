@@ -27,7 +27,7 @@ const Field = ({ as, name, onChange, onBlur, ...restProps }) => {
 };
 
 function App() {
-  const { form, select } = useForm({
+  const { form, mon } = useForm({
     defaultValues: { username: "" },
     // excludeFields: ["username"], // You can also exclude the field here
     validate: ({ username }) => {
@@ -37,7 +37,7 @@ function App() {
     },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
-  const errors = select("errors");
+  const errors = mon("errors");
 
   return (
     <form ref={form} noValidate>
