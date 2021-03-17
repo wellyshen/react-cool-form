@@ -334,6 +334,12 @@ export interface Meta {
 export type ControlledReturn = [FieldProps, Meta];
 
 // useFieldArray
+export type Keys = "values" | "touched" | "errors" | "dirty";
+
+export interface HelperHandler {
+  (value: any[], type: Keys, lastIndex?: number): any[];
+}
+
 type HelperOptions = Partial<{
   shouldTouched: boolean;
   shouldDirty: boolean;

@@ -3,7 +3,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   FieldArrayConfig,
   FieldArrayReturn,
+  HelperHandler,
   Insert,
+  Keys,
   Move,
   Push,
   Remove,
@@ -19,8 +21,6 @@ import {
   set,
   setValuesAsTrue,
 } from "./utils";
-
-type Keys = "values" | "touched" | "errors" | "dirty";
 
 export default <V = any>(
   name: string,
@@ -79,7 +79,7 @@ export default <V = any>(
 
   const setState = useCallback(
     (
-      handler: (values: any[], type: Keys, lastIndex?: number) => any[],
+      handler: HelperHandler,
       {
         shouldTouched,
         shouldDirty,
@@ -88,13 +88,13 @@ export default <V = any>(
       let state = getState();
 
       (["values", "touched", "errors", "dirty"] as Keys[]).forEach((key) => {
-        const values = state[key][name];
+        const value = state[key][name];
 
         if (
           key === "values" ||
           (key === "touched" && shouldTouched) ||
           (key === "dirty" && shouldDirty) ||
-          !isUndefined(values)
+          !isUndefined(value)
         )
           state = set(
             state,
@@ -102,7 +102,7 @@ export default <V = any>(
             {
               ...state[key],
               [name]: handler(
-                Array.isArray(values) ? [...values] : [],
+                Array.isArray(value) ? [...value] : [],
                 key,
                 state.values[name]?.length - 1 || 0
               ),
@@ -121,17 +121,17 @@ export default <V = any>(
 
   const push = useCallback<Push<V>>(
     (value, { shouldTouched, shouldDirty = true } = {}) => {
-      const handler = (values: any[], type: Keys, lastIndex = 0) => {
+      const handler: HelperHandler = (val, type, lastIndex = 0) => {
         if (type === "values") {
-          values.push(value);
+          val.push(value);
         } else if (
           (type === "touched" && shouldTouched) ||
           (type === "dirty" && shouldDirty)
         ) {
-          values[lastIndex] = setValuesAsTrue(value);
+          val[lastIndex] = setValuesAsTrue(value);
         }
 
-        return values;
+        return val;
       };
 
       setState(handler, { shouldTouched, shouldDirty });
@@ -141,19 +141,19 @@ export default <V = any>(
 
   const insert = useCallback<Insert<V>>(
     (index, value, { shouldTouched, shouldDirty = true } = {}) => {
-      const handler = (values: any[], type: Keys) => {
+      const handler: HelperHandler = (val, type) => {
         if (type === "values") {
-          values.splice(index, 0, value);
+          val.splice(index, 0, value);
         } else if (
           (type === "touched" && shouldTouched) ||
           (type === "dirty" && shouldDirty)
         ) {
-          values[index] = setValuesAsTrue(value);
-        } else if (index < values.length) {
-          values.splice(index, 0, undefined);
+          val[index] = setValuesAsTrue(value);
+        } else if (index < val.length) {
+          val.splice(index, 0, undefined);
         }
 
-        return values;
+        return val;
       };
 
       setState(handler, { shouldTouched, shouldDirty });
@@ -166,21 +166,21 @@ export default <V = any>(
       const fieldValue = getState(`values.${name}`);
       if (!Array.isArray(fieldValue) || index > fieldValue.length - 1) return;
 
-      const handler = (values: any[], type: Keys) => {
+      const handler: HelperHandler = (val, type) => {
         if (type === "values") {
-          values[index] = value;
+          val[index] = value;
         } else if (
           (type === "touched" && shouldTouched) ||
           (type === "dirty" && shouldDirty)
         ) {
-          values[index] = setValuesAsTrue(value);
-        } else if (index < values.length - 1) {
-          delete values[index];
+          val[index] = setValuesAsTrue(value);
+        } else if (index < val.length - 1) {
+          delete val[index];
         } else {
-          values.splice(index, 1);
+          val.splice(index, 1);
         }
 
-        return compact(values).length ? values : [];
+        return compact(val).length ? val : [];
       };
 
       setState(handler, { shouldTouched, shouldDirty });
@@ -190,9 +190,9 @@ export default <V = any>(
 
   const remove = useCallback<Remove<V>>(
     (index) => {
-      const handler = (values: any[]) => {
-        values.splice(index, 1);
-        return compact(values).length ? values : [];
+      const handler: HelperHandler = (val) => {
+        val.splice(index, 1);
+        return compact(val).length ? val : [];
       };
       const value = (getState(`values.${name}`) || [])[index];
 
@@ -205,9 +205,9 @@ export default <V = any>(
 
   const swap = useCallback<Swap>(
     (indexA, indexB) => {
-      const handler = (values: any[]) => {
-        [values[indexA], values[indexB]] = [values[indexB], values[indexA]];
-        return values;
+      const handler: HelperHandler = (val) => {
+        [val[indexA], val[indexB]] = [val[indexB], val[indexA]];
+        return val;
       };
 
       setState(handler);
@@ -217,9 +217,9 @@ export default <V = any>(
 
   const move = useCallback<Move>(
     (from, to) => {
-      const handler = (values: any[]) => {
-        values.splice(to, 0, values.splice(from, 1)[0]);
-        return values;
+      const handler: HelperHandler = (val) => {
+        val.splice(to, 0, val.splice(from, 1)[0]);
+        return val;
       };
 
       setState(handler);
