@@ -13,11 +13,11 @@ const methods = useFormMethods(formId);
 
 `string`
 
-The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We only need it when using multiple form hooks at the same time.
+The [corresponding ID](../api-reference/use-form#id) of `useForm` hook. We only need it when using multiple form hooks at the same time.
 
 ## methods
 
-The [methods](./use-form#methods) are the same as the `useForm` hook.
+The [methods](./use-form#methods) are the same as `useForm` hook.
 
 ## Example
 
