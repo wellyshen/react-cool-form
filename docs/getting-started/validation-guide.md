@@ -77,14 +77,14 @@ const validate = async (values) => {
 };
 
 const App = () => {
-  const { form, select } = useForm({
+  const { form, mon } = useForm({
     defaultValues: { username: "", email: "" },
     validate,
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
 
-  console.log("Form is validating: ", select("isValidating"));
+  console.log("Form is validating: ", mon("isValidating"));
 
   return (
     <form ref={form} noValidate>
@@ -170,13 +170,13 @@ const validateUsername = async (value, values /* Form values */) => {
 };
 
 const App = () => {
-  const { form, field, select } = useForm({
+  const { form, field, mon } = useForm({
     defaultValues: { username: "", email: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
 
-  console.log("Form is validating: ", select("isValidating"));
+  console.log("Form is validating: ", mon("isValidating"));
 
   return (
     <form ref={form} noValidate>
@@ -288,7 +288,7 @@ When validating with mixed ways, the results are deeply merged according to the 
 
 ## Displaying Error Messages
 
-All errors are stored in the [formState.errors](./form-state#about-the-form-state), we can display error messages by accessing the `errors` object via the [select](../api-reference/use-form#select) method. The method provides an `errorWithTouched` option to help us filtering the errors of untouched fields, which is designed based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can enable the feature by setting the option to `true` (see [related doc](./form-state#filter-untouched-field-errors)).
+All errors are stored in the [formState.errors](./form-state#about-the-form-state), we can display error messages by accessing the `errors` object via the [mon](../api-reference/use-form#mon) method. The method provides an `errorWithTouched` option to help us filtering the errors of untouched fields, which is designed based on the [Errors in Forms design guideline](https://www.nngroup.com/articles/errors-forms-design-guidelines) (No.7). You can enable the feature by setting the option to `true` (see [related doc](./form-state#filter-untouched-field-errors)).
 
 [![Edit RCF - Quick start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-quick-start-j8p1l?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -296,13 +296,13 @@ All errors are stored in the [formState.errors](./form-state#about-the-form-stat
 import { useForm } from "react-cool-form";
 
 const App = () => {
-  const { form, select } = useForm({
+  const { form, mon } = useForm({
     defaultValues: { username: "", email: "", password: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
   // We can enable the "errorWithTouched" option to filter the error of an un-blurred field
   // Which helps the user focus on typing without being annoyed by the error message
-  const errors = select("errors", { errorWithTouched: true }); // Default is "false"
+  const errors = mon("errors", { errorWithTouched: true }); // Default is "false"
 
   return (
     <form ref={form} noValidate>
@@ -324,11 +324,11 @@ The built-in validation is **turned on** by default. Which provides two forms of
 import { useForm } from "react-cool-form";
 
 const App = () => {
-  const { form, select } = useForm({
+  const { form, mon } = useForm({
     builtInValidationMode: "message" | "state" | false, // Default is "message"
     // More options...
   });
-  const errors = select("errors");
+  const errors = mon("errors");
 
   console.log("Message mode: ", errors); // Returns a localized message that describes the validation constraints that the field does not satisfy (if any)
   console.log("State mode: ", errors); // Returns the "key" of the invalid property of the ValidityState (if any)
