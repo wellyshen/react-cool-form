@@ -114,7 +114,9 @@ export default <V extends FormValues = FormValues>({
 
   const handleUnset = useCallback(
     (path: string) => {
-      const [t, n] = path.split(".");
+      const segs = path.split(".");
+      const t = segs.shift() as string;
+      const n = segs.join(".");
       setStateRef(
         t,
         unset(stateRef.current[t as keyof FormState<V>], n, true),
