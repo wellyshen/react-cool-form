@@ -1,4 +1,10 @@
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  waitFor,
+  screen,
+  act,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import {
@@ -7,6 +13,7 @@ import {
   GetState,
   Meta,
   RegisterField,
+  Reset,
 } from "./types";
 import useForm from "./useForm";
 import useFieldArray from "./useFieldArray";
@@ -17,6 +24,7 @@ interface API {
   meta: Meta;
   field: RegisterField;
   getState: GetState;
+  reset: Reset;
 }
 
 interface Config extends ControlledConfig {
@@ -26,6 +34,7 @@ interface Config extends ControlledConfig {
   defaultValues: Record<string, any>;
   onSubmit: (values: any) => void;
   onError: (errors: any) => void;
+  onReset: (values: any) => void;
 }
 
 type Props = Partial<Config>;
@@ -37,12 +46,14 @@ const Form = ({
   defaultValues,
   onSubmit = () => null,
   onError = () => null,
+  onReset = () => null,
   ...rest
 }: Props) => {
-  const { form, field, getState } = useForm({
+  const { form, field, getState, reset } = useForm({
     defaultValues,
     onSubmit: (values) => onSubmit(values),
     onError: (errors) => onError(errors),
+    onReset: (values) => onReset(values),
   });
   const [fieldProps, meta] = useControlled(name, rest);
   useFieldArray(isFieldArray ? name : "x");
@@ -53,7 +64,9 @@ const Form = ({
       <div>{meta.isTouched ? "touched" : "not-touched"}</div>
       <div>{meta.isDirty ? "dirty" : "not-dirty"}</div>
       <form data-testid="form" ref={form}>
-        {children ? children({ fieldProps, meta, field, getState }) : null}
+        {children
+          ? children({ fieldProps, meta, field, getState, reset })
+          : null}
       </form>
     </>
   );
@@ -226,6 +239,24 @@ describe("useControlled", () => {
     });
     expect(getState("values.foo")).toBeUndefined();
   });
+
+  it.each(["form", "controlled"])(
+    "should reset value from %s option",
+    (type) => {
+      const onReset = jest.fn();
+      const defaultValues = { foo: value };
+      const { reset } = renderHelper({
+        defaultValues: type === "form" ? defaultValues : undefined,
+        defaultValue: type === "controlled" ? defaultValues.foo : undefined,
+        onReset,
+        children: ({ fieldProps }: API) => (
+          <input data-testid="foo" {...fieldProps} />
+        ),
+      });
+      act(() => reset());
+      expect(onReset).toHaveBeenCalledWith(defaultValues);
+    }
+  );
 
   it("should run validation on submit", async () => {
     const errors = { foo: "Required" };
@@ -407,6 +438,4 @@ describe("useControlled", () => {
     });
     expect(getByTestId("foo").value).toBe(value);
   });
-
-  it.todo("should reset form correctly");
 });

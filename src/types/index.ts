@@ -239,7 +239,7 @@ export interface RunValidation {
   (name?: string | string[]): Promise<boolean>;
 }
 
-export interface Reset<V> {
+export interface Reset<V = any> {
   (
     values?: V | ((previousValues: V) => V) | null,
     exclude?: (keyof FormState<V>)[] | null,
