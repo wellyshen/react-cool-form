@@ -35,7 +35,7 @@ React Cool Form provides a powerful [select](../api-reference/use-form#select) m
 
 ### Accessing the State
 
-Due to the support of [complex structures](./complex-structures), the `select` method allows us to use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation)-and-[bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation to get the form state.
+Due to the support of [complex structures](./complex-structures), `select` method allows us to use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation)-and-[bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation to get the form state.
 
 ```js
 const { select } = useForm();
@@ -77,7 +77,7 @@ const [foo, bar, baz] = select(["foo", "bar", "baz"], { target: "values.nest" })
 
 ### Best Practices
 
-Every time we access a value from the form state via the `select` method, it will watch the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
+Every time we access a value from the form state via `select` method, it will listen the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
 
 ```js
 const { select } = useForm();
@@ -98,7 +98,7 @@ const [touched, dirty] = select(["touched", "dirty"]);
 
 ### Missing Default Values?
 
-If we didn't initialize the default value of a field via the [defaultValues option](../api-reference/use-form#defaultvalues) of the `useForm`. The `select` method will lose the value. Because the method is called before the field's initial render. For such cases, we can provide an alternative default value for the `select` method to return as below:
+If we didn't initialize the default value of a field via the [defaultValues option](../api-reference/use-form#defaultvalues) of `useForm` hook. The `select` method will lose the value. Because the method is called before the field's initial render. For such cases, we can provide an alternative default value for `select` method to return as below:
 
 > 💡 If you need to refer to the status of a [conditional field](../examples/conditional-fields), we recommend to use React state instead.
 
@@ -127,7 +127,7 @@ const App = () => {
 
 Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `select`'s `errorWithTouched` option (default is `false`).
 
-> 💡 This feature filters any errors of the untouched fields. So when validating with the [runValidation](../api-reference/use-form#runvalidation), please ensure it's triggered after the field(s) is (are) touched.
+> 💡 This feature filters any errors of the untouched fields. So when validating with [runValidation](../api-reference/use-form#runvalidation) method, please ensure it's triggered after the field(s) is (are) touched.
 
 ```js
 const { select } = useForm();
@@ -153,7 +153,7 @@ const errors = select("errors", {
 
 ## Isolating Re-rendering
 
-Whenever a [selected value](#accessing-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via the [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to the `select` method that maintain a consistent DX for us.
+Whenever a [selected value](#accessing-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to `select` method that maintain a consistent DX for us.
 
 [![Edit RCF - Isolating Re-rendering](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/intelligent-banach-uqxyx?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -201,7 +201,7 @@ const App = () => {
 
 ## Reading the State
 
-If you just want to read the form state without triggering re-renders, here's the [getState](../api-reference/use-form#getstate) method for you.
+If you just want to read the form state without triggering re-renders, here's a [getState](../api-reference/use-form#getstate) method for you.
 
 > 💡 Please note, this method should be used in an event handler.
 
@@ -215,7 +215,7 @@ const SomeHandler = () => {
 };
 ```
 
-With the `getState`, we can read/construct the data by the following ways:
+With the method, we can read/construct the data by the following ways:
 
 ```js
 const { getState } = useForm();
