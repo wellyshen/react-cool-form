@@ -3,7 +3,7 @@ id: use-form-state
 title: useFormState
 ---
 
-This hook helps us to isolate re-rendering at the component level for performance optimization (see [related article](https://overreacted.io/before-you-memo)). The hook has the similar API design to the [select](../api-reference/use-form#select) method of the `useForm` that maintain a consistent DX for us. Check the [Isolating Re-rendering](../getting-started/form-state#isolating-re-rendering) to learn more.
+This hook helps us to isolate re-rendering at the component level for performance optimization (see [related article](https://overreacted.io/before-you-memo)). The hook has the similar API design to the [mon](../api-reference/use-form#mon) method of the `useForm` that maintain a consistent DX for us. Check the [Isolating Re-rendering](../getting-started/form-state#isolating-re-rendering) to learn more.
 
 ```js
 const values = useFormState(path, config);

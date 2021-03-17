@@ -25,11 +25,11 @@ import {
 } from "@material-ui/core";
 
 const App = () => {
-  const { form, select } = useForm({
+  const { form, mon } = useForm({
     defaultValues: { username: "", framework: "", fruit: [] },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const errors = select("errors");
+  const errors = mon("errors");
 
   return (
     <form ref={form} noValidate>
@@ -163,7 +163,7 @@ const Field = ({ as, name, onChange, onBlur, ...restProps }) => {
 };
 
 const App = () => {
-  const { form, select } = useForm({
+  const { form, mon } = useForm({
     defaultValues: { username: "" },
     // excludeFields: ["username"], // You can also exclude the field here
     validate: ({ username }) => {
@@ -173,7 +173,7 @@ const App = () => {
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const errors = select("errors");
+  const errors = mon("errors");
 
   return (
     <form ref={form} noValidate>
