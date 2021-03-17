@@ -5,7 +5,7 @@ import useForm from "./useForm";
 import useFormMethods from "./useFormMethods";
 
 interface Props {
-  children: (methods: FormMethods<any>) => JSX.Element | null;
+  children: (methods: FormMethods) => JSX.Element | null;
 }
 
 const Form = ({ children }: Props) => {
@@ -16,7 +16,7 @@ const Form = ({ children }: Props) => {
 };
 
 const renderHelper = () => {
-  let api: FormMethods<any>;
+  let api: FormMethods;
 
   render(
     <Form>
@@ -34,7 +34,7 @@ const renderHelper = () => {
 describe("useFormMethods", () => {
   it("should throw form id errors", () => {
     expect(() => useFormMethods("form-1")).toThrow(
-      '💡 react-cool-form > useFormMethods: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+      '💡 react-cool-form > useFormMethods: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
     );
   });
 

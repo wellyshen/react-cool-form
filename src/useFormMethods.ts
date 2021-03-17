@@ -9,7 +9,7 @@ export default <V extends FormValues = FormValues>(
 
   invariant(
     !methods,
-    '💡 react-cool-form > useFormMethods: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+    '💡 react-cool-form > useFormMethods: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
   );
 
   const {

@@ -4,6 +4,7 @@ describe("isEmptyObject", () => {
   it("should work correctly", () => {
     expect(isEmptyObject(undefined)).toBeFalsy();
     expect(isEmptyObject(null)).toBeFalsy();
+    expect(isEmptyObject(NaN)).toBeFalsy();
     expect(isEmptyObject(true)).toBeFalsy();
     expect(isEmptyObject(1)).toBeFalsy();
     expect(isEmptyObject("")).toBeFalsy();

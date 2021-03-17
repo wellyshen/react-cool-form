@@ -4,6 +4,7 @@ describe("get", () => {
   it('should return "undefined" when target is invalid', () => {
     expect(get(null, "foo")).toBeUndefined();
     expect(get(undefined, "foo")).toBeUndefined();
+    expect(get(NaN, "foo")).toBeUndefined();
     expect(get(true, "foo")).toBeUndefined();
     expect(get("", "foo")).toBeUndefined();
     expect(get(1, "foo")).toBeUndefined();

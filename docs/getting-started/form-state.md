@@ -77,22 +77,22 @@ const [foo, bar, baz] = select(["foo", "bar", "baz"], { target: "values.nest" })
 
 ### Best Practices
 
-Every time we access a value from the form state via the `select` method, it will watch the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
+Every time we access a value from the form state via the `select` method, it will listen the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
 
 ```js
 const { select } = useForm();
 
-// 🙅🏻‍♀️ You can, but not recommended because it will cause the component to update on every value change
+// 👎🏻 You can, but not recommended because it will cause the component to update on every value change
 const values = select("values");
-// 🙆🏻‍♀️ For the form's values, we always recommended getting the target value as specific as possible
+// 👍🏻 For the form's values, we always recommended getting the target value as specific as possible
 const fooValue = select("values.foo");
 
-// 🙆🏻‍♀️ It's OK, in most case the form's validation will be triggered less frequently
+// 👍🏻 It's OK, in most case the form's validation will be triggered less frequently
 const errors = select("errors");
-// 🙆🏻‍♀️ But if a validation is triggered frequently, get the target error instead
+// 👍🏻 But if a validation is triggered frequently, get the target error instead
 const fooError = select("errors.foo");
 
-// 🙆🏻‍♀️ It's OK, they are triggered less frequently
+// 👍🏻 It's OK, they are triggered less frequently
 const [touched, dirty] = select(["touched", "dirty"]);
 ```
 
@@ -201,7 +201,7 @@ const App = () => {
 
 ## Reading the State
 
-If you just want to read the form state without triggering re-renders, here's the [getState](../api-reference/use-form#getstate) method for you.
+If you just want to read the form state without triggering re-renders, there's a [getState](../api-reference/use-form#getstate) method for you.
 
 > 💡 Please note, this method should be used in an event handler.
 

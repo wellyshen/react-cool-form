@@ -60,6 +60,12 @@ describe("useState", () => {
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 
+  it("should set state without re-render", () => {
+    const { setStateRef } = renderHelper();
+    setStateRef("", initialState);
+    expect(forceUpdate).not.toHaveBeenCalled();
+  });
+
   it("should set state's values without re-render", () => {
     const { stateRef, setStateRef } = renderHelper();
     const foo = "🍎";
@@ -229,7 +235,7 @@ describe("useState", () => {
     expect(forceUpdate).not.toHaveBeenCalled();
   });
 
-  it('should re-render correctly based on the "fieldPath"', () => {
+  it('should re-render correctly based on "fieldPath"', () => {
     const { setStateRef, setUsedState } = renderHelper();
     const fieldPath = "values.some-value";
 

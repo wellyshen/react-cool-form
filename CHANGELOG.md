@@ -1,5 +1,39 @@
 # react-cool-form
 
+## 0.0.139
+
+### Patch Changes
+
+- [`9bb9992`](https://github.com/wellyshen/react-cool-form/commit/9bb9992c666d52c17ce929d7d273b2fd885766b3) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: refine warning messages
+
+## 0.0.138
+
+### Patch Changes
+
+- [`889e331`](https://github.com/wellyshen/react-cool-form/commit/889e3319d5f064607cef4dec42a3e5fb32cdadb4) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(utils): the side-effect of `cloneObject`
+
+## 0.0.137
+
+### Patch Changes
+
+- [`d808960`](https://github.com/wellyshen/react-cool-form/commit/d80896022c8322dfe4aed5facc57b40874151a82) [#466](https://github.com/wellyshen/react-cool-form/pull/466) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): `isDirty` not working with array type form values
+
+## 0.0.136
+
+### Patch Changes
+
+- [`c066ecc`](https://github.com/wellyshen/react-cool-form/commit/c066ecc5004d6b29d9d649a41f99290d5f52234f) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: reduce bundle size
+
+## 0.0.135
+
+### Patch Changes
+
+- [`c4724a0`](https://github.com/wellyshen/react-cool-form/commit/c4724a04a1d60c767f501bc74f35393e835c31d1) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): skip unnecessary set state logic for `reset` method
+
+* [`573ab7b`](https://github.com/wellyshen/react-cool-form/commit/573ab7b6f29d2a7e9b503bd1cdaf772d903b5952) [#461](https://github.com/wellyshen/react-cool-form/pull/461) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): keep the value of a conditional field when `shouldRemoveField` option set to `false`'
+
+- [`ae11590`](https://github.com/wellyshen/react-cool-form/commit/ae115903890ee8d1b8f8d79d4acb399a375244c6) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: refine missing "name" warnings
+
 ## 0.0.134
 
 ### Patch Changes

@@ -83,7 +83,7 @@ export default <V extends FormValues = FormValues>({
   const formRef = useRef<HTMLElement>();
   const fieldsRef = useRef<Fields>({});
   const fieldParsersRef = useRef<Parsers>({});
-  const controllersRef = useRef<Map>({});
+  const controlledsRef = useRef<Map>({});
   const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
@@ -113,9 +113,19 @@ export default <V extends FormValues = FormValues>({
   } = useState<V>(initialStateRef.current, debug);
 
   const handleUnset = useCallback(
-    (path: string, fieldPath: string, target: any, name: string) =>
-      setStateRef(path, unset(target, name, true), { fieldPath }),
-    [setStateRef]
+    (path: string) => {
+      const segs = path.split(".");
+      const k = segs.shift() as string;
+      const n = segs.join(".");
+      setStateRef(
+        k,
+        unset(stateRef.current[k as keyof FormState<V>], n, true),
+        {
+          fieldPath: path,
+        }
+      );
+    },
+    [setStateRef, stateRef]
   );
 
   const getFields = useCallback(
@@ -143,13 +153,13 @@ export default <V extends FormValues = FormValues>({
 
           if (rcfExclude !== "true" && !name) {
             warn(
-              '💡 react-cool-form > field: Missing the "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
+              '💡 react-cool-form > field: Missing "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
             );
             return false;
           }
 
           return (
-            controllersRef.current[name] ||
+            controlledsRef.current[name] ||
             (rcfExclude !== "true" && !exclude[name])
           );
         })
@@ -223,7 +233,7 @@ export default <V extends FormValues = FormValues>({
 
   const setNodeValue = useCallback(
     (name: string, value: any, fields: Fields = fieldsRef.current) => {
-      if (!fields[name] || controllersRef.current[name]) return;
+      if (!fields[name] || controlledsRef.current[name]) return;
 
       const { field, options } = fields[name];
 
@@ -274,13 +284,18 @@ export default <V extends FormValues = FormValues>({
   const setNodesOrStateValue = useCallback(
     (
       values: V,
-      shouldUpdateDefaultValues: boolean,
-      fields: Field[] | string[] = Object.values(fieldsRef.current)
+      {
+        shouldUpdateDefaultValues = true,
+        fields = Object.values(fieldsRef.current),
+      }: {
+        shouldUpdateDefaultValues?: boolean;
+        fields?: Field[] | string[];
+      } = {}
     ) =>
       fields.forEach((field: Field | string) => {
         const name = isPlainObject(field) ? (field as Field).field.name : field;
 
-        if (controllersRef.current[name]) return;
+        if (controlledsRef.current[name]) return;
 
         let value = get(values, name);
 
@@ -318,7 +333,7 @@ export default <V extends FormValues = FormValues>({
         if (callback) {
           if (p === "values")
             warn(
-              `💡 react-cool-form > ${methodName}: Getting the "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
+              `💡 react-cool-form > ${methodName}: Getting "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
             );
 
           usedState[p] = true;
@@ -400,7 +415,7 @@ export default <V extends FormValues = FormValues>({
       if (error) {
         setStateRef(`errors.${name}`, error);
       } else {
-        handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
+        handleUnset(`errors.${name}`);
       }
     },
     [handleUnset, setStateRef, stateRef]
@@ -574,23 +589,12 @@ export default <V extends FormValues = FormValues>({
       if (isTouched) {
         setStateRef(`touched.${name}`, true);
       } else {
-        handleUnset(
-          "touched",
-          `touched.${name}`,
-          stateRef.current.touched,
-          name
-        );
+        handleUnset(`touched.${name}`);
       }
 
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
-    [
-      handleUnset,
-      setStateRef,
-      stateRef,
-      validateFieldWithLowPriority,
-      validateOnBlur,
-    ]
+    [handleUnset, setStateRef, validateFieldWithLowPriority, validateOnBlur]
   );
 
   const setTouchedMaybeValidate = useCallback<SetTouchedMaybeValidate>(
@@ -608,10 +612,10 @@ export default <V extends FormValues = FormValues>({
       if (isDirty) {
         setStateRef(`dirty.${name}`, true);
       } else {
-        handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
+        handleUnset(`dirty.${name}`);
       }
     },
-    [handleUnset, setStateRef, stateRef]
+    [handleUnset, setStateRef]
   );
 
   const setDirtyIfNeeded = useCallback(
@@ -643,7 +647,7 @@ export default <V extends FormValues = FormValues>({
       if (!isUndefined(value)) {
         setStateRef(`values.${name}`, value);
       } else {
-        handleUnset("values", `values.${name}`, stateRef.current.values, name);
+        handleUnset(`values.${name}`);
       }
       setNodeValue(name, value);
 
@@ -702,7 +706,9 @@ export default <V extends FormValues = FormValues>({
             nextValues,
             true
           );
-          setNodesOrStateValue(nextValues, !!values);
+          setNodesOrStateValue(nextValues, {
+            shouldUpdateDefaultValues: false,
+          });
         } else {
           // @ts-expect-error
           state[key] = initialStateRef.current[key];
@@ -722,7 +728,7 @@ export default <V extends FormValues = FormValues>({
 
       const nextTouched = Object.keys({
         ...fieldsRef.current,
-        ...controllersRef.current,
+        ...controlledsRef.current,
       }).reduce((touched, name) => {
         touched = set(touched, name, true, true);
         return touched;
@@ -771,10 +777,10 @@ export default <V extends FormValues = FormValues>({
 
   const removeField = useCallback<RemoveField>(
     (name) => {
-      handleUnset("values", `values.${name}`, stateRef.current.values, name);
-      handleUnset("touched", `touched.${name}`, stateRef.current.touched, name);
-      handleUnset("dirty", `dirty.${name}`, stateRef.current.dirty, name);
-      handleUnset("errors", `errors.${name}`, stateRef.current.errors, name);
+      handleUnset(`values.${name}`);
+      handleUnset(`touched.${name}`);
+      handleUnset(`dirty.${name}`);
+      handleUnset(`errors.${name}`);
 
       initialStateRef.current = unset(
         initialStateRef.current,
@@ -784,9 +790,9 @@ export default <V extends FormValues = FormValues>({
 
       delete fieldParsersRef.current[name];
       delete fieldValidatorsRef.current[name];
-      delete controllersRef.current[name];
+      delete controlledsRef.current[name];
     },
-    [handleUnset, stateRef]
+    [handleUnset]
   );
 
   const registerForm = useCallback<RegisterForm>(
@@ -797,17 +803,17 @@ export default <V extends FormValues = FormValues>({
       const form = formRef.current;
 
       fieldsRef.current = getFields(form);
-      setNodesOrStateValue(initialStateRef.current.values, true);
+      setNodesOrStateValue(initialStateRef.current.values);
 
       handlersRef.current.change = ({ target }: Event) => {
         const { name } = target as FieldElement;
 
         if (!name) {
-          warn('💡 react-cool-form > field: Missing the "name" attribute.');
+          warn('💡 react-cool-form > field: Missing "name" attribute.');
           return;
         }
 
-        if (fieldsRef.current[name] && !controllersRef.current[name]) {
+        if (fieldsRef.current[name] && !controlledsRef.current[name]) {
           const parse = fieldParsersRef.current[name]?.parse;
           const value = getNodeValue(name);
 
@@ -821,7 +827,7 @@ export default <V extends FormValues = FormValues>({
 
         const { name } = target as FieldElement;
 
-        if (fieldsRef.current[name] && !controllersRef.current[name]) {
+        if (fieldsRef.current[name] && !controlledsRef.current[name]) {
           setTouchedMaybeValidate(name);
           changedFieldRef.current = undefined;
         }
@@ -840,11 +846,10 @@ export default <V extends FormValues = FormValues>({
         if (type !== "childList") return;
 
         const fields = getFields(form);
-        let { values } = stateRef.current;
 
         if (shouldRemoveField)
           Object.keys(fieldsRef.current).forEach((name) => {
-            if (controllersRef.current[name]) return;
+            if (controlledsRef.current[name]) return;
 
             if (!fields[name]) {
               removeField(name);
@@ -868,21 +873,21 @@ export default <V extends FormValues = FormValues>({
             }
           });
 
+        let values = defaultValuesRef.current;
         const addedNodes: string[] = [];
 
         Object.keys(fields).forEach((name) => {
-          if (fieldsRef.current[name] || controllersRef.current[name]) return;
+          if (fieldsRef.current[name] || controlledsRef.current[name]) return;
 
-          const defaultValue = get(defaultValuesRef.current, name);
-
-          if (!isUndefined(defaultValue))
-            values = set(values, name, defaultValue, true);
+          const value = get(stateRef.current.values, name);
+          if (!isUndefined(value)) values = set(values, name, value, true);
 
           addedNodes.push(name);
         });
 
         fieldsRef.current = fields;
-        if (addedNodes.length) setNodesOrStateValue(values, true, addedNodes);
+        if (addedNodes.length)
+          setNodesOrStateValue(values, { fields: addedNodes });
       });
 
       observerRef.current.observe(form, { childList: true, subtree: true });
@@ -907,7 +912,7 @@ export default <V extends FormValues = FormValues>({
     (validateOrOptions) => (field) => {
       if (
         !field?.name ||
-        controllersRef.current[field.name] ||
+        controlledsRef.current[field.name] ||
         excludeFieldsRef.current[field.name]
       )
         return;
@@ -929,7 +934,7 @@ export default <V extends FormValues = FormValues>({
     shouldRemoveField,
     defaultValuesRef,
     initialStateRef,
-    controllersRef,
+    controlledsRef,
     fieldValidatorsRef,
     changedFieldRef,
     excludeFieldsRef,

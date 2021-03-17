@@ -12,6 +12,8 @@ describe("deepMerge", () => {
     expect(deepMerge(target, override)).toEqual(override);
     override = { foo: { bar: undefined } };
     expect(deepMerge(target, override)).toEqual(override);
+    override = { foo: { bar: NaN } };
+    expect(deepMerge(target, override)).toEqual(override);
     override = { foo: { bar: true } };
     expect(deepMerge(target, override)).toEqual(override);
     override = { foo: { bar: "" } };

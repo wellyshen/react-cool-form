@@ -8,7 +8,7 @@ import useFormState from "./useFormState";
 const defaultValues = { foo: "🍎" };
 const error = "Required";
 
-interface Props extends FormStateConfig<any> {
+interface Props extends FormStateConfig {
   children: (state: any) => JSX.Element;
   path?: Path;
   formDefaultValues?: any;
@@ -60,7 +60,7 @@ const renderHelper = (args: Omit<Props, "children"> = {}) => {
 describe("useFormState", () => {
   it("should throw form id errors", () => {
     expect(() => useFormState("values", { formId: "form-1" })).toThrow(
-      '💡 react-cool-form > useFormState: You must provide the corresponding ID to the "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+      '💡 react-cool-form > useFormState: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
     );
   });
 
@@ -68,7 +68,7 @@ describe("useFormState", () => {
     console.warn = jest.fn();
     renderHelper({ path: "values" });
     expect(console.warn).toHaveBeenCalledWith(
-      '💡 react-cool-form > useFormState: Getting the "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+      '💡 react-cool-form > useFormState: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
     );
   });
 

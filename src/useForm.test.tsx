@@ -16,14 +16,14 @@ jest.mock("./shared", () => ({ set: jest.fn(), remove: jest.fn() }));
 
 type Children = JSX.Element | JSX.Element[] | null;
 
-type Methods = Omit<FormMethods<any>, "form">;
+type Methods = Omit<FormMethods, "form">;
 
-interface Config extends FormConfig<any> {
+interface Config extends FormConfig {
   children: Children | ((methods: Methods) => Children);
   onSubmit: (values: any) => void;
-  onSubmitFull: SubmitHandler<any>;
+  onSubmitFull: SubmitHandler;
   onError: (errors: any) => void;
-  onErrorFull: ErrorHandler<any>;
+  onErrorFull: ErrorHandler;
   onRender: () => void;
 }
 
@@ -116,11 +116,11 @@ describe("useForm", () => {
       expect(console.warn).toHaveBeenCalledTimes(2);
       expect(console.warn).toHaveBeenNthCalledWith(
         1,
-        '💡 react-cool-form > field: Missing the "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
+        '💡 react-cool-form > field: Missing "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
       );
       expect(console.warn).toHaveBeenNthCalledWith(
         2,
-        '💡 react-cool-form > field: Missing the "name" attribute.'
+        '💡 react-cool-form > field: Missing "name" attribute.'
       );
     });
 
@@ -138,7 +138,7 @@ describe("useForm", () => {
       const { select } = renderHelper();
       select("values");
       expect(console.warn).toHaveBeenCalledWith(
-        '💡 react-cool-form > select: Getting the "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+        '💡 react-cool-form > select: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
       );
     });
 
@@ -390,9 +390,10 @@ describe("useForm", () => {
       onReset,
       children: <input data-testid="foo" name="foo" />,
     });
+    const value = "🍎";
     const foo = getByTestId("foo");
 
-    setValue("foo", "🍎");
+    setValue("foo", value);
     setError("foo", "Required");
     const e = {};
     // @ts-expect-error
@@ -401,19 +402,18 @@ describe("useForm", () => {
     expect(onReset).toHaveBeenCalledWith(defaultValues, options, e);
     expect(getState()).toEqual({ ...initialState, values: defaultValues });
 
-    const values = { foo: "🍋" };
+    const values = { foo: value };
     // @ts-expect-error
     act(() => reset(values, null, e));
     expect(foo.value).toBe(values.foo);
     expect(onReset).toHaveBeenCalledWith(values, options, e);
     expect(getState()).toEqual({ ...initialState, values });
 
-    const value = "🍎";
     // @ts-expect-error
-    act(() => reset((prevValues) => ({ ...prevValues, foo: value }), null, e));
+    act(() => reset((prevValues) => ({ ...prevValues, ...values }), null, e));
     expect(foo.value).toBe(value);
-    expect(onReset).toHaveBeenCalledWith({ foo: value }, options, e);
-    expect(getState()).toEqual({ ...initialState, values: { foo: value } });
+    expect(onReset).toHaveBeenCalledWith(values, options, e);
+    expect(getState()).toEqual({ ...initialState, values });
 
     const error = "Required";
     setValue("foo", value);
@@ -421,10 +421,10 @@ describe("useForm", () => {
     // @ts-expect-error
     act(() => reset(null, ["values", "errors", "touched"], e));
     expect(foo.value).toBe(value);
-    expect(onReset).toHaveBeenCalledWith({ foo: value }, options, e);
+    expect(onReset).toHaveBeenCalledWith(values, options, e);
     expect(getState()).toEqual({
       ...initialState,
-      values: { foo: value },
+      values,
       errors: { foo: error },
       touched: { foo: true },
     });
@@ -1259,6 +1259,31 @@ describe("useForm", () => {
       fireEvent.input(foo, e);
       fireEvent.submit(getByTestId("form"));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
+    });
+
+    it('should ignore "field" method', async () => {
+      const mockDate = "2050-01-09";
+      renderHelper({
+        defaultValues: { foo: mockDate },
+        excludeFields: ["foo"],
+        onSubmit,
+        children: ({ field }: Methods) => (
+          <input
+            data-testid="foo"
+            name="foo"
+            type="date"
+            ref={field({
+              validate: () => "Required",
+              valueAsNumber: true,
+            })}
+          />
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => {
+        expect(onSubmit).toHaveBeenCalledWith({ foo: mockDate });
+        expect(onError).not.toHaveBeenCalled();
+      });
     });
   });
 
