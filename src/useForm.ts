@@ -320,7 +320,7 @@ export default <V extends FormValues = FormValues>({
         target,
         errorWithTouched,
         defaultValues: dfValues = {},
-        methodName = "watch",
+        methodName = "mon",
         callback,
       }
     ) => {
@@ -390,7 +390,7 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const watch = useCallback<Watch<V>>(
+  const mon = useCallback<Watch<V>>(
     (path, { target, errorWithTouched, defaultValues: dfValues } = {}) =>
       getFormState(path, {
         target,
@@ -948,7 +948,7 @@ export default <V extends FormValues = FormValues>({
     unsubscribeObserver,
     form: registerForm,
     field: registerField,
-    watch,
+    mon,
     getState,
     setValue,
     setTouched,
@@ -980,7 +980,7 @@ export default <V extends FormValues = FormValues>({
   return {
     form: registerForm,
     field: registerField,
-    watch,
+    mon,
     getState,
     setValue,
     setTouched,

@@ -274,7 +274,7 @@ export type FormConfig<V = any> = Partial<{
 export interface FormMethods<V = any> {
   form: RegisterForm;
   field: RegisterField<V>;
-  watch: Watch<V>;
+  mon: Watch<V>;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;

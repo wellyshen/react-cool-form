@@ -43,7 +43,7 @@ describe("useFormMethods", () => {
     expect(methods).toEqual({
       form: expect.any(Function),
       field: expect.any(Function),
-      watch: expect.any(Function),
+      mon: expect.any(Function),
       getState: expect.any(Function),
       setValue: expect.any(Function),
       setTouched: expect.any(Function),

@@ -187,7 +187,7 @@ declare module "react-cool-form" {
   export interface FormMethods<V extends FormValues = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
-    watch: Watch<V>;
+    mon: Watch<V>;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
