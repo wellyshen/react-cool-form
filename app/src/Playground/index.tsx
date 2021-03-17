@@ -12,7 +12,7 @@ export default () => {
   const [t0, setT0] = useState(true);
   const { form, reset } = useForm({
     // defaultValues: { foo: "form test" },
-    shouldRemoveField: false,
+    // shouldRemoveField: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
@@ -22,7 +22,7 @@ export default () => {
 
   return (
     <form ref={form}>
-      {t0 && <Field name="foo" defaultValue="field test" />}
+      {t0 && <Field name="foo" />}
       <input type="submit" />
       <input type="reset" />
       <button type="button" onClick={() => setT0(!t0)}>

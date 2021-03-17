@@ -20,7 +20,7 @@ const options = [
 
 function App() {
   const { form } = useForm({
-    defaultValues: { framework: "" }, // (Strongly advise) Provide a default value for the controlled field
+    defaultValues: { framework: "" }, // We must provide a default value for the controlled field
     excludeFields: ["#framework"], // Exclude the internal input element of React-Select by ID
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
