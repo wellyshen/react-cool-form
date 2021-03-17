@@ -146,6 +146,59 @@ describe("useControlled", () => {
     }
   );
 
+  it("should return values correctly", () => {
+    const { fieldProps, meta } = renderHelper({ anyProp: () => null });
+    expect(fieldProps).toEqual({
+      name: expect.any(String),
+      value: expect.anything(),
+      onChange: expect.any(Function),
+      onBlur: expect.any(Function),
+      anyProp: expect.any(Function),
+    });
+    expect(meta).toEqual({
+      isTouched: expect.any(Boolean),
+      isDirty: expect.any(Boolean),
+    });
+  });
+
+  it("should call events correctly", () => {
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    renderHelper({
+      onChange,
+      onBlur,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    fireEvent.input(getByTestId("foo"), { target: { value } });
+    expect(onChange).toHaveBeenCalled();
+    fireEvent.focusOut(getByTestId("foo"));
+    expect(onBlur).toHaveBeenCalled();
+  });
+
+  it.each(["form", "controlled"])(
+    "should set default value from %s option",
+    async (type) => {
+      const format = jest.fn(() => value);
+      renderHelper({
+        defaultValues: type === "form" ? { foo: value } : undefined,
+        defaultValue: type === "controlled" ? value : undefined,
+        format,
+        onSubmit,
+        children: ({ fieldProps }: API) => (
+          <input data-testid="foo" {...fieldProps} />
+        ),
+      });
+      expect(format).toHaveBeenCalledWith(value);
+      expect(getByTestId("foo").value).toBe(value);
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
+    }
+  );
+
   it("should not set default value", () => {
     const { getState } = renderHelper({
       children: ({ fieldProps }: API) => <input {...fieldProps} />,
@@ -174,43 +227,6 @@ describe("useControlled", () => {
     expect(getState("values.foo")).toBeUndefined();
   });
 
-  it("should return values correctly", () => {
-    const { fieldProps, meta } = renderHelper({ anyProp: () => null });
-    expect(fieldProps).toEqual({
-      name: expect.any(String),
-      value: expect.anything(),
-      onChange: expect.any(Function),
-      onBlur: expect.any(Function),
-      anyProp: expect.any(Function),
-    });
-    expect(meta).toEqual({
-      isTouched: expect.any(Boolean),
-      isDirty: expect.any(Boolean),
-    });
-  });
-
-  it.each(["form", "controlled"])(
-    "should set default value from %s option",
-    async (type) => {
-      const format = jest.fn(() => value);
-      renderHelper({
-        defaultValues: type === "form" ? { foo: value } : undefined,
-        defaultValue: type === "controlled" ? value : undefined,
-        format,
-        onSubmit,
-        children: ({ fieldProps }: API) => (
-          <input data-testid="foo" {...fieldProps} />
-        ),
-      });
-      expect(format).toHaveBeenCalledWith(value);
-      expect(getByTestId("foo").value).toBe(value);
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
-      );
-    }
-  );
-
   it("should run validation on submit", async () => {
     const errors = { foo: "Required" };
     const { getState } = renderHelper({
@@ -222,9 +238,8 @@ describe("useControlled", () => {
         <input data-testid="foo" {...fieldProps} />
       ),
     });
-    const form = getByTestId("form");
 
-    fireEvent.submit(form);
+    fireEvent.submit(getByTestId("form"));
     expect(getState("isValidating")).toBeTruthy();
     await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
     const error = await screen.findByText(errors.foo);
@@ -233,7 +248,7 @@ describe("useControlled", () => {
     expect(getState("isValid")).toBeFalsy();
 
     fireEvent.input(getByTestId("foo"), { target: { value } });
-    fireEvent.submit(form);
+    fireEvent.submit(getByTestId("form"));
     expect(getState("isValidating")).toBeTruthy();
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith({ foo: value });
@@ -394,8 +409,4 @@ describe("useControlled", () => {
   });
 
   it.todo("should reset form correctly");
-
-  it.todo('should call "onChange" event correctly');
-
-  it.todo('should call "onBlur" event correctly');
 });
