@@ -7,10 +7,11 @@ React Cool Form is a [tiny size](https://bundlephobia.com/result?p=react-cool-fo
 
 | Name                                                | Size    |
 | --------------------------------------------------- | ------- |
-| [useForm](../api-reference/use-form)                | ~ 5.2KB |
-| [useFormMethods](../api-reference/use-form-methods) | ~ 252B  |
-| [useFormState](../api-reference/use-form-state)     | ~ 301B  |
-| [useControlled](../api-reference/use-controlled)    | ~ 771B  |
-| [get](../api-reference/utility-functions#get)       | ~ 5B    |
+| [useForm](../api-reference/use-form)                | ~ 5.3KB |
+| [useFormMethods](../api-reference/use-form-methods) | ~ 268B  |
+| [useFormState](../api-reference/use-form-state)     | ~ 313B  |
+| [useControlled](../api-reference/use-controlled)    | ~ 839B  |
+| [useFieldArray](../api-reference/use-field-array)   | ~ 911B  |
+| [get](../api-reference/utility-functions#get)       | ~ 4B    |
 | [set](../api-reference/utility-functions#set)       | ~ 6B    |
 | [unset](../api-reference/utility-functions#unset)   | ~ 7B    |
