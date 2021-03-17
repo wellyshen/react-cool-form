@@ -21,7 +21,7 @@ declare module "react-cool-form" {
     submit: Submit<V>;
   }
 
-  interface Select<V> {
+  interface Watch<V> {
     (
       path: string | string[] | Map<string>,
       options?: {
@@ -187,7 +187,7 @@ declare module "react-cool-form" {
   export interface FormMethods<V extends FormValues = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
-    select: Select<V>;
+    watch: Watch<V>;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;

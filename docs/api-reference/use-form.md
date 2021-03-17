@@ -225,11 +225,11 @@ If you just want to validate the field, there's a shortcut for it:
 <input nam="rcf" ref={field((value) => !value.length && "Required")} />
 ```
 
-### select
+### watch
 
 `(path: string | string[] | Record<string, string>, options?: Object) => any`
 
-This method provides us a performant way to use the form state. Check the [Form State](../getting-started/form-state) to learn more.
+This method provides us a performant way to use the form state with minimized re-renders. Check the [Form State](../getting-started/form-state) to learn more.
 
 ### getState
 

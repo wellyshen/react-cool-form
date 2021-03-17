@@ -102,11 +102,11 @@ const Field = ({ label, id, error, ...rest }) => (
 );
 
 const App = () => {
-  const { form, select, submit } = useForm({
+  const { form, watch, submit } = useForm({
     defaultValues: { email: "", password: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const errors = select("errors", { errorWithTouched: true });
+  const errors = watch("errors", { errorWithTouched: true });
 
   return (
     <div ref={form}>

@@ -28,12 +28,12 @@ const errorHandler = (errors, options, e) => {
 };
 
 const App = () => {
-  const { form, select } = useForm({
+  const { form, watch } = useForm({
     defaultValues: { username: "", email: "" },
-    onSubmit: submitHandler, // 🙆🏻‍♀️ The event is triggered once the form is valid
-    onError: errorHandler, // 🙅🏻‍♀️ The event is triggered once the form is invalid (optional)
+    onSubmit: submitHandler, // The event is triggered once the form is valid
+    onError: errorHandler, // The event is triggered once the form is invalid (optional)
   });
-  const isSubmitting = select("isSubmitting");
+  const isSubmitting = watch("isSubmitting");
 
   return (
     <form ref={form} noValidate>
@@ -87,12 +87,12 @@ For some reasons (e.g. design requirement, auto-retry etc.), we might need to tr
 import { useForm } from "react-cool-form";
 
 const App = () => {
-  const { form, select, submit } = useForm({
+  const { form, watch, submit } = useForm({
     defaultValues: { username: "", email: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
-  const isSubmitting = select("isSubmitting");
+  const isSubmitting = watch("isSubmitting");
 
   const handleSubmit = () => {
     submit();
