@@ -201,7 +201,7 @@ const App = () => {
 
 ## Reading the State
 
-If you just want to read the form state without triggering re-renders, here's the [getState](../api-reference/use-form#getstate) method for you.
+If you just want to read the form state without triggering re-renders, here's a [getState](../api-reference/use-form#getstate) method for you.
 
 > 💡 Please note, this method should be used in an event handler.
 
