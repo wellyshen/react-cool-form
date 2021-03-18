@@ -271,8 +271,12 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setDefaultValue = useCallback<SetDefaultValue>(
-    (name, value) => {
-      if (!isFieldArray(fieldArrayRef.current, name))
+    (
+      name,
+      value,
+      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
+    ) => {
+      if (shouldUpdateDefaultValue)
         initialStateRef.current = set(
           initialStateRef.current,
           `values.${name}`,
@@ -955,6 +959,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   shared.set(id, {
+    validateOnChange,
     shouldRemoveField,
     defaultValuesRef,
     initialStateRef,

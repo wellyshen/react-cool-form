@@ -5,6 +5,7 @@ export type Map<T = boolean> = Record<string, T>;
 
 // Global
 export type Methods = {
+  validateOnChange: boolean;
   shouldRemoveField: boolean;
   defaultValuesRef: MutableRefObject<any>;
   initialStateRef: MutableRefObject<FormState>;
@@ -168,7 +169,7 @@ export interface HandleChangeEvent {
 }
 
 export interface SetDefaultValue {
-  (name: string, value: any): void;
+  (name: string, value: any, shouldUpdateDefaultValue?: boolean): void;
 }
 
 export interface RemoveField {
@@ -345,18 +346,16 @@ type HelperOptions = Partial<{
   shouldDirty: boolean;
 }>;
 
-export interface Push<V> {
-  (value: V, options?: HelperOptions): void;
+export interface Push<T> {
+  (value: T, options?: HelperOptions): void;
 }
 
-export type Replace<V> = Insert<V>;
-
-export interface Insert<V> {
-  (index: number, value: V, options?: HelperOptions): void;
+export interface Insert<T> {
+  (index: number, value: T, options?: HelperOptions): void;
 }
 
-export interface Remove<V> {
-  (index: number): Partial<V> | void;
+export interface Remove<T> {
+  (index: number): T | void;
 }
 
 export interface Swap {
@@ -367,18 +366,18 @@ export interface Move {
   (from: number, to: number): void;
 }
 
-export type FieldArrayConfig = Partial<{
+export type FieldArrayConfig<T, V> = Partial<{
   formId: string;
-  validateOnChange: boolean;
+  defaultValue: T[];
+  validate: FieldValidator<V>;
 }>;
 
-export type FieldArrayReturn<V> = [
-  V[],
+export type FieldArrayReturn<T> = [
+  T[],
   {
-    push: Push<V>;
-    insert: Insert<V>;
-    replace: Replace<V>;
-    remove: Remove<V>;
+    push: Push<T>;
+    insert: Insert<T>;
+    remove: Remove<T>;
     swap: Swap;
     move: Move;
   }

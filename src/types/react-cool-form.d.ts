@@ -264,18 +264,16 @@ declare module "react-cool-form" {
     shouldDirty: boolean;
   }>;
 
-  interface Push<V> {
-    (value: V, options?: HelperOptions): void;
+  interface Push<T> {
+    (value: T, options?: HelperOptions): void;
   }
 
-  interface Insert<V> {
-    (index: number, value: V, options?: HelperOptions): void;
+  interface Insert<T> {
+    (index: number, value: T, options?: HelperOptions): void;
   }
 
-  type Replace<V> = Insert<V>;
-
-  interface Remove<V> {
-    (index: number): Partial<V> | void;
+  interface Remove<T> {
+    (index: number): T | void;
   }
 
   interface Swap {
@@ -286,27 +284,30 @@ declare module "react-cool-form" {
     (from: number, to: number): void;
   }
 
-  export type FieldArrayConfig = Partial<{
+  export type FieldArrayConfig<
+    T = any,
+    V extends FormValues = FormValues
+  > = Partial<{
     formId: string;
-    validateOnChange: boolean;
+    defaultValue: T[];
+    validate: FieldValidator<V>;
   }>;
 
-  export type FieldArrayReturn<V = any> = [
-    V[],
+  export type FieldArrayReturn<T = any> = [
+    T[],
     {
-      push: Push<V>;
-      insert: Insert<V>;
-      replace: Replace<V>;
-      remove: Remove<V>;
+      push: Push<T>;
+      insert: Insert<T>;
+      remove: Remove<T>;
       swap: Swap;
       move: Move;
     }
   ];
 
-  export function useFieldArray<V = any>(
+  export function useFieldArray<T = any, V extends FormValues = FormValues>(
     name: string,
-    config?: FieldArrayConfig
-  ): FieldArrayReturn<V>;
+    config?: FieldArrayConfig<T, V>
+  ): FieldArrayReturn<T>;
 
   // Utility functions
   export function get(object: any, path: string, defaultValue?: unknown): any;

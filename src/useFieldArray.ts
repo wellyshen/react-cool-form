@@ -1,20 +1,21 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   FieldArrayConfig,
   FieldArrayReturn,
+  FormValues,
   HelperHandler,
   Insert,
   Keys,
   Move,
   Push,
   Remove,
-  Replace,
   Swap,
 } from "./types";
 import * as shared from "./shared";
 import {
   compact,
+  get,
   getIsDirty,
   invariant,
   isUndefined,
@@ -22,10 +23,10 @@ import {
   setValuesAsTrue,
 } from "./utils";
 
-export default <V = any>(
+export default <T = any, V extends FormValues = FormValues>(
   name: string,
-  { formId, validateOnChange = true }: FieldArrayConfig = {}
-): FieldArrayReturn<V> => {
+  { formId, defaultValue, validate }: FieldArrayConfig<T, V> = {}
+): FieldArrayReturn<T> => {
   invariant(
     !name,
     '💡 react-cool-form > useFieldArray: Missing "name" parameter.'
@@ -39,30 +40,41 @@ export default <V = any>(
   );
 
   const {
+    validateOnChange,
     shouldRemoveField,
+    initialStateRef,
     fieldArrayRef,
+    fieldValidatorsRef,
+    setDefaultValue,
     getState,
     setStateRef,
     runValidation,
     removeField,
   } = methods;
+  const defaultValueRef = useRef<T[] | undefined>(defaultValue);
 
   const getValue = useCallback(
-    () =>
-      Array.isArray(getState(`values.${name}`))
-        ? [...getState(`values.${name}`)]
-        : [],
+    (init = false) => {
+      let value = getState(`values.${name}`);
+      if (init && isUndefined(value)) value = defaultValueRef.current;
+      return Array.isArray(value) ? [...value] : [];
+    },
     [getState, name]
   );
 
-  const [fields, setFields] = useState<V[]>(getValue());
+  const [fields, setFields] = useState<T[]>(getValue(true));
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    if (
+      isUndefined(get(initialStateRef.current.values, name)) &&
+      !isUndefined(defaultValueRef.current)
+    )
+      setDefaultValue(name, defaultValueRef.current, true);
+
+    return () => {
       if (shouldRemoveField) removeField(name);
-    },
-    [name, removeField, shouldRemoveField]
-  );
+    };
+  }, [initialStateRef, name, removeField, setDefaultValue, shouldRemoveField]);
 
   fieldArrayRef.current[name] = useMemo(
     () => ({
@@ -83,6 +95,7 @@ export default <V = any>(
     }),
     [getState, getValue, name]
   );
+  if (validate) fieldValidatorsRef.current[name] = validate;
 
   const setState = useCallback(
     (
@@ -126,7 +139,7 @@ export default <V = any>(
     [fields, getState, name, runValidation, setStateRef, validateOnChange]
   );
 
-  const push = useCallback<Push<V>>(
+  const push = useCallback<Push<T>>(
     (value, { shouldTouched, shouldDirty = true } = {}) => {
       const handler: HelperHandler = (val, type, lastIndex = 0) => {
         if (type === "values") {
@@ -146,7 +159,7 @@ export default <V = any>(
     [setState]
   );
 
-  const insert = useCallback<Insert<V>>(
+  const insert = useCallback<Insert<T>>(
     (index, value, { shouldTouched, shouldDirty = true } = {}) => {
       const handler: HelperHandler = (val, type) => {
         if (type === "values") {
@@ -168,34 +181,7 @@ export default <V = any>(
     [setState]
   );
 
-  const replace = useCallback<Replace<V>>(
-    (index, value, { shouldTouched, shouldDirty = true } = {}) => {
-      const fieldValue = getState(`values.${name}`);
-      if (!Array.isArray(fieldValue) || index > fieldValue.length - 1) return;
-
-      const handler: HelperHandler = (val, type) => {
-        if (type === "values") {
-          val[index] = value;
-        } else if (
-          (type === "touched" && shouldTouched) ||
-          (type === "dirty" && shouldDirty)
-        ) {
-          val[index] = setValuesAsTrue(value);
-        } else if (index < val.length - 1) {
-          delete val[index];
-        } else {
-          val.splice(index, 1);
-        }
-
-        return compact(val).length ? val : [];
-      };
-
-      setState(handler, { shouldTouched, shouldDirty });
-    },
-    [getState, name, setState]
-  );
-
-  const remove = useCallback<Remove<V>>(
+  const remove = useCallback<Remove<T>>(
     (index) => {
       const handler: HelperHandler = (val) => {
         val.splice(index, 1);
@@ -234,5 +220,5 @@ export default <V = any>(
     [setState]
   );
 
-  return [fields, { push, insert, replace, remove, swap, move }];
+  return [fields, { push, insert, remove, swap, move }];
 };
