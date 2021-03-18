@@ -9,7 +9,7 @@ module.exports = {
       "getting-started/reset-form",
       "getting-started/form-state",
       "getting-started/complex-structures",
-      "getting-started/array-and-list-fields",
+      "getting-started/arrays-and-lists",
       "getting-started/3rd-party-ui-libraries",
       "getting-started/bundle-size-overview",
     ],

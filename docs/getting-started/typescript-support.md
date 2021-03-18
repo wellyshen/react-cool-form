@@ -54,6 +54,15 @@ const methods = useFormMethods<FormValues>();
 const values = useFormState<FormValues>();
 
 const props = useControlled<FormValues>();
+
+// Without using the "validate" option
+const props = useFieldArray<FieldValue>();
+// When using the "validate" option
+const props = useFieldArray<FieldValue, FormValues>({
+  validate: (value) => {
+    /* ... */
+  },
+});
 ```
 
 ## Making Field's Name Type-safe
