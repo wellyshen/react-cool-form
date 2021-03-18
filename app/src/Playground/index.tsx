@@ -11,7 +11,12 @@ const Field = ({ name, ...rest }: any) => {
 };
 
 const FieldArray = ({ name }: any) => {
-  const [fields, { push }] = useFieldArray(name);
+  const [fields, { push }] = useFieldArray(name, {
+    defaultValue: [
+      { id: "2", val: "2" },
+      { id: "3", val: "3" },
+    ],
+  });
 
   return (
     <>
@@ -34,34 +39,40 @@ export default () => {
   const swBRef = useRef<HTMLInputElement>(null);
   const mvARef = useRef<HTMLInputElement>(null);
   const mvBRef = useRef<HTMLInputElement>(null);
-  const { form, select, reset, setValue, field } = useForm({
+  const { form, mon, reset, setValue, field } = useForm({
     defaultValues: {
-      foo: [
-        { id: "0", val: "0" },
-        { id: "1", val: "1" },
-      ],
+      // foo: [
+      //   { id: "0", val: "0" },
+      //   { id: "1", val: "1" },
+      // ],
       // bar: [
       //   { id: "0", val: "0" },
       //   { id: "1", val: "1" },
       // ],
     },
     // shouldRemoveField: false,
-    validate: (values) => {
-      const errors: { foo?: string } = {};
-      if (!values.foo.length) errors.foo = "Required";
-      return errors;
-    },
+    // validate: (values) => {
+    //   const errors: { foo?: string } = {};
+    //   if (!values.foo.length) errors.foo = "Required";
+    //   return errors;
+    // },
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
-  const [fields, { push, insert, replace, remove, swap, move }] = useFieldArray(
-    "foo"
-  );
+  const [fields, { push, insert, remove, swap, move }] = useFieldArray("foo", {
+    defaultValue: [
+      { id: "2", val: "2" },
+      { id: "3", val: "3" },
+    ],
+    validate: (value, values) => {
+      console.log("LOG ===> ", value, values);
+    },
+  });
 
   // console.log("LOG ===> Re-renders");
   /* console.log(
     "LOG ===> State: ",
-    select({
+    mon({
       values: "values.foo",
       touched: "touched.foo",
       errors: "errors.foo",
@@ -107,21 +118,6 @@ export default () => {
         Insert
       </button>
       <input ref={inRef} />
-      <br />
-      <button
-        type="button"
-        onClick={() =>
-          replace(
-            // @ts-expect-error
-            +reRef.current.value,
-            { id: getId(), val: getId() }
-            // { shouldDirty: false, shouldTouched: false }
-          )
-        }
-      >
-        Replace
-      </button>
-      <input ref={reRef} />
       <br />
       <button
         type="button"
