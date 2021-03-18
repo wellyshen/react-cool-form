@@ -25,7 +25,7 @@ An `object` with the following options:
 
 `string`
 
-The [corresponding ID](../api-reference/use-form#id) of `useForm` hook. We only need it when using multiple form hooks at the same time.
+The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We only need it when using multiple form hooks at the same time.
 
 ### defaultValue
 

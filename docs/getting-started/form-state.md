@@ -127,7 +127,7 @@ const App = () => {
 
 Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `mon`'s `errorWithTouched` option (default is `false`).
 
-> 💡 This feature filters any errors of the untouched fields. So when validating with [runValidation](../api-reference/use-form#runvalidation) method, please ensure it's triggered after the field(s) is (are) touched.
+> 💡 This feature filters any errors of the untouched fields. So when validating with the [runValidation](../api-reference/use-form#runvalidation), please ensure it's triggered after the field(s) is (are) touched.
 
 ```js
 const { mon } = useForm();

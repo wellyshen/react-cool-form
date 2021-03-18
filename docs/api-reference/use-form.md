@@ -23,9 +23,9 @@ The ID of the hook, it's used to pair with the related hook(s) of React Cool For
 
 `Record<string, any>`
 
-Default field values of the form. In most case (especially working with TypeScript), we should use it to initialize a field's value and use [defaultValue/defaultChecked](https://reactjs.org/docs/uncontrolled-components.html#default-values) attribute for the case of [conditional fields](../examples/conditional-fields). The `defaultValues` also used to compare against the current values to calculate `isDirty` and `dirty`.
+Default field values of the form. In most case (especially working with TypeScript), we should use it to initialize a field's value and use the [defaultValue/defaultChecked](https://reactjs.org/docs/uncontrolled-components.html#default-values) attribute for the case of [conditional fields](../examples/conditional-fields). The `defaultValues` also used to compare against the current values to calculate `isDirty` and `dirty`.
 
-- The `defaultValues` is cached **at the first render** within the custom hook. If you want to reset it or [lazily set it](../examples/lazy-default-values), you can use [reset](#reset) method.
+- The `defaultValues` is cached **at the first render** within the custom hook. If you want to reset it or [lazily set it](../examples/lazy-default-values), you can use the [reset](#reset) method.
 
 ### excludeFields
 
@@ -33,7 +33,7 @@ Default field values of the form. In most case (especially working with TypeScri
 
 Tell React Cool Form to exclude field(s) by passing in the `name`/`id`/`class` of the field. You can also exclude a field via the pre-defined `data-rcf-exclude` attribute.
 
-- The `excludeFields` and `data-rcf-exclude` won't affect the functionality of [useControlled](./use-controlled) hook.
+- The `excludeFields` and `data-rcf-exclude` won't affect the functionality of the [useControlled](./use-controlled).
 
 ```js
 import { useForm } from "react-cool-form";
@@ -79,7 +79,7 @@ We can configure the [mode of the built-in validation](../getting-started/valida
 
 `boolean`
 
-Tell React Cool Form to run validations on `change` events as well as [setValue](#setvalue) method. Default is `true`.
+Tell React Cool Form to run validations on `change` events as well as the [setValue](#setvalue) method. Default is `true`.
 
 ### validateOnBlur
 
@@ -123,7 +123,7 @@ const methods = useForm({
 
 `(errors: FormErrors, options: Object, e?: Event) => void`
 
-The form error handler that is called when the form is submitted (or when [submit](#submit) method is called) and validated failed. It takes the following parameters:
+The form error handler that is called when the form is submitted (or when the [submit](#submit) method is called) and validated failed. It takes the following parameters:
 
 ```js
 const methods = useForm({
@@ -149,7 +149,7 @@ const methods = useForm({
 
 `(values: FormValues, options: Object, e?: Event) => void`
 
-The form reset handler that is called when the form is reset (or when [reset](#reset) method is called). It takes the following parameters:
+The form reset handler that is called when the form is reset (or when the [reset](#reset) method is called). It takes the following parameters:
 
 ```js
 const methods = useForm({
@@ -202,7 +202,7 @@ This method allows us to integrate [an existing form](../getting-started/integra
 This method allows us to do [field-level validation](../getting-started/validation-guide#field-level-validation) and data type conversion via the `ref` attribute. For the data type conversion, React Cool Form supports the [valueAsNumber](https://www.w3.org/TR/2011/WD-html5-20110405/common-input-element-attributes.html#dom-input-valueasnumber), [valueAsDate](https://www.w3.org/TR/2011/WD-html5-20110405/common-input-element-attributes.html#dom-input-valueasdate), and custom parser.
 
 - For your convenience, the values of `<input type="number">` and `<input type="radio">` are converted to `number` by default.
-- When using this method with [useControlled](./use-controlled) hook, the functionality of the method will be replaced.
+- When using this method with the [useControlled](./use-controlled), the functionality of the method will be replaced.
 
 ```js
 const { field } = useForm();

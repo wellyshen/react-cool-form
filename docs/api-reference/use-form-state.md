@@ -38,7 +38,7 @@ An `object` with the following options:
 
 `string`
 
-The [corresponding ID](../api-reference/use-form#id) of `useForm` hook. We only need it when using multiple form hooks at the same time.
+The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We only need it when using multiple form hooks at the same time.
 
 ### target
 
@@ -64,10 +64,10 @@ const [foo, bar, baz] = useFormState(["foo", "bar", "baz"], {
 
 `FormValues`
 
-The alternative default values for this hook to return when we didn't provide them via the [defaultValues option](./use-form#defaultvalues) of `useForm` hook. Two common use cases of this option are as follows:
+The alternative default values for this hook to return when we didn't provide them via the [defaultValues option](./use-form#defaultvalues) of the `useForm`. Two common use cases of this option are as follows:
 
-- Setting a default value for a field via `defaultValue` attribute.
-- Setting a default value for a field via `useControlled`'s [defaultValue option](./use-controlled#defaultvalue).
+- Setting a default value for a field via the `defaultValue` attribute.
+- Setting a default value for a field via the `useControlled`'s [defaultValue option](./use-controlled#defaultvalue).
 
 ### errorWithTouched
 
