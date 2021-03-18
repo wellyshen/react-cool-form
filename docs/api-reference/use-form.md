@@ -97,7 +97,7 @@ A synchronous/asynchronous function that is used for the [form-level validation]
 
 `(values: FormValues, options: Object, e?: Event) => void | Promise<void>`
 
-The form submission handler that is called when the form is submitted (or when [submit](#submit) method is called) and validated successfully. It takes the following parameters:
+The form submission handler will be called when the form is submitted (or when the [submit](#submit) method is called) and validated successfully. It takes the following parameters:
 
 ```js
 const methods = useForm({
