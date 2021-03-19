@@ -7,6 +7,7 @@ import * as shared from "./shared";
 import {
   ClearErrors,
   Field,
+  FieldArray,
   FieldElement,
   Fields,
   FieldValidator,
@@ -46,6 +47,7 @@ import {
   isAsyncFunction,
   isCheckboxInput,
   isEmptyObject,
+  isFieldArray,
   isFieldElement,
   isFileInput,
   isFileList,
@@ -83,6 +85,7 @@ export default <V extends FormValues = FormValues>({
   const formRef = useRef<HTMLElement>();
   const fieldsRef = useRef<Fields>({});
   const fieldParsersRef = useRef<Parsers>({});
+  const fieldArrayRef = useRef<FieldArray>({});
   const controlledsRef = useRef<Map>({});
   const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
   const changedFieldRef = useRef<string>();
@@ -268,17 +271,23 @@ export default <V extends FormValues = FormValues>({
   );
 
   const setDefaultValue = useCallback<SetDefaultValue>(
-    (name, value) => {
-      initialStateRef.current = set(
-        initialStateRef.current,
-        `values.${name}`,
-        value,
-        true
-      );
+    (
+      name,
+      value,
+      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
+    ) => {
+      if (shouldUpdateDefaultValue)
+        initialStateRef.current = set(
+          initialStateRef.current,
+          `values.${name}`,
+          value,
+          true
+        );
 
-      setStateRef(`values.${name}`, value, { shouldUpdate: false });
+      if (!dequal(get(stateRef.current.values, name), value))
+        setStateRef(`values.${name}`, value, { shouldUpdate: false });
     },
-    [setStateRef]
+    [setStateRef, stateRef]
   );
 
   const setNodesOrStateValue = useCallback(
@@ -463,11 +472,14 @@ export default <V extends FormValues = FormValues>({
 
   const runFieldValidation = useCallback(
     async (name: string): Promise<any> => {
-      if (!fieldValidatorsRef.current[name]) return undefined;
+      const value = get(stateRef.current.values, name);
+
+      if (!fieldValidatorsRef.current[name] || isUndefined(value))
+        return undefined;
 
       try {
         const error = await fieldValidatorsRef.current[name](
-          get(stateRef.current.values, name),
+          value,
           stateRef.current.values
         );
 
@@ -654,11 +666,22 @@ export default <V extends FormValues = FormValues>({
       if (shouldTouched) setTouched(name, true, false);
       if (shouldDirty) setDirtyIfNeeded(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
+
+      isFieldArray(fieldArrayRef.current, name, (key) => {
+        setNodesOrStateValue(initialStateRef.current.values, {
+          shouldUpdateDefaultValues: false,
+          fields: Object.keys(fieldsRef.current).filter((k) =>
+            k.startsWith(key)
+          ),
+        });
+        fieldArrayRef.current[key].reset();
+      });
     },
     [
       handleUnset,
       setDirtyIfNeeded,
       setNodeValue,
+      setNodesOrStateValue,
       setStateRef,
       setTouched,
       stateRef,
@@ -717,6 +740,8 @@ export default <V extends FormValues = FormValues>({
 
       setStateRef("", state);
       onResetRef.current(state.values, getOptions(), e);
+
+      Object.values(fieldArrayRef.current).forEach((field) => field.reset());
     },
     [getOptions, onResetRef, setNodesOrStateValue, setStateRef, stateRef]
   );
@@ -777,10 +802,12 @@ export default <V extends FormValues = FormValues>({
 
   const removeField = useCallback<RemoveField>(
     (name) => {
-      handleUnset(`values.${name}`);
-      handleUnset(`touched.${name}`);
-      handleUnset(`dirty.${name}`);
-      handleUnset(`errors.${name}`);
+      const { values, touched, dirty, errors } = stateRef.current;
+
+      if (!isUndefined(get(values, name))) handleUnset(`values.${name}`);
+      if (!isUndefined(get(touched, name))) handleUnset(`touched.${name}`);
+      if (!isUndefined(get(dirty, name))) handleUnset(`dirty.${name}`);
+      if (!isUndefined(get(errors, name))) handleUnset(`errors.${name}`);
 
       initialStateRef.current = unset(
         initialStateRef.current,
@@ -790,9 +817,10 @@ export default <V extends FormValues = FormValues>({
 
       delete fieldParsersRef.current[name];
       delete fieldValidatorsRef.current[name];
+      delete fieldArrayRef.current[name];
       delete controlledsRef.current[name];
     },
-    [handleUnset]
+    [handleUnset, stateRef]
   );
 
   const registerForm = useCallback<RegisterForm>(
@@ -931,13 +959,16 @@ export default <V extends FormValues = FormValues>({
   );
 
   shared.set(id, {
+    validateOnChange,
     shouldRemoveField,
     defaultValuesRef,
     initialStateRef,
+    fieldArrayRef,
     controlledsRef,
     fieldValidatorsRef,
     changedFieldRef,
     excludeFieldsRef,
+    setStateRef,
     getNodeValue,
     getFormState,
     setDefaultValue,

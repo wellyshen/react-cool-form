@@ -7,7 +7,7 @@ import isUndefined from "./isUndefined";
 import stringToPath from "./stringToPath";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const unset = (object: any, path: string, immutable = false): any => {
+const unset = (object: any, path: string, immutable?: boolean): any => {
   if (!isPlainObject(object)) throw new TypeError("Expected an object.");
 
   const refObject = immutable ? cloneObject(object) : object;

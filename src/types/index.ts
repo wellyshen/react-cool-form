@@ -5,13 +5,16 @@ export type Map<T = boolean> = Record<string, T>;
 
 // Global
 export type Methods = {
+  validateOnChange: boolean;
   shouldRemoveField: boolean;
   defaultValuesRef: MutableRefObject<any>;
   initialStateRef: MutableRefObject<FormState>;
   excludeFieldsRef: MutableRefObject<Map>;
+  fieldArrayRef: MutableRefObject<FieldArray>;
   controlledsRef: MutableRefObject<Map>;
   fieldValidatorsRef: MutableRefObject<Map<FieldValidator>>;
   changedFieldRef: MutableRefObject<string | undefined>;
+  setStateRef: SetStateRef;
   getNodeValue: GetNodeValue;
   getFormState: GetFormState;
   setDefaultValue: SetDefaultValue;
@@ -90,7 +93,9 @@ export interface Field {
 
 export type Fields = Map<Field>;
 
-interface Options<V> {
+export type FieldArray = Map<{ fields: Map; reset: () => void }>;
+
+interface EventOptions<V> {
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;
@@ -103,13 +108,13 @@ interface Options<V> {
 }
 
 interface ResetHandler<V> {
-  (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
+  (values: V, options: EventOptions<V>, event?: Event | SyntheticEvent): void;
 }
 
 export interface SubmitHandler<V = any> {
   (
     values: V,
-    options: Options<V>,
+    options: EventOptions<V>,
     event?: Event | SyntheticEvent
   ): void | Promise<void>;
 }
@@ -117,7 +122,7 @@ export interface SubmitHandler<V = any> {
 export interface ErrorHandler<V = any> {
   (
     errors: FormErrors<V>,
-    options: Options<V>,
+    options: EventOptions<V>,
     event?: Event | SyntheticEvent
   ): void;
 }
@@ -164,7 +169,7 @@ export interface HandleChangeEvent {
 }
 
 export interface SetDefaultValue {
-  (name: string, value: any): void;
+  (name: string, value: any, shouldUpdateDefaultValue?: boolean): void;
 }
 
 export interface RemoveField {
@@ -235,7 +240,7 @@ export interface RunValidation {
   (name?: string | string[]): Promise<boolean>;
 }
 
-export interface Reset<V> {
+export interface Reset<V = any> {
   (
     values?: V | ((previousValues: V) => V) | null,
     exclude?: (keyof FormState<V>)[] | null,
@@ -328,3 +333,52 @@ export interface Meta {
 }
 
 export type ControlledReturn = [FieldProps, Meta];
+
+// useFieldArray
+export type Keys = "values" | "touched" | "errors" | "dirty";
+
+export interface HelperHandler {
+  (value: any[], type: Keys, lastIndex?: number): any[];
+}
+
+type HelperOptions = Partial<{
+  shouldTouched: boolean;
+  shouldDirty: boolean;
+}>;
+
+export interface Push<T> {
+  (value: T, options?: HelperOptions): void;
+}
+
+export interface Insert<T> {
+  (index: number, value: T, options?: HelperOptions): void;
+}
+
+export interface Remove<T> {
+  (index: number): T | void;
+}
+
+export interface Swap {
+  (indexA: number, indexB: number): void;
+}
+
+export interface Move {
+  (from: number, to: number): void;
+}
+
+export type FieldArrayConfig<T, V> = Partial<{
+  formId: string;
+  defaultValue: T[];
+  validate: FieldValidator<V>;
+}>;
+
+export type FieldArrayReturn<T> = [
+  T[],
+  {
+    push: Push<T>;
+    insert: Insert<T>;
+    remove: Remove<T>;
+    swap: Swap;
+    move: Move;
+  }
+];

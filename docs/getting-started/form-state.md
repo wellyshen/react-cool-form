@@ -149,7 +149,7 @@ const errors = mon("errors", {
 });
 ```
 
-👉🏻 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
+👉🏻 See the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
 
 ## Isolating Re-rendering
 
@@ -215,7 +215,7 @@ const SomeHandler = () => {
 };
 ```
 
-With the `getState`, we can read/construct the data by the following ways:
+With the method, we can read/construct the data by the following ways:
 
 ```js
 const { getState } = useForm();

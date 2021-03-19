@@ -7,7 +7,7 @@ export default (
   object: any,
   path: string,
   value: unknown,
-  immutable = false
+  immutable?: boolean
 ): any => {
   if (!isPlainObject(object)) throw new TypeError("Expected an object.");
 
