@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import { ControlledConfig, ControlledReturn, FormValues } from "./types";
 import * as shared from "./shared";
+import { useLatest } from "./hooks";
 import {
   get,
   invariant,
@@ -60,21 +61,22 @@ export default <V extends FormValues = FormValues>(
     removeField,
   } = methods;
   const hasWarn = useRef(false);
+  const nameRef = useLatest(name);
 
   const warnDefaultValue = useCallback(() => {
     if (!hasWarn.current) {
       warn(
-        `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
+        `💡 react-cool-form > useControlled: Please provide a default value for "${nameRef.current}" field.`
       );
       hasWarn.current = true;
     }
-  }, [name]);
+  }, [nameRef]);
 
   useEffect(
     () => () => {
-      if (shouldRemoveField) removeField(name);
+      if (shouldRemoveField) removeField(nameRef.current);
     },
-    [name, removeField, shouldRemoveField]
+    [nameRef, removeField, shouldRemoveField]
   );
 
   controlledsRef.current[name] = true;

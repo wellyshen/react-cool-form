@@ -80,20 +80,18 @@ export default <T = any, V extends FormValues = FormValues>(
     () => ({
       reset: () =>
         setFields((prevFields) => {
-          let nextFields = [...prevFields];
           const valueLength = getState(`values.${name}`)?.length || 0;
 
-          if (nextFields.length > valueLength) {
-            nextFields.length = valueLength;
-          } else {
-            nextFields = getValue();
-          }
+          if (prevFields.length === valueLength) return prevFields;
+
+          const nextFields = [...prevFields];
+          nextFields.length = valueLength;
 
           return nextFields;
         }),
       fields: {},
     }),
-    [getState, getValue, name]
+    [getState, name]
   );
   if (validate) fieldValidatorsRef.current[name] = validate;
 
@@ -131,12 +129,12 @@ export default <T = any, V extends FormValues = FormValues>(
           );
       });
 
-      setFields(handler([...fields], "values"));
+      setFields((prevFields) => handler([...prevFields], "values"));
       setStateRef("", { ...state, shouldDirty: getIsDirty(state.dirty) });
 
       if (validateOnChange) runValidation(name);
     },
-    [fields, getState, name, runValidation, setStateRef, validateOnChange]
+    [getState, name, runValidation, setStateRef, validateOnChange]
   );
 
   const push = useCallback<Push<T>>(
