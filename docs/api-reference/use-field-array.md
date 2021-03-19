@@ -47,7 +47,7 @@ An array that holds the relevant field values. It refers to the location of the 
 
 An `object` with the following methods:
 
-### Push
+### push
 
 `(value: FieldValue, options?: Object) => void`
 
@@ -65,7 +65,7 @@ const handleAdd = () => {
 };
 ```
 
-### Insert
+### insert
 
 `(index: number, value: FieldValue, options?: Object) => void`
 
@@ -84,19 +84,19 @@ const handleInsert = () => {
 };
 ```
 
-### Swap
+### swap
 
 `(indexA: number, indexB: number) => void`
 
 Swap two values in an array.
 
-### Move
+### move
 
 `(from: number, to: number) => void`
 
 Move a value in an array to another index.
 
-### Remove
+### remove
 
 `(index: number) => FieldValue`
 
