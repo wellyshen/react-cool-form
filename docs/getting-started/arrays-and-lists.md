@@ -5,11 +5,13 @@ title: Arrays and Lists
 
 There can be situations in which the user needs to add or remove fields from a form depending on the amount of fields they need to fill out. Using React Cool Form, we can use the [useFieldArray](../api-reference/use-field-array) hook to easily deal with this situation.
 
-## Deal with Field Array
+## Deal with Array Fields
 
 The `useFieldArray` hook helps you to deal with multiple similar fields. You pass it a `name` parameter with the path of the field that holds the relevant array. The hook will then give you the power to render an array of inputs as well as common array/list manipulations.
 
-> 💡 When dealing with field array, we don’t recommend using indexes for keys if the order of fields may change. Check out the [article](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318) to learn more.
+> 💡 When dealing with array fields, we don’t recommend using indexes for keys if the order of fields may change. Check out the [article](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318) to learn more.
+
+[![Edit RCF - Arrays and Lists](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-arrays-and-lists-crv9d?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
 import { useForm, useFieldArray } from "react-cool-form";
