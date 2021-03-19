@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { render } from "react-dom";
-import { useForm, useControlled } from "react-cool-form";
+import { useForm, useControlled, useFieldArray } from "react-cool-form";
 
 import "./styles.scss";
 
@@ -15,6 +15,16 @@ const RadioButtons = ({ name, buttons }) => {
       <input {...fieldProps} id={id} value={value} defaultChecked={checked} />
       <label htmlFor={id}>{value}</label>
     </span>
+  ));
+};
+
+const NoteArray = ({ name, notes }) => {
+  const [fields] = useFieldArray(name, {
+    defaultValue: notes
+  });
+
+  return fields.map(({ id, text }, index) => (
+    <input key={id} name={`${name}[${index}].text`} defaultValue={text} />
   ));
 };
 
@@ -64,6 +74,8 @@ function App() {
               { id: "lemon", value: "🍋" }
             ]}
           /> */}
+          {/* When working with conditional fields, please ensure the "useFieldArray" hook is wrapped in a component */}
+          <NoteArray name="note" notes={[{ id: "0", text: "" }]} />
         </>
       )}
       <input type="submit" />
