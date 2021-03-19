@@ -106,9 +106,9 @@ export default () => {
         ))}
         <input type="submit" />
         <input type="reset" />
-        <button type="button" onClick={() => setShow(!show)}>
+        {/* <button type="button" onClick={() => setShow(!show)}>
           Toggle
-        </button>
+        </button> */}
       </form>
     </>
   );
