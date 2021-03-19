@@ -3,7 +3,7 @@ id: use-form-methods
 title: useFormMethods
 ---
 
-This hook allows us to use [all of the methods](./use-form#methods) provided by React Cool Form from a component at any level. Check the [Do It Yourself](../getting-started/3rd-party-ui-libraries#3-do-it-yourself) to learn more.
+This hook allows us to use [all of the methods](./use-form#methods) provided by React Cool Form from a component at any level. See the [Do It Yourself](../getting-started/3rd-party-ui-libraries#3-do-it-yourself) to learn more.
 
 ```js
 const methods = useFormMethods(formId);

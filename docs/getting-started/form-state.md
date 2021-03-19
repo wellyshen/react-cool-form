@@ -149,7 +149,7 @@ const errors = mon("errors", {
 });
 ```
 
-👉🏻 Check the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
+👉🏻 See the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
 
 ## Isolating Re-rendering
 
