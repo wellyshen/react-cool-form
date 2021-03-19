@@ -129,12 +129,12 @@ export default <T = any, V extends FormValues = FormValues>(
           );
       });
 
-      setFields(handler([...fields], "values"));
+      setFields((prevFields) => handler([...prevFields], "values"));
       setStateRef("", { ...state, shouldDirty: getIsDirty(state.dirty) });
 
       if (validateOnChange) runValidation(name);
     },
-    [fields, getState, name, runValidation, setStateRef, validateOnChange]
+    [getState, name, runValidation, setStateRef, validateOnChange]
   );
 
   const push = useCallback<Push<T>>(
