@@ -54,11 +54,11 @@ const methods = useFormMethods<FormValues>();
 const data = useFormState<FormValues>();
 
 const props = useControlled<FormValues>();
-
+Ｆ;
 // Working without "validate" option
-const helpers = useFieldArray<FieldValue>();
+const props = useFieldArray<FieldValue>();
 // Working with "validate" option
-const helpers = useFieldArray<FieldValue, FormValues>({
+const props = useFieldArray<FieldValue, FormValues>({
   validate: (value) => {
     /* ... */
   },
