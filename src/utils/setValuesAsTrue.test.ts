@@ -25,4 +25,10 @@ describe("setValuesAsTrue", () => {
       foo: { bar: [{ baz: true }, true] },
     });
   });
+
+  it("should set value with immutable way", () => {
+    const target = { foo: { a: "🍎" } };
+    setValuesAsTrue(target);
+    expect(target).toEqual({ foo: { a: "🍎" } });
+  });
 });
