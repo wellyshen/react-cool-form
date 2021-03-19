@@ -1,9 +1,14 @@
 /* eslint-disable no-console */
 
 import { useRef, useState } from "react";
-import { useForm, useFieldArray } from "react-cool-form";
+import { useForm, useFieldArray, useControlled } from "react-cool-form";
 
 const getId = () => Math.floor(Math.random() * 10000).toString();
+
+const Field = ({ name, ...restProps }: any) => {
+  const [props] = useControlled(name, restProps);
+  return <input {...props} />;
+};
 
 export default () => {
   const [show, setShow] = useState(false);
@@ -25,7 +30,7 @@ export default () => {
   });
   const [fields, { push, insert, remove, swap, move }] = useFieldArray("foo");
 
-  console.log("LOG ===> Re-rendering");
+  console.log("LOG ===> Re-rendering", fields);
 
   return (
     <>
@@ -97,7 +102,7 @@ export default () => {
       <input ref={mvBRef} />
       <form ref={form}>
         {fields.map(({ id, val }, idx) => (
-          <input key={id} name={`foo[${idx}].val`} defaultValue={val} />
+          <Field key={id} name={`foo[${idx}].val`} defaultValue={val} />
         ))}
         <input type="submit" />
         <input type="reset" />
