@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.142
+
+### Patch Changes
+
+- [#481](https://github.com/wellyshen/react-cool-form/pull/481) [`90afddc`](https://github.com/wellyshen/react-cool-form/commit/90afddc7f61d76a891c0451410e383f8906f3c08) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFieldArray): reset not working
+
+* [#484](https://github.com/wellyshen/react-cool-form/pull/484) [`d5d68bc`](https://github.com/wellyshen/react-cool-form/commit/d5d68bcf7500caefc2faa3081bbdb46a6e9242be) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useControlled): controlled components not working with field-array
+
 ## 0.0.140
 
 ### Patch Changes
