@@ -26,6 +26,7 @@ module.exports = {
       "examples/radio-group",
       "examples/multi-select",
       "examples/complex-structures",
+      "examples/arrays-and-lists",
       "examples/conditional-fields",
       "examples/lazy-default-values",
       "examples/material-ui",

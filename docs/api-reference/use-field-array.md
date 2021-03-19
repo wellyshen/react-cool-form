@@ -106,7 +106,7 @@ Remove a value at an index of an array and return it.
 
 The example demonstrates the basic usage of this hook.
 
-> 💡 When dealing with field array, we don’t recommend using indexes for keys if the order of fields may change. Check out the [article](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318) to learn more.
+> 💡 When dealing with array fields, we don’t recommend using indexes for keys if the order of fields may change. Check out the [article](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318) to learn more.
 
 ```js
 import { useForm, useFieldArray } from "react-cool-form";
