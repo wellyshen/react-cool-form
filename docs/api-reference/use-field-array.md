@@ -49,15 +49,40 @@ An `object` with the following methods:
 
 ### Push
 
-`(value: FieldValue) => void`
+`(value: FieldValue, options?: Object) => void`
 
 Add a value to the end of an array.
 
+```js
+const handleAdd = () => {
+  push(
+    { id: "0", name: "Iron Man" },
+    {
+      shouldTouched: false, // Set the field as touched, default is false
+      shouldDirty: true, // Set the field as dirty, default is true
+    }
+  );
+};
+```
+
 ### Insert
 
-`(index: number, value: FieldValue) => void`
+`(index: number, value: FieldValue, options?: Object) => void`
 
 Insert a value at a given index into the array.
+
+```js
+const handleInsert = () => {
+  insert(
+    0,
+    { id: "0", name: "Iron Man" },
+    {
+      shouldTouched: false, // Set the field as touched, default is false
+      shouldDirty: true, // Set the field as dirty, default is true
+    }
+  );
+};
+```
 
 ### Swap
 
