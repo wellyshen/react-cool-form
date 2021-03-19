@@ -77,7 +77,7 @@ Are there any errors?
 
 - Sets `formState.isSubmitting` to `false`
 
-👉🏻 Check the [Form State](./form-state#about-the-form-state) to learn more about it.
+👉🏻 See the [Form State](./form-state#about-the-form-state) to learn more about it.
 
 ## Manually Triggering Submission
 

@@ -1,6 +1,6 @@
 import isObject from "./isObject";
 
-const getIsDirty = (dirty: object): boolean => {
+export default (dirty: object): boolean => {
   const search = (dty: object, found: any[] = []) => {
     for (const val of Object.values(dty)) {
       if (val === true) {
@@ -16,5 +16,3 @@ const getIsDirty = (dirty: object): boolean => {
 
   return !!search(dirty).length;
 };
-
-export default getIsDirty;

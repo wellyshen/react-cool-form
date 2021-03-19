@@ -55,13 +55,13 @@ const App = () => {
 };
 ```
 
-👉🏻 Check the [Exclude Fields](../getting-started/integration-an-existing-form#exclude-fields) to learn more.
+👉🏻 See the [Exclude Fields](../getting-started/integration-an-existing-form#exclude-fields) to learn more.
 
 ### shouldRemoveField
 
 `boolean`
 
-By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirty`) of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. Check the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
+By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirty`) of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. See the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
 
 - If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)), we need to clear the related state by ourselves.
 
@@ -91,7 +91,7 @@ Tell React Cool Form to run validations on `blur` events. Default is `true`.
 
 `(values: FormValues) => FormErrors | false | void | Promise<FormErrors | false | void>`
 
-A synchronous/asynchronous function that is used for the [form-level validation](../getting-started/validation-guide#form-level-validation). It takes all the `values` of the form and returns any validation errors (or returns `undefined` if there's no error). The validation errors must be in the same shape as the values of the form.
+A synchronous/asynchronous function that is used for the [form-level validation](../getting-started/validation-guide#form-level-validation). It takes all the form's values and returns any validation errors (or returns `undefined` if there's no error). The validation errors must be in the same shape as the values of the form.
 
 ### onSubmit
 
@@ -117,7 +117,7 @@ const methods = useForm({
 });
 ```
 
-👉🏻 Check the [Form Submission](../getting-started/form-submission) to learn more.
+👉🏻 See the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### onError
 
@@ -143,7 +143,7 @@ const methods = useForm({
 });
 ```
 
-👉🏻 Check the [Form Submission](../getting-started/form-submission) to learn more.
+👉🏻 See the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### onReset
 
@@ -169,7 +169,7 @@ const methods = useForm({
 });
 ```
 
-👉🏻 Check the [Reset Form](../getting-started/reset-form) to learn more.
+👉🏻 See the [Reset Form](../getting-started/reset-form) to learn more.
 
 ### debug
 
@@ -229,13 +229,13 @@ If you just want to validate the field, there's a shortcut for it:
 
 `(path: string | string[] | Record<string, string>, options?: Object) => any`
 
-Mon means "monitor", the method provides us a performant way to use the form state with minimized re-renders. Check the [Form State](../getting-started/form-state) to learn more.
+Mon means "monitor", the method provides us a performant way to use the form state with minimized re-renders. See the [Form State](../getting-started/form-state) to learn more.
 
 ### getState
 
 `(path?: string | string[] | Record<string, string>, target?: string) => any`
 
-This method allows us to read the form state without triggering re-renders. Check the [Reading the State](../getting-started/form-state#reading-the-state) to learn more.
+This method allows us to read the form state without triggering re-renders. See the [Reading the State](../getting-started/form-state#reading-the-state) to learn more.
 
 ### setValue
 
@@ -373,7 +373,7 @@ const validateForm = async () => {
 };
 ```
 
-👉🏻 Check the [Validation Guide](../getting-started/validation-guide) to learn more.
+👉🏻 See the [Validation Guide](../getting-started/validation-guide) to learn more.
 
 ### submit
 
@@ -401,7 +401,7 @@ const handleFormSubmit = async (e) => {
 };
 ```
 
-👉🏻 Check the [Form Submission](../getting-started/form-submission) to learn more.
+👉🏻 See the [Form Submission](../getting-started/form-submission) to learn more.
 
 ### reset
 
@@ -430,4 +430,4 @@ const handleFormReset = (e) => {
 };
 ```
 
-👉🏻 Check the [Reset Form](../getting-started/reset-form) to learn more.
+👉🏻 See the [Reset Form](../getting-started/reset-form) to learn more.

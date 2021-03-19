@@ -9,7 +9,7 @@ declare module "react-cool-form" {
     [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
   };
 
-  interface Options<V> {
+  interface EventOptions<V> {
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
@@ -146,13 +146,13 @@ declare module "react-cool-form" {
   }
 
   export interface ResetHandler<V extends FormValues = FormValues> {
-    (values: V, options: Options<V>, event?: Event | SyntheticEvent): void;
+    (values: V, options: EventOptions<V>, event?: Event | SyntheticEvent): void;
   }
 
   export interface SubmitHandler<V extends FormValues = FormValues> {
     (
       values: V,
-      options: Options<V>,
+      options: EventOptions<V>,
       event?: Event | SyntheticEvent
     ): void | Promise<void>;
   }
@@ -160,7 +160,7 @@ declare module "react-cool-form" {
   export interface ErrorHandler<V extends FormValues = FormValues> {
     (
       errors: FormErrors<V>,
-      options: Options<V>,
+      options: EventOptions<V>,
       event?: Event | SyntheticEvent
     ): void;
   }
@@ -257,6 +257,57 @@ declare module "react-cool-form" {
     name: string,
     config?: ControlledConfig<V>
   ): ControlledReturn;
+
+  // useFieldArray
+  type HelperOptions = Partial<{
+    shouldTouched: boolean;
+    shouldDirty: boolean;
+  }>;
+
+  interface Push<T> {
+    (value: T, options?: HelperOptions): void;
+  }
+
+  interface Insert<T> {
+    (index: number, value: T, options?: HelperOptions): void;
+  }
+
+  interface Remove<T> {
+    (index: number): T | void;
+  }
+
+  interface Swap {
+    (indexA: number, indexB: number): void;
+  }
+
+  interface Move {
+    (from: number, to: number): void;
+  }
+
+  export type FieldArrayConfig<
+    T = any,
+    V extends FormValues = FormValues
+  > = Partial<{
+    formId: string;
+    defaultValue: T[];
+    validate: FieldValidator<V>;
+  }>;
+
+  export type FieldArrayReturn<T = any> = [
+    T[],
+    {
+      push: Push<T>;
+      insert: Insert<T>;
+      remove: Remove<T>;
+      swap: Swap;
+      move: Move;
+    }
+  ];
+
+  export function useFieldArray<T = any, V extends FormValues = FormValues>(
+    name: string,
+    config?: FieldArrayConfig<T, V>
+  ): FieldArrayReturn<T>;
 
   // Utility functions
   export function get(object: any, path: string, defaultValue?: unknown): any;

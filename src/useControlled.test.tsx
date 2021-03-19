@@ -1,4 +1,10 @@
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  waitFor,
+  screen,
+  act,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import {
@@ -7,8 +13,10 @@ import {
   GetState,
   Meta,
   RegisterField,
+  Reset,
 } from "./types";
 import useForm from "./useForm";
+import useFieldArray from "./useFieldArray";
 import useControlled from "./useControlled";
 
 interface API {
@@ -16,14 +24,17 @@ interface API {
   meta: Meta;
   field: RegisterField;
   getState: GetState;
+  reset: Reset;
 }
 
 interface Config extends ControlledConfig {
   children: (api: API) => JSX.Element | null;
   name: string;
+  isFieldArray: boolean;
   defaultValues: Record<string, any>;
   onSubmit: (values: any) => void;
   onError: (errors: any) => void;
+  onReset: (values: any) => void;
 }
 
 type Props = Partial<Config>;
@@ -31,17 +42,21 @@ type Props = Partial<Config>;
 const Form = ({
   children,
   name = "foo",
+  isFieldArray,
   defaultValues,
   onSubmit = () => null,
   onError = () => null,
+  onReset = () => null,
   ...rest
 }: Props) => {
-  const { form, field, getState } = useForm({
+  const { form, field, getState, reset } = useForm({
     defaultValues,
     onSubmit: (values) => onSubmit(values),
     onError: (errors) => onError(errors),
+    onReset: (values) => onReset(values),
   });
   const [fieldProps, meta] = useControlled(name, rest);
+  useFieldArray(isFieldArray ? name : "x");
 
   return (
     <>
@@ -49,7 +64,9 @@ const Form = ({
       <div>{meta.isTouched ? "touched" : "not-touched"}</div>
       <div>{meta.isDirty ? "dirty" : "not-dirty"}</div>
       <form data-testid="form" ref={form}>
-        {children ? children({ fieldProps, meta, field, getState }) : null}
+        {children
+          ? children({ fieldProps, meta, field, getState, reset })
+          : null}
       </form>
     </>
   );
@@ -82,6 +99,7 @@ const renderHelper = ({ children, ...rest }: Props = {}) => {
 };
 
 describe("useControlled", () => {
+  console.warn = jest.fn();
   const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
   const onError = jest.fn();
@@ -103,8 +121,21 @@ describe("useControlled", () => {
   });
 
   it("should warn missing default value", () => {
-    console.warn = jest.fn();
     renderHelper({
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    fireEvent.input(getByTestId("foo"), { target: { value } });
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledWith(
+      '💡 react-cool-form > useControlled: Please provide a default value for "foo" field.'
+    );
+  });
+
+  it("should warn missing default value for field-array", () => {
+    renderHelper({
+      isFieldArray: true,
       children: ({ fieldProps }: API) => (
         <input data-testid="foo" {...fieldProps} />
       ),
@@ -119,7 +150,6 @@ describe("useControlled", () => {
   it.each(["form", "controlled"])(
     "should not warn missing default value",
     (type) => {
-      console.warn = jest.fn();
       renderHelper({
         defaultValues: type === "form" ? { foo: value } : undefined,
         defaultValue: type === "controlled" ? value : undefined,
@@ -128,14 +158,6 @@ describe("useControlled", () => {
       expect(console.warn).not.toHaveBeenCalled();
     }
   );
-
-  it("should not set default value automatically", () => {
-    console.warn = jest.fn();
-    const { getState } = renderHelper({
-      children: ({ fieldProps }: API) => <input {...fieldProps} />,
-    });
-    expect(getState("values.foo")).toBeUndefined();
-  });
 
   it("should return values correctly", () => {
     const { fieldProps, meta } = renderHelper({ anyProp: () => null });
@@ -150,6 +172,22 @@ describe("useControlled", () => {
       isTouched: expect.any(Boolean),
       isDirty: expect.any(Boolean),
     });
+  });
+
+  it("should call events correctly", () => {
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    renderHelper({
+      onChange,
+      onBlur,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    fireEvent.input(getByTestId("foo"), { target: { value } });
+    expect(onChange).toHaveBeenCalled();
+    fireEvent.focusOut(getByTestId("foo"));
+    expect(onBlur).toHaveBeenCalled();
   });
 
   it.each(["form", "controlled"])(
@@ -174,7 +212,53 @@ describe("useControlled", () => {
     }
   );
 
-  it("should run validation", async () => {
+  it("should not set default value", () => {
+    const { getState } = renderHelper({
+      children: ({ fieldProps }: API) => <input {...fieldProps} />,
+    });
+    expect(getState("values.foo")).toBeUndefined();
+  });
+
+  it("should set default value for field-array", () => {
+    const { getState } = renderHelper({
+      isFieldArray: true,
+      defaultValue: value,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    expect(getState("values.foo")).toBe(value);
+  });
+
+  it("should not set default value for field-array", () => {
+    const { getState } = renderHelper({
+      isFieldArray: true,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    expect(getState("values.foo")).toBeUndefined();
+  });
+
+  it.each(["form", "controlled"])(
+    "should reset value from %s option",
+    (type) => {
+      const onReset = jest.fn();
+      const defaultValues = { foo: value };
+      const { reset } = renderHelper({
+        defaultValues: type === "form" ? defaultValues : undefined,
+        defaultValue: type === "controlled" ? defaultValues.foo : undefined,
+        onReset,
+        children: ({ fieldProps }: API) => (
+          <input data-testid="foo" {...fieldProps} />
+        ),
+      });
+      act(() => reset());
+      expect(onReset).toHaveBeenCalledWith(defaultValues);
+    }
+  );
+
+  it("should run validation on submit", async () => {
     const errors = { foo: "Required" };
     const { getState } = renderHelper({
       defaultValue: "",
@@ -185,9 +269,8 @@ describe("useControlled", () => {
         <input data-testid="foo" {...fieldProps} />
       ),
     });
-    const form = getByTestId("form");
 
-    fireEvent.submit(form);
+    fireEvent.submit(getByTestId("form"));
     expect(getState("isValidating")).toBeTruthy();
     await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
     const error = await screen.findByText(errors.foo);
@@ -196,7 +279,7 @@ describe("useControlled", () => {
     expect(getState("isValid")).toBeFalsy();
 
     fireEvent.input(getByTestId("foo"), { target: { value } });
-    fireEvent.submit(form);
+    fireEvent.submit(getByTestId("form"));
     expect(getState("isValidating")).toBeTruthy();
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith({ foo: value });
@@ -207,6 +290,34 @@ describe("useControlled", () => {
     expect(getState("errors")).toEqual({});
     expect(getState("isValidating")).toBeFalsy();
     expect(getState("isValid")).toBeTruthy();
+  });
+
+  it("should run validation on change", async () => {
+    const error = "Too short";
+    const { getState } = renderHelper({
+      defaultValue: "",
+      validate: (val: string) => (val.length < 5 ? error : false),
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+
+    fireEvent.input(getByTestId("foo"), { target: { value: "123" } });
+    await waitFor(() => expect(getState("errors")).toEqual({ foo: error }));
+  });
+
+  it("should run validation on blur", async () => {
+    const error = "Required";
+    const { getState } = renderHelper({
+      defaultValue: "",
+      validate: (val: string) => (!val.length ? error : false),
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+
+    fireEvent.focusOut(getByTestId("foo"));
+    await waitFor(() => expect(getState("errors")).toEqual({ foo: error }));
   });
 
   it('should ignore "field" method', async () => {
@@ -327,6 +438,4 @@ describe("useControlled", () => {
     });
     expect(getByTestId("foo").value).toBe(value);
   });
-
-  it.todo("should reset form correctly");
 });
