@@ -102,7 +102,7 @@ export default () => {
       <input ref={mvBRef} />
       <form ref={form}>
         {fields.map(({ id, val }, idx) => (
-          <Field key={id} name={`foo[${idx}].val`} defaultValue={val} />
+          <input key={id} name={`foo[${idx}].val`} defaultValue={val} />
         ))}
         <input type="submit" />
         <input type="reset" />
