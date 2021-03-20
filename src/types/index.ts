@@ -11,7 +11,7 @@ export type Methods = {
   initialStateRef: MutableRefObject<FormState>;
   excludeFieldsRef: MutableRefObject<Map>;
   fieldArrayRef: MutableRefObject<FieldArray>;
-  controlledsRef: MutableRefObject<Map>;
+  controlsRef: MutableRefObject<Map>;
   fieldValidatorsRef: MutableRefObject<Map<FieldValidator>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   setStateRef: SetStateRef;
