@@ -18,6 +18,7 @@ export type Methods = {
   getNodeValue: GetNodeValue;
   getFormState: GetFormState;
   setDefaultValue: SetDefaultValue;
+  setNodesOrStateValue: SetNodesOrStateValue;
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
   handleChangeEvent: HandleChangeEvent;
   removeField: RemoveField;
@@ -170,6 +171,13 @@ export interface HandleChangeEvent {
 
 export interface SetDefaultValue {
   (name: string, value: any, shouldUpdateDefaultValue?: boolean): void;
+}
+
+export interface SetNodesOrStateValue<V = any> {
+  (
+    values: V,
+    options?: { shouldUpdateDefaultValues?: boolean; fields?: string[] }
+  ): void;
 }
 
 export interface RemoveField {
@@ -338,7 +346,7 @@ export type ControlledReturn = [FieldProps, Meta];
 export type Keys = "values" | "touched" | "errors" | "dirty";
 
 export interface HelperHandler {
-  (fields: any[], type: Keys, lastIndex?: number): any[];
+  (fields: any[], type: Keys, lastIndex: number): any[];
 }
 
 type HelperOptions = Partial<{
@@ -373,7 +381,7 @@ export type FieldArrayConfig<T, V> = Partial<{
 }>;
 
 export type FieldArrayReturn<T> = [
-  T[],
+  Array<[string, T]>,
   {
     push: Push<T>;
     insert: Insert<T>;

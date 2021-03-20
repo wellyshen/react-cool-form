@@ -6,7 +6,6 @@ import { dequal } from "dequal/lite";
 import * as shared from "./shared";
 import {
   ClearErrors,
-  Field,
   FieldArray,
   FieldElement,
   Fields,
@@ -31,6 +30,7 @@ import {
   SetDefaultValue,
   SetDirty,
   SetError,
+  SetNodesOrStateValue,
   SetTouched,
   SetTouchedMaybeValidate,
   SetValue,
@@ -169,6 +169,10 @@ export default <V extends FormValues = FormValues>({
         .reduce((acc: Fields, elm) => {
           const field = elm as FieldElement;
           const { name } = field;
+          const fieldArrayName = isFieldArray(fieldArrayRef.current, name);
+
+          if (fieldArrayName)
+            fieldArrayRef.current[fieldArrayName].fields[name] = true;
 
           acc[name] = { ...acc[name], field: acc[name]?.field || field };
 
@@ -290,20 +294,15 @@ export default <V extends FormValues = FormValues>({
     [setStateRef, stateRef]
   );
 
-  const setNodesOrStateValue = useCallback(
+  const setNodesOrStateValue = useCallback<SetNodesOrStateValue<V>>(
     (
-      values: V,
+      values,
       {
         shouldUpdateDefaultValues = true,
-        fields = Object.values(fieldsRef.current),
-      }: {
-        shouldUpdateDefaultValues?: boolean;
-        fields?: Field[] | string[];
+        fields = Object.keys(fieldsRef.current),
       } = {}
     ) =>
-      fields.forEach((field: Field | string) => {
-        const name = isPlainObject(field) ? (field as Field).field.name : field;
-
+      fields.forEach((name) => {
         if (controlledsRef.current[name]) return;
 
         let value = get(values, name);
@@ -667,21 +666,14 @@ export default <V extends FormValues = FormValues>({
       if (shouldDirty) setDirtyIfNeeded(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
 
-      isFieldArray(fieldArrayRef.current, name, (key) => {
-        setNodesOrStateValue(initialStateRef.current.values, {
-          shouldUpdateDefaultValues: false,
-          fields: Object.keys(fieldsRef.current).filter((k) =>
-            k.startsWith(key)
-          ),
-        });
-        fieldArrayRef.current[key].reset();
-      });
+      isFieldArray(fieldArrayRef.current, name, (key) =>
+        fieldArrayRef.current[key].reset()
+      );
     },
     [
       handleUnset,
       setDirtyIfNeeded,
       setNodeValue,
-      setNodesOrStateValue,
       setStateRef,
       setTouched,
       stateRef,
@@ -731,6 +723,9 @@ export default <V extends FormValues = FormValues>({
           );
           setNodesOrStateValue(nextValues, {
             shouldUpdateDefaultValues: false,
+            fields: Object.keys(fieldsRef.current).filter(
+              (name) => !isFieldArray(fieldArrayRef.current, name)
+            ),
           });
         } else {
           // @ts-expect-error
@@ -976,6 +971,7 @@ export default <V extends FormValues = FormValues>({
     getNodeValue,
     getFormState,
     setDefaultValue,
+    setNodesOrStateValue,
     setTouchedMaybeValidate,
     handleChangeEvent,
     removeField,
