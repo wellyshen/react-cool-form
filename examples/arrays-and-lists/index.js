@@ -14,9 +14,16 @@ function App() {
 
   return (
     <form ref={form}>
+      {/* The first parameter of the callback is an array that includes
+          a supplied "fieldName" (name + index) and your field value */}
       {fields.map(([fieldName, { name }], index) => (
-        <div key={fieldName}>
-          <input name={`${fieldName}.name`} defaultValue={name} />
+        <div
+          key={fieldName} // Use the "fieldName" as the key
+        >
+          <input
+            name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
+            defaultValue={name} // Don't forget to provide the default value
+          />
           <button type="button" onClick={() => remove(index)}>
             Remove
           </button>
