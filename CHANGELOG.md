@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.143
+
+### Patch Changes
+
+- [`4f9ae54`](https://github.com/wellyshen/react-cool-form/commit/4f9ae542010d413b1bc466a99b7c479249e39b2e) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFieldArray): reset fields not working properly
+
+* [`c5a700f`](https://github.com/wellyshen/react-cool-form/commit/c5a700f26004f5c7ec5772eb7578bfd6cff5cee4) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): reserve the default value of field-array from `removeField` method
+
 ## 0.0.142
 
 ### Patch Changes
