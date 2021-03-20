@@ -90,13 +90,14 @@ export default <T = any, V extends FormValues = FormValues>(
     };
   }, [initialStateRef, name, removeField, setDefaultValue, shouldRemoveField]);
 
-  fieldArrayRef.current[name] = {
-    reset: () => {
-      setFields(getFields());
-      setNodeValue();
-    },
-    fields: {},
-  };
+  if (!fieldArrayRef.current[name])
+    fieldArrayRef.current[name] = {
+      reset: () => {
+        setFields(getFields());
+        setNodeValue();
+      },
+      fields: {},
+    };
   if (validate) fieldValidatorsRef.current[name] = validate;
 
   const setState = useCallback(

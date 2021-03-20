@@ -1,5 +1,17 @@
 # react-cool-form
 
+## 0.0.145
+
+### Patch Changes
+
+- [#489](https://github.com/wellyshen/react-cool-form/pull/489) [`1eee601`](https://github.com/wellyshen/react-cool-form/commit/1eee601ef0b121387e1744290b0c62d62c0c277d) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFieldArray): fields not updated by helper methods
+
+## 0.0.144
+
+### Patch Changes
+
+- [#487](https://github.com/wellyshen/react-cool-form/pull/487) [`2d70034`](https://github.com/wellyshen/react-cool-form/commit/2d70034f2d4b8c9b4dd11a55eac42e1e19b3e41b) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useFieldArray): better API for fixing the side-effect of React keys and lists
+
 ## 0.0.143
 
 ### Patch Changes
