@@ -6,11 +6,7 @@ import "./styles.scss";
 function App() {
   const { form } = useForm({
     defaultValues: {
-      foo: [
-        { id: "0", name: "Iron Mane" },
-        { id: "1", name: "Thor" },
-        { id: "2", name: "Hulk" }
-      ]
+      foo: [{ name: "Iron Mane" }, { name: "Thor" }, { name: "Hulk" }]
     },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
@@ -18,22 +14,19 @@ function App() {
 
   return (
     <form ref={form}>
-      {fields.map(({ id, name }, index) => (
-        <div key={id}>
-          <input name={`foo[${index}].name`} defaultValue={name} />
+      {fields.map(([fieldName, { name }], index) => (
+        <div key={fieldName}>
+          <input name={`${fieldName}.name`} defaultValue={name} />
           <button type="button" onClick={() => remove(index)}>
             Remove
           </button>
         </div>
       ))}
       <div>
-        <button type="button" onClick={() => push({ id: "3", name: "Loki" })}>
+        <button type="button" onClick={() => push({ name: "Loki" })}>
           Push
         </button>
-        <button
-          type="button"
-          onClick={() => insert(1, { id: "4", name: "Spider Man" })}
-        >
+        <button type="button" onClick={() => insert(1, { name: "Spider Man" })}>
           Insert
         </button>
         <button type="button" onClick={() => swap(0, 1)}>
