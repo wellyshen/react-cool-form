@@ -294,7 +294,7 @@ declare module "react-cool-form" {
   }>;
 
   export type FieldArrayReturn<T = any> = [
-    T[],
+    Array<[string, T]>,
     {
       push: Push<T>;
       insert: Insert<T>;

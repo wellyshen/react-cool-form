@@ -39,7 +39,7 @@ A synchronous/asynchronous function that is used for the [field-level validation
 
 ## Fields
 
-`FieldValue[]`
+`Array<[string, FieldValue]>`
 
 An array that holds the relevant field values and a supplied field name (name + index) for the `key` and `name` attributes of a field.
 
