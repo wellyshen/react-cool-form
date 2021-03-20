@@ -173,7 +173,7 @@ export interface SetDefaultValue {
 }
 
 export interface RemoveField {
-  (name: string): void;
+  (name: string, shouldUpdateDefaultValue?: boolean): void;
 }
 
 export interface SetTouchedMaybeValidate {

@@ -72,7 +72,7 @@ export default <T = any, V extends FormValues = FormValues>(
       setDefaultValue(name, defaultValueRef.current, true);
 
     return () => {
-      if (shouldRemoveField) removeField(name);
+      if (shouldRemoveField) removeField(name, true);
     };
   }, [initialStateRef, name, removeField, setDefaultValue, shouldRemoveField]);
 

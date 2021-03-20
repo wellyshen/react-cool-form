@@ -801,7 +801,10 @@ export default <V extends FormValues = FormValues>({
   );
 
   const removeField = useCallback<RemoveField>(
-    (name) => {
+    (
+      name,
+      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
+    ) => {
       const { values, touched, dirty, errors } = stateRef.current;
 
       if (!isUndefined(get(values, name))) handleUnset(`values.${name}`);
@@ -809,11 +812,12 @@ export default <V extends FormValues = FormValues>({
       if (!isUndefined(get(dirty, name))) handleUnset(`dirty.${name}`);
       if (!isUndefined(get(errors, name))) handleUnset(`errors.${name}`);
 
-      initialStateRef.current = unset(
-        initialStateRef.current,
-        `values.${name}`,
-        true
-      );
+      if (shouldUpdateDefaultValue)
+        initialStateRef.current = unset(
+          initialStateRef.current,
+          `values.${name}`,
+          true
+        );
 
       delete fieldParsersRef.current[name];
       delete fieldValidatorsRef.current[name];
