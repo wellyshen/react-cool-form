@@ -80,12 +80,14 @@ export default <T = any, V extends FormValues = FormValues>(
     () => ({
       reset: () =>
         setFields((prevFields) => {
-          const fieldLength = getState(`values.${name}`)?.length || 0;
+          const currFields = getState(`values.${name}`);
+          const currFieldsLength = currFields?.length || 0;
 
-          if (prevFields.length === fieldLength) return prevFields;
+          if (prevFields.length === currFieldsLength) return prevFields;
+          if (prevFields.length < currFieldsLength) return currFields;
 
           const nextFields = [...prevFields];
-          nextFields.length = fieldLength;
+          nextFields.length = currFieldsLength;
 
           return nextFields;
         }),
