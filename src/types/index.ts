@@ -338,7 +338,7 @@ export type ControlledReturn = [FieldProps, Meta];
 export type Keys = "values" | "touched" | "errors" | "dirty";
 
 export interface HelperHandler {
-  (value: any[], type: Keys, lastIndex?: number): any[];
+  (fields: any[], type: Keys, lastIndex?: number): any[];
 }
 
 type HelperOptions = Partial<{
