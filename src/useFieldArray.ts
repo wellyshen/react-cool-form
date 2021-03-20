@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   FieldArrayConfig,
@@ -46,6 +46,7 @@ export default <T = any, V extends FormValues = FormValues>(
     fieldArrayRef,
     fieldValidatorsRef,
     setDefaultValue,
+    setNodesOrStateValue,
     getState,
     setStateRef,
     runValidation,
@@ -53,16 +54,29 @@ export default <T = any, V extends FormValues = FormValues>(
   } = methods;
   const defaultValueRef = useRef<T[] | undefined>(defaultValue);
 
-  const getValue = useCallback(
-    (init = false) => {
-      let value = getState(`values.${name}`);
-      if (init && isUndefined(value)) value = defaultValueRef.current;
-      return Array.isArray(value) ? [...value] : [];
+  const getFields = useCallback(
+    (init = false): Array<[string, T]> => {
+      let fields = getState(`values.${name}`);
+
+      if (init && isUndefined(fields)) fields = defaultValueRef.current;
+
+      return Array.isArray(fields)
+        ? fields.map((value, index) => [`${name}[${index}]`, value])
+        : [];
     },
     [getState, name]
   );
 
-  const [fields, setFields] = useState<T[]>(getValue(true));
+  const [fields, setFields] = useState<Array<[string, T]>>(getFields(true));
+
+  const setNodeValue = useCallback(
+    () =>
+      setNodesOrStateValue(getState("values"), {
+        shouldUpdateDefaultValues: false,
+        fields: Object.keys(fieldArrayRef.current[name].fields),
+      }),
+    [fieldArrayRef, getState, name, setNodesOrStateValue]
+  );
 
   useEffect(() => {
     if (
@@ -76,25 +90,13 @@ export default <T = any, V extends FormValues = FormValues>(
     };
   }, [initialStateRef, name, removeField, setDefaultValue, shouldRemoveField]);
 
-  fieldArrayRef.current[name] = useMemo(
-    () => ({
-      reset: () =>
-        setFields((prevFields) => {
-          const currFields = getState(`values.${name}`);
-          const currFieldsLength = currFields?.length || 0;
-
-          if (prevFields.length === currFieldsLength) return prevFields;
-          if (prevFields.length < currFieldsLength) return currFields;
-
-          const nextFields = [...prevFields];
-          nextFields.length = currFieldsLength;
-
-          return nextFields;
-        }),
-      fields: {},
-    }),
-    [getState, name]
-  );
+  fieldArrayRef.current[name] = {
+    reset: () => {
+      setFields(getFields());
+      setNodeValue();
+    },
+    fields: {},
+  };
   if (validate) fieldValidatorsRef.current[name] = validate;
 
   const setState = useCallback(
@@ -131,12 +133,21 @@ export default <T = any, V extends FormValues = FormValues>(
           );
       });
 
-      setFields((prevFields) => handler([...prevFields], "values"));
       setStateRef("", { ...state, shouldDirty: getIsDirty(state.dirty) });
+      setFields(getFields());
+      setNodeValue();
 
       if (validateOnChange) runValidation(name);
     },
-    [getState, name, runValidation, setStateRef, validateOnChange]
+    [
+      getState,
+      getFields,
+      name,
+      runValidation,
+      setNodeValue,
+      setStateRef,
+      validateOnChange,
+    ]
   );
 
   const push = useCallback<Push<T>>(

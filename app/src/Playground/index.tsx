@@ -3,24 +3,7 @@
 import { useRef, useState } from "react";
 import { useForm, useFieldArray, useControlled } from "react-cool-form";
 
-const getId = () => Math.floor(Math.random() * 10000).toString();
-
-const FieldArray = () => {
-  const [fields] = useFieldArray("foo", {
-    defaultValue: [
-      { id: "0", val: "0" },
-      { id: "1", val: "1" },
-    ],
-  });
-
-  return (
-    <>
-      {fields.map(({ id, val }, idx) => (
-        <input key={id} name={`foo[${idx}].val`} defaultValue={val} />
-      ))}
-    </>
-  );
-};
+const getId = () => Math.floor(Math.random() * 1000).toString();
 
 const Field = ({ name, ...restProps }: any) => {
   const [props] = useControlled(name, restProps);
@@ -37,10 +20,7 @@ export default () => {
   const mvBRef = useRef<HTMLInputElement>(null);
   const { form, setValue, mon } = useForm({
     defaultValues: {
-      foo: [
-        { id: "0", val: "0" },
-        { id: "1", val: "1" },
-      ],
+      foo: [{ val: "0" }, { val: "1" }],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
@@ -53,12 +33,7 @@ export default () => {
     <>
       <button
         type="button"
-        onClick={() =>
-          setValue("foo", [
-            { id: "0", val: "0" },
-            { id: "1", val: "1" },
-          ])
-        }
+        onClick={() => setValue("foo", [{ val: "0" }, { val: "1" }])}
       >
         Set Value
       </button>
@@ -78,7 +53,7 @@ export default () => {
           insert(
             // @ts-expect-error
             +inRef.current.value,
-            { id: getId(), val: getId() }
+            { val: getId() }
             // { shouldDirty: true, shouldTouched: true }
           )
         }
@@ -118,10 +93,9 @@ export default () => {
       <input ref={mvARef} />
       <input ref={mvBRef} />
       <form ref={form}>
-        {fields.map(({ id, val }, idx) => (
-          <Field key={id} name={`foo[${idx}].val`} defaultValue={val} />
+        {fields.map(([name, { val }]) => (
+          <input key={name} name={`${name}.val`} defaultValue={val} />
         ))}
-        {/* {show && <FieldArray />} */}
         <input type="submit" />
         <input type="reset" />
         {/* <button type="button" onClick={() => setShow(!show)}>
