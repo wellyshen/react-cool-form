@@ -11,13 +11,14 @@ export type Methods = {
   initialStateRef: MutableRefObject<FormState>;
   excludeFieldsRef: MutableRefObject<Map>;
   fieldArrayRef: MutableRefObject<FieldArray>;
-  controlledsRef: MutableRefObject<Map>;
+  controlsRef: MutableRefObject<Map>;
   fieldValidatorsRef: MutableRefObject<Map<FieldValidator>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   setStateRef: SetStateRef;
   getNodeValue: GetNodeValue;
   getFormState: GetFormState;
   setDefaultValue: SetDefaultValue;
+  setNodesOrStateValue: SetNodesOrStateValue;
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
   handleChangeEvent: HandleChangeEvent;
   removeField: RemoveField;
@@ -172,8 +173,15 @@ export interface SetDefaultValue {
   (name: string, value: any, shouldUpdateDefaultValue?: boolean): void;
 }
 
+export interface SetNodesOrStateValue<V = any> {
+  (
+    values: V,
+    options?: { shouldUpdateDefaultValues?: boolean; fields?: string[] }
+  ): void;
+}
+
 export interface RemoveField {
-  (name: string): void;
+  (name: string, shouldUpdateDefaultValue?: boolean): void;
 }
 
 export interface SetTouchedMaybeValidate {
@@ -338,7 +346,7 @@ export type ControlledReturn = [FieldProps, Meta];
 export type Keys = "values" | "touched" | "errors" | "dirty";
 
 export interface HelperHandler {
-  (value: any[], type: Keys, lastIndex?: number): any[];
+  (fields: any[], type: Keys, lastIndex: number): any[];
 }
 
 type HelperOptions = Partial<{
@@ -373,7 +381,7 @@ export type FieldArrayConfig<T, V> = Partial<{
 }>;
 
 export type FieldArrayReturn<T> = [
-  T[],
+  Array<[string, T]>,
   {
     push: Push<T>;
     insert: Insert<T>;

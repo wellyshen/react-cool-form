@@ -6,7 +6,6 @@ import { dequal } from "dequal/lite";
 import * as shared from "./shared";
 import {
   ClearErrors,
-  Field,
   FieldArray,
   FieldElement,
   Fields,
@@ -31,6 +30,7 @@ import {
   SetDefaultValue,
   SetDirty,
   SetError,
+  SetNodesOrStateValue,
   SetTouched,
   SetTouchedMaybeValidate,
   SetValue,
@@ -86,7 +86,7 @@ export default <V extends FormValues = FormValues>({
   const fieldsRef = useRef<Fields>({});
   const fieldParsersRef = useRef<Parsers>({});
   const fieldArrayRef = useRef<FieldArray>({});
-  const controlledsRef = useRef<Map>({});
+  const controlsRef = useRef<Map>({});
   const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
@@ -162,13 +162,17 @@ export default <V extends FormValues = FormValues>({
           }
 
           return (
-            controlledsRef.current[name] ||
+            controlsRef.current[name] ||
             (rcfExclude !== "true" && !exclude[name])
           );
         })
         .reduce((acc: Fields, elm) => {
           const field = elm as FieldElement;
           const { name } = field;
+          const fieldArrayName = isFieldArray(fieldArrayRef.current, name);
+
+          if (fieldArrayName)
+            fieldArrayRef.current[fieldArrayName].fields[name] = true;
 
           acc[name] = { ...acc[name], field: acc[name]?.field || field };
 
@@ -236,7 +240,7 @@ export default <V extends FormValues = FormValues>({
 
   const setNodeValue = useCallback(
     (name: string, value: any, fields: Fields = fieldsRef.current) => {
-      if (!fields[name] || controlledsRef.current[name]) return;
+      if (!fields[name] || controlsRef.current[name]) return;
 
       const { field, options } = fields[name];
 
@@ -290,21 +294,16 @@ export default <V extends FormValues = FormValues>({
     [setStateRef, stateRef]
   );
 
-  const setNodesOrStateValue = useCallback(
+  const setNodesOrStateValue = useCallback<SetNodesOrStateValue<V>>(
     (
-      values: V,
+      values,
       {
         shouldUpdateDefaultValues = true,
-        fields = Object.values(fieldsRef.current),
-      }: {
-        shouldUpdateDefaultValues?: boolean;
-        fields?: Field[] | string[];
+        fields = Object.keys(fieldsRef.current),
       } = {}
     ) =>
-      fields.forEach((field: Field | string) => {
-        const name = isPlainObject(field) ? (field as Field).field.name : field;
-
-        if (controlledsRef.current[name]) return;
+      fields.forEach((name) => {
+        if (controlsRef.current[name]) return;
 
         let value = get(values, name);
 
@@ -667,21 +666,14 @@ export default <V extends FormValues = FormValues>({
       if (shouldDirty) setDirtyIfNeeded(name);
       if (shouldValidate) validateFieldWithLowPriority(name);
 
-      isFieldArray(fieldArrayRef.current, name, (key) => {
-        setNodesOrStateValue(initialStateRef.current.values, {
-          shouldUpdateDefaultValues: false,
-          fields: Object.keys(fieldsRef.current).filter((k) =>
-            k.startsWith(key)
-          ),
-        });
-        fieldArrayRef.current[key].reset();
-      });
+      isFieldArray(fieldArrayRef.current, name, (key) =>
+        fieldArrayRef.current[key].reset()
+      );
     },
     [
       handleUnset,
       setDirtyIfNeeded,
       setNodeValue,
-      setNodesOrStateValue,
       setStateRef,
       setTouched,
       stateRef,
@@ -731,6 +723,9 @@ export default <V extends FormValues = FormValues>({
           );
           setNodesOrStateValue(nextValues, {
             shouldUpdateDefaultValues: false,
+            fields: Object.keys(fieldsRef.current).filter(
+              (name) => !isFieldArray(fieldArrayRef.current, name)
+            ),
           });
         } else {
           // @ts-expect-error
@@ -753,7 +748,7 @@ export default <V extends FormValues = FormValues>({
 
       const nextTouched = Object.keys({
         ...fieldsRef.current,
-        ...controlledsRef.current,
+        ...controlsRef.current,
       }).reduce((touched, name) => {
         touched = set(touched, name, true, true);
         return touched;
@@ -801,7 +796,10 @@ export default <V extends FormValues = FormValues>({
   );
 
   const removeField = useCallback<RemoveField>(
-    (name) => {
+    (
+      name,
+      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
+    ) => {
       const { values, touched, dirty, errors } = stateRef.current;
 
       if (!isUndefined(get(values, name))) handleUnset(`values.${name}`);
@@ -809,16 +807,17 @@ export default <V extends FormValues = FormValues>({
       if (!isUndefined(get(dirty, name))) handleUnset(`dirty.${name}`);
       if (!isUndefined(get(errors, name))) handleUnset(`errors.${name}`);
 
-      initialStateRef.current = unset(
-        initialStateRef.current,
-        `values.${name}`,
-        true
-      );
+      if (shouldUpdateDefaultValue)
+        initialStateRef.current = unset(
+          initialStateRef.current,
+          `values.${name}`,
+          true
+        );
 
       delete fieldParsersRef.current[name];
       delete fieldValidatorsRef.current[name];
       delete fieldArrayRef.current[name];
-      delete controlledsRef.current[name];
+      delete controlsRef.current[name];
     },
     [handleUnset, stateRef]
   );
@@ -841,7 +840,7 @@ export default <V extends FormValues = FormValues>({
           return;
         }
 
-        if (fieldsRef.current[name] && !controlledsRef.current[name]) {
+        if (fieldsRef.current[name] && !controlsRef.current[name]) {
           const parse = fieldParsersRef.current[name]?.parse;
           const value = getNodeValue(name);
 
@@ -855,7 +854,7 @@ export default <V extends FormValues = FormValues>({
 
         const { name } = target as FieldElement;
 
-        if (fieldsRef.current[name] && !controlledsRef.current[name]) {
+        if (fieldsRef.current[name] && !controlsRef.current[name]) {
           setTouchedMaybeValidate(name);
           changedFieldRef.current = undefined;
         }
@@ -877,7 +876,7 @@ export default <V extends FormValues = FormValues>({
 
         if (shouldRemoveField)
           Object.keys(fieldsRef.current).forEach((name) => {
-            if (controlledsRef.current[name]) return;
+            if (controlsRef.current[name]) return;
 
             if (!fields[name]) {
               removeField(name);
@@ -905,7 +904,7 @@ export default <V extends FormValues = FormValues>({
         const addedNodes: string[] = [];
 
         Object.keys(fields).forEach((name) => {
-          if (fieldsRef.current[name] || controlledsRef.current[name]) return;
+          if (fieldsRef.current[name] || controlsRef.current[name]) return;
 
           const value = get(stateRef.current.values, name);
           if (!isUndefined(value)) values = set(values, name, value, true);
@@ -940,7 +939,7 @@ export default <V extends FormValues = FormValues>({
     (validateOrOptions) => (field) => {
       if (
         !field?.name ||
-        controlledsRef.current[field.name] ||
+        controlsRef.current[field.name] ||
         excludeFieldsRef.current[field.name]
       )
         return;
@@ -964,7 +963,7 @@ export default <V extends FormValues = FormValues>({
     defaultValuesRef,
     initialStateRef,
     fieldArrayRef,
-    controlledsRef,
+    controlsRef,
     fieldValidatorsRef,
     changedFieldRef,
     excludeFieldsRef,
@@ -972,6 +971,7 @@ export default <V extends FormValues = FormValues>({
     getNodeValue,
     getFormState,
     setDefaultValue,
+    setNodesOrStateValue,
     setTouchedMaybeValidate,
     handleChangeEvent,
     removeField,

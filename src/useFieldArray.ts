@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   FieldArrayConfig,
@@ -46,6 +46,7 @@ export default <T = any, V extends FormValues = FormValues>(
     fieldArrayRef,
     fieldValidatorsRef,
     setDefaultValue,
+    setNodesOrStateValue,
     getState,
     setStateRef,
     runValidation,
@@ -53,16 +54,29 @@ export default <T = any, V extends FormValues = FormValues>(
   } = methods;
   const defaultValueRef = useRef<T[] | undefined>(defaultValue);
 
-  const getValue = useCallback(
-    (init = false) => {
-      let value = getState(`values.${name}`);
-      if (init && isUndefined(value)) value = defaultValueRef.current;
-      return Array.isArray(value) ? [...value] : [];
+  const getFields = useCallback(
+    (init = false): Array<[string, T]> => {
+      let fields = getState(`values.${name}`);
+
+      if (init && isUndefined(fields)) fields = defaultValueRef.current;
+
+      return Array.isArray(fields)
+        ? fields.map((value, index) => [`${name}[${index}]`, value])
+        : [];
     },
     [getState, name]
   );
 
-  const [fields, setFields] = useState<T[]>(getValue(true));
+  const [fields, setFields] = useState<Array<[string, T]>>(getFields(true));
+
+  const setNodeValue = useCallback(
+    () =>
+      setNodesOrStateValue(getState("values"), {
+        shouldUpdateDefaultValues: false,
+        fields: Object.keys(fieldArrayRef.current[name].fields),
+      }),
+    [fieldArrayRef, getState, name, setNodesOrStateValue]
+  );
 
   useEffect(() => {
     if (
@@ -72,27 +86,17 @@ export default <T = any, V extends FormValues = FormValues>(
       setDefaultValue(name, defaultValueRef.current, true);
 
     return () => {
-      if (shouldRemoveField) removeField(name);
+      if (shouldRemoveField) removeField(name, true);
     };
   }, [initialStateRef, name, removeField, setDefaultValue, shouldRemoveField]);
 
-  fieldArrayRef.current[name] = useMemo(
-    () => ({
-      reset: () =>
-        setFields((prevFields) => {
-          const valueLength = getState(`values.${name}`)?.length || 0;
-
-          if (prevFields.length === valueLength) return prevFields;
-
-          const nextFields = [...prevFields];
-          nextFields.length = valueLength;
-
-          return nextFields;
-        }),
-      fields: {},
-    }),
-    [getState, name]
-  );
+  fieldArrayRef.current[name] = {
+    reset: () => {
+      setFields(getFields());
+      setNodeValue();
+    },
+    fields: {},
+  };
   if (validate) fieldValidatorsRef.current[name] = validate;
 
   const setState = useCallback(
@@ -106,13 +110,13 @@ export default <T = any, V extends FormValues = FormValues>(
       let state = getState();
 
       (["values", "touched", "errors", "dirty"] as Keys[]).forEach((key) => {
-        const value = state[key][name];
+        const currFields = state[key][name];
 
         if (
           key === "values" ||
           (key === "touched" && shouldTouched) ||
           (key === "dirty" && shouldDirty) ||
-          !isUndefined(value)
+          !isUndefined(currFields)
         )
           state = set(
             state,
@@ -120,7 +124,7 @@ export default <T = any, V extends FormValues = FormValues>(
             {
               ...state[key],
               [name]: handler(
-                Array.isArray(value) ? [...value] : [],
+                Array.isArray(currFields) ? [...currFields] : [],
                 key,
                 state.values[name]?.length - 1 || 0
               ),
@@ -129,27 +133,36 @@ export default <T = any, V extends FormValues = FormValues>(
           );
       });
 
-      setFields((prevFields) => handler([...prevFields], "values"));
       setStateRef("", { ...state, shouldDirty: getIsDirty(state.dirty) });
+      setFields(getFields());
+      setNodeValue();
 
       if (validateOnChange) runValidation(name);
     },
-    [getState, name, runValidation, setStateRef, validateOnChange]
+    [
+      getState,
+      getFields,
+      name,
+      runValidation,
+      setNodeValue,
+      setStateRef,
+      validateOnChange,
+    ]
   );
 
   const push = useCallback<Push<T>>(
     (value, { shouldTouched, shouldDirty = true } = {}) => {
-      const handler: HelperHandler = (val, type, lastIndex = 0) => {
+      const handler: HelperHandler = (f, type, lastIndex = 0) => {
         if (type === "values") {
-          val.push(value);
+          f.push(value);
         } else if (
           (type === "touched" && shouldTouched) ||
           (type === "dirty" && shouldDirty)
         ) {
-          val[lastIndex] = setValuesAsTrue(value);
+          f[lastIndex] = setValuesAsTrue(value);
         }
 
-        return val;
+        return f;
       };
 
       setState(handler, { shouldTouched, shouldDirty });
@@ -159,19 +172,19 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const insert = useCallback<Insert<T>>(
     (index, value, { shouldTouched, shouldDirty = true } = {}) => {
-      const handler: HelperHandler = (val, type) => {
+      const handler: HelperHandler = (f, type) => {
         if (type === "values") {
-          val.splice(index, 0, value);
+          f.splice(index, 0, value);
         } else if (
           (type === "touched" && shouldTouched) ||
           (type === "dirty" && shouldDirty)
         ) {
-          val[index] = setValuesAsTrue(value);
-        } else if (index < val.length) {
-          val.splice(index, 0, undefined);
+          f[index] = setValuesAsTrue(value);
+        } else if (index < f.length) {
+          f.splice(index, 0, undefined);
         }
 
-        return val;
+        return f;
       };
 
       setState(handler, { shouldTouched, shouldDirty });
@@ -181,9 +194,9 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const remove = useCallback<Remove<T>>(
     (index) => {
-      const handler: HelperHandler = (val) => {
-        val.splice(index, 1);
-        return compact(val).length ? val : [];
+      const handler: HelperHandler = (f) => {
+        f.splice(index, 1);
+        return compact(f).length ? f : [];
       };
       const value = (getState(`values.${name}`) || [])[index];
 
@@ -196,9 +209,9 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const swap = useCallback<Swap>(
     (indexA, indexB) => {
-      const handler: HelperHandler = (val) => {
-        [val[indexA], val[indexB]] = [val[indexB], val[indexA]];
-        return val;
+      const handler: HelperHandler = (f) => {
+        [f[indexA], f[indexB]] = [f[indexB], f[indexA]];
+        return f;
       };
 
       setState(handler);
@@ -208,9 +221,9 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const move = useCallback<Move>(
     (from, to) => {
-      const handler: HelperHandler = (val) => {
-        val.splice(to, 0, val.splice(from, 1)[0]);
-        return val;
+      const handler: HelperHandler = (f) => {
+        f.splice(to, 0, f.splice(from, 1)[0]);
+        return f;
       };
 
       setState(handler);

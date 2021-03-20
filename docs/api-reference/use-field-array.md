@@ -41,7 +41,22 @@ A synchronous/asynchronous function that is used for the [field-level validation
 
 `FieldValue[]`
 
-An array that holds the relevant field values. It refers to the location of the field in the [form state](../getting-started/form-state#about-the-form-state). If the referenced value isn't an `array` type, returns an empty array instead.
+An array that holds the relevant field values and a supplied field name (name + index) for the `key` and `name` attributes of a field.
+
+- It refers to the location of the field in the [form state](../getting-started/form-state#about-the-form-state). If the referenced value isn't an `array` type, returns an empty array instead.
+
+```js
+const [fields] = useFieldArray("foo", { defaultValue: [{ name: "Iron Man" }] });
+
+// The first parameter of the callback is an array that includes a supplied "fieldName" and your field value
+fields.map(([fieldName, { name }]) => (
+  <input
+    key={fieldName} // Use the "fieldName" as the key
+    name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
+    defaultValue={name}
+  />
+));
+```
 
 ## Helpers
 
@@ -56,7 +71,7 @@ Add a value to the end of an array.
 ```js
 const handleAdd = () => {
   push(
-    { id: "0", name: "Iron Man" },
+    { name: "Iron Man" },
     {
       shouldTouched: false, // Set the field as touched, default is false
       shouldDirty: true, // Set the field as dirty, default is true
@@ -75,7 +90,7 @@ Insert a value at a given index into the array.
 const handleInsert = () => {
   insert(
     0,
-    { id: "0", name: "Iron Man" },
+    { name: "Iron Man" },
     {
       shouldTouched: false, // Set the field as touched, default is false
       shouldDirty: true, // Set the field as dirty, default is true
@@ -106,24 +121,24 @@ Remove a value at an index of an array and return it.
 
 The example demonstrates the basic usage of this hook.
 
-> 💡 When dealing with array fields, we don’t recommend using indexes for keys if the order of fields may change. Check out the [article](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318) to learn more.
-
 ```js
 import { useForm, useFieldArray } from "react-cool-form";
 
 const App = () => {
   const { form } = useForm({
-    defaultValues: { foo: [{ id: "0", name: "Iron Man" }] },
+    defaultValues: { foo: [{ name: "Iron Man" }] },
   });
   const [fields, { push, insert, move, swap, remove }] = useFieldArray("foo");
 
   return (
     <form ref={form}>
-      {fields.map(({ id, name }, index) => (
+      {/* The first parameter of the callback is an array that includes
+          a supplied "fieldName" (name + index) and your field value */}
+      {fields.map(([fieldName, { name }]) => (
         <input
-          key={id}
-          name={`foo[${index}].name`}
-          defaultValue={name} // We need to provide the default value
+          key={fieldName} // Use the "fieldName" as the key
+          name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
+          defaultValue={name} // Don't forget to provide the default value
         />
       ))}
     </form>

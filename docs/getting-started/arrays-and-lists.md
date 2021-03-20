@@ -9,8 +9,6 @@ There can be situations in which the user needs to add or remove fields from a f
 
 The `useFieldArray` hook helps you to deal with multiple similar fields. You pass it a `name` parameter with the path of the field that holds the relevant array. The hook will then give you the power to render an array of inputs as well as common array/list manipulations.
 
-> 💡 When dealing with array fields, we don’t recommend using indexes for keys if the order of fields may change. Check out the [article](https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318) to learn more.
-
 [![Edit RCF - Arrays and Lists](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-arrays-and-lists-crv9d?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
@@ -24,10 +22,7 @@ const Field = ({ name, ...restProps }) => {
 const App = () => {
   const { form } = useForm({
     defaultValues: {
-      foo: [
-        { id: "0", name: "Iron Man" },
-        { id: "1", name: "Hulk" },
-      ],
+      foo: [{ name: "Iron Man" }, { name: "Hulk" }],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
@@ -35,23 +30,27 @@ const App = () => {
 
   return (
     <form ref={form}>
-      {fields.map(({ id, name }, index) => (
-        <div key={id}>
+      {/* The first parameter of the callback is an array that includes
+          a supplied "fieldName" (name + index) and your field value */}
+      {fields.map(([fieldName, { name }], index) => (
+        <div
+          key={fieldName} // Use the "fieldName" as the key
+        >
           <input
-            name={`foo[${index}].name`}
-            defaultValue={name} // We need to provide the default value
+            name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
+            defaultValue={name} // Don't forget to provide the default value
           />
           {/* Working with a controlled component */}
           <Field
-            name={`foo[${index}].name`}
-            defaultValue={name} // We need to provide the default value
+            name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
+            defaultValue={name} // Don't forget to provide the default value
           />
           <button type="button" onClick={() => remove(index)}>
             ➖
           </button>
         </div>
       ))}
-      <button type="button" onClick={() => push({ id: "2", name: "Thor" })}>
+      <button type="button" onClick={() => push({ name: "Thor" })}>
         ➕
       </button>
       <input type="submit" />
@@ -75,25 +74,26 @@ const App = () => {
       if (!foo.length) errors.foo = "We need a super hero!";
 
       return errors;
-    }
+    },
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
   const [fields, { push, remove }] = useFieldArray("foo", {
-    validate: (value, values /* Form values */) => !foo.length ? "We need a super hero!" : false,
+    validate: (value, values /* Form values */) =>
+      !foo.length ? "We need a super hero!" : false,
   });
 
   return (
     <form ref={form} noValidate>
-      {fields.map(({ id, name }, index) => (
-        <div key={id}>
-          <input name={`foo[${index}].name`} defaultValue={name} />
+      {fields.map(([fieldName, { name }], index) => (
+        <div key={fieldName}>
+          <input name={`${fieldName}.name`} defaultValue={name} />
           <button type="button" onClick={() => remove(index)}>
             ➖
           </button>
         </div>
       ))}
-      <button type="button" onClick={() => push({ id: "2", name: "Thor" })}>
+      <button type="button" onClick={() => push({ name: "Thor" })}>
         ➕
       </button>
       <input type="submit" />
