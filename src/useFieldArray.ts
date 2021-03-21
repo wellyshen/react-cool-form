@@ -46,7 +46,7 @@ export default <T = any, V extends FormValues = FormValues>(
     fieldArrayRef,
     fieldValidatorsRef,
     setDefaultValue,
-    setNodesOrStateValue,
+    setNodesOrValues,
     getState,
     setStateRef,
     runValidation,
@@ -71,11 +71,11 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const updateFields = useCallback(() => {
     setFields(getFields());
-    setNodesOrStateValue(getState("values"), {
-      shouldUpdateDefaultValues: false,
+    setNodesOrValues(getState("values"), {
+      shouldSetValues: false,
       fields: Object.keys(fieldArrayRef.current[name].fields),
     });
-  }, [fieldArrayRef, getFields, getState, name, setNodesOrStateValue]);
+  }, [fieldArrayRef, getFields, getState, name, setNodesOrValues]);
 
   useEffect(() => {
     if (

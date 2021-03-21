@@ -18,7 +18,7 @@ export type Methods = {
   getNodeValue: GetNodeValue;
   getFormState: GetFormState;
   setDefaultValue: SetDefaultValue;
-  setNodesOrStateValue: SetNodesOrStateValue;
+  setNodesOrValues: SetNodesOrValues;
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
   handleChangeEvent: HandleChangeEvent;
   removeField: RemoveField;
@@ -173,11 +173,8 @@ export interface SetDefaultValue {
   (name: string, value: any, shouldUpdateDefaultValue?: boolean): void;
 }
 
-export interface SetNodesOrStateValue<V = any> {
-  (
-    values: V,
-    options?: { shouldUpdateDefaultValues?: boolean; fields?: string[] }
-  ): void;
+export interface SetNodesOrValues<V = any> {
+  (values: V, options?: { shouldSetValues?: boolean; fields?: string[] }): void;
 }
 
 export interface RemoveField {

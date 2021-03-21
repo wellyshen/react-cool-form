@@ -30,7 +30,7 @@ import {
   SetDefaultValue,
   SetDirty,
   SetError,
-  SetNodesOrStateValue,
+  SetNodesOrValues,
   SetTouched,
   SetTouchedMaybeValidate,
   SetValue,
@@ -294,13 +294,10 @@ export default <V extends FormValues = FormValues>({
     [setStateRef, stateRef]
   );
 
-  const setNodesOrStateValue = useCallback<SetNodesOrStateValue<V>>(
+  const setNodesOrValues = useCallback<SetNodesOrValues<V>>(
     (
       values,
-      {
-        shouldUpdateDefaultValues = true,
-        fields = Object.keys(fieldsRef.current),
-      } = {}
+      { shouldSetValues = true, fields = Object.keys(fieldsRef.current) } = {}
     ) =>
       fields.forEach((name) => {
         if (controlsRef.current[name]) return;
@@ -309,7 +306,7 @@ export default <V extends FormValues = FormValues>({
 
         if (!isUndefined(value)) setNodeValue(name, value);
 
-        if (shouldUpdateDefaultValues) {
+        if (shouldSetValues) {
           value = get(defaultValuesRef.current, name);
 
           setDefaultValue(
@@ -721,8 +718,8 @@ export default <V extends FormValues = FormValues>({
             nextValues,
             true
           );
-          setNodesOrStateValue(nextValues, {
-            shouldUpdateDefaultValues: false,
+          setNodesOrValues(nextValues, {
+            shouldSetValues: false,
             fields: Object.keys(fieldsRef.current).filter(
               (name) => !isFieldArray(fieldArrayRef.current, name)
             ),
@@ -738,7 +735,7 @@ export default <V extends FormValues = FormValues>({
 
       Object.values(fieldArrayRef.current).forEach((field) => field.reset());
     },
-    [getOptions, onResetRef, setNodesOrStateValue, setStateRef, stateRef]
+    [getOptions, onResetRef, setNodesOrValues, setStateRef, stateRef]
   );
 
   const submit: Submit<V> = useCallback(
@@ -830,7 +827,7 @@ export default <V extends FormValues = FormValues>({
       const form = formRef.current;
 
       fieldsRef.current = getFields(form);
-      setNodesOrStateValue(initialStateRef.current.values);
+      setNodesOrValues(initialStateRef.current.values);
 
       handlersRef.current.change = ({ target }: Event) => {
         const { name } = target as FieldElement;
@@ -913,8 +910,7 @@ export default <V extends FormValues = FormValues>({
         });
 
         fieldsRef.current = fields;
-        if (addedNodes.length)
-          setNodesOrStateValue(values, { fields: addedNodes });
+        if (addedNodes.length) setNodesOrValues(values, { fields: addedNodes });
       });
 
       observerRef.current.observe(form, { childList: true, subtree: true });
@@ -926,7 +922,7 @@ export default <V extends FormValues = FormValues>({
       removeField,
       reset,
       setNodeValue,
-      setNodesOrStateValue,
+      setNodesOrValues,
       setStateRef,
       setTouchedMaybeValidate,
       shouldRemoveField,
@@ -971,7 +967,7 @@ export default <V extends FormValues = FormValues>({
     getNodeValue,
     getFormState,
     setDefaultValue,
-    setNodesOrStateValue,
+    setNodesOrValues,
     setTouchedMaybeValidate,
     handleChangeEvent,
     removeField,
