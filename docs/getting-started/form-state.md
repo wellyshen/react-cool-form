@@ -33,7 +33,7 @@ Form state is an `object` containing the following properties:
 
 React Cool Form provides a powerful API: [mon](../api-reference/use-form#mon) (a.k.a monitor) to help us avoid unnecessary re-renders when using the form state.
 
-### Accessing the State
+### Monitoring the State
 
 Due to the support of [complex structures](./complex-structures), the `mon` method allows us to use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation)-and-[bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation to get the form state.
 
@@ -63,21 +63,9 @@ const [foo, bar] = mon(["values.foo", "values.bar"]);
 const { foo, bar } = mon({ foo: "values.foo", bar: "values.bar" });
 ```
 
-From the code above, you can see we are getting the values of a specific target, it's kind of verbose. We can reduce it by the `target` option.
-
-<!-- prettier-ignore-start -->
-```js
-// Current state: { values: { foo: "🍎", bar: "🥝", baz: "🍋" } }
-const [foo, bar, baz] = mon(["foo", "bar", "baz"], { target: "values" });
-
-// Current state: { values: { nest: { foo: "🍎", bar: "🥝", baz: "🍋" } } }
-const [foo, bar, baz] = mon(["foo", "bar", "baz"], { target: "values.nest" });
-```
-<!-- prettier-ignore-end -->
-
 ### Best Practices
 
-Every time we access a value from the form state via the `mon` method, it will listen the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, when getting a value from an `object` state, **more specific more performant**.
+Every time we get a value from the form state via the `mon` method, it will listen the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, **more frequently updated value(s), need to be accessed more specific, will get more performant**.
 
 ```js
 const { mon } = useForm();
@@ -94,6 +82,17 @@ const fooError = mon("errors.foo");
 
 // 👍🏻 It's OK, they are triggered less frequently
 const [touched, dirty] = mon(["touched", "dirty"]);
+```
+
+### Shortcut for Accessing the Form's Values
+
+The form's values might be the most frequent one that we need to get in a specific way, it's kind of verbose. However there's a shortcut for it, we can get the form's values without the `values.` prefix:
+
+```diff
+// Current state: { values: { foo: "🍎", bar: "🥝", baz: "🍋" } }
+
+-const [foo, bar, baz] = mon(["values.foo", "values.bar", "values.baz"]);
++const [foo, bar, baz] = mon(["foo", "bar", "baz"]);
 ```
 
 ### Missing Default Values?
@@ -153,7 +152,7 @@ const errors = mon("errors", {
 
 ## Isolating Re-rendering
 
-Whenever a [selected value](#accessing-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via the [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to the `mon` method that maintain a consistent DX for us.
+Whenever a [monitored value](#monitoring-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via the [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to the `mon` method that maintain a consistent DX for us.
 
 [![Edit RCF - Isolating Re-rendering](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/intelligent-banach-uqxyx?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -170,8 +169,8 @@ const checkStrength = (pwd) => {
 };
 
 const FieldMessage = () => {
-  // Supports single-value-pick, array-pick, and object-pick data formats
-  const [error, value] = useFormState(["errors.password", "values.password"]);
+  // Supports single-value-pick, array-values-pick, object-values-pick, and shortcut-values-pick
+  const [error, value] = useFormState(["errors.password", "password"]);
 
   return <p>{error || checkStrength(value)}</p>;
 };
@@ -226,13 +225,12 @@ const state = getState();
 // Reading a value of the form state
 const foo = getState("values.foo");
 
+// Shortcut for reading a value
+const foo = getState("foo");
+
 // Array pick
 const [foo, bar] = getState(["values.foo", "values.bar"]);
 
 // Object pick
 const { foo, bar } = getState({ foo: "values.foo", bar: "values.bar" });
-
-// Reading the values of a specific target
-// Current state: { values: { foo: "🍎", bar: "🥝", baz: "🍋" } }
-const [foo, bar, baz] = getState(["foo", "bar", "baz"], "values");
 ```
