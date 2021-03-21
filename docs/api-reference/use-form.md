@@ -233,7 +233,7 @@ Mon means "monitor", the method provides us a performant way to use the form sta
 
 ### getState
 
-`(path?: string | string[] | Record<string, string>, target?: string) => any`
+`(path?: string | string[] | Record<string, string>) => any`
 
 This method allows us to read the form state without triggering re-renders. See the [Reading the State](../getting-started/form-state#reading-the-state) to learn more.
 

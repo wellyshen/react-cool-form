@@ -12,6 +12,15 @@ form {
     justify-content: space-between;
     align-items: center;
 
+    &.count {
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      padding: 0.25rem 0;
+      color: #fff;
+      background: #333;
+      border-radius: 4px;
+    }
+
     input {
       width: 73.5%;
     }
@@ -50,7 +59,7 @@ form {
   }
 
   input[type="submit"] {
-    margin-top: 1.5rem;
+    margin-top: 2rem;
     color: #fff;
     background: #0971f1;
   }

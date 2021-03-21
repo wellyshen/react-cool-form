@@ -16,19 +16,21 @@ const data = useFormState(path, config);
 The path of the property we want to access from the [form state](../getting-started/form-state#about-the-form-state). We can construct the return values as follows.
 
 - Every time an accessed value changed that will trigger re-renders. Thus, there're [some guidelines](../getting-started/form-state#best-practices) for us to use the form state.
+- You can access the form's values without the `values.` prefix, ya! it's a shortcut for for your convenience.
 
-<!-- prettier-ignore-start -->
 ```js
 // Getting a value
-const foo = useFormState("values.foo", config);
+const foo = useFormState("values.foo");
+
+// Shortcut for getting a value
+const foo = useFormState("foo");
 
 // Array pick
-const [foo, bar] = useFormState(["values.foo", "values.bar"], config);
+const [foo, bar] = useFormState(["values.foo", "values.bar"]);
 
 // Object pick
-const { foo, bar } = useFormState({ foo: "values.foo", bar: "values.bar" }, config);
+const { foo, bar } = useFormState({ foo: "values.foo", bar: "values.bar" });
 ```
-<!-- prettier-ignore-end -->
 
 ## Config
 
@@ -39,26 +41,6 @@ An `object` with the following options:
 `string`
 
 The [corresponding ID](../api-reference/use-form#id) of the `useForm` hook. We only need it when using multiple form hooks at the same time.
-
-### target
-
-`string`
-
-A default path that can help us to reduce the verbose of accessing the values from a specific target.
-
-```js
-// Current state: { values: { foo: "🍎", bar: "🥝", baz: "🍋" } }
-const [foo, bar, baz] = useFormState(["foo", "bar", "baz"], {
-  target: "values",
-  // Other options...
-});
-
-// Current state: { values: { nest: { foo: "🍎", bar: "🥝", baz: "🍋" } } }
-const [foo, bar, baz] = useFormState(["foo", "bar", "baz"], {
-  target: "values.nest",
-  // Other options...
-});
-```
 
 ### defaultValues
 
@@ -78,23 +60,15 @@ Enable/disable the feature of **filtering untouched errors**, which can help the
 ```js
 // Current state: { errors: { foo: "Required" }, touched: { foo: false } }
 // Returns { foo: "Required" }
-const errors = useFormState("errors", {
-  // Some options...
-});
+const errors = useFormState("errors");
 
 // Current state: { errors: { foo: "Required" }, touched: { foo: false } }
 // Returns {}
-const errors = useFormState("errors", {
-  errorWithTouched: true,
-  // Other options...
-});
+const errors = useFormState("errors", { errorWithTouched: true );
 
 // Current state: { errors: { foo: "Required" }, touched: { foo: true } }
 // Returns { foo: "Required" }
-const errors = useFormState("errors", {
-  errorWithTouched: true,
-  // Other options...
-});
+const errors = useFormState("errors", { errorWithTouched: true );
 ```
 
 ## Example

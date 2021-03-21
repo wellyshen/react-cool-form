@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.146
+
+### Patch Changes
+
+- [`68b340a`](https://github.com/wellyshen/react-cool-form/commit/68b340a93188b23fd22303e7c097770be7b0cc56) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFieldArray): correct the type of return values
+
 ## 0.0.145
 
 ### Patch Changes

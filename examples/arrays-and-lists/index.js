@@ -3,8 +3,12 @@ import { useForm, useFieldArray } from "react-cool-form";
 
 import "./styles.scss";
 
+let count = 0;
+
 function App() {
-  const { form } = useForm({
+  count++;
+
+  const { form, mon } = useForm({
     defaultValues: {
       foo: [{ name: "Iron Mane" }, { name: "Thor" }, { name: "Hulk" }]
     },
@@ -12,8 +16,14 @@ function App() {
   });
   const [fields, { push, insert, remove, swap, move }] = useFieldArray("foo");
 
+  /* console.log(
+    "Field value: ",
+    mon({ value: "values.foo", touched: "touched.foo", dirty: "dirty.foo" })
+  ); */
+
   return (
     <form ref={form}>
+      <div className="count">Render {count} times</div>
       {/* The first parameter of the callback is an array that includes
           a supplied "fieldName" (name + index) and your field value */}
       {fields.map(([fieldName, { name }], index) => (
@@ -25,22 +35,22 @@ function App() {
             defaultValue={name} // Don't forget to provide the default value
           />
           <button type="button" onClick={() => remove(index)}>
-            Remove
+            REMOVE
           </button>
         </div>
       ))}
       <div>
         <button type="button" onClick={() => push({ name: "Loki" })}>
-          Push
+          PUSH
         </button>
-        <button type="button" onClick={() => insert(1, { name: "Spider Man" })}>
-          Insert
+        <button type="button" onClick={() => insert(0, { name: "Spider Man" })}>
+          INSERT
         </button>
         <button type="button" onClick={() => swap(0, 1)}>
-          Swap
+          SWAP
         </button>
         <button type="button" onClick={() => move(2, 0)}>
-          Move
+          MOVE
         </button>
       </div>
       <input type="submit" />

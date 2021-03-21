@@ -21,6 +21,7 @@ import {
   HandleChangeEvent,
   Handlers,
   Map,
+  Mon,
   Parsers,
   RegisterField,
   RegisterForm,
@@ -30,12 +31,11 @@ import {
   SetDefaultValue,
   SetDirty,
   SetError,
-  SetNodesOrStateValue,
+  SetNodesOrValues,
   SetTouched,
   SetTouchedMaybeValidate,
   SetValue,
   Submit,
-  Watch,
 } from "./types";
 import { useLatest, useState } from "./hooks";
 import {
@@ -94,6 +94,7 @@ export default <V extends FormValues = FormValues>({
   const onResetRef = useLatest(onReset || (() => undefined));
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
+  const hasWarnValues = useRef(false);
   const defaultValuesRef = useRef(defaultValues);
   const initialStateRef = useRef<FormState<V>>({
     values: defaultValuesRef.current,
@@ -294,13 +295,10 @@ export default <V extends FormValues = FormValues>({
     [setStateRef, stateRef]
   );
 
-  const setNodesOrStateValue = useCallback<SetNodesOrStateValue<V>>(
+  const setNodesOrValues = useCallback<SetNodesOrValues<V>>(
     (
       values,
-      {
-        shouldUpdateDefaultValues = true,
-        fields = Object.keys(fieldsRef.current),
-      } = {}
+      { shouldSetValues = true, fields = Object.keys(fieldsRef.current) } = {}
     ) =>
       fields.forEach((name) => {
         if (controlsRef.current[name]) return;
@@ -309,7 +307,7 @@ export default <V extends FormValues = FormValues>({
 
         if (!isUndefined(value)) setNodeValue(name, value);
 
-        if (shouldUpdateDefaultValues) {
+        if (shouldSetValues) {
           value = get(defaultValuesRef.current, name);
 
           setDefaultValue(
@@ -325,24 +323,28 @@ export default <V extends FormValues = FormValues>({
     (
       path,
       {
-        target,
         errorWithTouched,
         defaultValues: dfValues = {},
         methodName = "mon",
         callback,
-      }
+      } = {}
     ) => {
       if (!path) return callback ? undefined : stateRef.current;
 
       const usedState: Map = {};
       const getPath = (p: string) => {
-        p = target ? `${target}.${p}` : p;
+        if (
+          !Object.keys(initialStateRef.current).some((key) => p.startsWith(key))
+        )
+          p = `values.${p}`;
 
         if (callback) {
-          if (p === "values")
+          if (p === "values" && !hasWarnValues.current) {
             warn(
               `💡 react-cool-form > ${methodName}: Getting "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
             );
+            hasWarnValues.current = true;
+          }
 
           usedState[p] = true;
         }
@@ -398,10 +400,9 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const mon = useCallback<Watch<V>>(
-    (path, { target, errorWithTouched, defaultValues: dfValues } = {}) =>
+  const mon = useCallback<Mon<V>>(
+    (path, { errorWithTouched, defaultValues: dfValues } = {}) =>
       getFormState(path, {
-        target,
         errorWithTouched,
         defaultValues: dfValues,
         callback: (usedState) => setUsedState(usedState),
@@ -409,10 +410,9 @@ export default <V extends FormValues = FormValues>({
     [getFormState, setUsedState]
   );
 
-  const getState = useCallback<GetState>(
-    (path, target) => getFormState(path, { target }),
-    [getFormState]
-  );
+  const getState = useCallback<GetState>((path) => getFormState(path), [
+    getFormState,
+  ]);
 
   const setError = useCallback<SetError>(
     (name, error) => {
@@ -721,8 +721,8 @@ export default <V extends FormValues = FormValues>({
             nextValues,
             true
           );
-          setNodesOrStateValue(nextValues, {
-            shouldUpdateDefaultValues: false,
+          setNodesOrValues(nextValues, {
+            shouldSetValues: false,
             fields: Object.keys(fieldsRef.current).filter(
               (name) => !isFieldArray(fieldArrayRef.current, name)
             ),
@@ -738,7 +738,7 @@ export default <V extends FormValues = FormValues>({
 
       Object.values(fieldArrayRef.current).forEach((field) => field.reset());
     },
-    [getOptions, onResetRef, setNodesOrStateValue, setStateRef, stateRef]
+    [getOptions, onResetRef, setNodesOrValues, setStateRef, stateRef]
   );
 
   const submit: Submit<V> = useCallback(
@@ -830,7 +830,7 @@ export default <V extends FormValues = FormValues>({
       const form = formRef.current;
 
       fieldsRef.current = getFields(form);
-      setNodesOrStateValue(initialStateRef.current.values);
+      setNodesOrValues(initialStateRef.current.values);
 
       handlersRef.current.change = ({ target }: Event) => {
         const { name } = target as FieldElement;
@@ -913,8 +913,7 @@ export default <V extends FormValues = FormValues>({
         });
 
         fieldsRef.current = fields;
-        if (addedNodes.length)
-          setNodesOrStateValue(values, { fields: addedNodes });
+        if (addedNodes.length) setNodesOrValues(values, { fields: addedNodes });
       });
 
       observerRef.current.observe(form, { childList: true, subtree: true });
@@ -926,7 +925,7 @@ export default <V extends FormValues = FormValues>({
       removeField,
       reset,
       setNodeValue,
-      setNodesOrStateValue,
+      setNodesOrValues,
       setStateRef,
       setTouchedMaybeValidate,
       shouldRemoveField,
@@ -971,7 +970,7 @@ export default <V extends FormValues = FormValues>({
     getNodeValue,
     getFormState,
     setDefaultValue,
-    setNodesOrStateValue,
+    setNodesOrValues,
     setTouchedMaybeValidate,
     handleChangeEvent,
     removeField,

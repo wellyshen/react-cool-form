@@ -130,12 +130,11 @@ describe("useFormState", () => {
     });
   });
 
-  it("should get state with specific target", () => {
-    const target = "values";
+  it("should get form's values by shortcut", () => {
     const { foo } = defaultValues;
-    expect(renderHelper({ path: "foo", target })).toBe(foo);
-    expect(renderHelper({ path: ["foo"], target })).toEqual([foo]);
-    expect(renderHelper({ path: { foo: "foo" }, target })).toEqual({ foo });
+    expect(renderHelper({ path: "foo" })).toBe(foo);
+    expect(renderHelper({ path: ["foo"] })).toEqual([foo]);
+    expect(renderHelper({ path: { foo: "foo" } })).toEqual({ foo });
   });
 
   it("should get error with touched", () => {

@@ -21,19 +21,15 @@ declare module "react-cool-form" {
     submit: Submit<V>;
   }
 
-  interface Watch<V> {
+  interface Mon<V> {
     (
       path: string | string[] | Map<string>,
-      options?: {
-        target?: string;
-        defaultValues?: V;
-        errorWithTouched?: boolean;
-      }
+      options?: { defaultValues?: V; errorWithTouched?: boolean }
     ): any;
   }
 
   interface GetState {
-    (path?: string | string[] | Map<string>, target?: string): any;
+    (path?: string | string[] | Map<string>): any;
   }
 
   interface SetValue {
@@ -187,7 +183,7 @@ declare module "react-cool-form" {
   export interface FormMethods<V extends FormValues = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
-    mon: Watch<V>;
+    mon: Mon<V>;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
@@ -213,7 +209,6 @@ declare module "react-cool-form" {
 
   export type FormStateConfig<V> = Partial<{
     formId: string;
-    target: string;
     defaultValues: V;
     errorWithTouched: boolean;
   }>;

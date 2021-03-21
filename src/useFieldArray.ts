@@ -46,7 +46,7 @@ export default <T = any, V extends FormValues = FormValues>(
     fieldArrayRef,
     fieldValidatorsRef,
     setDefaultValue,
-    setNodesOrStateValue,
+    setNodesOrValues,
     getState,
     setStateRef,
     runValidation,
@@ -69,14 +69,13 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const [fields, setFields] = useState<Array<[string, T]>>(getFields(true));
 
-  const setNodeValue = useCallback(
-    () =>
-      setNodesOrStateValue(getState("values"), {
-        shouldUpdateDefaultValues: false,
-        fields: Object.keys(fieldArrayRef.current[name].fields),
-      }),
-    [fieldArrayRef, getState, name, setNodesOrStateValue]
-  );
+  const updateFields = useCallback(() => {
+    setFields(getFields());
+    setNodesOrValues(getState("values"), {
+      shouldSetValues: false,
+      fields: Object.keys(fieldArrayRef.current[name].fields),
+    });
+  }, [fieldArrayRef, getFields, getState, name, setNodesOrValues]);
 
   useEffect(() => {
     if (
@@ -92,10 +91,7 @@ export default <T = any, V extends FormValues = FormValues>(
 
   if (!fieldArrayRef.current[name])
     fieldArrayRef.current[name] = {
-      reset: () => {
-        setFields(getFields());
-        setNodeValue();
-      },
+      reset: updateFields,
       fields: {},
     };
   if (validate) fieldValidatorsRef.current[name] = validate;
@@ -135,20 +131,11 @@ export default <T = any, V extends FormValues = FormValues>(
       });
 
       setStateRef("", { ...state, shouldDirty: getIsDirty(state.dirty) });
-      setFields(getFields());
-      setNodeValue();
+      updateFields();
 
       if (validateOnChange) runValidation(name);
     },
-    [
-      getState,
-      getFields,
-      name,
-      runValidation,
-      setNodeValue,
-      setStateRef,
-      validateOnChange,
-    ]
+    [getState, name, runValidation, setStateRef, updateFields, validateOnChange]
   );
 
   const push = useCallback<Push<T>>(
