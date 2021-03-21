@@ -94,6 +94,7 @@ export default <V extends FormValues = FormValues>({
   const onResetRef = useLatest(onReset || (() => undefined));
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
+  const hasWarnValues = useRef(false);
   const defaultValuesRef = useRef(defaultValues);
   const initialStateRef = useRef<FormState<V>>({
     values: defaultValuesRef.current,
@@ -336,10 +337,12 @@ export default <V extends FormValues = FormValues>({
         p = target ? `${target}.${p}` : p;
 
         if (callback) {
-          if (p === "values")
+          if (p === "values" && !hasWarnValues.current) {
             warn(
               `💡 react-cool-form > ${methodName}: Getting "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
             );
+            hasWarnValues.current = true;
+          }
 
           usedState[p] = true;
         }
