@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.147
+
+### Patch Changes
+
+- [#494](https://github.com/wellyshen/react-cool-form/pull/494) [`40e9b76`](https://github.com/wellyshen/react-cool-form/commit/40e9b76e74b2740fd8e6c309353bf9e77127998e) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat: shortcut for getting form's values
+
+* [#492](https://github.com/wellyshen/react-cool-form/pull/492) [`4f0dbaf`](https://github.com/wellyshen/react-cool-form/commit/4f0dbaf6610bad9977b474b92e158c0d83227755) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): throw multiple warning when getting form values with `mon` method
+
 ## 0.0.146
 
 ### Patch Changes
