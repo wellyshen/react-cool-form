@@ -194,8 +194,7 @@ export type Path = string | string[] | Map<string>;
 export interface GetFormState<V = any> {
   (
     path: Path | undefined,
-    options: {
-      target?: string;
+    options?: {
       errorWithTouched?: boolean;
       defaultValues?: V;
       methodName?: string;
@@ -204,15 +203,15 @@ export interface GetFormState<V = any> {
   ): any;
 }
 
-export interface Watch<V> {
+export interface Mon<V> {
   (
     path: Path,
-    options?: { target?: string; defaultValues?: V; errorWithTouched?: boolean }
+    options?: { defaultValues?: V; errorWithTouched?: boolean }
   ): any;
 }
 
 export interface GetState {
-  (path?: string | string[] | Map<string>, target?: string): any;
+  (path?: string | string[] | Map<string>): any;
 }
 
 export interface SetValue {
@@ -284,7 +283,7 @@ export type FormConfig<V = any> = Partial<{
 export interface FormMethods<V = any> {
   form: RegisterForm;
   field: RegisterField<V>;
-  mon: Watch<V>;
+  mon: Mon<V>;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;
@@ -299,7 +298,6 @@ export interface FormMethods<V = any> {
 // useFormState
 export type FormStateConfig<V = any> = Partial<{
   formId: string;
-  target: string;
   defaultValues: V;
   errorWithTouched: boolean;
 }>;

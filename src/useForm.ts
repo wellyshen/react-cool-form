@@ -21,6 +21,7 @@ import {
   HandleChangeEvent,
   Handlers,
   Map,
+  Mon,
   Parsers,
   RegisterField,
   RegisterForm,
@@ -35,7 +36,6 @@ import {
   SetTouchedMaybeValidate,
   SetValue,
   Submit,
-  Watch,
 } from "./types";
 import { useLatest, useState } from "./hooks";
 import {
@@ -323,18 +323,20 @@ export default <V extends FormValues = FormValues>({
     (
       path,
       {
-        target,
         errorWithTouched,
         defaultValues: dfValues = {},
         methodName = "mon",
         callback,
-      }
+      } = {}
     ) => {
       if (!path) return callback ? undefined : stateRef.current;
 
       const usedState: Map = {};
       const getPath = (p: string) => {
-        p = target ? `${target}.${p}` : p;
+        if (
+          !Object.keys(initialStateRef.current).some((key) => p.startsWith(key))
+        )
+          p = `values.${p}`;
 
         if (callback) {
           if (p === "values" && !hasWarnValues.current) {
@@ -398,10 +400,9 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const mon = useCallback<Watch<V>>(
-    (path, { target, errorWithTouched, defaultValues: dfValues } = {}) =>
+  const mon = useCallback<Mon<V>>(
+    (path, { errorWithTouched, defaultValues: dfValues } = {}) =>
       getFormState(path, {
-        target,
         errorWithTouched,
         defaultValues: dfValues,
         callback: (usedState) => setUsedState(usedState),
@@ -409,10 +410,9 @@ export default <V extends FormValues = FormValues>({
     [getFormState, setUsedState]
   );
 
-  const getState = useCallback<GetState>(
-    (path, target) => getFormState(path, { target }),
-    [getFormState]
-  );
+  const getState = useCallback<GetState>((path) => getFormState(path), [
+    getFormState,
+  ]);
 
   const setError = useCallback<SetError>(
     (name, error) => {

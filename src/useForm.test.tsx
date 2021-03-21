@@ -1460,13 +1460,12 @@ describe("useForm", () => {
       ).toEqual({ values, foo: values.foo, isValid });
     });
 
-    it("should get state with specific target", () => {
+    it("should get form's values by shortcut", () => {
       const { mon } = renderHelper({ defaultValues: values });
-      const option = { target: "values" };
       const { foo } = values;
-      expect(mon("foo", option)).toBe(foo);
-      expect(mon(["foo"], option)).toEqual([foo]);
-      expect(mon({ foo: "foo" }, option)).toEqual({ foo });
+      expect(mon("foo")).toBe(foo);
+      expect(mon(["foo"])).toEqual([foo]);
+      expect(mon({ foo: "foo" })).toEqual({ foo });
     });
 
     it("should get error with touched", async () => {
@@ -1531,13 +1530,12 @@ describe("useForm", () => {
       ).toEqual({ values, foo: values.foo, isValid });
     });
 
-    it("should get state with specific target", () => {
+    it("should get value without key", () => {
       const { getState } = renderHelper({ defaultValues: values });
-      const target = "values";
       const { foo } = values;
-      expect(getState("foo", target)).toBe(foo);
-      expect(getState(["foo"], target)).toEqual([foo]);
-      expect(getState({ foo: "foo" }, target)).toEqual({ foo });
+      expect(getState("foo")).toBe(foo);
+      expect(getState(["foo"])).toEqual([foo]);
+      expect(getState({ foo: "foo" })).toEqual({ foo });
     });
 
     it("should not trigger re-rendering", () => {
