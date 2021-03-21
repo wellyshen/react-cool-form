@@ -18,7 +18,7 @@ function App() {
 
   /* console.log(
     "Field value: ",
-    mon({ value: "values.foo", touched: "touched.foo", dirty: "dirty.foo" })
+    mon({ value: "foo", touched: "touched.foo", dirty: "dirty.foo" })
   ); */
 
   return (
