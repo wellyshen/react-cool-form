@@ -53,7 +53,6 @@ fields.map(([fieldName, { name }]) => (
   <input
     key={fieldName} // Use the "fieldName" as the key
     name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
-    defaultValue={name}
   />
 ));
 ```
@@ -138,7 +137,6 @@ const App = () => {
         <input
           key={fieldName} // Use the "fieldName" as the key
           name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
-          defaultValue={name} // Don't forget to provide the default value
         />
       ))}
     </form>
