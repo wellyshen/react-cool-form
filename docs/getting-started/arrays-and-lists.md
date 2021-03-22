@@ -14,7 +14,7 @@ The `useFieldArray` hook helps you to deal with multiple similar fields. You pas
 ```js
 import { useForm, useFieldArray } from "react-cool-form";
 
-const Field = ({ name, ...restProps }) => {
+const TextField = ({ name, ...restProps }) => {
   const [fieldProps] = useControlled(name, restProps);
   return <input {...fieldProps} />;
 };
@@ -33,18 +33,12 @@ const App = () => {
       {/* The first parameter of the callback is an array that includes
           a supplied "fieldName" (name + index) and your field value */}
       {fields.map(([fieldName, { name }], index) => (
-        <div
-          key={fieldName} // Use the "fieldName" as the key
-        >
-          <input
-            name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
-            defaultValue={name} // Don't forget to provide the default value
-          />
+        // Use the "fieldName" as the key
+        <div key={fieldName}>
+          {/* Use the "fieldName" + "YOUR PATH" as the name */}
+          <input name={`${fieldName}.name`} />
           {/* Working with a controlled component */}
-          <Field
-            name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
-            defaultValue={name} // Don't forget to provide the default value
-          />
+          <TextField name={`${fieldName}.name`} />
           <button type="button" onClick={() => remove(index)}>
             ➖
           </button>
@@ -85,9 +79,9 @@ const App = () => {
 
   return (
     <form ref={form} noValidate>
-      {fields.map(([fieldName, { name }], index) => (
+      {fields.map(([fieldName], index) => (
         <div key={fieldName}>
-          <input name={`${fieldName}.name`} defaultValue={name} />
+          <input name={`${fieldName}.name`} />
           <button type="button" onClick={() => remove(index)}>
             ➖
           </button>

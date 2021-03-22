@@ -23,8 +23,8 @@ const NoteArray = ({ name, notes }) => {
     defaultValue: notes
   });
 
-  return fields.map(({ id, text }, index) => (
-    <input key={id} name={`${name}[${index}].text`} defaultValue={text} />
+  return fields.map(([fieldName]) => (
+    <input key={fieldName} name={`${fieldName}.text`} />
   ));
 };
 
@@ -75,7 +75,7 @@ function App() {
             ]}
           /> */}
           {/* When working with conditional fields, please ensure the "useFieldArray" hook is wrapped in a component */}
-          <NoteArray name="note" notes={[{ id: "0", text: "" }]} />
+          <NoteArray name="note" notes={[{ text: "" }]} />
         </>
       )}
       <input type="submit" />
