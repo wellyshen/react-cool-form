@@ -85,7 +85,7 @@ const App = () => {
 
 [Controlled components](https://reactjs.org/docs/forms.html#controlled-components) with highly customized and full features like [React Select](https://react-select.com) or [React Datepicker](https://reactdatepicker.com). We can use React Cool Form's [useControlled](../api-reference/use-controlled) hook to create a reusable controller component for them in a flexible and performant way.
 
-> 💡 When using the hook, we must provide a default value for the controlled field.
+> 💡 When using the hook (and not working with [field-array](./arrays-and-lists#dealing-with-array-fields)), a default value is required.
 
 [![Edit RCF - React Select](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-react-select-djsl1?fontsize=14&hidenavigation=1&theme=dark)
 

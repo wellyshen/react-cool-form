@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { ControlledConfig, ControlledReturn, FormValues } from "./types";
 import * as shared from "./shared";
@@ -48,7 +48,6 @@ export default <V extends FormValues = FormValues>(
   );
   const {
     shouldRemoveField,
-    defaultValuesRef,
     initialStateRef,
     fieldArrayRef,
     controlsRef,
@@ -63,15 +62,6 @@ export default <V extends FormValues = FormValues>(
   const hasWarn = useRef(false);
   const nameRef = useLatest(name);
 
-  const warnDefaultValue = useCallback(() => {
-    if (!hasWarn.current) {
-      warn(
-        `💡 react-cool-form > useControlled: Please provide a default value for "${nameRef.current}" field.`
-      );
-      hasWarn.current = true;
-    }
-  }, [nameRef]);
-
   useEffect(
     () => () => {
       if (shouldRemoveField) removeField(nameRef.current);
@@ -82,26 +72,18 @@ export default <V extends FormValues = FormValues>(
   controlsRef.current[name] = true;
   if (validate) fieldValidatorsRef.current[name] = validate;
 
-  const fieldArrayName = isFieldArray(fieldArrayRef.current, name);
   let value;
 
-  if (fieldArrayName) {
-    if (!fieldArrayRef.current[fieldArrayName].fields[name]) {
-      if (!isUndefined(defaultValue)) {
-        setDefaultValue(name, defaultValue);
-        fieldArrayRef.current[fieldArrayName].fields[name] = true;
-      } else {
-        warnDefaultValue();
-      }
-    }
-  } else if (isUndefined(get(initialStateRef.current.values, name))) {
-    value = get(defaultValuesRef.current, name);
-    value = !isUndefined(value) ? value : defaultValue;
+  if (isUndefined(get(initialStateRef.current.values, name))) {
+    value = defaultValue;
 
     if (!isUndefined(value)) {
       setDefaultValue(name, value);
-    } else {
-      warnDefaultValue();
+    } else if (!isFieldArray(fieldArrayRef.current, name) && !hasWarn.current) {
+      warn(
+        `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
+      );
+      hasWarn.current = true;
     }
   }
 

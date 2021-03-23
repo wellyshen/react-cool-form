@@ -55,8 +55,8 @@ const Form = ({
     onError: (errors) => onError(errors),
     onReset: (values) => onReset(values),
   });
-  const [fieldProps, meta] = useControlled(name, rest);
   useFieldArray(isFieldArray ? name : "x");
+  const [fieldProps, meta] = useControlled(name, rest);
 
   return (
     <>
@@ -103,6 +103,7 @@ describe("useControlled", () => {
   const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
   const onError = jest.fn();
+  const onReset = jest.fn();
   const value = "🍎";
 
   beforeEach(() => jest.clearAllMocks());
@@ -133,7 +134,7 @@ describe("useControlled", () => {
     );
   });
 
-  it("should warn missing default value for field-array", () => {
+  it("should not warn missing default value for field-array", () => {
     renderHelper({
       isFieldArray: true,
       children: ({ fieldProps }: API) => (
@@ -141,10 +142,7 @@ describe("useControlled", () => {
       ),
     });
     fireEvent.input(getByTestId("foo"), { target: { value } });
-    expect(console.warn).toHaveBeenCalledTimes(1);
-    expect(console.warn).toHaveBeenCalledWith(
-      '💡 react-cool-form > useControlled: Please provide a default value for "foo" field.'
-    );
+    expect(console.warn).not.toHaveBeenCalled();
   });
 
   it.each(["form", "controlled"])(
@@ -191,7 +189,7 @@ describe("useControlled", () => {
   });
 
   it.each(["form", "controlled"])(
-    "should set default value from %s option",
+    "should set default value correctly from %s option",
     async (type) => {
       const format = jest.fn(() => value);
       renderHelper({
@@ -219,16 +217,51 @@ describe("useControlled", () => {
     expect(getState("values.foo")).toBeUndefined();
   });
 
-  it("should set default value for field-array", () => {
-    const { getState } = renderHelper({
-      isFieldArray: true,
-      defaultValue: value,
-      children: ({ fieldProps }: API) => (
-        <input data-testid="foo" {...fieldProps} />
-      ),
-    });
-    expect(getState("values.foo")).toBe(value);
-  });
+  it.each(["form", "controlled"])(
+    "should set default value correctly from %s option for field-array",
+    async (type) => {
+      const format = jest.fn(() => value);
+      renderHelper({
+        isFieldArray: true,
+        defaultValues: type === "form" ? { foo: value } : undefined,
+        defaultValue: type === "controlled" ? value : undefined,
+        format,
+        onSubmit,
+        children: ({ fieldProps }: API) => (
+          <input data-testid="foo" {...fieldProps} />
+        ),
+      });
+      expect(format).toHaveBeenCalledWith(value);
+      expect(getByTestId("foo").value).toBe(value);
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
+    }
+  );
+
+  it.each(["normal", "field-array"])(
+    "should use form-level default value first",
+    async (type) => {
+      const format = jest.fn(() => value);
+      renderHelper({
+        isFieldArray: type === "field-array",
+        defaultValues: { foo: value },
+        defaultValue: "🍋",
+        format,
+        onSubmit,
+        children: ({ fieldProps }: API) => (
+          <input data-testid="foo" {...fieldProps} />
+        ),
+      });
+      expect(format).toHaveBeenCalledWith(value);
+      expect(getByTestId("foo").value).toBe(value);
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() =>
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
+      );
+    }
+  );
 
   it("should not set default value for field-array", () => {
     const { getState } = renderHelper({
@@ -241,9 +274,8 @@ describe("useControlled", () => {
   });
 
   it.each(["form", "controlled"])(
-    "should reset value from %s option",
+    "should reset value correctly from %s option",
     (type) => {
-      const onReset = jest.fn();
       const defaultValues = { foo: value };
       const { reset } = renderHelper({
         defaultValues: type === "form" ? defaultValues : undefined,
@@ -255,6 +287,26 @@ describe("useControlled", () => {
       });
       act(() => reset());
       expect(onReset).toHaveBeenCalledWith(defaultValues);
+    }
+  );
+
+  it.each(["form", "controlled"])(
+    "should reset value correctly from %s option for field-array",
+    (type) => {
+      const defaultValues = { foo: value };
+      const { reset } = renderHelper({
+        isFieldArray: true,
+        defaultValues: type === "form" ? defaultValues : undefined,
+        defaultValue: type === "controlled" ? defaultValues.foo : undefined,
+        onReset,
+        children: ({ fieldProps }: API) => (
+          <input data-testid="foo" {...fieldProps} />
+        ),
+      });
+      act(() => reset());
+      expect(onReset).toHaveBeenCalledWith(
+        type === "controlled" ? {} : defaultValues
+      );
     }
   );
 
