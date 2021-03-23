@@ -192,7 +192,7 @@ export type Path = string | string[] | Map<string>;
 
 export interface GetFormState<V = any> {
   (
-    path: Path | undefined,
+    path?: Path,
     options?: {
       errorWithTouched?: boolean;
       defaultValues?: V;
