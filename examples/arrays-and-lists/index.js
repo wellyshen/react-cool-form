@@ -24,9 +24,8 @@ function App() {
   return (
     <form ref={form}>
       <div className="count">Render {count} times</div>
-      {/* The first parameter of the callback is an array that includes
-          a supplied "fieldName" (name + index) and your field value */}
-      {fields.map(([fieldName], index) => (
+      {/* The first parameter of the callback supplies you a field name (e.g. foo[0], foo[1]) */}
+      {fields.map((fieldName, index) => (
         // Use the "fieldName" as the key
         <div key={fieldName}>
           {/* Use the "fieldName" + "YOUR PATH" as the name */}
