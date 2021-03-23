@@ -141,7 +141,7 @@ To indicate whether the field has been modified.
 
 The example demonstrates the basic usage of this hook.
 
-> 💡 When using the hook, we must provide a default value for the controlled field.
+> 💡 When using the hook (and not working with [field-array](../getting-started/arrays-and-lists#dealing-with-array-fields)), a default value is required.
 
 ```js
 import { useControlled } from "react-cool-form";

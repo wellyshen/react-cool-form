@@ -7,7 +7,6 @@ export type Map<T = boolean> = Record<string, T>;
 export type Methods = {
   validateOnChange: boolean;
   shouldRemoveField: boolean;
-  defaultValuesRef: MutableRefObject<any>;
   initialStateRef: MutableRefObject<FormState>;
   excludeFieldsRef: MutableRefObject<Map>;
   fieldArrayRef: MutableRefObject<FieldArray>;
@@ -376,7 +375,7 @@ export type FieldArrayConfig<T, V> = Partial<{
 }>;
 
 export type FieldArrayReturn<T> = [
-  Array<[string, T]>,
+  string[],
   {
     push: Push<T>;
     insert: Insert<T>;

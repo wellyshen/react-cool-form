@@ -23,7 +23,7 @@ const NoteArray = ({ name, notes }) => {
     defaultValue: notes
   });
 
-  return fields.map(([fieldName]) => (
+  return fields.map((fieldName) => (
     <input key={fieldName} name={`${fieldName}.text`} />
   ));
 };
