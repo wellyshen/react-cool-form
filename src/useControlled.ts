@@ -72,13 +72,9 @@ export default <V extends FormValues = FormValues>(
   controlsRef.current[name] = true;
   if (validate) fieldValidatorsRef.current[name] = validate;
 
-  let value;
-
   if (isUndefined(get(initialStateRef.current.values, name))) {
-    value = defaultValue;
-
-    if (!isUndefined(value)) {
-      setDefaultValue(name, value);
+    if (!isUndefined(defaultValue)) {
+      setDefaultValue(name, defaultValue);
     } else if (!isFieldArray(fieldArrayRef.current, name) && !hasWarn.current) {
       warn(
         `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
@@ -87,9 +83,10 @@ export default <V extends FormValues = FormValues>(
     }
   }
 
-  value = !isUndefined(meta.value) ? meta.value : value;
-  value = (format ? format(value) : value) ?? "";
   const { onChange, onBlur, ...restProps } = props;
+  let value = !isUndefined(meta.value) ? meta.value : defaultValue;
+  value = format ? format(value) : value;
+  value = !isUndefined(value) ? value : "";
 
   return [
     {
