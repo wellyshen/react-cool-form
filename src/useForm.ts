@@ -959,7 +959,6 @@ export default <V extends FormValues = FormValues>({
   shared.set(id, {
     validateOnChange,
     shouldRemoveField,
-    defaultValuesRef,
     initialStateRef,
     fieldArrayRef,
     controlsRef,

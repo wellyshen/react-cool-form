@@ -55,19 +55,19 @@ export default <T = any, V extends FormValues = FormValues>(
   const defaultValueRef = useRef<T[] | undefined>(defaultValue);
 
   const getFields = useCallback(
-    (init = false): Array<[string, T]> => {
+    (init = false): string[] => {
       let fields = getState(`values.${name}`);
 
       if (init && isUndefined(fields)) fields = defaultValueRef.current;
 
       return Array.isArray(fields)
-        ? fields.map((value, index) => [`${name}[${index}]`, value])
+        ? fields.map((_, index) => `${name}[${index}]`)
         : [];
     },
     [getState, name]
   );
 
-  const [fields, setFields] = useState<Array<[string, T]>>(getFields(true));
+  const [fields, setFields] = useState<string[]>(getFields(true));
 
   const updateFields = useCallback(() => {
     setFields(getFields());

@@ -39,17 +39,17 @@ A synchronous/asynchronous function that is used for the [field-level validation
 
 ## Fields
 
-`Array<[string, FieldValue]>`
+`string[]`
 
-An array that holds the relevant field values and a supplied field name (name + index) for the `key` and `name` attributes of a field.
+An array that holds field names (e.g. `foo[0]`, `foo[1]`), which can be used for the `key` and `name` attributes of a field.
 
 - It refers to the location of the field in the [form state](../getting-started/form-state#about-the-form-state). If the referenced value isn't an `array` type, returns an empty array instead.
 
 ```js
 const [fields] = useFieldArray("foo", { defaultValue: [{ name: "Iron Man" }] });
 
-// The first parameter of the callback is an array that includes a supplied "fieldName" and your field value
-fields.map(([fieldName, { name }]) => (
+// The first parameter of the callback supplies you a field name (e.g. foo[0], foo[1])
+fields.map((fieldName) => (
   <input
     key={fieldName} // Use the "fieldName" as the key
     name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
@@ -131,9 +131,8 @@ const App = () => {
 
   return (
     <form ref={form}>
-      {/* The first parameter of the callback is an array that includes
-          a supplied "fieldName" (name + index) and your field value */}
-      {fields.map(([fieldName, { name }]) => (
+      {/* The first parameter of the callback supplies you a field name (e.g. foo[0], foo[1]) */}
+      {fields.map((fieldName) => (
         <input
           key={fieldName} // Use the "fieldName" as the key
           name={`${fieldName}.name`} // Use the "fieldName" + "YOUR PATH" as the name
