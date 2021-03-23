@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.148
+
+### Patch Changes
+
+- [#499](https://github.com/wellyshen/react-cool-form/pull/499) [`38cfd17`](https://github.com/wellyshen/react-cool-form/commit/38cfd17cd6b79345652a88ede0329ec328674139) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useFieldArray): provide simpler API
+
 ## 0.0.147
 
 ### Patch Changes
