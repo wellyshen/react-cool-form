@@ -219,6 +219,7 @@ describe("useForm", () => {
   });
 
   it("should return methods correctly", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { unmount, ...methods } = renderHelper();
     expect(methods).toEqual({
       form: expect.any(Function),
