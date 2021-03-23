@@ -85,8 +85,7 @@ export default <V extends FormValues = FormValues>(
 
   const { onChange, onBlur, ...restProps } = props;
   let value = !isUndefined(meta.value) ? meta.value : defaultValue;
-  value = format ? format(value) : value;
-  value = !isUndefined(value) ? value : "";
+  value = (format ? format(value) : value) ?? "";
 
   return [
     {
