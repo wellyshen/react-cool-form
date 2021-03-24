@@ -8,11 +8,11 @@ let count = 0;
 function App() {
   count++;
 
-  const { form, select } = useForm({
+  const { form, mon } = useForm({
     defaultValues: { firstName: "", lastName: "", framework: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
-  const errors = select("errors");
+  const errors = mon("errors");
 
   return (
     <form ref={form} noValidate>
