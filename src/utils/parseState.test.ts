@@ -48,7 +48,7 @@ describe("parseState", () => {
     expect(handler).toHaveBeenCalledWith(path);
   });
 
-  it("should call error handler correctly", () => {
+  it("should call state handler correctly", () => {
     const handler = jest.fn();
     const path = "values.foo";
     const { foo } = state.values;
