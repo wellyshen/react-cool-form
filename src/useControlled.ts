@@ -1,6 +1,11 @@
 import { useEffect, useRef } from "react";
 
-import { ControlledConfig, ControlledReturn, FormValues } from "./types";
+import {
+  ControlledConfig,
+  ControlledReturn,
+  FormValues,
+  Methods,
+} from "./types";
 import * as shared from "./shared";
 import { useLatest } from "./hooks";
 import {
@@ -30,7 +35,7 @@ export default <V extends FormValues = FormValues>(
     '💡 react-cool-form > useControlled: Missing "name" parameter.'
   );
 
-  const methods = shared.get(formId);
+  const methods: Methods<V> = shared.get(formId);
 
   invariant(
     !methods,
