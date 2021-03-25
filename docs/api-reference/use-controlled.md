@@ -43,7 +43,7 @@ A synchronous/asynchronous function that is used for the [field-level validation
 
 `(...args: any[]) => any`
 
-A function that takes the event object (or arguments) of the target component's `onChange` handler and parses the value of the field that you want to store into the [form state](../getting-started/form-state#about-the-form-state). Useful for data type converting.
+A function that takes the event object (or parameters) of the target component's `onChange` handler and parses the value of the field that you want to store into the [form state](../getting-started/form-state#about-the-form-state). Useful for data type converting.
 
 ### format
 

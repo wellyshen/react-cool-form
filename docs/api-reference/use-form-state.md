@@ -3,10 +3,17 @@ id: use-form-state
 title: useFormState
 ---
 
-This hook helps us to isolate re-rendering at the component level for performance optimization (see [related article](https://overreacted.io/before-you-memo)). The hook has the similar API design to the [mon](../api-reference/use-form#mon) method of the `useForm` that maintain a consistent DX for us. See the [Isolating Re-rendering](../getting-started/form-state#isolating-re-rendering) to learn more.
+This hook can be used for two purposes:
+
+- Isolating re-rendering: It helps us to isolate re-rendering at the component level for performance optimization (see [related article](https://overreacted.io/before-you-memo)). The API design similar to the [mon](../api-reference/use-form#mon) method of the `useForm` that maintain a consistent DX for us. See the [Isolating Re-rendering](../getting-started/form-state#isolating-re-rendering) to learn more.
+- On state change event: To listen for changes to properties in the [form state](../getting-started/form-state#about-the-form-state) without triggering re-renders. See the [On State Change Event](../getting-started/form-state#on-state-change-event) to learn more.
 
 ```js
+// Isolating re-rendering mode
 const props = useFormState(path, config);
+
+// On state change event mode
+useFormState(path, callback, formId);
 ```
 
 ## Path
@@ -71,6 +78,18 @@ const errors = useFormState("errors", { errorWithTouched: true );
 const errors = useFormState("errors", { errorWithTouched: true );
 ```
 
+## Callback
+
+`(props: any) => void`
+
+It's called on any of the subscribed properties in the [form state](../getting-started/form-state#about-the-form-state) change. It takes the properties as the parameter.
+
+## FormId
+
+`string`
+
+An optional parameter that works the same as the [config.formId](#formid).
+
 ## Example
 
 The example demonstrates the basic usage of this hook.
@@ -78,9 +97,13 @@ The example demonstrates the basic usage of this hook.
 ```js
 import { useFormState } from "react-cool-form";
 
+// To isolate re-rendering at the component level
 const IsolatedComponent = () => {
-  const foo = useFormState("values.foo");
+  const foo = useFormState("foo");
 
   return <div>{foo}</div>;
 };
+
+// To listen for the changes of a field value
+useFormState("foo", (foo) => console.log(foo));
 ```
