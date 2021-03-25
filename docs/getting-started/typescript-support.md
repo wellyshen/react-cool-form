@@ -74,7 +74,7 @@ enum FieldNames {
   "fieldName.a[0].b" = "fieldName.a[0].b",
 }
 
-<input name={FieldNames["fieldName.a[0].c"]} />; // 👎🏻 Property "fieldName.a[0].c" does not exist on type "typeof FieldNames". Did you mean "fieldName.a[0].b"?
+<input name={FieldNames["fieldName.a[0].c"]} />; // 🙅🏻‍♀️ Property "fieldName.a[0].c" does not exist on type "typeof FieldNames". Did you mean "fieldName.a[0].b"?
 ```
 
 🧐 You can dig more useful [types](https://github.com/wellyshen/react-cool-form/blob/master/src/types/react-cool-form.d.ts) of this library to build a strongly typed form.

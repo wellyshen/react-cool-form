@@ -99,7 +99,9 @@ The form's values might be the most frequent one that we need to get in a specif
 
 If we didn't initialize the default value of a field via the [defaultValues option](../api-reference/use-form#defaultvalues) of the `useForm`. The `mon` method will lose the value. Because the method is called before the field's initial render. For such cases, we can provide an alternative default value for the `mon` method to return as below:
 
-> 💡 If you need to refer to the status of a [conditional field](../examples/conditional-fields), we recommend to use React state instead.
+:::note
+If you need to refer to the status of a [conditional field](../examples/conditional-fields), we recommend to use React state instead.
+:::
 
 ```js
 import { useForm } from "react-cool-form";
@@ -126,7 +128,9 @@ const App = () => {
 
 Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `mon`'s `errorWithTouched` option (default is `false`).
 
-> 💡 This feature filters any errors of the untouched fields. So when validating with the [runValidation](../api-reference/use-form#runvalidation), please ensure it's triggered after the field(s) is (are) touched.
+:::note
+This feature filters any errors of the untouched fields. So when validating with the [runValidation](../api-reference/use-form#runvalidation), please ensure it's triggered after the field(s) is (are) touched.
+:::
 
 ```js
 const { mon } = useForm();
@@ -154,7 +158,9 @@ const errors = mon("errors", {
 
 Whenever a [monitored value](#monitoring-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via the [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to the `mon` method that maintain a consistent DX for us.
 
-> 💡 We must provide a valid path to use the hook, or it will return `undefined`.
+:::note
+We must provide a valid path to use the hook, or it will return `undefined`.
+:::
 
 [![Edit RCF - Isolating Re-rendering](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/intelligent-banach-uqxyx?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -204,7 +210,9 @@ const App = () => {
 
 The `useFormState` hook can also play as an event listener to listen for the changes to properties in the form state without triggering re-renders.
 
-> 💡 We must provide a valid path to use the hook, or the callback won't be triggered.
+:::note
+We must provide a valid path to use the hook, or the callback won't be triggered.
+:::
 
 ```js
 import { useForm, useFormState } from "react-cool-form";
@@ -227,7 +235,9 @@ const App = () => {
 
 If you just want to read the form state without triggering re-renders, there's a [getState](../api-reference/use-form#getstate) method for you.
 
-> 💡 Please note, this method should be used in an event handler.
+:::note
+Please note, this method should be used in an event handler.
+:::
 
 ```js {4}
 const { getState } = useForm();

@@ -42,7 +42,9 @@ Some validation attributes such as [minLength](https://developer.mozilla.org/en-
 
 The [validate](../api-reference/use-form#validate) option provides a convenient way to access the complete `values` of the form (a.k.a [formState.values](./form-state#about-the-form-state)), which is useful to validate by dependent fields **during both editing (e.g. onChange, onBlur) and submission phases**.
 
-> 💡 Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex structures](./complex-structures), we've provided a set of [utility functions](../api-reference/utility-functions) to help you get shit done 💩.
+:::note
+Please ensure the shape of the `errors` matches the shape of form's `values`. If you're dealing with [complex structures](./complex-structures), we've provided a set of [utility functions](../api-reference/utility-functions) to help you get shit done 💩.
+:::
 
 [![Edit RCF - Form-level validation](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-form-level-validation-2if7r?fontsize=14&hidenavigation=1&theme=dark)
 
@@ -284,7 +286,9 @@ When validating with mixed ways, the results are deeply merged according to the 
 2. Field-level validation
 3. Form-level validation
 
-> 💡 To make the validation result of each field works correctly with the [individual](#when-to-run) target events or methods. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
+:::note
+To make the validation result of each field works correctly with the [individual](#when-to-run) target events or methods. When using [form-level validation](#form-level-validation), please ensure the shape of the `errors` matches the form's `values`.
+:::
 
 ## Displaying Error Messages
 
