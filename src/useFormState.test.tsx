@@ -9,7 +9,7 @@ const defaultValues = { foo: "🍎" };
 const error = "Required";
 
 interface Props extends FormStateConfig {
-  children: (state: any) => JSX.Element;
+  children: (props: any) => JSX.Element;
   path?: Path;
   formDefaultValues?: any;
   isError?: boolean;
@@ -34,7 +34,7 @@ const Form = ({
     defaultValues: formDefaultValues,
   });
   // @ts-expect-error
-  const state = useFormState(path, callback || { ...rest, formId }, formId);
+  const props = useFormState(path, callback || { ...rest, formId }, formId);
 
   onRender();
 
@@ -43,22 +43,22 @@ const Form = ({
     if (isTouched) setTouched("foo");
   }, [isError, isTouched, setError, setTouched]);
 
-  return <form ref={form}>{children(state)}</form>;
+  return <form ref={form}>{children(props)}</form>;
 };
 
 const renderHelper = (args: Omit<Props, "children"> = {}) => {
-  let state;
+  let props;
 
   render(
     <Form {...args}>
-      {(s) => {
-        state = s;
+      {(p) => {
+        props = p;
         return <input data-testid="foo" name="foo" />;
       }}
     </Form>
   );
 
-  return state;
+  return props;
 };
 
 describe("useFormState", () => {
@@ -89,8 +89,8 @@ describe("useFormState", () => {
   );
 
   it('should return undefined if "path" isn\'t set', () => {
-    const state = renderHelper();
-    expect(state).toBeUndefined();
+    const props = renderHelper();
+    expect(props).toBeUndefined();
   });
 
   it('should not trigger callback if "path" isn\'t set', () => {

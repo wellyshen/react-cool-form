@@ -372,7 +372,7 @@ export interface Move {
   (from: number, to: number): void;
 }
 
-export type FieldArrayConfig<T, V> = Partial<{
+export type FieldArrayConfig<T = any, V = any> = Partial<{
   formId: string;
   defaultValue: T[];
   validate: FieldValidator<V>;
