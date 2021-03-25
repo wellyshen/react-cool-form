@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.149
+
+### Patch Changes
+
+- [`bfab667`](https://github.com/wellyshen/react-cool-form/commit/bfab667e915f33ceb974195bf7cc12e10cde4be1) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat: new on form-state change event mode for `useFormState` hook
+
 ## 0.0.148
 
 ### Patch Changes
