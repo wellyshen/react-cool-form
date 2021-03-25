@@ -1533,9 +1533,9 @@
     "@testing-library/dom" "^7.28.1"
 
 "@testing-library/user-event@^13.0.8":
-  version "13.0.12"
-  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-13.0.12.tgz#1725a2233923fe0473c47a012b0fc1e1737898e5"
-  integrity sha512-sXSlqYIkOOwhkJEtYProKyoXHDZZkKIofWh3dVKWiLVp4wVzmzP+dJqT9OOUCoPG9dpfVqSgIylkd4TSBD4Tbw==
+  version "13.0.16"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-13.0.16.tgz#c027a9656f1984cf05f9c94c8f7168c06e85792c"
+  integrity sha512-plXL8lGR2H0xm0fHE0Dfz37ke2UtBI1wAmaWIo6BP7+pGt+BxdBQrITHAMGcac0a3PtBi5CXNPth8S53ISO1Ew==
   dependencies:
     "@babel/runtime" "^7.12.5"
 
