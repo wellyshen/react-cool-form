@@ -19,6 +19,8 @@
     "validation",
     "uncontrolled",
     "controlled",
+    "arrays",
+    "lists",
     "dx",
     "ux",
     "performance",
