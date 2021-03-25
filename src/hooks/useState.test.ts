@@ -282,7 +282,7 @@ describe("useState", () => {
     } = renderHelper();
     const path = "values.foo";
     const foo = "🍎";
-    const observer = { usedState: { [path]: true }, update: forceUpdate };
+    const observer = { usedState: { [path]: true }, notify: forceUpdate };
 
     subscribeObserver(observer);
     setStateRef(path, foo);
