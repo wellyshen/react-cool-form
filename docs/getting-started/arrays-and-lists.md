@@ -106,7 +106,7 @@ const App = () => {
 
 You can validate the top-level field via the [Form-level Validation](./validation-guide#form-level-validation) or [Field-level Validation](./validation-guide#field-level-validation) (via the `validate` option), depends on your case. React Cool Form runs validation after any array manipulations.
 
-```js
+```js {6-12,18-19}
 import { useForm, useFieldArray } from "react-cool-form";
 
 const App = () => {

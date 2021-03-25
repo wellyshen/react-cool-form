@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.150
+
+### Patch Changes
+
+- [`98cd462`](https://github.com/wellyshen/react-cool-form/commit/98cd46202296b720dff48352fd90d418596599b4) Thanks [@wellyshen](https://github.com/wellyshen)! - Docs(readme): update features section
+
+* [`cd8755b`](https://github.com/wellyshen/react-cool-form/commit/cd8755b265b6ec592312cb2690f18650ee1919de) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFieldArray): correct form ID warning message
+
 ## 0.0.149
 
 ### Patch Changes

@@ -5,7 +5,9 @@ title: useControlled
 
 This hook allows us to integrate with an existing component (usually a [controlled component](https://reactjs.org/docs/forms.html#controlled-components)) or 3rd-party UI library in React Cool Form. With this hook, we can easily to create a reusable controller component to fulfill our needs. See the [useControlled Hook](../getting-started/3rd-party-ui-libraries#2-usecontrolled-hook) to learn more.
 
-> 💡 When working with [conditional fields](../examples/conditional-fields), please ensure the hook is wrapped in a component.
+:::note
+When working with [conditional fields](../examples/conditional-fields), please ensure the hook is wrapped in a component.
+:::
 
 ```js
 const [fieldProps, meta] = useControlled(name, config);
@@ -141,7 +143,9 @@ To indicate whether the field has been modified.
 
 The example demonstrates the basic usage of this hook.
 
-> 💡 When using the hook (and not working with [field-array](../getting-started/arrays-and-lists#dealing-with-array-fields)), a default value is required.
+:::note
+When using the hook (and not working with [field-array](../getting-started/arrays-and-lists#dealing-with-array-fields)), a default value is required.
+:::
 
 ```js
 import { useControlled } from "react-cool-form";
