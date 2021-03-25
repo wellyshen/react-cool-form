@@ -41,6 +41,7 @@ type Props = Partial<Config>;
 
 const Form = ({
   children,
+  formId,
   name = "foo",
   isFieldArray,
   defaultValues,
@@ -50,13 +51,14 @@ const Form = ({
   ...rest
 }: Props) => {
   const { form, field, getState, reset } = useForm({
+    id: formId,
     defaultValues,
     onSubmit: (values) => onSubmit(values),
     onError: (errors) => onError(errors),
     onReset: (values) => onReset(values),
   });
-  useFieldArray(isFieldArray ? name : "x");
-  const [fieldProps, meta] = useControlled(name, rest);
+  useFieldArray(isFieldArray ? name : "x", { formId });
+  const [fieldProps, meta] = useControlled(name, { ...rest, formId });
 
   return (
     <>
@@ -392,6 +394,20 @@ describe("useControlled", () => {
       expect(onSubmit).toHaveBeenCalledWith({ foo: mockDate });
       expect(onError).not.toHaveBeenCalled();
     });
+  });
+
+  it.each([undefined, "form-1"])("should work with form ID", async (formId) => {
+    renderHelper({
+      formId,
+      name: "foo",
+      onSubmit,
+      children: ({ fieldProps }: API) => (
+        <input data-testid="foo" {...fieldProps} />
+      ),
+    });
+    fireEvent.input(getByTestId("foo"), { target: { value } });
+    fireEvent.submit(getByTestId("form"));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
   });
 
   it("should handle text correctly", async () => {
