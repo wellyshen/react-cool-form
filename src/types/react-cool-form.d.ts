@@ -213,9 +213,14 @@ declare module "react-cool-form" {
     errorWithTouched: boolean;
   }>;
 
+  export interface FormStateCallback {
+    (props: any): void;
+  }
+
   export function useFormState<V extends FormValues = FormValues>(
     path: Path,
-    config?: FormStateConfig<V>
+    configOrCallback?: FormStateConfig<V> | FormStateCallback,
+    formId?: string
   ): any;
 
   // useControlled

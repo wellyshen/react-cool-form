@@ -1,11 +1,11 @@
-import { FormMethods, FormValues } from "./types";
+import { FormMethods, FormValues, Methods } from "./types";
 import { get } from "./shared";
 import { invariant } from "./utils";
 
 export default <V extends FormValues = FormValues>(
   formId?: string
 ): FormMethods<V> => {
-  const methods = get(formId);
+  const methods: Methods<V> = get(formId);
 
   invariant(
     !methods,

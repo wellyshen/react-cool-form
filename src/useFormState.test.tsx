@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 
-import { FormStateConfig, Path } from "./types";
+import { FormStateCallback, FormStateConfig, Path } from "./types";
 import useForm from "./useForm";
 import useFormState from "./useFormState";
 
@@ -14,23 +14,27 @@ interface Props extends FormStateConfig {
   formDefaultValues?: any;
   isError?: boolean;
   isTouched?: boolean;
+  callback?: FormStateCallback;
   onRender?: () => void;
 }
 
 const Form = ({
   children,
+  formId,
   path,
   formDefaultValues = defaultValues,
   isError,
   isTouched,
+  callback,
   onRender = () => null,
   ...rest
 }: Props) => {
   const { form, setError, setTouched } = useForm({
+    id: formId,
     defaultValues: formDefaultValues,
   });
   // @ts-expect-error
-  const state = useFormState(path, rest);
+  const state = useFormState(path, callback || { ...rest, formId }, formId);
 
   onRender();
 
@@ -64,7 +68,7 @@ describe("useFormState", () => {
     );
   });
 
-  it('should warn mon "values" alone', () => {
+  it('should warn monitor "values" alone', () => {
     console.warn = jest.fn();
     renderHelper({ path: "values" });
     expect(console.warn).toHaveBeenCalledWith(
@@ -72,15 +76,28 @@ describe("useFormState", () => {
     );
   });
 
-  it('should not warn mon "values" alone', () => {
-    console.warn = jest.fn();
-    renderHelper({ path: "values.foo" });
-    expect(console.warn).not.toHaveBeenCalled();
-  });
+  it.each(["path", "callback"])(
+    'should not warn monitor "values" alone when %s is set',
+    (type) => {
+      console.warn = jest.fn();
+      renderHelper({
+        path: type === "path" ? "values.foo" : "values",
+        callback: type === "callback" ? () => null : undefined,
+      });
+      expect(console.warn).not.toHaveBeenCalled();
+    }
+  );
 
   it('should return undefined if "path" isn\'t set', () => {
     const state = renderHelper();
     expect(state).toBeUndefined();
+  });
+
+  it('should not trigger callback if "path" isn\'t set', () => {
+    const callback = jest.fn();
+    renderHelper({ callback });
+    fireEvent.input(screen.getByTestId("foo"));
+    expect(callback).not.toHaveBeenCalled();
   });
 
   it("should get default value correctly", () => {
@@ -150,10 +167,27 @@ describe("useFormState", () => {
     ).toBe(error);
   });
 
+  it("should work with form ID", () => {
+    const config = { path: "foo", formId: "form-1" };
+    const { foo } = defaultValues;
+    expect(renderHelper(config)).toBe(foo);
+    expect(renderHelper({ ...config, callback: () => null })).toBe(foo);
+  });
+
   it("should trigger re-rendering", () => {
     const onRender = jest.fn();
     renderHelper({ path: "values.foo", onRender });
     fireEvent.input(screen.getByTestId("foo"), { target: { value: "🍋" } });
     expect(onRender).toHaveBeenCalledTimes(2);
+  });
+
+  it("should trigger callback correctly", () => {
+    const onRender = jest.fn();
+    const callback = jest.fn();
+    const value = "🍋";
+    renderHelper({ path: "values.foo", onRender, callback });
+    fireEvent.input(screen.getByTestId("foo"), { target: { value } });
+    expect(callback).toHaveBeenCalledWith(value);
+    expect(onRender).toHaveBeenCalledTimes(1);
   });
 });

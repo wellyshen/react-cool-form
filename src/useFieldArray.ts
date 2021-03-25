@@ -7,6 +7,7 @@ import {
   HelperHandler,
   Insert,
   Keys,
+  Methods,
   Move,
   Push,
   Remove,
@@ -32,7 +33,7 @@ export default <T = any, V extends FormValues = FormValues>(
     '💡 react-cool-form > useFieldArray: Missing "name" parameter.'
   );
 
-  const methods = shared.get(formId);
+  const methods: Methods<V> = shared.get(formId);
 
   invariant(
     !methods,
