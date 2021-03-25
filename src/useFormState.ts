@@ -2,25 +2,34 @@
 
 import { useEffect, useReducer, useRef } from "react";
 
-import { FormStateConfig, FormValues, Observer, Path } from "./types";
+import {
+  FormStateCallback,
+  FormStateConfig,
+  FormValues,
+  Methods,
+  Observer,
+  Path,
+} from "./types";
 import { get } from "./shared";
-import { invariant } from "./utils";
+import { invariant, isFunction, parseState } from "./utils";
 
 export default <V extends FormValues = FormValues>(
   path: Path,
-  { formId, ...rest }: FormStateConfig<V> = {}
+  configOrCallback: FormStateCallback | FormStateConfig<V>,
+  formId?: string
 ): any => {
-  const methods = get(formId);
-  const methodName = "useFormState";
+  const config = !isFunction(configOrCallback) ? configOrCallback : {};
+  const methods: Methods<V> = get(config?.formId || formId);
 
   invariant(
     !methods,
-    `💡 react-cool-form > ${methodName}: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id`
+    `💡 react-cool-form > useFormState: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id`
   );
 
-  const observerRef = useRef<Observer>();
+  const observerRef = useRef<Observer<V>>();
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const { getFormState, subscribeObserver, unsubscribeObserver } = methods;
+  const callback = isFunction(configOrCallback) ? configOrCallback : undefined;
 
   useEffect(() => {
     // @ts-expect-error
@@ -32,11 +41,16 @@ export default <V extends FormValues = FormValues>(
   }, []);
 
   return getFormState(path, {
-    ...rest,
-    methodName,
+    ...config,
+    methodName: callback ? "useFormStateCallback" : "useFormState",
     callback: (usedState) => {
       if (!observerRef.current)
-        observerRef.current = { usedState, update: forceUpdate };
+        observerRef.current = {
+          usedState,
+          notify: callback
+            ? (state) => callback(parseState(path, state))
+            : forceUpdate,
+        };
     },
   });
 };

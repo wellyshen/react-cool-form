@@ -44,6 +44,7 @@ import {
   deepMerge,
   filterErrors,
   get,
+  getPath,
   isAsyncFunction,
   isCheckboxInput,
   isEmptyObject,
@@ -60,6 +61,7 @@ import {
   isSelectMultiple,
   isSelectOne,
   isUndefined,
+  parseState,
   runWithLowPriority,
   set,
   unset,
@@ -325,73 +327,59 @@ export default <V extends FormValues = FormValues>({
       {
         errorWithTouched,
         defaultValues: dfValues = {},
-        methodName = "mon",
+        methodName = "getState",
         callback,
       } = {}
     ) => {
-      if (!path) return callback ? undefined : stateRef.current;
-
       const usedState: Map = {};
-      const getPath = (p: string) => {
-        if (
-          !Object.keys(initialStateRef.current).some((key) => p.startsWith(key))
-        )
-          p = `values.${p}`;
+      const state = parseState(
+        path,
+        stateRef.current,
+        (p) => {
+          p = getPath(p);
 
-        if (callback) {
-          if (p === "values" && !hasWarnValues.current) {
-            warn(
-              `💡 react-cool-form > ${methodName}: Getting "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
-            );
-            hasWarnValues.current = true;
+          if (methodName !== "getState") {
+            if (
+              p === "values" &&
+              methodName !== "useFormStateCallback" &&
+              !hasWarnValues.current
+            ) {
+              warn(
+                `💡 react-cool-form > ${methodName}: Getting "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
+              );
+              hasWarnValues.current = true;
+            }
+
+            usedState[p] = true;
           }
 
+          return p;
+        },
+        (p, v) => {
+          if (p.startsWith("values")) {
+            if (!isUndefined(v)) return v;
+
+            p = p.replace("values.", "");
+            v = get(defaultValuesRef.current, p);
+
+            return !isUndefined(v) ? v : get(dfValues, p);
+          }
+
+          if (
+            !errorWithTouched ||
+            !p.startsWith("errors") ||
+            !v ||
+            isEmptyObject(v)
+          )
+            return v;
+
+          p = p.replace("errors", "touched");
           usedState[p] = true;
-        }
 
-        return p;
-      };
-      const helper = (p: string, state: any) => {
-        if (p.startsWith("values")) {
-          if (!isUndefined(state)) return state;
-
-          p = p.replace("values.", "");
-          state = get(defaultValuesRef.current, p);
-
-          return !isUndefined(state) ? state : get(dfValues, p);
-        }
-
-        if (
-          !errorWithTouched ||
-          !p.startsWith("errors") ||
-          !state ||
-          isEmptyObject(state)
-        )
-          return state;
-
-        p = p.replace("errors", "touched");
-        usedState[p] = true;
-
-        return filterErrors(state, get(stateRef.current, p));
-      };
-      let state;
-
-      if (Array.isArray(path)) {
-        state = path.map((p) => {
-          p = getPath(p);
-          return helper(p, get(stateRef.current, p));
-        });
-      } else if (isPlainObject(path)) {
-        const paths = path as Map<string>;
-        state = Object.keys(paths).reduce((s: Map<any>, key) => {
-          path = getPath(paths[key]);
-          s[key] = helper(path, get(stateRef.current, path));
-          return s;
-        }, {});
-      } else {
-        path = getPath(path);
-        state = helper(path, get(stateRef.current, path));
-      }
+          return filterErrors(v, get(stateRef.current, p));
+        },
+        methodName === "getState"
+      );
 
       if (callback) callback(usedState);
 
@@ -405,6 +393,7 @@ export default <V extends FormValues = FormValues>({
       getFormState(path, {
         errorWithTouched,
         defaultValues: dfValues,
+        methodName: "mon",
         callback: (usedState) => setUsedState(usedState),
       }),
     [getFormState, setUsedState]
