@@ -19,8 +19,8 @@ export default <V>(
 ): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const stateRef = useRef(initialState);
-  const stateObserversRef = useRef<Observer[]>([
-    { usedState: {}, update: forceUpdate },
+  const stateObserversRef = useRef<Observer<V>[]>([
+    { usedState: {}, notify: forceUpdate },
   ]);
   const onChangeRef = useLatest(onChange || (() => undefined));
 
@@ -33,8 +33,9 @@ export default <V>(
           stateRef.current = value;
           onChangeRef.current(stateRef.current);
 
-          stateObserversRef.current.forEach(({ usedState, update }) => {
-            if (shouldUpdate && !isEmptyObject(usedState)) update();
+          stateObserversRef.current.forEach(({ usedState, notify }) => {
+            if (shouldUpdate && !isEmptyObject(usedState))
+              notify(stateRef.current);
           });
         }
 
@@ -66,7 +67,7 @@ export default <V>(
         if (!shouldUpdate) return;
 
         path = fieldPath || path;
-        stateObserversRef.current.forEach(({ usedState, update }) => {
+        stateObserversRef.current.forEach(({ usedState, notify }) => {
           if (
             Object.keys(usedState).some(
               (k) => path.startsWith(k) || k.startsWith(path)
@@ -74,7 +75,7 @@ export default <V>(
             (usedState.isDirty && isDirty !== prevIsDirty) ||
             (usedState.isValid && isValid !== prevIsValid)
           )
-            update();
+            notify(stateRef.current);
         });
       }
     },
@@ -85,12 +86,12 @@ export default <V>(
     stateObserversRef.current[0].usedState = usedState;
   }, []);
 
-  const subscribeObserver = useCallback<ObserverHandler>(
+  const subscribeObserver = useCallback<ObserverHandler<V>>(
     (observer) => stateObserversRef.current.push(observer),
     []
   );
 
-  const unsubscribeObserver = useCallback<ObserverHandler>((observer) => {
+  const unsubscribeObserver = useCallback<ObserverHandler<V>>((observer) => {
     stateObserversRef.current = stateObserversRef.current.filter(
       (o) => o !== observer
     );

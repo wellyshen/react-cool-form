@@ -247,7 +247,7 @@ describe("useState", () => {
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 
-  it("should call debug callback correctly when setting state", () => {
+  it("should call debug correctly when setting state", () => {
     const debug = jest.fn();
     const { setStateRef } = renderHelper(debug);
     const state = {
@@ -260,7 +260,7 @@ describe("useState", () => {
     expect(debug).toHaveBeenCalledWith(state);
   });
 
-  it("should call debug callback correctly when setting state's value", () => {
+  it("should call debug correctly when setting state's value", () => {
     const debug = jest.fn();
     const { setStateRef } = renderHelper(debug);
     const errors = { foo: "Required" };
@@ -281,14 +281,18 @@ describe("useState", () => {
       setStateRef,
     } = renderHelper();
     const path = "values.foo";
-    const observer = { usedState: { [path]: true }, update: forceUpdate };
+    const foo = "🍎";
+    const observer = { usedState: { [path]: true }, notify: forceUpdate };
 
     subscribeObserver(observer);
-    setStateRef(path, "🍎");
-    expect(forceUpdate).toHaveBeenCalledTimes(1);
+    setStateRef(path, foo);
+    expect(forceUpdate).toHaveBeenCalledWith({
+      ...initialState,
+      values: { foo },
+    });
 
     unsubscribeObserver(observer);
-    setStateRef(path, "🍎");
+    setStateRef(path, foo);
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 });

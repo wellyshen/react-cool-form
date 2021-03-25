@@ -134,7 +134,7 @@ describe("useForm", () => {
       expect(console.warn).not.toHaveBeenCalled();
     });
 
-    it('should warn mon "values" alone', () => {
+    it('should warn monitor "values" alone', () => {
       const { mon } = renderHelper();
       mon("values");
       mon("values");
@@ -144,7 +144,7 @@ describe("useForm", () => {
       );
     });
 
-    it('should not warn mon "values" alone', () => {
+    it('should not warn monitor "values" alone', () => {
       const { mon } = renderHelper();
       mon("values.foo");
       expect(console.warn).not.toHaveBeenCalled();
@@ -219,6 +219,7 @@ describe("useForm", () => {
   });
 
   it("should return methods correctly", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { unmount, ...methods } = renderHelper();
     expect(methods).toEqual({
       form: expect.any(Function),

@@ -51,7 +51,7 @@ const methods = useForm<FormValues>();
 
 const methods = useFormMethods<FormValues>();
 
-const data = useFormState<FormValues>();
+const props = useFormState<FormValues>();
 
 const props = useControlled<FormValues>();
 Ｆ;

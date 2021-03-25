@@ -4,26 +4,26 @@ import { FocusEventHandler, MutableRefObject, SyntheticEvent } from "react";
 export type Map<T = boolean> = Record<string, T>;
 
 // Global
-export type Methods = {
+export type Methods<V = any> = {
   validateOnChange: boolean;
   shouldRemoveField: boolean;
-  initialStateRef: MutableRefObject<FormState>;
+  initialStateRef: MutableRefObject<FormState<V>>;
   excludeFieldsRef: MutableRefObject<Map>;
   fieldArrayRef: MutableRefObject<FieldArray>;
   controlsRef: MutableRefObject<Map>;
-  fieldValidatorsRef: MutableRefObject<Map<FieldValidator>>;
+  fieldValidatorsRef: MutableRefObject<Map<FieldValidator<V>>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   setStateRef: SetStateRef;
   getNodeValue: GetNodeValue;
-  getFormState: GetFormState;
+  getFormState: GetFormState<V>;
   setDefaultValue: SetDefaultValue;
-  setNodesOrValues: SetNodesOrValues;
+  setNodesOrValues: SetNodesOrValues<V>;
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
   handleChangeEvent: HandleChangeEvent;
   removeField: RemoveField;
-  subscribeObserver: ObserverHandler;
-  unsubscribeObserver: ObserverHandler;
-} & FormMethods;
+  subscribeObserver: ObserverHandler<V>;
+  unsubscribeObserver: ObserverHandler<V>;
+} & FormMethods<V>;
 
 // useState
 type DeepProps<V, T = any> = {
@@ -57,21 +57,21 @@ export interface SetUsedState {
   (usedState: Map): void;
 }
 
-export interface Observer {
+export interface Observer<V> {
   usedState: Map;
-  update: () => void;
+  notify: (state: FormState<V>) => void;
 }
 
-export interface ObserverHandler {
-  (observer: Observer): void;
+export interface ObserverHandler<V> {
+  (observer: Observer<V>): void;
 }
 
 export interface FormStateReturn<V> {
   stateRef: MutableRefObject<FormState<V>>;
   setStateRef: SetStateRef;
   setUsedState: SetUsedState;
-  subscribeObserver: ObserverHandler;
-  unsubscribeObserver: ObserverHandler;
+  subscribeObserver: ObserverHandler<V>;
+  unsubscribeObserver: ObserverHandler<V>;
 }
 
 // useForm
@@ -143,7 +143,7 @@ export interface RegisterForm {
   (element: HTMLElement | null): void;
 }
 
-export interface FieldValidator<V = any> {
+export interface FieldValidator<V> {
   (value: any, values: V): any | Promise<any>;
 }
 
@@ -172,7 +172,7 @@ export interface SetDefaultValue {
   (name: string, value: any, shouldUpdateDefaultValue?: boolean): void;
 }
 
-export interface SetNodesOrValues<V = any> {
+export interface SetNodesOrValues<V> {
   (values: V, options?: { shouldSetValues?: boolean; fields?: string[] }): void;
 }
 
@@ -190,9 +190,9 @@ export interface GetNodeValue {
 
 export type Path = string | string[] | Map<string>;
 
-export interface GetFormState<V = any> {
+export interface GetFormState<V> {
   (
-    path: Path | undefined,
+    path?: Path,
     options?: {
       errorWithTouched?: boolean;
       defaultValues?: V;
@@ -300,6 +300,10 @@ export type FormStateConfig<V = any> = Partial<{
   defaultValues: V;
   errorWithTouched: boolean;
 }>;
+
+export interface FormStateCallback {
+  (props: any): void;
+}
 
 // useControlled
 interface ControlledParser {

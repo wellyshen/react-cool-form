@@ -1,43 +1,25 @@
 /* eslint-disable no-console */
 
-import { useState } from "react";
-import { useForm, useFieldArray, useControlled } from "react-cool-form";
-
-const Field = ({ name, ...restProps }: any) => {
-  const [props] = useControlled(name, restProps);
-  return <input {...props} />;
-};
+import { useForm, useFormState } from "react-cool-form";
 
 export default () => {
-  const [show, setShow] = useState(true);
-  const { form, mon } = useForm({
-    defaultValues: { foo: [{ name: "test-1", conditional: "conditional-1" }] },
+  const { form } = useForm({
+    // id: "form-1",
+    defaultValues: { foo: "foo", bar: "bar" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [fields, { push }] = useFieldArray("foo");
 
-  console.log("LOG ===> Re-rendering", mon({ foo: "foo" }));
+  const data = useFormState(
+    "foo",
+    // (state) => console.log("LOG ===> Callback: ", state),
+    // "form-1"
+  );
+  console.log("LOG ===> Re-render: ", data);
 
   return (
     <form ref={form}>
-      {fields.map((fieldName) => (
-        <div key={fieldName}>
-          <Field name={`${fieldName}.name`} />
-          {show && (
-            <Field
-              name={`${fieldName}.conditional`}
-              defaultValue="conditional-2"
-            />
-          )}
-        </div>
-      ))}
-      <button type="button" onClick={() => push({ name: "test-2" })}>
-        Push
-      </button>
-      <button type="button" onClick={() => setShow(!show)}>
-        Toggle
-      </button>
-
+      <input name="foo" />
+      <input name="bar" />
       <input type="submit" />
     </form>
   );
