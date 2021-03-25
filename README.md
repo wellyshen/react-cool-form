@@ -16,7 +16,7 @@
 
 ## Features
 
-- 🎣 [Easy to use](https://react-cool-form.netlify.app/docs/getting-started/integration-an-existing-form), just a React [hook](https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook).
+- 🎣 [Easy to use](https://react-cool-form.netlify.app/docs/getting-started/integration-an-existing-form), React Cool Form is [a set of React hooks](https://react-cool-form.netlify.app/docs/api-reference/use-form) that helps you conquer all kinds of forms.
 - 🗃 Manages [complex form data](https://react-cool-form.netlify.app/docs/getting-started/complex-structures) without hassle.
 - 🚦 Supports [built-in](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#built-in-validation), [form-level](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#form-level-validation), and [field-level](https://react-cool-form.netlify.app/docs/getting-started/validation-guide#field-level-validation) validation.
 - 🚀 Highly performant, [minimizes the number of re-renders](https://react-cool-form.netlify.app#performance-matters) for you.

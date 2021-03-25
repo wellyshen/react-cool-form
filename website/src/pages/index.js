@@ -13,15 +13,13 @@ const features = [
     imageUrl: "img/plug.svg",
     description: (
       <>
-        React Cool Form is a React{" "}
-        <Link to="https://reactjs.org/docs/hooks-custom.html#using-a-custom-hook">
-          hook
-        </Link>
-        , it's designed to be a <b>plug-and-play</b>. You can easily{" "}
+        React Cool Form is{" "}
+        <Link to="/docs/api-reference/use-form">a set of React hooks</Link> that
+        helps you conquer all kinds of forms. See how easy to{" "}
         <Link to="/docs/getting-started/integration-an-existing-form">
-          hook it into any forms
-        </Link>{" "}
-        that you want.
+          integrate it with your form
+        </Link>
+        .
       </>
     ),
   },
@@ -76,7 +74,7 @@ const features = [
     description: (
       <>
         Intuitive and flexible{" "}
-        <Link to="/docs/api-reference/use-form">API</Link> design, provides a
+        <Link to="/docs/api-reference/use-form">APIs</Link> design, provides a
         seamless way to integration with existing HTML form inputs or{" "}
         <Link to="/docs/getting-started/3rd-party-ui-libraries">
           3rd-party UI libraries
@@ -165,7 +163,7 @@ function Home() {
             Form eliminates unnecessary re-renders throughout the development
             process. Now dive into the following example to learn more.
           </p>
-          <i
+          <iframe
             className={styles.iframe}
             src="https://codesandbox.io/embed/rcf-showbox-8b0qn?fontsize=14&hidenavigation=1&theme=dark"
             title="RCF - Showbox"
