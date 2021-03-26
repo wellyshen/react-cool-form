@@ -17,6 +17,7 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
     "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
   },
   settings: {
     polyfills: ["Promise"],
