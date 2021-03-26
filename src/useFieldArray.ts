@@ -82,13 +82,22 @@ export default <T = any, V extends FormValues = FormValues>(
     if (
       isUndefined(get(initialStateRef.current.values, name)) &&
       !isUndefined(defaultValueRef.current)
-    )
+    ) {
       setDefaultValue(name, defaultValueRef.current, true);
+      updateFields();
+    }
 
     return () => {
       if (shouldRemoveField) removeField(name, true);
     };
-  }, [initialStateRef, name, removeField, setDefaultValue, shouldRemoveField]);
+  }, [
+    initialStateRef,
+    name,
+    removeField,
+    setDefaultValue,
+    shouldRemoveField,
+    updateFields,
+  ]);
 
   if (!fieldArrayRef.current[name])
     fieldArrayRef.current[name] = {
