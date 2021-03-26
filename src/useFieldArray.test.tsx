@@ -1,4 +1,10 @@
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  screen,
+  act,
+  waitFor,
+} from "@testing-library/react";
 
 import {
   FieldArrayConfig,
@@ -89,7 +95,8 @@ const renderHelper = ({ children, ...rest }: Props = {}) => {
 describe("useFieldArray", () => {
   const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
-  const fieldValue = [{ name: "🍎" }];
+  const onRender = jest.fn();
+  const value = [{ name: "🍎" }];
 
   beforeEach(() => jest.clearAllMocks());
 
@@ -110,8 +117,8 @@ describe("useFieldArray", () => {
     "should set default value correctly from %s option",
     async (type) => {
       const { container } = renderHelper({
-        defaultValues: type === "form" ? { foo: fieldValue } : undefined,
-        defaultValue: type === "field-array" ? fieldValue : undefined,
+        defaultValues: type === "form" ? { foo: value } : undefined,
+        defaultValue: type === "field-array" ? value : undefined,
         onSubmit,
         children: ({ fields }: API) =>
           fields.map((fieldName) => (
@@ -123,16 +130,16 @@ describe("useFieldArray", () => {
           )),
       });
       expect(container.querySelectorAll("input")).toHaveLength(1);
-      expect(getByTestId("foo[0]").value).toBe(fieldValue[0].name);
+      expect(getByTestId("foo[0]").value).toBe(value[0].name);
       fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith({ foo: fieldValue })
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
       );
     }
   );
 
   it("should use form-level default value first", async () => {
-    const defaultValues = { foo: fieldValue };
+    const defaultValues = { foo: value };
     renderHelper({
       defaultValues,
       defaultValue: [{ name: "🍋" }],
@@ -140,5 +147,60 @@ describe("useFieldArray", () => {
     });
     fireEvent.submit(getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
+  });
+
+  it.each([undefined, true, value])(
+    'should return "fields" correctly',
+    (val) => {
+      const { fields, getState } = renderHelper({
+        defaultValues: { foo: val },
+      });
+      if (Array.isArray(val)) {
+        expect(fields).toEqual(["foo[0]"]);
+      } else {
+        expect(fields).toEqual([]);
+      }
+      expect(getState("foo")).toEqual(val);
+    }
+  );
+
+  it.each([undefined, { shouldDirty: false }, { shouldTouched: true }])(
+    "should push value correctly",
+    async (options) => {
+      const { push, container, getState } = renderHelper({
+        defaultValues: { foo: value },
+        onRender,
+        children: ({ fields }: API) =>
+          fields.map((fieldName) => (
+            <input
+              data-testid={fieldName}
+              key={fieldName}
+              name={`${fieldName}.name`}
+            />
+          )),
+      });
+      const newValue = { name: "🍋" };
+      act(() => push(newValue, options));
+      expect(container.querySelectorAll("input")).toHaveLength(2);
+      await waitFor(() =>
+        expect(getByTestId("foo[1]").value).toBe(newValue.name)
+      );
+      expect(getState("foo")).toEqual([...value, newValue]);
+      if (options?.shouldDirty === false) {
+        expect(getState("dirty.foo")).toBeUndefined();
+      } else {
+        expect(getState("dirty.foo")).toEqual([undefined, { name: true }]);
+      }
+      if (options?.shouldTouched) {
+        expect(getState("touched.foo")).toEqual([undefined, { name: true }]);
+      } else {
+        expect(getState("touched.foo")).toBeUndefined();
+      }
+      expect(onRender).toHaveBeenCalledTimes(2);
+    }
+  );
+
+  it("should swap values correctly", () => {
+    // ...
   });
 });
