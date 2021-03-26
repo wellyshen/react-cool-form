@@ -10,7 +10,7 @@ import styles from "./styles.module.scss";
 const features = [
   {
     title: "Easy to Use",
-    imageUrl: "img/plug.svg",
+    imageUrl: "img/form.svg",
     description: (
       <>
         React Cool Form is{" "}

@@ -20,7 +20,7 @@
   }
 
   .heroTitle {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     font-size: 3.75rem;
     color: #fff;
 
@@ -36,14 +36,14 @@
 
   .getStarted {
     padding: 1rem 2rem;
-    border: 2px solid var(--ifm-color-primary);
+    border: none;
+    background: var(--ifm-color-primary);
     text-transform: uppercase;
     font-size: 1.5rem;
     color: #fff;
 
     &:hover {
-      background: var(--ifm-color-primary);
-      color: #fff;
+      background: var(--ifm-color-primary-dark);
     }
   }
 
