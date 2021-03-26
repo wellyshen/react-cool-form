@@ -216,7 +216,7 @@ describe("useControlled", () => {
     const { getState } = renderHelper({
       children: ({ fieldProps }: API) => <input {...fieldProps} />,
     });
-    expect(getState("values.foo")).toBeUndefined();
+    expect(getState("foo")).toBeUndefined();
   });
 
   it.each(["form", "controlled"])(
@@ -272,7 +272,7 @@ describe("useControlled", () => {
         <input data-testid="foo" {...fieldProps} />
       ),
     });
-    expect(getState("values.foo")).toBeUndefined();
+    expect(getState("foo")).toBeUndefined();
   });
 
   it.each(["form", "controlled"])(

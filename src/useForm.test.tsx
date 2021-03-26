@@ -146,7 +146,7 @@ describe("useForm", () => {
 
     it('should not warn monitor "values" alone', () => {
       const { mon } = renderHelper();
-      mon("values.foo");
+      mon("foo");
       expect(console.warn).not.toHaveBeenCalled();
     });
 
@@ -165,15 +165,6 @@ describe("useForm", () => {
           "🍎"
         )
       );
-    });
-
-    it("should not warn form-level validation exception", async () => {
-      renderHelper({
-        validate: () => false,
-        children: <input data-testid="foo" name="foo" />,
-      });
-      fireEvent.input(getByTestId("foo"));
-      await waitFor(() => expect(console.warn).not.toHaveBeenCalled());
     });
 
     it("should warn field-level validation exception", async () => {
@@ -197,17 +188,6 @@ describe("useForm", () => {
           "🍎"
         )
       );
-    });
-
-    it("should not warn field-level validation exception", async () => {
-      const id = "foo";
-      renderHelper({
-        children: ({ field }: Methods) => (
-          <input data-testid={id} name="foo" ref={field(() => false)} />
-        ),
-      });
-      fireEvent.input(getByTestId(id));
-      await waitFor(() => expect(console.warn).not.toHaveBeenCalled());
     });
 
     it("should not warn in production", () => {
@@ -1494,7 +1474,7 @@ describe("useForm", () => {
         onRender,
         children: <input data-testid="foo" name="foo" />,
       });
-      mon("values.foo");
+      mon("foo");
       fireEvent.input(getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(2);
     });
@@ -1531,7 +1511,7 @@ describe("useForm", () => {
       ).toEqual({ values, foo: values.foo, isValid });
     });
 
-    it("should get value without key", () => {
+    it("should get form's values by shortcut", () => {
       const { getState } = renderHelper({ defaultValues: values });
       const { foo } = values;
       expect(getState("foo")).toBe(foo);
@@ -1544,7 +1524,7 @@ describe("useForm", () => {
         onRender,
         children: <input data-testid="foo" name="foo" />,
       });
-      getState("values.foo");
+      getState("foo");
       fireEvent.input(getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(1);
     });
@@ -1556,16 +1536,16 @@ describe("useForm", () => {
       const value = "🍎";
 
       setValue("foo", value);
-      expect(getState("values.foo")).toBe(value);
+      expect(getState("foo")).toBe(value);
 
       setValue("foo", (prevValue: string) => prevValue);
-      expect(getState("values.foo")).toBe(value);
+      expect(getState("foo")).toBe(value);
 
       setValue("foo.a[0].b", value);
-      expect(getState("values.foo.a[0].b")).toBe(value);
+      expect(getState("foo.a[0].b")).toBe(value);
 
       setValue("foo");
-      expect(getState("values.foo")).toBeUndefined();
+      expect(getState("foo")).toBeUndefined();
     });
 
     it("should set value with touched correctly", () => {
@@ -1691,6 +1671,10 @@ describe("useForm", () => {
     clearErrors(["bar", "baz.a[0].b"]);
     expect(getState("errors.bar")).toBeUndefined();
     expect(getState("baz.a[0].b")).toBeUndefined();
+
+    setError("foo", error);
+    clearErrors();
+    expect(getState("errors")).toEqual({});
   });
 
   it.each(["number", "date", "custom"])(

@@ -352,15 +352,15 @@ type HelperOptions = Partial<{
   shouldDirty: boolean;
 }>;
 
-export interface Push<T> {
+export interface Push<T = any> {
   (value: T, options?: HelperOptions): void;
 }
 
-export interface Insert<T> {
+export interface Insert<T = any> {
   (index: number, value: T, options?: HelperOptions): void;
 }
 
-export interface Remove<T> {
+export interface Remove<T = any> {
   (index: number): T | void;
 }
 
