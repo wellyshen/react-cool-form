@@ -4,10 +4,10 @@ import { useForm, useFieldArray } from "react-cool-form";
 
 export default () => {
   const { form } = useForm({
-    // defaultValues: { foo: [{ name: "test-1" }] },
-    onSubmit: (values) => console.log("onSubmit: ", values),
+    defaultValues: { foo: [{ name: "test-1" }] },
+    onSubmit: (values, { getState }) => console.log("onSubmit: ", getState()),
   });
-  const [fields, { insert }] = useFieldArray("foo", {
+  const [fields, { remove }] = useFieldArray("foo", {
     // defaultValue: [{ name: "test-1" }],
   });
 
@@ -16,8 +16,8 @@ export default () => {
       {fields.map((fieldName) => (
         <input key={fieldName} name={`${fieldName}.name`} />
       ))}
-      <button type="button" onClick={() => insert(0, { name: "test-2" })}>
-        Insert
+      <button type="button" onClick={() => remove(0)}>
+        Remove
       </button>
       <input type="submit" />
     </form>

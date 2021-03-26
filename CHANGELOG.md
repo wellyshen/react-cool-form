@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.151
+
+### Patch Changes
+
+- [`d914de6`](https://github.com/wellyshen/react-cool-form/commit/d914de63a527a5188afd0ba0ea7203dcd9fd17cb) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFieldArray): field value not displayed when setting default value via `useFieldArray` hook
+
 ## 0.0.150
 
 ### Patch Changes
