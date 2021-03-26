@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.152
+
+### Patch Changes
+
+- [`642650c`](https://github.com/wellyshen/react-cool-form/commit/642650c610893f65a83cd384a06bff1d82b5f4ba) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFieldArray): avoid touched and dirty values are set at negative index when using `push` method
+
 ## 0.0.151
 
 ### Patch Changes
