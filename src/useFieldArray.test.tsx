@@ -27,14 +27,13 @@ interface API {
   push: Push;
   remove: Remove;
   swap: Swap;
+  getState: GetState;
   setValue: SetValue;
   reset: Reset;
-  getState: GetState;
 }
 
 interface Config extends FieldArrayConfig {
   children: (api: API) => JSX.Element[] | null;
-  name: string;
   defaultValues: any;
   onSubmit: (values: any) => void;
   onError: (errors: any) => void;
@@ -47,7 +46,6 @@ type Props = Partial<Config>;
 const Form = ({
   children,
   formId,
-  name = "foo",
   defaultValues,
   onSubmit = () => null,
   onError = () => null,
@@ -55,7 +53,7 @@ const Form = ({
   onRender = () => null,
   ...rest
 }: Props) => {
-  const { form, setValue, reset, getState } = useForm({
+  const { form, getState, setValue, reset } = useForm({
     id: formId,
     defaultValues,
     onSubmit: (values) => onSubmit(values),
@@ -63,14 +61,14 @@ const Form = ({
     onReset: (values) => onReset(values),
   });
   // @ts-expect-error
-  const [fields, helpers] = useFieldArray(name, { ...rest, formId }, formId);
+  const [fields, helpers] = useFieldArray("foo", { ...rest, formId }, formId);
 
   onRender();
 
   return (
     <form data-testid="form" ref={form}>
       {children
-        ? children({ setValue, reset, getState, fields, ...helpers })
+        ? children({ getState, setValue, reset, fields, ...helpers })
         : null}
     </form>
   );
@@ -267,4 +265,37 @@ describe("useFieldArray", () => {
     expect(getState("dirty.foo")).toEqual([{ name: true }, undefined]);
     expect(onRender).toHaveBeenCalledTimes(2);
   });
+
+  it("should remove value correctly", () => {
+    const { push, remove, getState } = renderHelper({
+      onRender,
+      children: ({ fields }: API) =>
+        fields.map((fieldName) => (
+          <input
+            data-testid={fieldName}
+            key={fieldName}
+            name={`${fieldName}.name`}
+          />
+        )),
+    });
+    const val = [...value, { name: "🍋" }];
+    act(() => {
+      push(val[0], { shouldTouched: true });
+      push(val[1], { shouldTouched: true });
+      expect(remove(1)).toEqual(val[1]);
+    });
+    expect(getState("foo")).toEqual([val[0]]);
+    expect(getState("dirty.foo")).toEqual([{ name: true }]);
+    expect(getState("touched.foo")).toEqual([{ name: true }]);
+    act(() => expect(remove(0)).toEqual(val[0]));
+    expect(getState("foo")).toEqual([]);
+    expect(getState("dirty.foo")).toEqual([]);
+    expect(getState("touched.foo")).toEqual([]);
+  });
+
+  it.todo("should test set value");
+
+  it.todo("should test reset");
+
+  it.todo("should test validation");
 });
