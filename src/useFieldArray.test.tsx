@@ -164,7 +164,7 @@ describe("useFieldArray", () => {
     }
   );
 
-  it.each([undefined, { shouldDirty: false }, { shouldTouched: true }])(
+  it.each([{ shouldDirty: false }, { shouldTouched: true }])(
     "should push value correctly",
     async (options) => {
       const { push, container, getState } = renderHelper({
@@ -189,16 +189,56 @@ describe("useFieldArray", () => {
       if (options?.shouldDirty === false) {
         expect(getState("dirty.foo")).toBeUndefined();
       } else {
-        expect(getState("dirty.foo")).toEqual([undefined, { name: true }]);
+        expect(getState("dirty.foo")).toEqual([, { name: true }]);
       }
       if (options?.shouldTouched) {
-        expect(getState("touched.foo")).toEqual([undefined, { name: true }]);
+        expect(getState("touched.foo")).toEqual([, { name: true }]);
       } else {
         expect(getState("touched.foo")).toBeUndefined();
       }
       expect(onRender).toHaveBeenCalledTimes(2);
     }
   );
+
+  it("should insert value correctly", async () => {
+    const { insert, container, getState } = renderHelper({
+      defaultValues: { foo: value },
+      onRender,
+      children: ({ fields }: API) =>
+        fields.map((fieldName) => (
+          <input
+            data-testid={fieldName}
+            key={fieldName}
+            name={`${fieldName}.name`}
+          />
+        )),
+    });
+
+    let val = [...value, { name: "🍋" }];
+    act(() => insert(1, val[1], { shouldTouched: true }));
+    expect(container.querySelectorAll("input")).toHaveLength(2);
+    await waitFor(() => expect(getByTestId("foo[1]").value).toBe(val[1].name));
+    expect(getState("foo")).toEqual(val);
+    expect(getState("dirty.foo")).toEqual([, { name: true }]);
+    expect(getState("touched.foo")).toEqual([, { name: true }]);
+    expect(onRender).toHaveBeenCalledTimes(2);
+
+    val = [...val, { name: "🥝" }];
+    act(() => insert(2, val[2], { shouldDirty: false }));
+    expect(container.querySelectorAll("input")).toHaveLength(3);
+    await waitFor(() => expect(getByTestId("foo[2]").value).toBe(val[2].name));
+    expect(getState("foo")).toEqual(val);
+    expect(getState("dirty.foo")).toEqual([, { name: true }]);
+    expect(getState("touched.foo")).toEqual([, { name: true }]);
+
+    val = [{ name: "🍒" }, ...val];
+    act(() => insert(0, val[0], { shouldDirty: false }));
+    expect(container.querySelectorAll("input")).toHaveLength(4);
+    await waitFor(() => expect(getByTestId("foo[0]").value).toBe(val[0].name));
+    expect(getState("foo")).toEqual(val);
+    expect(getState("dirty.foo")).toEqual([, , { name: true }]);
+    expect(getState("touched.foo")).toEqual([, , { name: true }]);
+  });
 
   it.each(["swap", "move"])("should %s values correctly", (type) => {
     const { push, swap, move, getState } = renderHelper({
