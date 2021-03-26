@@ -200,7 +200,31 @@ describe("useFieldArray", () => {
     }
   );
 
-  it("should swap values correctly", () => {
-    // ...
+  it.each(["swap", "move"])("should %s values correctly", (type) => {
+    const { push, swap, move, getState } = renderHelper({
+      defaultValues: { foo: value },
+      onRender,
+      children: ({ fields }: API) =>
+        fields.map((fieldName) => (
+          <input
+            data-testid={fieldName}
+            key={fieldName}
+            name={`${fieldName}.name`}
+          />
+        )),
+    });
+    const newValue = { name: "🍋" };
+    act(() => {
+      push(newValue, { shouldTouched: true });
+      if (type === "swap") {
+        swap(0, 1);
+      } else {
+        move(1, 0);
+      }
+    });
+    expect(getState("foo")).toEqual([newValue, ...value]);
+    expect(getState("touched.foo")).toEqual([{ name: true }, undefined]);
+    expect(getState("dirty.foo")).toEqual([{ name: true }, undefined]);
+    expect(onRender).toHaveBeenCalledTimes(2);
   });
 });
