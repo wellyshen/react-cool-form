@@ -117,13 +117,14 @@ export default <T = any, V extends FormValues = FormValues>(
       let state = getState();
 
       (["values", "touched", "errors", "dirty"] as Keys[]).forEach((key) => {
-        const currFields = state[key][name];
+        const value = state[key][name];
+        const fieldsLength = state.values[name]?.length;
 
         if (
           key === "values" ||
           (key === "touched" && shouldTouched) ||
           (key === "dirty" && shouldDirty) ||
-          !isUndefined(currFields)
+          !isUndefined(value)
         )
           state = set(
             state,
@@ -131,9 +132,9 @@ export default <T = any, V extends FormValues = FormValues>(
             {
               ...state[key],
               [name]: handler(
-                Array.isArray(currFields) ? [...currFields] : [],
+                Array.isArray(value) ? [...value] : [],
                 key,
-                state.values[name]?.length - 1 || 0
+                fieldsLength ? fieldsLength - 1 : 0
               ),
             },
             true
