@@ -32,11 +32,9 @@ export default <V extends FormValues = FormValues>(
   const callback = isFunction(configOrCallback) ? configOrCallback : undefined;
 
   useEffect(() => {
-    // @ts-expect-error
-    subscribeObserver(observerRef.current);
+    subscribeObserver(observerRef.current!);
 
-    // @ts-expect-error
-    return () => unsubscribeObserver(observerRef.current);
+    return () => unsubscribeObserver(observerRef.current!);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
