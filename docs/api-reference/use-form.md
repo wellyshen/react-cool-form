@@ -107,6 +107,7 @@ const methods = useForm({
       setValue,
       setTouched,
       setDirty,
+      setFocus,
       setError,
       runValidation,
       submit,
@@ -134,6 +135,7 @@ const methods = useForm({
       setValue,
       setTouched,
       setDirty,
+      setFocus,
       setError,
       runValidation,
       submit,
@@ -161,6 +163,7 @@ const methods = useForm({
       setValue,
       setTouched,
       setDirty,
+      setFocus,
       setError,
       runValidation,
       submit,
@@ -270,6 +273,8 @@ setValue("fieldName", undefined); // The field will be unset: { fieldName: "valu
 `(name: string, isTouched?: boolean, shouldValidate?: boolean) => void`
 
 This method allows us to manually set/clear the touched of a field. Useful for creating custom field touched handlers.
+
+- Calling it will clear the focus of the field.
 
 ```js
 const { setTouched } = useForm();
