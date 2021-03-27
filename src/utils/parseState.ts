@@ -1,4 +1,4 @@
-import { FormState, Map, Path } from "../types";
+import { FormState, ObjMap, Path } from "../types";
 import get from "./get";
 import getPath from "./getPath";
 import isPlainObject from "./isPlainObject";
@@ -21,8 +21,8 @@ export default (
       return stateHandler ? stateHandler(p, value) : value;
     });
   } else if (isPlainObject(path)) {
-    const paths = path as Map<string>;
-    parsedState = Object.keys(paths).reduce((s: Map<any>, key) => {
+    const paths = path as ObjMap<string>;
+    parsedState = Object.keys(paths).reduce((s: ObjMap<any>, key) => {
       path = pathHandler(paths[key]);
       const value = get(state, path);
       s[key] = stateHandler ? stateHandler(path, value) : value;

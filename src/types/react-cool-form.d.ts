@@ -2,7 +2,7 @@ declare module "react-cool-form" {
   import { FocusEventHandler, SyntheticEvent } from "react";
 
   // Type utils
-  type Map<T = boolean> = Record<string, T>;
+  type ObjMap<T = boolean> = Record<string, T>;
 
   // useForm
   type DeepProps<V, T = any> = {
@@ -23,13 +23,13 @@ declare module "react-cool-form" {
 
   interface Mon<V> {
     (
-      path: string | string[] | Map<string>,
+      path: string | string[] | ObjMap<string>,
       options?: { defaultValues?: V; errorWithTouched?: boolean }
     ): any;
   }
 
   interface GetState {
-    (path?: string | string[] | Map<string>): any;
+    (path?: string | string[] | ObjMap<string>): any;
   }
 
   interface SetValue {
@@ -96,7 +96,7 @@ declare module "react-cool-form" {
     }>;
   }
 
-  export type FormValues = Map<any>;
+  export type FormValues = ObjMap<any>;
 
   export type FormErrors<E extends FormValues = FormValues> = DeepProps<E>;
 
@@ -205,7 +205,7 @@ declare module "react-cool-form" {
   ): FormMethods<V>;
 
   // useFormState
-  export type Path = string | string[] | Map<string>;
+  export type Path = string | string[] | ObjMap<string>;
 
   export type FormStateConfig<V> = Partial<{
     formId: string;
