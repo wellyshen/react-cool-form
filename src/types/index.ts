@@ -1,17 +1,17 @@
 import { FocusEventHandler, MutableRefObject, SyntheticEvent } from "react";
 
 // Utils
-export type Map<T = boolean> = Record<string, T>;
+export type ObjMap<T = boolean> = Record<string, T>;
 
 // Global
 export type Methods<V = any> = {
   validateOnChange: boolean;
   shouldRemoveField: boolean;
   initialStateRef: MutableRefObject<FormState<V>>;
-  excludeFieldsRef: MutableRefObject<Map>;
+  excludeFieldsRef: MutableRefObject<ObjMap>;
   fieldArrayRef: MutableRefObject<FieldArray>;
-  controlsRef: MutableRefObject<Map>;
-  fieldValidatorsRef: MutableRefObject<Map<FieldValidator<V>>>;
+  controlsRef: MutableRefObject<ObjMap>;
+  fieldValidatorsRef: MutableRefObject<ObjMap<FieldValidator<V>>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   setStateRef: SetStateRef;
   getNodeValue: GetNodeValue;
@@ -54,11 +54,11 @@ export interface SetStateRef {
 }
 
 export interface SetUsedState {
-  (usedState: Map): void;
+  (usedState: ObjMap): void;
 }
 
 export interface Observer<V> {
-  usedState: Map;
+  usedState: ObjMap;
   notify: (state: FormState<V>) => void;
 }
 
@@ -75,7 +75,7 @@ export interface FormStateReturn<V> {
 }
 
 // useForm
-export type FormValues = Map<any>;
+export type FormValues = ObjMap<any>;
 
 export type Handlers = {
   [k in "change" | "blur" | "submit" | "reset"]?: (event: Event) => void;
@@ -91,9 +91,9 @@ export interface Field {
   options?: (HTMLInputElement | HTMLOptionElement)[];
 }
 
-export type Fields = Map<Field>;
+export type Fields = ObjMap<Field>;
 
-export type FieldArray = Map<{ fields: Map; reset: () => void }>;
+export type FieldArray = ObjMap<{ fields: ObjMap; reset: () => void }>;
 
 interface EventOptions<V> {
   getState: GetState;
@@ -188,7 +188,7 @@ export interface GetNodeValue {
   (name: string, fields?: Fields): any;
 }
 
-export type Path = string | string[] | Map<string>;
+export type Path = string | string[] | ObjMap<string>;
 
 export interface GetFormState<V> {
   (
@@ -197,7 +197,7 @@ export interface GetFormState<V> {
       errorWithTouched?: boolean;
       defaultValues?: V;
       methodName?: string;
-      callback?: (usedState: Map) => void;
+      callback?: (usedState: ObjMap) => void;
     }
   ): any;
 }
@@ -210,7 +210,7 @@ export interface Mon<V> {
 }
 
 export interface GetState {
-  (path?: string | string[] | Map<string>): any;
+  (path?: string | string[] | ObjMap<string>): any;
 }
 
 export interface SetValue {
@@ -258,7 +258,7 @@ export interface Submit<V> {
   }>;
 }
 
-export type Parsers = Map<{
+export type Parsers = ObjMap<{
   valueAsNumber?: boolean;
   valueAsDate?: boolean;
   parse?: FieldParser;

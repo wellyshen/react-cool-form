@@ -1,7 +1,7 @@
-import { Map, Methods } from "./types";
+import { Methods, ObjMap } from "./types";
 
 let one: Methods | undefined;
-const all: Map<Methods> = {};
+const all: ObjMap<Methods> = {};
 
 export const get = (id?: string): Methods => (id ? all[id] : (one as Methods));
 

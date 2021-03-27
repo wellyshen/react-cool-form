@@ -20,8 +20,8 @@ import {
   GetState,
   HandleChangeEvent,
   Handlers,
-  Map,
   Mon,
+  ObjMap,
   Parsers,
   RegisterField,
   RegisterForm,
@@ -88,11 +88,11 @@ export default <V extends FormValues = FormValues>({
   const fieldsRef = useRef<Fields>({});
   const fieldParsersRef = useRef<Parsers>({});
   const fieldArrayRef = useRef<FieldArray>({});
-  const controlsRef = useRef<Map>({});
-  const excludeFieldsRef = useRef<Map>(arrayToMap(excludeFields));
+  const controlsRef = useRef<ObjMap>({});
+  const excludeFieldsRef = useRef<ObjMap>(arrayToMap(excludeFields));
   const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
-  const fieldValidatorsRef = useRef<Map<FieldValidator<V>>>({});
+  const fieldValidatorsRef = useRef<ObjMap<FieldValidator<V>>>({});
   const onResetRef = useLatest(onReset || (() => undefined));
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
@@ -331,7 +331,7 @@ export default <V extends FormValues = FormValues>({
         callback,
       } = {}
     ) => {
-      const usedState: Map = {};
+      const usedState: ObjMap = {};
       const state = parseState(
         path,
         stateRef.current,
