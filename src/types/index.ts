@@ -343,7 +343,7 @@ export type ControlledReturn = [FieldProps, Meta];
 // useFieldArray
 export type Keys = "values" | "touched" | "errors" | "dirty";
 
-export interface HelperHandler {
+export interface StateHandler {
   (fields: any[], type: Keys, lastIndex: number): any[];
 }
 
