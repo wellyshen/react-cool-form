@@ -4,13 +4,13 @@ import {
   FieldArrayConfig,
   FieldArrayReturn,
   FormValues,
-  HelperHandler,
   Insert,
   Keys,
   Methods,
   Move,
   Push,
   Remove,
+  StateHandler,
   Swap,
 } from "./types";
 import * as shared from "./shared";
@@ -108,7 +108,7 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const setState = useCallback(
     (
-      handler: HelperHandler,
+      handler: StateHandler,
       {
         shouldTouched,
         shouldDirty,
@@ -151,7 +151,7 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const push = useCallback<Push<T>>(
     (value, { shouldTouched, shouldDirty = true } = {}) => {
-      const handler: HelperHandler = (f, type, lastIndex = 0) => {
+      const handler: StateHandler = (f, type, lastIndex = 0) => {
         if (type === "values") {
           f.push(value);
         } else if (
@@ -171,7 +171,7 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const insert = useCallback<Insert<T>>(
     (index, value, { shouldTouched, shouldDirty = true } = {}) => {
-      const handler: HelperHandler = (f, type) => {
+      const handler: StateHandler = (f, type) => {
         if (type === "values") {
           f.splice(index, 0, value);
         } else if (
@@ -193,7 +193,7 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const remove = useCallback<Remove<T>>(
     (index) => {
-      const handler: HelperHandler = (f) => {
+      const handler: StateHandler = (f) => {
         f.splice(index, 1);
         return compact(f).length ? f : [];
       };
@@ -208,7 +208,7 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const swap = useCallback<Swap>(
     (indexA, indexB) => {
-      const handler: HelperHandler = (f) => {
+      const handler: StateHandler = (f) => {
         [f[indexA], f[indexB]] = [f[indexB], f[indexA]];
         return f;
       };
@@ -220,7 +220,7 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const move = useCallback<Move>(
     (from, to) => {
-      const handler: HelperHandler = (f) => {
+      const handler: StateHandler = (f) => {
         f.splice(to, 0, f.splice(from, 1)[0]);
         return f;
       };
