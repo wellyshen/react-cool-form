@@ -1,4 +1,4 @@
-import { Methods, ObjMap } from "./types";
+import { ObjMap, Methods } from "./types";
 
 let one: Methods | undefined;
 const all: ObjMap<Methods> = {};
