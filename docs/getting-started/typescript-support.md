@@ -71,10 +71,24 @@ Some folks are asking about the type-safe of a field's name, however we can achi
 
 ```tsx
 enum FieldNames {
-  "fieldName.a[0].b" = "fieldName.a[0].b",
+  "name" = "name",
 }
 
-<input name={FieldNames["fieldName.a[0].c"]} />; // 🙅🏻‍♀️ Property "fieldName.a[0].c" does not exist on type "typeof FieldNames". Did you mean "fieldName.a[0].b"?
+const App = () => {
+  const { form } = useForm({
+    defaultValues: {
+      [FieldNames.email]: "Welly", // 🙅🏻‍♀️ Property "email" does not exist on type "typeof FieldNames"
+    },
+  });
+
+  return (
+    <form ref={form}>
+      <input
+        name={FieldNames.email} // 🙅🏻‍♀️ Property "email" does not exist on type "typeof FieldNames"
+      />
+    </form>
+  );
+};
 ```
 
 🧐 You can dig more useful [types](https://github.com/wellyshen/react-cool-form/blob/master/src/types/react-cool-form.d.ts) of this library to build a strongly typed form.
