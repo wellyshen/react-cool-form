@@ -19,6 +19,7 @@ import {
 } from "./types";
 import useForm from "./useForm";
 import useFieldArray from "./useFieldArray";
+import useControlled from "./useControlled";
 
 interface API {
   fields: string[];
@@ -35,9 +36,8 @@ interface API {
 interface Config extends FieldArrayConfig {
   children: (api: API) => JSX.Element[] | null;
   defaultValues: any;
+  formValidate: (values: any) => void;
   onSubmit: (values: any) => void;
-  onError: (errors: any) => void;
-  onReset: (values: any) => void;
   onRender: () => void;
 }
 
@@ -47,18 +47,16 @@ const Form = ({
   children,
   formId,
   defaultValues,
+  formValidate,
   onSubmit = () => null,
-  onError = () => null,
-  onReset = () => null,
   onRender = () => null,
   ...rest
 }: Props) => {
   const { form, getState, setValue, reset } = useForm({
     id: formId,
     defaultValues,
+    validate: formValidate,
     onSubmit: (values) => onSubmit(values),
-    onError: (errors) => onError(errors),
-    onReset: (values) => onReset(values),
   });
   // @ts-expect-error
   const [fields, helpers] = useFieldArray("foo", { ...rest, formId }, formId);
@@ -90,11 +88,16 @@ const renderHelper = ({ children, ...rest }: Props = {}) => {
   return { ...api, container };
 };
 
+const Field = ({ name, ...rest }: any) => {
+  const [props] = useControlled(name, rest);
+  return <input {...props} />;
+};
+
 describe("useFieldArray", () => {
   const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
   const onRender = jest.fn();
-  const value = [{ name: "🍎" }];
+  const value = [{ a: "🍎", b: "🍎" }];
 
   beforeEach(() => jest.clearAllMocks());
 
@@ -120,15 +123,15 @@ describe("useFieldArray", () => {
         onSubmit,
         children: ({ fields }: API) =>
           fields.map((fieldName) => (
-            <input
-              data-testid={fieldName}
-              key={fieldName}
-              name={`${fieldName}.name`}
-            />
+            <div key={fieldName}>
+              <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
+              <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+            </div>
           )),
       });
-      expect(container.querySelectorAll("input")).toHaveLength(1);
-      expect(getByTestId("foo[0]").value).toBe(value[0].name);
+      expect(container.querySelectorAll("input")).toHaveLength(2);
+      expect(getByTestId("foo[0].a").value).toBe(value[0].a);
+      expect(getByTestId("foo[0].b").value).toBe(value[0].b);
       fireEvent.submit(getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })
@@ -140,7 +143,7 @@ describe("useFieldArray", () => {
     const defaultValues = { foo: value };
     renderHelper({
       defaultValues,
-      defaultValue: [{ name: "🍋" }],
+      defaultValue: [{ a: "🍋" }],
       onSubmit,
     });
     fireEvent.submit(getByTestId("form"));
@@ -170,27 +173,27 @@ describe("useFieldArray", () => {
         onRender,
         children: ({ fields }: API) =>
           fields.map((fieldName) => (
-            <input
-              data-testid={fieldName}
-              key={fieldName}
-              name={`${fieldName}.name`}
-            />
+            <div key={fieldName}>
+              <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
+              <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+            </div>
           )),
       });
-      const newValue = { name: "🍋" };
+      const newValue = { a: "🍋", b: "🍋" };
       act(() => push(newValue, options));
-      expect(container.querySelectorAll("input")).toHaveLength(2);
-      await waitFor(() =>
-        expect(getByTestId("foo[1]").value).toBe(newValue.name)
-      );
+      expect(container.querySelectorAll("input")).toHaveLength(4);
+      await waitFor(() => {
+        expect(getByTestId("foo[1].a").value).toBe(newValue.a);
+        expect(getByTestId("foo[1].b").value).toBe(newValue.b);
+      });
       expect(getState("foo")).toEqual([...value, newValue]);
       if (options?.shouldDirty === false) {
         expect(getState("dirty.foo")).toBeUndefined();
       } else {
-        expect(getState("dirty.foo")).toEqual([, { name: true }]);
+        expect(getState("dirty.foo")).toEqual([, { a: true, b: true }]);
       }
       if (options?.shouldTouched) {
-        expect(getState("touched.foo")).toEqual([, { name: true }]);
+        expect(getState("touched.foo")).toEqual([, { a: true, b: true }]);
       } else {
         expect(getState("touched.foo")).toBeUndefined();
       }
@@ -204,38 +207,46 @@ describe("useFieldArray", () => {
       onRender,
       children: ({ fields }: API) =>
         fields.map((fieldName) => (
-          <input
-            data-testid={fieldName}
-            key={fieldName}
-            name={`${fieldName}.name`}
-          />
+          <div key={fieldName}>
+            <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
+            <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+          </div>
         )),
     });
 
-    let val = [...value, { name: "🍋" }];
+    let val = [...value, { a: "🍋", b: "🍋" }];
     act(() => insert(1, val[1], { shouldTouched: true }));
-    expect(container.querySelectorAll("input")).toHaveLength(2);
-    await waitFor(() => expect(getByTestId("foo[1]").value).toBe(val[1].name));
+    expect(container.querySelectorAll("input")).toHaveLength(4);
+    await waitFor(() => {
+      expect(getByTestId("foo[1].a").value).toBe(val[1].a);
+      expect(getByTestId("foo[1].b").value).toBe(val[1].b);
+    });
     expect(getState("foo")).toEqual(val);
-    expect(getState("dirty.foo")).toEqual([, { name: true }]);
-    expect(getState("touched.foo")).toEqual([, { name: true }]);
+    expect(getState("dirty.foo")).toEqual([, { a: true, b: true }]);
+    expect(getState("touched.foo")).toEqual([, { a: true, b: true }]);
     expect(onRender).toHaveBeenCalledTimes(2);
 
-    val = [...val, { name: "🥝" }];
+    val = [...val, { a: "🥝", b: "🥝" }];
     act(() => insert(2, val[2], { shouldDirty: false }));
-    expect(container.querySelectorAll("input")).toHaveLength(3);
-    await waitFor(() => expect(getByTestId("foo[2]").value).toBe(val[2].name));
+    expect(container.querySelectorAll("input")).toHaveLength(6);
+    await waitFor(() => {
+      expect(getByTestId("foo[2].a").value).toBe(val[2].a);
+      expect(getByTestId("foo[2].b").value).toBe(val[2].b);
+    });
     expect(getState("foo")).toEqual(val);
-    expect(getState("dirty.foo")).toEqual([, { name: true }]);
-    expect(getState("touched.foo")).toEqual([, { name: true }]);
+    expect(getState("dirty.foo")).toEqual([, { a: true, b: true }]);
+    expect(getState("touched.foo")).toEqual([, { a: true, b: true }]);
 
-    val = [{ name: "🍒" }, ...val];
+    val = [{ a: "🍒", b: "🍒" }, ...val];
     act(() => insert(0, val[0], { shouldDirty: false }));
-    expect(container.querySelectorAll("input")).toHaveLength(4);
-    await waitFor(() => expect(getByTestId("foo[0]").value).toBe(val[0].name));
+    expect(container.querySelectorAll("input")).toHaveLength(8);
+    await waitFor(() => {
+      expect(getByTestId("foo[0].a").value).toBe(val[0].a);
+      expect(getByTestId("foo[0].b").value).toBe(val[0].b);
+    });
     expect(getState("foo")).toEqual(val);
-    expect(getState("dirty.foo")).toEqual([, , { name: true }]);
-    expect(getState("touched.foo")).toEqual([, , { name: true }]);
+    expect(getState("dirty.foo")).toEqual([, , { a: true, b: true }]);
+    expect(getState("touched.foo")).toEqual([, , { a: true, b: true }]);
   });
 
   it.each(["swap", "move"])("should %s values correctly", (type) => {
@@ -244,14 +255,13 @@ describe("useFieldArray", () => {
       onRender,
       children: ({ fields }: API) =>
         fields.map((fieldName) => (
-          <input
-            data-testid={fieldName}
-            key={fieldName}
-            name={`${fieldName}.name`}
-          />
+          <div key={fieldName}>
+            <input name={`${fieldName}.a`} />
+            <Field name={`${fieldName}.b`} />
+          </div>
         )),
     });
-    const newValue = { name: "🍋" };
+    const newValue = { a: "🍋", b: "🍋" };
     act(() => {
       push(newValue, { shouldTouched: true });
       if (type === "swap") {
@@ -261,8 +271,8 @@ describe("useFieldArray", () => {
       }
     });
     expect(getState("foo")).toEqual([newValue, ...value]);
-    expect(getState("touched.foo")).toEqual([{ name: true }, undefined]);
-    expect(getState("dirty.foo")).toEqual([{ name: true }, undefined]);
+    expect(getState("touched.foo")).toEqual([{ a: true, b: true }, undefined]);
+    expect(getState("dirty.foo")).toEqual([{ a: true, b: true }, undefined]);
     expect(onRender).toHaveBeenCalledTimes(2);
   });
 
@@ -271,31 +281,121 @@ describe("useFieldArray", () => {
       onRender,
       children: ({ fields }: API) =>
         fields.map((fieldName) => (
-          <input
-            data-testid={fieldName}
-            key={fieldName}
-            name={`${fieldName}.name`}
-          />
+          <div key={fieldName}>
+            <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
+            <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+          </div>
         )),
     });
-    const val = [...value, { name: "🍋" }];
+    const val = [...value, { a: "🍋", b: "🍋" }];
     act(() => {
       push(val[0], { shouldTouched: true });
       push(val[1], { shouldTouched: true });
       expect(remove(1)).toEqual(val[1]);
     });
     expect(getState("foo")).toEqual([val[0]]);
-    expect(getState("dirty.foo")).toEqual([{ name: true }]);
-    expect(getState("touched.foo")).toEqual([{ name: true }]);
+    expect(getState("dirty.foo")).toEqual([{ a: true, b: true }]);
+    expect(getState("touched.foo")).toEqual([{ a: true, b: true }]);
     act(() => expect(remove(0)).toEqual(val[0]));
     expect(getState("foo")).toEqual([]);
     expect(getState("dirty.foo")).toEqual([]);
     expect(getState("touched.foo")).toEqual([]);
   });
 
-  it.todo("should test set value");
+  it.each(["set-value", "reset"])("should set value correctly", (type) => {
+    const defaultValue = [...value, { a: "🍋", b: "🍋" }];
+    const { setValue, reset, getState, push, remove, container } = renderHelper(
+      {
+        defaultValues: { foo: defaultValue },
+        children: ({ fields }: API) =>
+          fields.map((fieldName) => (
+            <div key={fieldName}>
+              <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
+              <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+            </div>
+          )),
+      }
+    );
+    const fooA = getByTestId("foo[0].a");
+    const fooB = getByTestId("foo[0].b");
+    const target = { value: "🍒" };
 
-  it.todo("should test reset");
+    fireEvent.input(fooA, { target });
+    fireEvent.input(fooB, { target });
+    act(() => {
+      if (type === "set-value") {
+        setValue("foo", defaultValue);
+      } else {
+        reset();
+      }
+    });
+    expect(fooA.value).toBe(defaultValue[0].a);
+    expect(fooB.value).toBe(defaultValue[0].b);
+    expect(getState("foo")).toEqual(defaultValue);
+    if (type === "reset") {
+      expect(getState("touched.foo")).toBeUndefined();
+      expect(getState("dirty.foo")).toBeUndefined();
+    }
 
-  it.todo("should test validation");
+    act(() => {
+      if (type === "set-value") reset();
+      push({ a: "🥝", b: "🥝" });
+    });
+    fireEvent.input(fooA, { target });
+    fireEvent.input(fooB, { target });
+    act(() => {
+      if (type === "set-value") {
+        setValue("foo", defaultValue);
+      } else {
+        reset();
+      }
+    });
+    expect(container.querySelectorAll("input")).toHaveLength(4);
+    expect(fooA.value).toBe(defaultValue[0].a);
+    expect(fooB.value).toBe(defaultValue[0].b);
+    expect(getState("foo")).toEqual(defaultValue);
+    if (type === "reset") {
+      expect(getState("touched.foo")).toBeUndefined();
+      expect(getState("dirty.foo")).toBeUndefined();
+    }
+
+    act(() => {
+      if (type === "set-value") reset();
+      remove(1);
+    });
+    fireEvent.input(fooA, { target });
+    fireEvent.input(fooB, { target });
+    act(() => {
+      if (type === "set-value") {
+        setValue("foo", defaultValue);
+      } else {
+        reset();
+      }
+    });
+    expect(container.querySelectorAll("input")).toHaveLength(4);
+    expect(fooA.value).toBe(defaultValue[0].a);
+    expect(fooB.value).toBe(defaultValue[0].b);
+    expect(getState("foo")).toEqual(defaultValue);
+    if (type === "reset") {
+      expect(getState("touched.foo")).toBeUndefined();
+      expect(getState("dirty.foo")).toBeUndefined();
+    }
+  });
+
+  it.each(["form", "field"])("should run %s-level validation", async (type) => {
+    const error = "Required";
+    const { remove, getState } = renderHelper({
+      defaultValues: { foo: value },
+      formValidate:
+        type === "form"
+          ? ({ foo }) => (!foo.length ? { foo: error } : {})
+          : undefined,
+      validate:
+        type === "field" ? (val) => (!val.length ? error : false) : undefined,
+    });
+    act(() => {
+      remove(0);
+    });
+    await waitFor(() => expect(getState("errors.foo")).toBe(error));
+  });
 });
