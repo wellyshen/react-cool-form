@@ -86,12 +86,13 @@ export type FieldElement =
   | HTMLTextAreaElement
   | HTMLSelectElement;
 
-export interface Field {
-  field: FieldElement;
-  options?: (HTMLInputElement | HTMLOptionElement)[];
-}
-
-export type Fields = ObjMap<Field>;
+export type Fields = Map<
+  string,
+  {
+    field: FieldElement;
+    options?: (HTMLInputElement | HTMLOptionElement)[];
+  }
+>;
 
 export type FieldArray = ObjMap<{ fields: ObjMap; reset: () => void }>;
 

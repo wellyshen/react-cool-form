@@ -1,25 +1,22 @@
 /* eslint-disable no-console */
 
-import { useForm, useFieldArray } from "react-cool-form";
+import { useState } from "react";
+import { useForm } from "react-cool-form";
 
 export default () => {
+  const [show, setShow] = useState(true);
   const { form } = useForm({
-    defaultValues: { foo: [{ name: "test-1" }] },
-    onSubmit: (values, { getState }) => console.log("onSubmit: ", getState()),
-  });
-  const [fields, { remove }] = useFieldArray("foo", {
-    // defaultValue: [{ name: "test-1" }],
+    defaultValues: { foo: "test" },
+    onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
   return (
     <form ref={form}>
-      {fields.map((fieldName) => (
-        <input key={fieldName} name={`${fieldName}.name`} />
-      ))}
-      <button type="button" onClick={() => remove(0)}>
-        Remove
-      </button>
+      {show && <input name="foo" />}
       <input type="submit" />
+      <button type="button" onClick={() => setShow(!show)}>
+        Toggle
+      </button>
     </form>
   );
 };
