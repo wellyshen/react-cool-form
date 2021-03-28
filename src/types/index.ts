@@ -99,9 +99,10 @@ export type FieldArray = ObjMap<{ fields: ObjMap; reset: () => void }>;
 interface EventOptions<V> {
   getState: GetState;
   setValue: SetValue;
+  setError: SetError;
   setTouched: SetTouched;
   setDirty: SetDirty;
-  setError: SetError;
+  setFocus: SetFocus;
   clearErrors: ClearErrors;
   runValidation: RunValidation;
   reset: Reset<V>;
@@ -232,6 +233,10 @@ export interface SetDirty {
   (name: string, isDirty?: boolean): void;
 }
 
+export interface SetFocus {
+  (name: string | string[] | ((names: string[]) => string[])): void;
+}
+
 export interface SetError {
   (name: string, error?: any | ((previousError?: any) => any)): void;
 }
@@ -271,6 +276,7 @@ export type FormConfig<V = any> = Partial<{
   validate: FormValidator<V>;
   validateOnChange: boolean;
   validateOnBlur: boolean;
+  focusOnError: boolean;
   builtInValidationMode: "message" | "state" | false;
   shouldRemoveField: boolean;
   excludeFields: string[];
@@ -288,6 +294,7 @@ export interface FormMethods<V = any> {
   setValue: SetValue;
   setTouched: SetTouched;
   setDirty: SetDirty;
+  setFocus: SetFocus;
   setError: SetError;
   clearErrors: ClearErrors;
   runValidation: RunValidation;
