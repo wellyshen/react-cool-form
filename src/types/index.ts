@@ -276,8 +276,8 @@ export type FormConfig<V = any> = Partial<{
   validate: FormValidator<V>;
   validateOnChange: boolean;
   validateOnBlur: boolean;
-  focusOnError: boolean;
   builtInValidationMode: "message" | "state" | false;
+  shouldFocusError: boolean;
   shouldRemoveField: boolean;
   excludeFields: string[];
   onReset: ResetHandler<V>;
