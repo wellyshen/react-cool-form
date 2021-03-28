@@ -38,7 +38,7 @@ module.exports = {
     colorMode: { defaultMode: "dark" },
     announcementBar: {
       id: "start_us",
-      content: `⭐ If you like React Cool Form, give it a star on <a href=${github} target="_blank" rel="noopener noreferrer">GitHub</a>!`,
+      content: `If you're happy and you know it, start this library on <a href=${github} target="_blank" rel="noopener noreferrer">GitHub</a> ⭐`,
       textColor: "#fff",
       backgroundColor: "#1c7ef7",
     },
