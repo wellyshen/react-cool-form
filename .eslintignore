@@ -1,5 +1,5 @@
 dist
-rollup
+scripts/rollup
 app
 examples
 website
