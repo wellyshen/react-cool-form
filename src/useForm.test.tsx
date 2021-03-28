@@ -1664,7 +1664,7 @@ describe("useForm", () => {
 
     it("should not focus on error", async () => {
       renderHelper({
-        shouldFocusError: false,
+        focusOnError: false,
         validate: ({ foo }) => (!foo.length ? { foo: "Required" } : {}),
         onError,
         children: <input data-testid="foo" name="foo" />,
@@ -1681,7 +1681,7 @@ describe("useForm", () => {
     ])("should focus on error by custom ordering", async (names) => {
       const onErrorFull = jest.fn((_, { setFocus }) => setFocus(names));
       renderHelper({
-        shouldFocusError: false,
+        focusOnError: false,
         validate: ({ foo, bar }) => {
           const errors: any = {};
           if (!foo.length) errors.foo = "Required";

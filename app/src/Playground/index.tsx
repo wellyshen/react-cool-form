@@ -12,7 +12,7 @@ export default () => {
   const [show, setShow] = useState(true);
   const { form, field, setFocus, setTouched } = useForm({
     defaultValues: { foo: { a: "", b: "", c: "" }, bar: "" },
-    shouldFocusError: false,
+    focusOnError: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors, { setFocus: focus }) => {
       console.log("onError: ", errors);

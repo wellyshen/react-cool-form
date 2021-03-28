@@ -76,8 +76,8 @@ export default <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
+  focusOnError = true,
   builtInValidationMode = "message",
-  shouldFocusError = true,
   shouldRemoveField = true,
   excludeFields = [],
   onReset,
@@ -790,7 +790,7 @@ export default <V extends FormValues = FormValues>({
 
         if (!isEmptyObject(errors)) {
           onErrorRef.current(errors, getOptions(), e);
-          if (shouldFocusError) setFocus(Array.from(fieldsRef.current.keys()));
+          if (focusOnError) setFocus(Array.from(fieldsRef.current.keys()));
 
           return { errors };
         }
@@ -812,7 +812,7 @@ export default <V extends FormValues = FormValues>({
       onSubmitRef,
       setFocus,
       setStateRef,
-      shouldFocusError,
+      focusOnError,
       stateRef,
       validateForm,
     ]
