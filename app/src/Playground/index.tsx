@@ -11,34 +11,45 @@ const Field = ({ name, ...rest }: any) => {
 export default () => {
   const [show, setShow] = useState(true);
   const { form, field, setFocus, setTouched } = useForm({
-    defaultValues: { foo: "", baz: "", bar: "", aa: false },
-    focusOnError: false,
+    defaultValues: { foo: { a: "", b: "", c: "" }, bar: "" },
+    // focusOnError: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
-    onError: (errors) => console.log("onError: ", errors),
+    onError: (errors, { setFocus: focus }) => {
+      console.log("onError: ", errors);
+      /* focus((names) => {
+        // eslint-disable-next-line no-param-reassign
+        [names[0], names[1]] = [names[1], names[0]];
+        return names;
+      }); */
+    },
   });
 
   return (
     <form ref={form}>
       {/* {show && (
-        <input
-          name="foo"
-          // ref={field((value) => (!value.length ? "Required" : false))}
-        />
+        <div>
+          <input
+            name="foo.a"
+            ref={field((value) => (!value.length ? "Required" : false))}
+          />
+        </div>
       )} */}
-      {/* <input
-        type="checkbox"
-        name="aa"
-        ref={field((value) => (!value ? "Required" : false))}
-      /> */}
-      {show && (
-        <Field
-          name="baz"
-          validate={(value: any) => (!value.length ? "Required" : false)}
-        />
-      )}
       <input
         name="bar"
-        defaultValue="field-test"
+        ref={field((value) => (!value.length ? "Required" : false))}
+      />
+      {/* {show && (
+        <Field
+          name="foo.b"
+          validate={(value: any) => (!value.length ? "Required" : false)}
+        />
+      )} */}
+      <Field
+        name="foo.b"
+        validate={(value: any) => (!value.length ? "Required" : false)}
+      />
+      <input
+        name="foo.c"
         ref={field((value) => (!value.length ? "Required" : false))}
       />
       <input type="submit" />
@@ -48,8 +59,8 @@ export default () => {
       <button
         type="button"
         onClick={() => {
-          setFocus("baz");
-          setTimeout(() => setTouched("baz"), 1000);
+          setFocus("foo");
+          // setTimeout(() => setTouched("baz"), 1000);
         }}
       >
         Set Focus
