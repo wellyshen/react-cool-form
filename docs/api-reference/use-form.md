@@ -274,8 +274,6 @@ setValue("fieldName", undefined); // The field will be unset: { fieldName: "valu
 
 This method allows us to manually set/clear the touched of a field. Useful for creating custom field touched handlers.
 
-- Calling it will clear the focus of the field.
-
 ```js
 const { setTouched } = useForm();
 

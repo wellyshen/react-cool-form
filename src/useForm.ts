@@ -601,8 +601,6 @@ export default <V extends FormValues = FormValues>({
         handleUnset(`touched.${name}`);
       }
 
-      fieldsRef.current.forEach(({ field }) => field.blur());
-
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
     [handleUnset, setStateRef, validateFieldWithLowPriority, validateOnBlur]
