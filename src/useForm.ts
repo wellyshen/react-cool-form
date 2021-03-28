@@ -698,9 +698,7 @@ export default <V extends FormValues = FormValues>({
         return;
       }
 
-      name = isFunction(name) ? name(fieldNames) : name;
-
-      for (const n of name)
+      for (const n of isFunction(name) ? name(fieldNames) : name)
         if (get(stateRef.current.errors, n)) {
           setFocus(n);
           break;
