@@ -87,6 +87,18 @@ Tell React Cool Form to run validations on `change` events as well as the [setVa
 
 Tell React Cool Form to run validations on `blur` events. Default is `true`.
 
+### focusOnError
+
+`boolean`
+
+Tell React Cool Form to apply focus to the first field with an error upon an attempted form submission. Default is `true`.
+
+- Only native input elements that support [HTMLElement.focus()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/focus) will work.
+- The focus order is based on the field order (i.e. top-to-bottom and left-to-right).
+- You can change the focus order by the [setFocus](#setfocus) method.
+
+👉🏻 See the [Focus On Error](../getting-started/validation-guide#focus-on-error) to learn more.
+
 ### validate
 
 `(values: FormValues) => FormErrors | false | void | Promise<FormErrors | false | void>`
@@ -312,6 +324,12 @@ We can clear the dirty of a field by the following way:
 ```js
 setDirty("fieldName", false); // The dirty will be unset: { fieldName: true } → {}
 ```
+
+### setFocus
+
+`(name: string | string[] | Function) => void`
+
+Coming soon...
 
 ### setError
 

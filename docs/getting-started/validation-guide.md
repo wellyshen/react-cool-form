@@ -345,3 +345,41 @@ const App = () => {
   );
 };
 ```
+
+## Focus On Error
+
+When the user submits a form that fails the validation, React Cool Form will apply focus to the first field with an error (via the [focusOnError](../api-reference/use-form#focus-on-error) option). The focus order is based on the field order (i.e. top-to-bottom and left-to-right), however you can change the focus order by the [setFocus](../api-reference/use-form#setfocus) method.
+
+```js {6,10,12-15}
+import { useForm } from "react-cool-form";
+
+const App = () => {
+  const { form, mon } = useForm({
+    defaultValues: { username: "", email: "", password: "" },
+    focusOnError: false, // Disable built-in focus feature
+    onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (_, { setFocus }) => {
+      // Change the focus order by passing in a new field names
+      setFocus(["email", "username", "password"]);
+      // Change the focus order by modifying the existing field names
+      setFocus((fieldNames) => {
+        [fieldNames[0], fieldNames[1]] = [fieldNames[1], fieldNames[0]];
+        return fieldNames;
+      });
+    },
+  });
+  const errors = mon("errors", { errorWithTouched: true });
+
+  return (
+    <form ref={form} noValidate>
+      <input name="username" required />
+      {errors.username && <p>{errors.username}</p>}
+      <input name="email" type="email" required />
+      {errors.email && <p>{errors.email}</p>}
+      <input name="password" type="password" required minLength={6} />
+      {errors.password && <p>{errors.password}</p>}
+      <input type="submit" />
+    </form>
+  );
+};
+```
