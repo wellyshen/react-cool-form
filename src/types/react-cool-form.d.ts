@@ -14,6 +14,7 @@ declare module "react-cool-form" {
     setValue: SetValue;
     setTouched: SetTouched;
     setDirty: SetDirty;
+    setFocus: SetFocus;
     setError: SetError;
     clearErrors: ClearErrors;
     runValidation: RunValidation;
@@ -48,6 +49,10 @@ declare module "react-cool-form" {
 
   interface SetDirty {
     (name: string, isDirty?: boolean): void;
+  }
+
+  interface SetFocus {
+    (name: string | string[] | FieldNamesFn): void;
   }
 
   interface SetError {
@@ -113,6 +118,10 @@ declare module "react-cool-form" {
     submitCount: number;
   }>;
 
+  export interface FieldNamesFn<N extends string[] = string[]> {
+    (names: N): N;
+  }
+
   export interface PreviousValuesFn<V extends FormValues = FormValues> {
     (previousValues: V): V;
   }
@@ -171,6 +180,7 @@ declare module "react-cool-form" {
     validate: FormValidator<V>;
     validateOnChange: boolean;
     validateOnBlur: boolean;
+    focusOnError: boolean;
     builtInValidationMode: "message" | "state" | false;
     shouldRemoveField: boolean;
     excludeFields: string[];
@@ -188,6 +198,7 @@ declare module "react-cool-form" {
     setValue: SetValue;
     setTouched: SetTouched;
     setDirty: SetDirty;
+    setFocus: SetFocus;
     setError: SetError;
     clearErrors: ClearErrors;
     runValidation: RunValidation;

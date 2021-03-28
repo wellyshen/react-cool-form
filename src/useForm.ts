@@ -31,6 +31,7 @@ import {
   SetDefaultValue,
   SetDirty,
   SetError,
+  SetFocus,
   SetNodesOrValues,
   SetTouched,
   SetTouchedMaybeValidate,
@@ -60,6 +61,7 @@ import {
   isRangeInput,
   isSelectMultiple,
   isSelectOne,
+  isString,
   isUndefined,
   parseState,
   runWithLowPriority,
@@ -74,6 +76,7 @@ export default <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
+  focusOnError = true,
   builtInValidationMode = "message",
   shouldRemoveField = true,
   excludeFields = [],
@@ -598,6 +601,8 @@ export default <V extends FormValues = FormValues>({
         handleUnset(`touched.${name}`);
       }
 
+      fieldsRef.current.forEach(({ field }) => field.blur());
+
       if (shouldValidate) validateFieldWithLowPriority(name);
     },
     [handleUnset, setStateRef, validateFieldWithLowPriority, validateOnBlur]
@@ -657,13 +662,13 @@ export default <V extends FormValues = FormValues>({
       }
       setNodeValue(name, value);
 
-      if (shouldTouched) setTouched(name, true, false);
-      if (shouldDirty) setDirtyIfNeeded(name);
-      if (shouldValidate) validateFieldWithLowPriority(name);
-
       isFieldArray(fieldArrayRef.current, name, (key) =>
         fieldArrayRef.current[key].reset()
       );
+
+      if (shouldTouched) setTouched(name, true, false);
+      if (shouldDirty) setDirtyIfNeeded(name);
+      if (shouldValidate) validateFieldWithLowPriority(name);
     },
     [
       handleUnset,
@@ -677,12 +682,42 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
+  const setFocus = useCallback<SetFocus>(
+    (name) => {
+      const fieldNames = Array.from(fieldsRef.current.keys());
+
+      if (isString(name)) {
+        const field =
+          fieldsRef.current.get(name)?.field ||
+          fieldsRef.current.get(
+            fieldNames.find((fieldName) =>
+              fieldName.startsWith(name as string)
+            ) || ""
+          )?.field;
+
+        if (field) field.focus();
+
+        return;
+      }
+
+      name = isFunction(name) ? name(fieldNames) : name;
+
+      for (const n of name)
+        if (get(stateRef.current.errors, n)) {
+          setFocus(n);
+          break;
+        }
+    },
+    [stateRef]
+  );
+
   const getOptions = useCallback(
     () => ({
       getState,
       setValue,
       setTouched,
       setDirty,
+      setFocus,
       setError,
       clearErrors,
       runValidation,
@@ -758,6 +793,8 @@ export default <V extends FormValues = FormValues>({
         if (!isEmptyObject(errors)) {
           onErrorRef.current(errors, getOptions(), e);
 
+          if (focusOnError) setFocus(Array.from(fieldsRef.current.keys()));
+
           return { errors };
         }
 
@@ -772,7 +809,16 @@ export default <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
-    [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
+    [
+      getOptions,
+      onErrorRef,
+      onSubmitRef,
+      setFocus,
+      setStateRef,
+      focusOnError,
+      stateRef,
+      validateForm,
+    ]
   );
 
   const handleChangeEvent = useCallback<HandleChangeEvent>(
@@ -870,7 +916,7 @@ export default <V extends FormValues = FormValues>({
         const fields = getFields(form);
 
         if (shouldRemoveField)
-          Array.from(fieldsRef.current.keys()).forEach((name) => {
+          fieldsRef.current.forEach((_, name) => {
             if (controlsRef.current[name]) return;
 
             if (!fields.has(name)) {
@@ -878,7 +924,7 @@ export default <V extends FormValues = FormValues>({
               return;
             }
 
-            const currOptions = fieldsRef.current.get(name)!.options
+            const currOptions = fieldsRef.current.get(name)?.options
               ?.length as number;
             const nextOptions = fields.get(name).options?.length as number;
 
@@ -898,7 +944,7 @@ export default <V extends FormValues = FormValues>({
         let values = defaultValuesRef.current;
         const addedNodes: string[] = [];
 
-        Array.from(fields.keys()).forEach((name) => {
+        fields.forEach((_, name) => {
           if (fieldsRef.current.has(name) || controlsRef.current[name]) return;
 
           const value = get(stateRef.current.values, name);
@@ -977,6 +1023,7 @@ export default <V extends FormValues = FormValues>({
     setValue,
     setTouched,
     setDirty,
+    setFocus,
     setError,
     clearErrors,
     runValidation,
@@ -1009,6 +1056,7 @@ export default <V extends FormValues = FormValues>({
     setValue,
     setTouched,
     setDirty,
+    setFocus,
     setError,
     clearErrors,
     runValidation,

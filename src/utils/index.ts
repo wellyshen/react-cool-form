@@ -23,6 +23,7 @@ export { default as isRadioInput } from "./isRadioInput";
 export { default as isRangeInput } from "./isRangeInput";
 export { default as isSelectMultiple } from "./isSelectMultiple";
 export { default as isSelectOne } from "./isSelectOne";
+export { default as isString } from "./isString";
 export { default as isUndefined } from "./isUndefined";
 export { default as parseState } from "./parseState";
 export { default as runWithLowPriority } from "./runWithLowPriority";
