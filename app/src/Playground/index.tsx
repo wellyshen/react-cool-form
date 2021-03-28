@@ -12,15 +12,15 @@ export default () => {
   const [show, setShow] = useState(true);
   const { form, field, setFocus, setTouched } = useForm({
     defaultValues: { foo: { a: "", b: "", c: "" }, bar: "" },
-    // focusOnError: false,
+    focusOnError: false,
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors, { setFocus: focus }) => {
       console.log("onError: ", errors);
-      /* focus((names) => {
+      focus((names) => {
         // eslint-disable-next-line no-param-reassign
         [names[0], names[1]] = [names[1], names[0]];
         return names;
-      }); */
+      });
     },
   });
 
@@ -35,7 +35,7 @@ export default () => {
         </div>
       )} */}
       <input
-        name="bar"
+        name="foo.a"
         ref={field((value) => (!value.length ? "Required" : false))}
       />
       {/* {show && (
