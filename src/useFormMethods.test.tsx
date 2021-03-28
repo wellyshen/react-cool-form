@@ -51,6 +51,7 @@ describe("useFormMethods", () => {
         setValue: expect.any(Function),
         setTouched: expect.any(Function),
         setDirty: expect.any(Function),
+        setFocus: expect.any(Function),
         setError: expect.any(Function),
         clearErrors: expect.any(Function),
         runValidation: expect.any(Function),
