@@ -496,6 +496,7 @@ describe("useForm", () => {
       expect(getByTestId("text").value).toBe(text);
       expect(getByTestId("number").value).toBe(number.toString());
       expect(getByTestId("range").value).toBe(range.toString());
+      // eslint-disable-next-line jest-dom/prefer-checked
       expect(getByTestId("checkbox").checked).toBe(checkbox);
       const checkboxes0 = getByTestId("checkboxes-0");
       expect(checkboxes0.checked).toBe(checkboxes.includes(checkboxes0.value));
@@ -540,6 +541,7 @@ describe("useForm", () => {
       expect(getByTestId("text").value).toBe(text);
       expect(getByTestId("number").value).toBe(number.toString());
       expect(getByTestId("range").value).toBe(range.toString());
+      // eslint-disable-next-line jest-dom/prefer-checked
       expect(getByTestId("checkbox").checked).toBe(checkbox);
       const checkboxes0 = getByTestId("checkboxes-0");
       expect(checkboxes0.checked).toBe(checkboxes.includes(checkboxes0.value));
@@ -1630,6 +1632,94 @@ describe("useForm", () => {
 
       setTouched("foo");
       await waitFor(() => expect(getState("errors.foo")).toBe(builtInError));
+    });
+  });
+
+  describe("setFocus", () => {
+    it("should focus on error", async () => {
+      renderHelper({
+        validate: ({ foo, bar }) => {
+          const errors: any = {};
+          if (!foo.length) errors.foo = "Required";
+          if (!bar.length) errors.bar = "Required";
+          return errors;
+        },
+        onError,
+        children: (
+          <>
+            <input data-testid="foo" name="foo" />
+            <input data-testid="bar" name="bar" />
+          </>
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalled());
+      expect(getByTestId("foo")).toHaveFocus();
+
+      fireEvent.input(getByTestId("foo"), { target: { value: "🍎" } });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalled());
+      expect(getByTestId("bar")).toHaveFocus();
+    });
+
+    it("should not focus on error", async () => {
+      renderHelper({
+        focusOnError: false,
+        validate: ({ foo }) => (!foo.length ? { foo: "Required" } : {}),
+        onError,
+        children: <input data-testid="foo" name="foo" />,
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalled());
+      expect(getByTestId("foo")).not.toHaveFocus();
+    });
+
+    it.each([
+      ["bar", "foo"],
+      // eslint-disable-next-line no-return-assign
+      (names: string[]) => ([names[0], names[1]] = [names[1], names[0]]),
+    ])("should focus on error by custom ordering", async (names) => {
+      const onErrorFull = jest.fn((_, { setFocus }) => setFocus(names));
+      renderHelper({
+        focusOnError: false,
+        validate: ({ foo, bar }) => {
+          const errors: any = {};
+          if (!foo.length) errors.foo = "Required";
+          if (!bar.length) errors.bar = "Required";
+          return errors;
+        },
+        onErrorFull,
+        children: (
+          <>
+            <input data-testid="foo" name="foo" />
+            <input data-testid="bar" name="bar" />
+          </>
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onErrorFull).toHaveBeenCalled());
+      expect(getByTestId("bar")).toHaveFocus();
+    });
+
+    it("should set focus correctly", () => {
+      const { setFocus } = renderHelper({
+        children: <input data-testid="foo" name="foo" />,
+      });
+      setFocus("foo");
+      expect(getByTestId("foo")).toHaveFocus();
+    });
+
+    it("should set focus on the first field correctly", () => {
+      const { setFocus } = renderHelper({
+        children: (
+          <>
+            <input data-testid="foo.a" name="foo.a" />
+            <input data-testid="foo.b" name="foo.b" />
+          </>
+        ),
+      });
+      setFocus("foo");
+      expect(getByTestId("foo.a")).toHaveFocus();
     });
   });
 
