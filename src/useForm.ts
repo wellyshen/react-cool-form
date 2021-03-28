@@ -493,7 +493,7 @@ export default <V extends FormValues = FormValues>({
 
     return Promise.all(promises).then((errors) =>
       Object.keys(fieldValidatorsRef.current).reduce((acc, cur, idx) => {
-        acc = { ...acc, ...(errors[idx] ? set({}, cur, errors[idx]) : {}) };
+        acc = { ...acc, ...(errors[idx] ? set(acc, cur, errors[idx]) : {}) };
         return acc;
       }, {})
     );

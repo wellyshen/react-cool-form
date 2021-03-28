@@ -1076,6 +1076,27 @@ describe("useForm", () => {
       }
     );
 
+    it("should run field-level validation with nested fields", async () => {
+      const errors = { foo: { a: "Required", b: "Required" } };
+      renderHelper({
+        onError,
+        children: ({ field }: Methods) => (
+          <>
+            <input
+              name="foo.a"
+              ref={field((val: string) => (!val.length ? errors.foo.a : false))}
+            />
+            <input
+              name="foo.b"
+              ref={field((val: string) => (!val.length ? errors.foo.b : false))}
+            />
+          </>
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
+    });
+
     it("should run field-level validation with dependent fields", async () => {
       const errors = { foo: "Bar is required" };
       renderHelper({
