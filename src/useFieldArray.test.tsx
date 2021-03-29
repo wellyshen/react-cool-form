@@ -122,10 +122,10 @@ describe("useFieldArray", () => {
         defaultValue: type === "field-array" ? value : undefined,
         onSubmit,
         children: ({ fields }: API) =>
-          fields.map((fieldName) => (
-            <div key={fieldName}>
-              <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
-              <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+          fields.map((name) => (
+            <div key={name}>
+              <input data-testid={`${name}.a`} name={`${name}.a`} />
+              <Field data-testid={`${name}.b`} name={`${name}.b`} />
             </div>
           )),
       });
@@ -172,10 +172,10 @@ describe("useFieldArray", () => {
         defaultValues: { foo: value },
         onRender,
         children: ({ fields }: API) =>
-          fields.map((fieldName) => (
-            <div key={fieldName}>
-              <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
-              <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+          fields.map((name) => (
+            <div key={name}>
+              <input data-testid={`${name}.a`} name={`${name}.a`} />
+              <Field data-testid={`${name}.b`} name={`${name}.b`} />
             </div>
           )),
       });
@@ -206,10 +206,10 @@ describe("useFieldArray", () => {
       defaultValues: { foo: value },
       onRender,
       children: ({ fields }: API) =>
-        fields.map((fieldName) => (
-          <div key={fieldName}>
-            <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
-            <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+        fields.map((name) => (
+          <div key={name}>
+            <input data-testid={`${name}.a`} name={`${name}.a`} />
+            <Field data-testid={`${name}.b`} name={`${name}.b`} />
           </div>
         )),
     });
@@ -254,10 +254,10 @@ describe("useFieldArray", () => {
       defaultValues: { foo: value },
       onRender,
       children: ({ fields }: API) =>
-        fields.map((fieldName) => (
-          <div key={fieldName}>
-            <input name={`${fieldName}.a`} />
-            <Field name={`${fieldName}.b`} />
+        fields.map((name) => (
+          <div key={name}>
+            <input name={`${name}.a`} />
+            <Field name={`${name}.b`} />
           </div>
         )),
     });
@@ -280,10 +280,10 @@ describe("useFieldArray", () => {
     const { push, remove, getState } = renderHelper({
       onRender,
       children: ({ fields }: API) =>
-        fields.map((fieldName) => (
-          <div key={fieldName}>
-            <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
-            <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+        fields.map((name) => (
+          <div key={name}>
+            <input data-testid={`${name}.a`} name={`${name}.a`} />
+            <Field data-testid={`${name}.b`} name={`${name}.b`} />
           </div>
         )),
     });
@@ -308,10 +308,10 @@ describe("useFieldArray", () => {
       {
         defaultValues: { foo: defaultValue },
         children: ({ fields }: API) =>
-          fields.map((fieldName) => (
-            <div key={fieldName}>
-              <input data-testid={`${fieldName}.a`} name={`${fieldName}.a`} />
-              <Field data-testid={`${fieldName}.b`} name={`${fieldName}.b`} />
+          fields.map((name) => (
+            <div key={name}>
+              <input data-testid={`${name}.a`} name={`${name}.a`} />
+              <Field data-testid={`${name}.b`} name={`${name}.b`} />
             </div>
           )),
       }
