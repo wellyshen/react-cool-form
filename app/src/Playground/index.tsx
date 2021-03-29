@@ -10,44 +10,29 @@ const Field = ({ name, ...rest }: any) => {
 
 export default () => {
   const [show, setShow] = useState(true);
-  const { form, field, setFocus, setTouched } = useForm({
+  const { form, field, focus } = useForm({
     defaultValues: { foo: { a: "", b: "", c: "" }, bar: "" },
-    focusOnError: false,
+    focusOnError: ["foo.b", "foo.a", "foo.c"],
     onSubmit: (values) => console.log("onSubmit: ", values),
-    onError: (errors, { setFocus: focus }) => {
-      console.log("onError: ", errors);
-      focus((names) => {
-        // eslint-disable-next-line no-param-reassign
-        [names[0], names[1]] = [names[1], names[0]];
-        return names;
-      });
-    },
+    onError: (errors) => console.log("onError: ", errors),
   });
 
   return (
     <form ref={form}>
-      {/* {show && (
+      {show && (
         <div>
           <input
             name="foo.a"
             ref={field((value) => (!value.length ? "Required" : false))}
           />
         </div>
-      )} */}
-      <input
-        name="foo.a"
-        ref={field((value) => (!value.length ? "Required" : false))}
-      />
-      {/* {show && (
+      )}
+      {show && (
         <Field
           name="foo.b"
           validate={(value: any) => (!value.length ? "Required" : false)}
         />
-      )} */}
-      <Field
-        name="foo.b"
-        validate={(value: any) => (!value.length ? "Required" : false)}
-      />
+      )}
       <input
         name="foo.c"
         ref={field((value) => (!value.length ? "Required" : false))}
@@ -56,13 +41,7 @@ export default () => {
       <button type="button" onClick={() => setShow(!show)}>
         Toggle
       </button>
-      <button
-        type="button"
-        onClick={() => {
-          setFocus("foo");
-          // setTimeout(() => setTouched("baz"), 1000);
-        }}
-      >
+      <button type="button" onClick={() => focus("foo")}>
         Set Focus
       </button>
     </form>
