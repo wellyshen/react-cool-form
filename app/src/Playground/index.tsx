@@ -1,48 +1,31 @@
 /* eslint-disable no-console */
 
-import { useState } from "react";
-import { useForm, useControlled } from "react-cool-form";
-
-const Field = ({ name, ...rest }: any) => {
-  const [props] = useControlled(name, rest);
-  return <input {...props} />;
-};
+import { useForm, useFieldArray } from "react-cool-form";
 
 export default () => {
-  const [show, setShow] = useState(true);
-  const { form, field, focus } = useForm({
-    defaultValues: { foo: { a: "", b: "", c: "" }, bar: "" },
-    focusOnError: ["foo.b", "foo.a", "foo.c"],
+  const { form, focus } = useForm({
+    defaultValues: { foo: [{ a: "test-1", b: "test-1" }] },
     onSubmit: (values) => console.log("onSubmit: ", values),
-    onError: (errors) => console.log("onError: ", errors),
   });
+  const [fields, { push }] = useFieldArray("foo");
 
   return (
     <form ref={form}>
-      {show && (
-        <div>
-          <input
-            name="foo.a"
-            ref={field((value) => (!value.length ? "Required" : false))}
-          />
+      {fields.map((name) => (
+        <div key={name}>
+          <input name={`${name}.a`} />
+          <input name={`${name}.b`} />
         </div>
-      )}
-      {show && (
-        <Field
-          name="foo.b"
-          validate={(value: any) => (!value.length ? "Required" : false)}
-        />
-      )}
-      <input
-        name="foo.c"
-        ref={field((value) => (!value.length ? "Required" : false))}
-      />
-      <input type="submit" />
-      <button type="button" onClick={() => setShow(!show)}>
-        Toggle
-      </button>
-      <button type="button" onClick={() => focus("foo")}>
-        Set Focus
+      ))}
+      <button
+        type="button"
+        onClick={() => {
+          push({ a: "test-2", b: "test-2" });
+          focus(`foo[${fields.length}]`, 300);
+          // focus(`foo[${fields.length}].b`, 300);
+        }}
+      >
+        Push
       </button>
     </form>
   );
