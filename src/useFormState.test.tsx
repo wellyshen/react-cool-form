@@ -64,7 +64,7 @@ const renderHelper = (args: Omit<Props, "children"> = {}) => {
 describe("useFormState", () => {
   it("should throw form id errors", () => {
     expect(() => useFormState("values", { formId: "form-1" })).toThrow(
-      '💡 react-cool-form > useFormState: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+      '💡 react-cool-form > useFormState: It must work with an "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form'
     );
   });
 

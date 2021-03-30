@@ -37,7 +37,7 @@ export default <T = any, V extends FormValues = FormValues>(
 
   invariant(
     !methods,
-    '💡 react-cool-form > useFieldArray: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+    '💡 react-cool-form > useFieldArray: It must work with an "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form'
   );
 
   const {

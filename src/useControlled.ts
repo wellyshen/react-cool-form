@@ -39,7 +39,7 @@ export default <V extends FormValues = FormValues>(
 
   invariant(
     !methods,
-    '💡 react-cool-form > useControlled: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+    '💡 react-cool-form > useControlled: It must work with an "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form'
   );
 
   const meta = useFormState(
