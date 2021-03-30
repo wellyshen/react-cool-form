@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { useForm, useFieldArray } from "react-cool-form";
+import { useForm } from "react-cool-form";
 
 export default () => {
   const { form, focus } = useForm({
