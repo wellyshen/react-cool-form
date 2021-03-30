@@ -269,15 +269,18 @@ Mon means "monitor", the method provides us a performant way to use the form sta
 
 This method allows us to apply focus to a field. If you want to focus on the first field of a nested fields, you can just pass in the parent path as below.
 
-```js {4,9}
+```js {7,12}
 const App = () => {
   const { form, focus } = useForm();
 
-  useEffect(() => focus("foo"), []);
+  useEffect(() => {
+    // Will focuses on the first field after 0.5 second
+    // It works the same as `focus("foo.a", 500)`
+    focus("foo", 500);
+  }, []);
 
   return (
     <form ref={form}>
-      {/* The first field will be focused */}
       <input name="foo.a" />
       <input name="foo.b" />
       <input name="foo.c" />
