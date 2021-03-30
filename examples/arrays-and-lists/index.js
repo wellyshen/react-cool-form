@@ -8,9 +8,13 @@ let count = 0;
 function App() {
   count++;
 
-  const { form, mon } = useForm({
+  const { form, focus, mon } = useForm({
     defaultValues: {
-      foo: [{ name: "Iron Mane" }, { name: "Thor" }, { name: "Hulk" }]
+      foo: [
+        { name: "Iron Man", quote: "I'm Iron Man" },
+        { name: "Thor", quote: "I Knew It" },
+        { name: "Hulk", quote: "Bout Time" }
+      ]
     },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
@@ -30,16 +34,34 @@ function App() {
         <div key={fieldName}>
           {/* Use the "fieldName" + "YOUR PATH" as the name */}
           <input name={`${fieldName}.name`} />
+          <input name={`${fieldName}.quote`} />
           <button type="button" onClick={() => remove(index)}>
             REMOVE
           </button>
         </div>
       ))}
       <div>
-        <button type="button" onClick={() => push({ name: "Loki" })}>
+        <button
+          type="button"
+          onClick={() => {
+            push({ name: "Loki", quote: "Your Savior Is Here" });
+            // Waiting for the item rendered then apply focus to the first field
+            focus(`foo[${fields.length}]`, 300);
+            // Or apply focus to a specified field
+            // focus(`foo[${fields.length}].quote`, 300);
+          }}
+        >
           PUSH
         </button>
-        <button type="button" onClick={() => insert(0, { name: "Spider Man" })}>
+        <button
+          type="button"
+          onClick={() =>
+            insert(0, {
+              name: "Spider Man",
+              quote: "Your Friendly Neighborhood Spider-Man"
+            })
+          }
+        >
           INSERT
         </button>
         <button type="button" onClick={() => swap(0, 1)}>

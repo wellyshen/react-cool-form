@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.154
+
+### Patch Changes
+
+- [#519](https://github.com/wellyshen/react-cool-form/pull/519) [`5539448`](https://github.com/wellyshen/react-cool-form/commit/5539448c8c7ee1fedd19d12cb79d909fcf781fa4) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): new `setFocus` API
+
+* [`06e66f3`](https://github.com/wellyshen/react-cool-form/commit/06e66f38de31ebf335dd04543a5a118e1202d18a) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): when working with nested fields, built-in validation results are overrided
+
 ## 0.0.153
 
 ### Patch Changes
