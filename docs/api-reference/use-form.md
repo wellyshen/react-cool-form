@@ -97,13 +97,13 @@ Tell React Cool Form to apply focus to the first field with an error upon an att
 ```js {6,12-15}
 const defaultValues = { foo: "", bar: "", baz: "" };
 
-// Change the focus order by passing in a new field names
+// Change the focus order by passing in a field names
 const methods = useForm({
   defaultValues,
   focusOnError: ["bar", "foo", "baz"],
 });
 
-// Change the focus order by modifying the existing field names
+// Change the focus order by modifying the field names
 const methods = useForm({
   defaultValues,
   focusOnError: (names) => {
