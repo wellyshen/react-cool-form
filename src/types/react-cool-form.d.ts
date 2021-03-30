@@ -10,11 +10,11 @@ declare module "react-cool-form" {
   };
 
   interface EventOptions<V> {
+    focus: Focus;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
     setDirty: SetDirty;
-    setFocus: SetFocus;
     setError: SetError;
     clearErrors: ClearErrors;
     runValidation: RunValidation;
@@ -27,6 +27,10 @@ declare module "react-cool-form" {
       path: string | string[] | ObjMap<string>,
       options?: { defaultValues?: V; errorWithTouched?: boolean }
     ): any;
+  }
+
+  interface Focus {
+    (name: string, delay?: number): void;
   }
 
   interface GetState {
@@ -49,10 +53,6 @@ declare module "react-cool-form" {
 
   interface SetDirty {
     (name: string, isDirty?: boolean): void;
-  }
-
-  interface SetFocus {
-    (name: string | string[] | FieldNamesFn): void;
   }
 
   interface SetError {
@@ -118,10 +118,6 @@ declare module "react-cool-form" {
     submitCount: number;
   }>;
 
-  export interface FieldNamesFn<N extends string[] = string[]> {
-    (names: N): N;
-  }
-
   export interface PreviousValuesFn<V extends FormValues = FormValues> {
     (previousValues: V): V;
   }
@@ -148,6 +144,10 @@ declare module "react-cool-form" {
 
   export interface FieldParser<V = any, R = any> {
     (value: V): R;
+  }
+
+  export interface FocusOnErrorFn<N extends string[] = string[]> {
+    (names: N): N;
   }
 
   export interface ResetHandler<V extends FormValues = FormValues> {
@@ -180,7 +180,7 @@ declare module "react-cool-form" {
     validate: FormValidator<V>;
     validateOnChange: boolean;
     validateOnBlur: boolean;
-    focusOnError: boolean;
+    focusOnError: boolean | string[] | FocusOnErrorFn;
     builtInValidationMode: "message" | "state" | false;
     shouldRemoveField: boolean;
     excludeFields: string[];
@@ -194,11 +194,11 @@ declare module "react-cool-form" {
     form: RegisterForm;
     field: RegisterField<V>;
     mon: Mon<V>;
+    focus: Focus;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
     setDirty: SetDirty;
-    setFocus: SetFocus;
     setError: SetError;
     clearErrors: ClearErrors;
     runValidation: RunValidation;
