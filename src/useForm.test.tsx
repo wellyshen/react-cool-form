@@ -92,6 +92,7 @@ describe("useForm", () => {
     submitCount: 0,
   };
   const options = {
+    focus: expect.any(Function),
     getState: expect.any(Function),
     setValue: expect.any(Function),
     setTouched: expect.any(Function),
@@ -205,6 +206,7 @@ describe("useForm", () => {
       form: expect.any(Function),
       field: expect.any(Function),
       mon: expect.any(Function),
+      focus: expect.any(Function),
       getState: expect.any(Function),
       setValue: expect.any(Function),
       setTouched: expect.any(Function),
@@ -494,6 +496,7 @@ describe("useForm", () => {
       expect(getByTestId("text").value).toBe(text);
       expect(getByTestId("number").value).toBe(number.toString());
       expect(getByTestId("range").value).toBe(range.toString());
+      // eslint-disable-next-line jest-dom/prefer-checked
       expect(getByTestId("checkbox").checked).toBe(checkbox);
       const checkboxes0 = getByTestId("checkboxes-0");
       expect(checkboxes0.checked).toBe(checkboxes.includes(checkboxes0.value));
@@ -538,6 +541,7 @@ describe("useForm", () => {
       expect(getByTestId("text").value).toBe(text);
       expect(getByTestId("number").value).toBe(number.toString());
       expect(getByTestId("range").value).toBe(range.toString());
+      // eslint-disable-next-line jest-dom/prefer-checked
       expect(getByTestId("checkbox").checked).toBe(checkbox);
       const checkboxes0 = getByTestId("checkboxes-0");
       expect(checkboxes0.checked).toBe(checkboxes.includes(checkboxes0.value));
@@ -992,6 +996,21 @@ describe("useForm", () => {
         expect(getState("isValid")).toBeTruthy();
       }
     );
+
+    it("should run built-in validation with nested fields", async () => {
+      const errors = { foo: { a: builtInError, b: builtInError } };
+      renderHelper({
+        onError,
+        children: (
+          <>
+            <input name="foo.a" required />
+            <input name="foo.b" required />
+          </>
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
+    });
 
     it("should disable built-in validation", async () => {
       const { getState } = renderHelper({
@@ -1498,6 +1517,106 @@ describe("useForm", () => {
       mon("foo");
       fireEvent.input(getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("focus", () => {
+    it("should focus on error", async () => {
+      renderHelper({
+        validate: ({ foo, bar }) => {
+          const errors: any = {};
+          if (!foo.length) errors.foo = "Required";
+          if (!bar.length) errors.bar = "Required";
+          return errors;
+        },
+        onError,
+        children: (
+          <>
+            <input data-testid="foo" name="foo" />
+            <input data-testid="bar" name="bar" />
+          </>
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalled());
+      expect(getByTestId("foo")).toHaveFocus();
+
+      fireEvent.input(getByTestId("foo"), { target: { value: "🍎" } });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalled());
+      expect(getByTestId("bar")).toHaveFocus();
+    });
+
+    it("should disable focus on error", async () => {
+      renderHelper({
+        focusOnError: false,
+        validate: ({ foo }) => (!foo.length ? { foo: "Required" } : {}),
+        onError,
+        children: <input data-testid="foo" name="foo" />,
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalled());
+      expect(getByTestId("foo")).not.toHaveFocus();
+    });
+
+    it.each([
+      ["bar", "foo"],
+      // eslint-disable-next-line no-return-assign
+      (names: string[]) => ([names[0], names[1]] = [names[1], names[0]]),
+    ])("should focus on error by custom order", async (focusOnError) => {
+      renderHelper({
+        focusOnError,
+        validate: ({ foo, bar }) => {
+          const errors: any = {};
+          if (!foo.length) errors.foo = "Required";
+          if (!bar.length) errors.bar = "Required";
+          return errors;
+        },
+        onError,
+        children: (
+          <>
+            <input data-testid="foo" name="foo" />
+            <input data-testid="bar" name="bar" />
+          </>
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalled());
+      expect(getByTestId("bar")).toHaveFocus();
+    });
+
+    it("should focus correctly", () => {
+      const { focus } = renderHelper({
+        children: <input data-testid="foo" name="foo" />,
+      });
+      focus("foo");
+      expect(getByTestId("foo")).toHaveFocus();
+    });
+
+    it("should focus on the first field correctly", () => {
+      const { focus } = renderHelper({
+        children: (
+          <>
+            <input data-testid="foo.a" name="foo.a" />
+            <input data-testid="foo.b" name="foo.b" />
+          </>
+        ),
+      });
+      focus("foo");
+      expect(getByTestId("foo.a")).toHaveFocus();
+    });
+
+    it("should delay to focus", () => {
+      jest.useFakeTimers();
+
+      const { focus } = renderHelper({
+        children: <input data-testid="foo" name="foo" />,
+      });
+      const delay = 1000;
+      focus("foo", delay);
+      expect(getByTestId("foo")).not.toHaveFocus();
+      jest.advanceTimersByTime(delay);
+      expect(getByTestId("foo")).toHaveFocus();
     });
   });
 

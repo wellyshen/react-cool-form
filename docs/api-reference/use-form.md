@@ -35,9 +35,7 @@ Tell React Cool Form to exclude field(s) by passing in the `name`/`id`/`class` o
 
 - The `excludeFields` and `data-rcf-exclude` won't affect the functionality of the [useControlled](./use-controlled).
 
-```js
-import { useForm } from "react-cool-form";
-
+```js {3,12}
 const App = () => {
   const { form } = useForm({
     excludeFields: ["foo", "#bar", ".baz"],
@@ -87,6 +85,34 @@ Tell React Cool Form to run validations on `change` events as well as the [setVa
 
 Tell React Cool Form to run validations on `blur` events. Default is `true`.
 
+### focusOnError
+
+`boolean | string[] | (names: string[]) => string[]`
+
+Tell React Cool Form to apply focus to the first field with an error upon an attempted form submission. Default is `true`.
+
+- Only native input elements that support [HTMLElement.focus()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/focus) will work.
+- The focus order is based on the field order (i.e. top-to-bottom and left-to-right).
+
+```js {6,12-15}
+const defaultValues = { foo: "", bar: "", baz: "" };
+
+// Change the focus order by passing in a new field names
+const methods = useForm({
+  defaultValues,
+  focusOnError: ["bar", "foo", "baz"],
+});
+
+// Change the focus order by modifying the existing field names
+const methods = useForm({
+  defaultValues,
+  focusOnError: (names) => {
+    [names[0], names[1]] = [names[1], names[0]];
+    return names;
+  },
+});
+```
+
 ### validate
 
 `(values: FormValues) => FormErrors | false | void | Promise<FormErrors | false | void>`
@@ -107,6 +133,7 @@ const methods = useForm({
       setValue,
       setTouched,
       setDirty,
+      setFocus,
       setError,
       runValidation,
       submit,
@@ -134,6 +161,7 @@ const methods = useForm({
       setValue,
       setTouched,
       setDirty,
+      setFocus,
       setError,
       runValidation,
       submit,
@@ -161,6 +189,7 @@ const methods = useForm({
       setValue,
       setTouched,
       setDirty,
+      setFocus,
       setError,
       runValidation,
       submit,
@@ -211,7 +240,7 @@ This method allows us to do [field-level validation](../getting-started/validati
 const { field } = useForm();
 
 <input
-  name="rcf"
+  name="foo"
   type="date"
   ref={field({
     validate: (value, values /* Form values */) => !value.length && "Required",
@@ -225,7 +254,7 @@ const { field } = useForm();
 If you just want to validate the field, there's a shortcut for it:
 
 ```js
-<input nam="rcf" ref={field((value) => !value.length && "Required")} />
+<input nam="foo" ref={field((value) => !value.length && "Required")} />
 ```
 
 ### mon
@@ -233,6 +262,32 @@ If you just want to validate the field, there's a shortcut for it:
 `(path: string | string[] | Record<string, string>, options?: Object) => any`
 
 Mon means "monitor", the method provides us a performant way to use the form state with minimized re-renders. See the [Form State](../getting-started/form-state) to learn more.
+
+### focus
+
+`(name: string, delay?: number) => void`
+
+This method allows us to apply focus to a field. If you want to focus on the first field of a nested fields, you can just pass in the parent path as below.
+
+```js {4,9}
+const App = () => {
+  const { form, focus } = useForm();
+
+  useEffect(() => focus("foo"), []);
+
+  return (
+    <form ref={form}>
+      {/* The first field will be focused */}
+      <input name="foo.a" />
+      <input name="foo.b" />
+      <input name="foo.c" />
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
+👉🏻 See the [Applying Focus](../getting-started/arrays-and-lists#applying-focus) to learn more.
 
 ### getState
 

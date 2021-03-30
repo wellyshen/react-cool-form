@@ -5,7 +5,7 @@ import replace from "@rollup/plugin-replace";
 import { sizeSnapshot } from "rollup-plugin-size-snapshot";
 import { terser } from "rollup-plugin-terser";
 
-import pkg from "../package.json";
+import pkg from "../../package.json";
 
 const babelRuntimeVersion = pkg.dependencies["@babel/runtime"].replace(
   /^[^0-9]*/,

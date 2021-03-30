@@ -10,6 +10,7 @@ import {
   FieldElement,
   Fields,
   FieldValidator,
+  Focus,
   FormConfig,
   FormErrors,
   FormMethods,
@@ -74,6 +75,7 @@ export default <V extends FormValues = FormValues>({
   validate,
   validateOnChange = true,
   validateOnBlur = true,
+  focusOnError = true,
   builtInValidationMode = "message",
   shouldRemoveField = true,
   excludeFields = [],
@@ -85,7 +87,7 @@ export default <V extends FormValues = FormValues>({
   const handlersRef = useRef<Handlers>({});
   const observerRef = useRef<MutationObserver>();
   const formRef = useRef<HTMLElement>();
-  const fieldsRef = useRef<Fields>({});
+  const fieldsRef = useRef<Fields>(new Map());
   const fieldParsersRef = useRef<Parsers>({});
   const fieldArrayRef = useRef<FieldArray>({});
   const controlsRef = useRef<ObjMap>({});
@@ -122,10 +124,9 @@ export default <V extends FormValues = FormValues>({
     (path: string) => {
       const segs = path.split(".");
       const k = segs.shift() as string;
-      const n = segs.join(".");
       setStateRef(
         k,
-        unset(stateRef.current[k as keyof FormState<V>], n, true),
+        unset(stateRef.current[k as keyof FormState<V>], segs.join("."), true),
         {
           fieldPath: path,
         }
@@ -147,13 +148,12 @@ export default <V extends FormValues = FormValues>({
             dataset: { rcfExclude },
           } = field;
 
-          const classes = Array.from(classList);
           const { current: exclude } = excludeFieldsRef;
 
           if (
             /button|image|submit|reset/.test(type) ||
             (fieldId && exclude[`#${fieldId}`]) ||
-            classes.find((n) => exclude[`.${n}`])
+            Array.from(classList).find((n) => exclude[`.${n}`])
           )
             return false;
 
@@ -169,7 +169,7 @@ export default <V extends FormValues = FormValues>({
             (rcfExclude !== "true" && !exclude[name])
           );
         })
-        .reduce((acc: Fields, elm) => {
+        .reduce((acc, elm) => {
           const field = elm as FieldElement;
           const { name } = field;
           const fieldArrayName = isFieldArray(fieldArrayRef.current, name);
@@ -177,75 +177,75 @@ export default <V extends FormValues = FormValues>({
           if (fieldArrayName)
             fieldArrayRef.current[fieldArrayName].fields[name] = true;
 
-          acc[name] = { ...acc[name], field: acc[name]?.field || field };
+          acc.set(name, {
+            ...acc.get(name),
+            field: acc.get(name)?.field || field,
+          });
 
           if (isCheckboxInput(field) || isRadioInput(field)) {
-            acc[name].options = acc[name].options
-              ? [...(acc[name].options as HTMLInputElement[]), field]
+            acc.get(name).options = acc.get(name).options
+              ? [...acc.get(name).options, field]
               : [field];
           } else if (isSelectOne(field) || isSelectMultiple(field)) {
-            acc[name].options = Array.from(field.options);
+            acc.get(name).options = Array.from(field.options);
           }
 
           return acc;
-        }, {}),
+        }, new Map()),
     []
   );
 
   const getNodeValue = useCallback<GetNodeValue>(
     (name, fields = fieldsRef.current) => {
-      const { field, options } = fields[name];
-      let value = field.value as any;
+      const { field, options } = fields.get(name)!;
 
       if (isInputElement(field)) {
-        if (fieldParsersRef.current[name]?.valueAsNumber) {
-          value = field.valueAsNumber;
-          return value;
-        }
-        if (fieldParsersRef.current[name]?.valueAsDate) {
-          value = field.valueAsDate;
-          return value;
-        }
+        if (fieldParsersRef.current[name]?.valueAsNumber)
+          return field.valueAsNumber;
+        if (fieldParsersRef.current[name]?.valueAsDate)
+          return field.valueAsDate;
       }
 
       if (isNumberInput(field) || isRangeInput(field))
-        value = field.valueAsNumber || "";
+        return field.valueAsNumber || "";
 
       if (isCheckboxInput(field)) {
         const checkboxes = options as HTMLInputElement[];
+
+        if (checkboxes.length > 1)
+          return checkboxes.filter((c) => c.checked).map((c) => c.value);
+
         const checkbox = checkboxes[0];
 
-        if (checkboxes.length > 1) {
-          value = checkboxes.filter((c) => c.checked).map((c) => c.value);
-        } else if (checkbox.hasAttribute("value") && checkbox.value) {
-          value = checkbox.checked ? [checkbox.value] : [];
-        } else {
-          value = checkbox.checked;
-        }
+        if (checkbox.hasAttribute("value") && checkbox.value)
+          return checkbox.checked ? [checkbox.value] : [];
+
+        return checkbox.checked;
       }
 
       if (isRadioInput(field))
-        value =
+        return (
           (options as HTMLInputElement[]).find((radio) => radio.checked)
-            ?.value || "";
+            ?.value || ""
+        );
 
       if (isSelectMultiple(field))
-        value = (options as HTMLOptionElement[])
+        return (options as HTMLOptionElement[])
           .filter((option) => option.selected)
           .map((option) => option.value);
 
-      if (isFileInput(field)) value = field.files;
+      if (isFileInput(field)) return field.files;
 
-      return value;
+      return field.value;
     },
     []
   );
 
   const setNodeValue = useCallback(
     (name: string, value: any, fields: Fields = fieldsRef.current) => {
-      if (!fields[name] || controlsRef.current[name]) return;
+      if (!fields.has(name) || controlsRef.current[name]) return;
 
-      const { field, options } = fields[name];
+      const { field, options } = fields.get(name)!;
 
       if (isCheckboxInput(field)) {
         const checkboxes = options as HTMLInputElement[];
@@ -300,7 +300,10 @@ export default <V extends FormValues = FormValues>({
   const setNodesOrValues = useCallback<SetNodesOrValues<V>>(
     (
       values,
-      { shouldSetValues = true, fields = Object.keys(fieldsRef.current) } = {}
+      {
+        shouldSetValues = true,
+        fields = Array.from(fieldsRef.current.keys()),
+      } = {}
     ) =>
       fields.forEach((name) => {
         if (controlsRef.current[name]) return;
@@ -320,88 +323,6 @@ export default <V extends FormValues = FormValues>({
       }),
     [getNodeValue, setDefaultValue, setNodeValue]
   );
-
-  const getFormState = useCallback<GetFormState<V>>(
-    (
-      path,
-      {
-        errorWithTouched,
-        defaultValues: dfValues = {},
-        methodName = "getState",
-        callback,
-      } = {}
-    ) => {
-      const usedState: ObjMap = {};
-      const state = parseState(
-        path,
-        stateRef.current,
-        (p) => {
-          p = getPath(p);
-
-          if (methodName !== "getState") {
-            if (
-              p === "values" &&
-              methodName !== "useFormStateCallback" &&
-              !hasWarnValues.current
-            ) {
-              warn(
-                `💡 react-cool-form > ${methodName}: Getting "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
-              );
-              hasWarnValues.current = true;
-            }
-
-            usedState[p] = true;
-          }
-
-          return p;
-        },
-        (p, v) => {
-          if (p.startsWith("values")) {
-            if (!isUndefined(v)) return v;
-
-            p = p.replace("values.", "");
-            v = get(defaultValuesRef.current, p);
-
-            return !isUndefined(v) ? v : get(dfValues, p);
-          }
-
-          if (
-            !errorWithTouched ||
-            !p.startsWith("errors") ||
-            !v ||
-            isEmptyObject(v)
-          )
-            return v;
-
-          p = p.replace("errors", "touched");
-          usedState[p] = true;
-
-          return filterErrors(v, get(stateRef.current, p));
-        },
-        methodName === "getState"
-      );
-
-      if (callback) callback(usedState);
-
-      return state;
-    },
-    [stateRef]
-  );
-
-  const mon = useCallback<Mon<V>>(
-    (path, { errorWithTouched, defaultValues: dfValues } = {}) =>
-      getFormState(path, {
-        errorWithTouched,
-        defaultValues: dfValues,
-        methodName: "mon",
-        callback: (usedState) => setUsedState(usedState),
-      }),
-    [getFormState, setUsedState]
-  );
-
-  const getState = useCallback<GetState>((path) => getFormState(path), [
-    getFormState,
-  ]);
 
   const setError = useCallback<SetError>(
     (name, error) => {
@@ -433,10 +354,10 @@ export default <V extends FormValues = FormValues>({
 
   const runBuiltInValidation = useCallback(
     (name: string) => {
-      if (builtInValidationMode === false || !fieldsRef.current[name])
+      if (builtInValidationMode === false || !fieldsRef.current.has(name))
         return undefined;
 
-      const { field } = fieldsRef.current[name];
+      const { field } = fieldsRef.current.get(name)!;
 
       if (builtInValidationMode === "message") return field.validationMessage;
 
@@ -451,9 +372,9 @@ export default <V extends FormValues = FormValues>({
   const runAllBuiltInValidation = useCallback(() => {
     if (builtInValidationMode === false) return {};
 
-    return Object.keys(fieldsRef.current).reduce((errors, name) => {
+    return Array.from(fieldsRef.current.keys()).reduce((errors, name) => {
       const error = runBuiltInValidation(name);
-      errors = { ...errors, ...(error ? set({}, name, error) : {}) };
+      errors = { ...errors, ...(error ? set(errors, name, error) : {}) };
       return errors;
     }, {});
   }, [builtInValidationMode, runBuiltInValidation]);
@@ -584,6 +505,110 @@ export default <V extends FormValues = FormValues>({
     [validateField, validateForm]
   );
 
+  const getFormState = useCallback<GetFormState<V>>(
+    (
+      path,
+      {
+        errorWithTouched,
+        defaultValues: dfValues = {},
+        methodName = "getState",
+        callback,
+      } = {}
+    ) => {
+      const usedState: ObjMap = {};
+      const state = parseState(
+        path,
+        stateRef.current,
+        (p) => {
+          p = getPath(p);
+
+          if (methodName !== "getState") {
+            if (
+              p === "values" &&
+              methodName !== "useFormStateCallback" &&
+              !hasWarnValues.current
+            ) {
+              warn(
+                `💡 react-cool-form > ${methodName}: Getting "values" alone might cause unnecessary re-renders. If you know what you're doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices`
+              );
+              hasWarnValues.current = true;
+            }
+
+            usedState[p] = true;
+          }
+
+          return p;
+        },
+        (p, v) => {
+          if (p.startsWith("values")) {
+            if (!isUndefined(v)) return v;
+
+            p = p.replace("values.", "");
+            v = get(defaultValuesRef.current, p);
+
+            return !isUndefined(v) ? v : get(dfValues, p);
+          }
+
+          if (
+            !errorWithTouched ||
+            !p.startsWith("errors") ||
+            !v ||
+            isEmptyObject(v)
+          )
+            return v;
+
+          p = p.replace("errors", "touched");
+          usedState[p] = true;
+
+          return filterErrors(v, get(stateRef.current, p));
+        },
+        methodName === "getState"
+      );
+
+      if (callback) callback(usedState);
+
+      return state;
+    },
+    [stateRef]
+  );
+
+  const mon = useCallback<Mon<V>>(
+    (path, { errorWithTouched, defaultValues: dfValues } = {}) =>
+      getFormState(path, {
+        errorWithTouched,
+        defaultValues: dfValues,
+        methodName: "mon",
+        callback: (usedState) => setUsedState(usedState),
+      }),
+    [getFormState, setUsedState]
+  );
+
+  const handleFocus = useCallback((name: string) => {
+    const field =
+      fieldsRef.current.get(name)?.field ||
+      fieldsRef.current.get(
+        Array.from(fieldsRef.current.keys()).find((n) => n.startsWith(name)) ||
+          ""
+      )?.field;
+
+    if (field && isFunction(field.focus)) field.focus();
+  }, []);
+
+  const focus = useCallback<Focus>(
+    (name, delay) => {
+      if (delay) {
+        setTimeout(() => handleFocus(name), delay);
+      } else {
+        handleFocus(name);
+      }
+    },
+    [handleFocus]
+  );
+
+  const getState = useCallback<GetState>((path) => getFormState(path), [
+    getFormState,
+  ]);
+
   const setTouched = useCallback<SetTouched>(
     (name, isTouched = true, shouldValidate = validateOnBlur) => {
       if (isTouched) {
@@ -651,13 +676,13 @@ export default <V extends FormValues = FormValues>({
       }
       setNodeValue(name, value);
 
-      if (shouldTouched) setTouched(name, true, false);
-      if (shouldDirty) setDirtyIfNeeded(name);
-      if (shouldValidate) validateFieldWithLowPriority(name);
-
       isFieldArray(fieldArrayRef.current, name, (key) =>
         fieldArrayRef.current[key].reset()
       );
+
+      if (shouldTouched) setTouched(name, true, false);
+      if (shouldDirty) setDirtyIfNeeded(name);
+      if (shouldValidate) validateFieldWithLowPriority(name);
     },
     [
       handleUnset,
@@ -673,6 +698,7 @@ export default <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
+      focus,
       getState,
       setValue,
       setTouched,
@@ -712,7 +738,7 @@ export default <V extends FormValues = FormValues>({
           );
           setNodesOrValues(nextValues, {
             shouldSetValues: false,
-            fields: Object.keys(fieldsRef.current).filter(
+            fields: Array.from(fieldsRef.current.keys()).filter(
               (name) => !isFieldArray(fieldArrayRef.current, name)
             ),
           });
@@ -735,10 +761,10 @@ export default <V extends FormValues = FormValues>({
       if (e?.preventDefault) e.preventDefault();
       if (e?.stopPropagation) e.stopPropagation();
 
-      const nextTouched = Object.keys({
-        ...fieldsRef.current,
-        ...controlsRef.current,
-      }).reduce((touched, name) => {
+      const nextTouched = [
+        ...Array.from(fieldsRef.current.keys()),
+        ...Object.keys(controlsRef.current),
+      ].reduce((touched, name) => {
         touched = set(touched, name, true, true);
         return touched;
       }, stateRef.current.touched);
@@ -751,6 +777,18 @@ export default <V extends FormValues = FormValues>({
 
         if (!isEmptyObject(errors)) {
           onErrorRef.current(errors, getOptions(), e);
+
+          if (focusOnError) {
+            let names = Array.from(fieldsRef.current.keys());
+            if (Array.isArray(focusOnError)) names = focusOnError;
+            if (isFunction(focusOnError)) names = focusOnError(names);
+
+            for (const name of names)
+              if (get(stateRef.current.errors, name)) {
+                handleFocus(name);
+                break;
+              }
+          }
 
           return { errors };
         }
@@ -766,7 +804,16 @@ export default <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
-    [getOptions, onErrorRef, onSubmitRef, setStateRef, stateRef, validateForm]
+    [
+      focusOnError,
+      getOptions,
+      handleFocus,
+      onErrorRef,
+      onSubmitRef,
+      setStateRef,
+      stateRef,
+      validateForm,
+    ]
   );
 
   const handleChangeEvent = useCallback<HandleChangeEvent>(
@@ -829,7 +876,7 @@ export default <V extends FormValues = FormValues>({
           return;
         }
 
-        if (fieldsRef.current[name] && !controlsRef.current[name]) {
+        if (fieldsRef.current.has(name) && !controlsRef.current[name]) {
           const parse = fieldParsersRef.current[name]?.parse;
           const value = getNodeValue(name);
 
@@ -843,7 +890,7 @@ export default <V extends FormValues = FormValues>({
 
         const { name } = target as FieldElement;
 
-        if (fieldsRef.current[name] && !controlsRef.current[name]) {
+        if (fieldsRef.current.has(name) && !controlsRef.current[name]) {
           setTouchedMaybeValidate(name);
           changedFieldRef.current = undefined;
         }
@@ -864,17 +911,17 @@ export default <V extends FormValues = FormValues>({
         const fields = getFields(form);
 
         if (shouldRemoveField)
-          Object.keys(fieldsRef.current).forEach((name) => {
+          fieldsRef.current.forEach((_, name) => {
             if (controlsRef.current[name]) return;
 
-            if (!fields[name]) {
+            if (!fields.has(name)) {
               removeField(name);
               return;
             }
 
-            const currOptions = fieldsRef.current[name].options
+            const currOptions = fieldsRef.current.get(name)?.options
               ?.length as number;
-            const nextOptions = fields[name].options?.length as number;
+            const nextOptions = fields.get(name).options?.length as number;
 
             if (currOptions > nextOptions) {
               setStateRef(`values.${name}`, getNodeValue(name, fields), {
@@ -892,8 +939,8 @@ export default <V extends FormValues = FormValues>({
         let values = defaultValuesRef.current;
         const addedNodes: string[] = [];
 
-        Object.keys(fields).forEach((name) => {
-          if (fieldsRef.current[name] || controlsRef.current[name]) return;
+        fields.forEach((_, name) => {
+          if (fieldsRef.current.has(name) || controlsRef.current[name]) return;
 
           const value = get(stateRef.current.values, name);
           if (!isUndefined(value)) values = set(values, name, value, true);
@@ -967,6 +1014,7 @@ export default <V extends FormValues = FormValues>({
     form: registerForm,
     field: registerField,
     mon,
+    focus,
     getState,
     setValue,
     setTouched,
@@ -999,6 +1047,7 @@ export default <V extends FormValues = FormValues>({
     form: registerForm,
     field: registerField,
     mon,
+    focus,
     getState,
     setValue,
     setTouched,

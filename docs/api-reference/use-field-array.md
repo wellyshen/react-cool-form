@@ -72,8 +72,8 @@ const handleAdd = () => {
   push(
     { name: "Iron Man" },
     {
-      shouldTouched: false, // Set the field as touched, default is false
-      shouldDirty: true, // Set the field as dirty, default is true
+      shouldTouched: false, // (Default = false) Set the field as touched
+      shouldDirty: true, // (Default = true) Set the field as dirty
     }
   );
 };
@@ -91,8 +91,8 @@ const handleInsert = () => {
     0,
     { name: "Iron Man" },
     {
-      shouldTouched: false, // Set the field as touched, default is false
-      shouldDirty: true, // Set the field as dirty, default is true
+      shouldTouched: false, // (Default = false) Set the field as touched
+      shouldDirty: true, // (Default = true) Set the field as dirty
     }
   );
 };

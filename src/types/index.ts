@@ -86,21 +86,23 @@ export type FieldElement =
   | HTMLTextAreaElement
   | HTMLSelectElement;
 
-export interface Field {
-  field: FieldElement;
-  options?: (HTMLInputElement | HTMLOptionElement)[];
-}
-
-export type Fields = ObjMap<Field>;
+export type Fields = Map<
+  string,
+  {
+    field: FieldElement;
+    options?: (HTMLInputElement | HTMLOptionElement)[];
+  }
+>;
 
 export type FieldArray = ObjMap<{ fields: ObjMap; reset: () => void }>;
 
 interface EventOptions<V> {
+  focus: Focus;
   getState: GetState;
   setValue: SetValue;
+  setError: SetError;
   setTouched: SetTouched;
   setDirty: SetDirty;
-  setError: SetError;
   clearErrors: ClearErrors;
   runValidation: RunValidation;
   reset: Reset<V>;
@@ -209,6 +211,10 @@ export interface Mon<V> {
   ): any;
 }
 
+export interface Focus {
+  (name: string, delay?: number): void;
+}
+
 export interface GetState {
   (path?: string | string[] | ObjMap<string>): any;
 }
@@ -270,6 +276,7 @@ export type FormConfig<V = any> = Partial<{
   validate: FormValidator<V>;
   validateOnChange: boolean;
   validateOnBlur: boolean;
+  focusOnError: boolean | string[] | ((names: string[]) => string[]);
   builtInValidationMode: "message" | "state" | false;
   shouldRemoveField: boolean;
   excludeFields: string[];
@@ -283,6 +290,7 @@ export interface FormMethods<V = any> {
   form: RegisterForm;
   field: RegisterField<V>;
   mon: Mon<V>;
+  focus: Focus;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;

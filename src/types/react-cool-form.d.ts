@@ -10,6 +10,7 @@ declare module "react-cool-form" {
   };
 
   interface EventOptions<V> {
+    focus: Focus;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
@@ -26,6 +27,10 @@ declare module "react-cool-form" {
       path: string | string[] | ObjMap<string>,
       options?: { defaultValues?: V; errorWithTouched?: boolean }
     ): any;
+  }
+
+  interface Focus {
+    (name: string, delay?: number): void;
   }
 
   interface GetState {
@@ -141,6 +146,10 @@ declare module "react-cool-form" {
     (value: V): R;
   }
 
+  export interface FocusOnErrorFn<N extends string[] = string[]> {
+    (names: N): N;
+  }
+
   export interface ResetHandler<V extends FormValues = FormValues> {
     (values: V, options: EventOptions<V>, event?: Event | SyntheticEvent): void;
   }
@@ -171,6 +180,7 @@ declare module "react-cool-form" {
     validate: FormValidator<V>;
     validateOnChange: boolean;
     validateOnBlur: boolean;
+    focusOnError: boolean | string[] | FocusOnErrorFn;
     builtInValidationMode: "message" | "state" | false;
     shouldRemoveField: boolean;
     excludeFields: string[];
@@ -184,6 +194,7 @@ declare module "react-cool-form" {
     form: RegisterForm;
     field: RegisterField<V>;
     mon: Mon<V>;
+    focus: Focus;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;

@@ -2,7 +2,7 @@
   "files": [
     {
       "path": "dist/index.umd.production.min.js",
-      "maxSize": "7 kB"
+      "maxSize": "7.5 kB"
     }
   ]
 }

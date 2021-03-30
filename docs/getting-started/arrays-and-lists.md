@@ -52,6 +52,54 @@ const App = () => {
 };
 ```
 
+## Applying Focus
+
+When dealing with dynamic list fields we can apply focus to a new field by the [focus](../api-reference/use-form#focus) method to provide better for the user.
+
+:::tip
+When working with nested fields, we can just pass in the parent path to the `focus` method. It will apply the focus to the first field.
+:::
+
+```js {27-29}
+import { useForm, useFieldArray } from "react-cool-form";
+
+const App = () => {
+  const { form, focus } = useForm({
+    defaultValues: {
+      foo: [{ name: "Iron Man", quote: "I'm Iron Man" }],
+    },
+    onSubmit: (values) => console.log("onSubmit: ", values),
+  });
+  const [fields, { push, remove }] = useFieldArray("foo");
+
+  return (
+    <form ref={form}>
+      {fields.map((fieldName, index) => (
+        <div key={fieldName}>
+          <input name={`${fieldName}.name`} />
+          <input name={`${fieldName}.quote`} />
+          <button type="button" onClick={() => remove(index)}>
+            ➖
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() => {
+          push({ name: "Thor", quote: "I knew it" });
+          focus(`foo[${fields.length}]`, 300); // Waiting for the item rendered then apply focus to the first field
+          // or
+          // focus(`foo[${fields.length}].quote`, 300); // Waiting for the item rendered then apply focus to a specified field
+        }}
+      >
+        ➕
+      </button>
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
 ## Conditional Fields
 
 The `useFieldArray` hook also supports you to work with conditional fields.

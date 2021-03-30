@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.153
+
+### Patch Changes
+
+- [`7de1f62`](https://github.com/wellyshen/react-cool-form/commit/7de1f62fb3b03d1aef8a5fe7041fedf1a48931fe) Thanks [@wellyshen](https://github.com/wellyshen)! - Docs(readme): add arrays-and-lists feature
+
+* [#518](https://github.com/wellyshen/react-cool-form/pull/518) [`cf7980f`](https://github.com/wellyshen/react-cool-form/commit/cf7980f72790bc6f5a95192fff629ec909ab38ad) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): when running field validation with nested field(s), error results will be overrided by the last field
+
+- [`c2459ee`](https://github.com/wellyshen/react-cool-form/commit/c2459eebbd18fd2cdbf58aa3552d51cbc650c5c0) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(types): rename `Map` to `ObjMap`
+
 ## 0.0.152
 
 ### Patch Changes

@@ -345,3 +345,7 @@ const App = () => {
   );
 };
 ```
+
+## Focus On Error
+
+When the user submits a form that fails the validation, React Cool Form will apply focus to the first field with an error. The focus order is based on the field order (i.e. top-to-bottom and left-to-right), however you can change the order by the [focusOnError](../api-reference/use-form#focusonerror) option.

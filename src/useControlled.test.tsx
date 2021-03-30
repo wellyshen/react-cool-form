@@ -119,7 +119,7 @@ describe("useControlled", () => {
 
   it("should throw form id errors", () => {
     expect(() => useControlled("foo", { formId: "form-1" })).toThrow(
-      '💡 react-cool-form > useControlled: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+      '💡 react-cool-form > useControlled: It must work with an "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form'
     );
   });
 
@@ -242,12 +242,12 @@ describe("useControlled", () => {
     }
   );
 
-  it.each(["normal", "field-array"])(
+  it.each([true, false])(
     "should use form-level default value first",
-    async (type) => {
+    async (isFieldArray) => {
       const format = jest.fn(() => value);
       renderHelper({
-        isFieldArray: type === "field-array",
+        isFieldArray,
         defaultValues: { foo: value },
         defaultValue: "🍋",
         format,
@@ -328,7 +328,7 @@ describe("useControlled", () => {
     expect(getState("isValidating")).toBeTruthy();
     await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
     const error = await screen.findByText(errors.foo);
-    expect(error).toBeDefined();
+    expect(error).toBeInTheDocument();
     expect(getState("isValidating")).toBeFalsy();
     expect(getState("isValid")).toBeFalsy();
 
@@ -340,7 +340,7 @@ describe("useControlled", () => {
       expect(onError).toHaveBeenCalledTimes(1);
     });
     const notError = await screen.findByText("not-error");
-    expect(notError).toBeDefined();
+    expect(notError).toBeInTheDocument();
     expect(getState("errors")).toEqual({});
     expect(getState("isValidating")).toBeFalsy();
     expect(getState("isValid")).toBeTruthy();
