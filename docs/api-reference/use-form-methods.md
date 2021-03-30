@@ -27,7 +27,7 @@ The example demonstrates the basic usage of this hook.
 import { useFormMethods } from "react-cool-form";
 
 const Field = ({ as, name, onFocus, ...restProps }) => {
-  const { clearErrors, ...moreMethods } = useFormMethods();
+  const { clearErrors, ...otherMethods } = useFormMethods();
   const Component = as;
 
   return (
