@@ -60,7 +60,7 @@ When dealing with dynamic list fields we can apply focus to a new field by the [
 When working with nested fields, we can just pass in the parent path to the `focus` method. It will apply the focus to the first field.
 :::
 
-```js {27-29}
+```js {28,30}
 import { useForm, useFieldArray } from "react-cool-form";
 
 const App = () => {
@@ -86,10 +86,11 @@ const App = () => {
       <button
         type="button"
         onClick={() => {
-          push({ name: "Thor", quote: "I knew it" });
-          focus(`foo[${fields.length}]`, 300); // Waiting for the item rendered then apply focus to the first field
-          // or
-          // focus(`foo[${fields.length}].quote`, 300); // Waiting for the item rendered then apply focus to a specified field
+          push({ name: "Thor", quote: "I Knew It" });
+          // Waiting for the item rendered then apply focus to the first field
+          focus(`foo[${fields.length}]`, 300);
+          // Or apply focus to a specified field
+          focus(`foo[${fields.length}].quote`, 300);
         }}
       >
         ➕
