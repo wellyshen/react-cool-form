@@ -35,7 +35,7 @@ const renderHelper = (formId?: string) => {
 describe("useFormMethods", () => {
   it("should throw form id errors", () => {
     expect(() => useFormMethods("form-1")).toThrow(
-      '💡 react-cool-form > useFormMethods: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+      '💡 react-cool-form > useFormMethods: It must work with an "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form'
     );
   });
 
@@ -47,11 +47,11 @@ describe("useFormMethods", () => {
         form: expect.any(Function),
         field: expect.any(Function),
         mon: expect.any(Function),
+        focus: expect.any(Function),
         getState: expect.any(Function),
         setValue: expect.any(Function),
         setTouched: expect.any(Function),
         setDirty: expect.any(Function),
-        setFocus: expect.any(Function),
         setError: expect.any(Function),
         clearErrors: expect.any(Function),
         runValidation: expect.any(Function),

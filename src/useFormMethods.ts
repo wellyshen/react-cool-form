@@ -9,18 +9,18 @@ export default <V extends FormValues = FormValues>(
 
   invariant(
     !methods,
-    '💡 react-cool-form > useFormMethods: You must provide the corresponding ID to "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form#id'
+    '💡 react-cool-form > useFormMethods: It must work with an "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form'
   );
 
   const {
     form,
     field,
     mon,
+    focus,
     getState,
     setValue,
     setTouched,
     setDirty,
-    setFocus,
     setError,
     clearErrors,
     runValidation,
@@ -32,11 +32,11 @@ export default <V extends FormValues = FormValues>(
     form,
     field,
     mon,
+    focus,
     getState,
     setValue,
     setTouched,
     setDirty,
-    setFocus,
     setError,
     clearErrors,
     runValidation,
