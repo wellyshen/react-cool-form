@@ -993,6 +993,21 @@ describe("useForm", () => {
       }
     );
 
+    it("should run built-in validation with nested fields", async () => {
+      const errors = { foo: { a: builtInError, b: builtInError } };
+      renderHelper({
+        onError,
+        children: (
+          <>
+            <input name="foo.a" required />
+            <input name="foo.b" required />
+          </>
+        ),
+      });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
+    });
+
     it("should disable built-in validation", async () => {
       const { getState } = renderHelper({
         builtInValidationMode: false,

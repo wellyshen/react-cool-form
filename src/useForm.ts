@@ -453,7 +453,7 @@ export default <V extends FormValues = FormValues>({
 
     return Object.keys(fieldsRef.current).reduce((errors, name) => {
       const error = runBuiltInValidation(name);
-      errors = { ...errors, ...(error ? set({}, name, error) : {}) };
+      errors = { ...errors, ...(error ? set(errors, name, error) : {}) };
       return errors;
     }, {});
   }, [builtInValidationMode, runBuiltInValidation]);

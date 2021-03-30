@@ -1,24 +1,19 @@
 /* eslint-disable no-console */
 
-import { useForm, useFieldArray } from "react-cool-form";
+import { useForm } from "react-cool-form";
 
 export default () => {
   const { form } = useForm({
-    defaultValues: { foo: [{ name: "test-1" }] },
-    onSubmit: (values, { getState }) => console.log("onSubmit: ", getState()),
-  });
-  const [fields, { remove }] = useFieldArray("foo", {
-    // defaultValue: [{ name: "test-1" }],
+    defaultValues: { foo: { a: "", b: "", c: "" } },
+    onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (errors) => console.log("onError: ", errors),
   });
 
   return (
-    <form ref={form}>
-      {fields.map((fieldName) => (
-        <input key={fieldName} name={`${fieldName}.name`} />
-      ))}
-      <button type="button" onClick={() => remove(0)}>
-        Remove
-      </button>
+    <form ref={form} noValidate>
+      <input name="foo.a" required />
+      <input name="foo.b" required />
+      <input name="foo.c" required />
       <input type="submit" />
     </form>
   );
