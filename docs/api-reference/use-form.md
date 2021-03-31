@@ -269,6 +269,10 @@ Mon means "monitor", the method provides us a performant way to use the form sta
 
 This method allows us to apply focus to a field. If you want to focus on the first field of a nested fields, you can just pass in the parent path as below.
 
+:::note
+When working with [Arrays and Lists](../getting-started/arrays-and-lists), we need to set `delay` (delay = 0 is acceptable) to wait for a field rendered before applying focus to it.
+:::
+
 ```js {7,12}
 const App = () => {
   const { form, focus } = useForm();
