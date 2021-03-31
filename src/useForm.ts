@@ -596,7 +596,7 @@ export default <V extends FormValues = FormValues>({
 
   const focus = useCallback<Focus>(
     (name, delay) => {
-      if (delay) {
+      if (!isUndefined(delay)) {
         setTimeout(() => handleFocus(name), delay);
       } else {
         handleFocus(name);
