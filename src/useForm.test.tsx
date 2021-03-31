@@ -1428,6 +1428,28 @@ describe("useForm", () => {
         })
       );
     });
+
+    it("should return correctly", async () => {
+      let { runValidation } = renderHelper({
+        children: <input data-testid="foo" name="foo" />,
+      });
+      let isValid = await runValidation();
+      expect(isValid).toBeTruthy();
+      isValid = await runValidation("foo");
+      expect(isValid).toBeTruthy();
+      isValid = await runValidation(["foo"]);
+      expect(isValid).toBeTruthy();
+
+      runValidation = renderHelper({
+        children: <input data-testid="foo" name="foo" required />,
+      }).runValidation;
+      isValid = await runValidation();
+      expect(isValid).toBeFalsy();
+      isValid = await runValidation("foo");
+      expect(isValid).toBeFalsy();
+      isValid = await runValidation(["foo"]);
+      expect(isValid).toBeFalsy();
+    });
   });
 
   describe("mon", () => {
