@@ -251,8 +251,8 @@ const App = () => {
       {/* With result */}
       <button
         onClick={async () => {
-          const valid = await runValidation();
-          console.log("The form is: ", valid ? "valid" : "invalid");
+          const isValid = await runValidation();
+          console.log("The form is: ", isValid ? "valid" : "invalid");
         }}
       >
         Validate Results

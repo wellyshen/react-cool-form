@@ -433,8 +433,8 @@ runValidation(["fieldName1", "fieldName2"]);
 
 // With result
 const validateForm = async () => {
-  const valid = await runValidation();
-  console.log("The form is: ", valid ? "valid" : "invalid");
+  const isValid = await runValidation();
+  console.log("The form is: ", isValid ? "valid" : "invalid");
 };
 ```
 
