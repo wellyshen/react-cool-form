@@ -1124,7 +1124,6 @@ describe("useForm", () => {
         children: ({ field }: Methods) => (
           <>
             <input
-              data-testid="foo"
               name="foo"
               ref={field((_, values) =>
                 !values.bar.length ? errors.foo : false
@@ -1292,7 +1291,6 @@ describe("useForm", () => {
         onSubmit,
         children: ({ field }: Methods) => (
           <input
-            data-testid="foo"
             name="foo"
             type="date"
             ref={field({
@@ -1315,9 +1313,9 @@ describe("useForm", () => {
       const { runValidation, getState } = renderHelper({
         children: (
           <>
-            <input data-testid="foo" name="foo" required />
-            <input data-testid="bar" name="bar" required />
-            <input data-testid="baz" name="baz" required />
+            <input name="foo" required />
+            <input name="bar" required />
+            <input name="baz" required />
           </>
         ),
       });
@@ -1353,9 +1351,9 @@ describe("useForm", () => {
       const { runValidation, getState } = renderHelper({
         children: ({ field }: Methods) => (
           <>
-            <input data-testid="foo" name="foo" ref={field(validate)} />
-            <input data-testid="bar" name="bar" ref={field(validate)} />
-            <input data-testid="baz" name="baz" ref={field(validate)} />
+            <input name="foo" ref={field(validate)} />
+            <input name="bar" ref={field(validate)} />
+            <input name="baz" ref={field(validate)} />
           </>
         ),
       });
@@ -1397,9 +1395,9 @@ describe("useForm", () => {
         },
         children: (
           <>
-            <input data-testid="foo" name="foo" />
-            <input data-testid="bar" name="bar" />
-            <input data-testid="baz" name="baz" />
+            <input name="foo" />
+            <input name="bar" />
+            <input name="baz" />
           </>
         ),
       });
@@ -1431,7 +1429,7 @@ describe("useForm", () => {
 
     it("should return correctly", async () => {
       let { runValidation } = renderHelper({
-        children: <input data-testid="foo" name="foo" />,
+        children: <input name="foo" />,
       });
       let isValid = await runValidation();
       expect(isValid).toBeTruthy();
@@ -1441,7 +1439,7 @@ describe("useForm", () => {
       expect(isValid).toBeTruthy();
 
       runValidation = renderHelper({
-        children: <input data-testid="foo" name="foo" required />,
+        children: <input name="foo" required />,
       }).runValidation;
       isValid = await runValidation();
       expect(isValid).toBeFalsy();

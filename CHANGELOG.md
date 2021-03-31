@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.155
+
+### Patch Changes
+
+- [#527](https://github.com/wellyshen/react-cool-form/pull/527) [`10af065`](https://github.com/wellyshen/react-cool-form/commit/10af065a4ce4de597fbce2a5f68923f68c330021) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): delay = 0 is acceptable by `focus` method
+
 ## 0.0.154
 
 ### Patch Changes
