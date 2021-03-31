@@ -784,7 +784,7 @@ export default <V extends FormValues = FormValues>({
             if (isFunction(focusOnError)) names = focusOnError(names);
 
             for (const name of names)
-              if (get(stateRef.current.errors, name)) {
+              if (get(errors, name)) {
                 handleFocus(name);
                 break;
               }
