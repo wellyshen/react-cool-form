@@ -413,10 +413,11 @@ clearErrors(["foo.bar", "foo.baz"]); // Clears "foo.bar" and "foo.baz" respectiv
 
 ### runValidation
 
-`(name?: string | string[]) => Promise<boolean>`
+`(name?: string | string[] | null, shouldFocus?: boolean) => Promise<boolean>`
 
 This method allows us to manually run validation for the field(s) or form. It returns a boolean that indicates the validation results, `true` means valid, `false` otherwise.
 
+- We can apply focus to the first field with an error via the `shouldFocus` parameter (default = false). It's useful when dealing with a [multi-step form](../examples/wizard-form) (a.k.a wizard form).
 - Please note, when enabling the [Filter Untouched Field Errors](../getting-started/form-state#filter-untouched-field-errors), only the errors of the touched fields are accessible.
 
 ```js
@@ -424,12 +425,18 @@ const { runValidation } = useForm();
 
 // Validates the form (i.e. all the fields)
 runValidation();
+// With applies focus to the first field with an error
+runValidation(null, true);
 
 // Validates a single field
 runValidation("fieldName");
+// With applies focus to a field with an error
+runValidation("fieldName", true);
 
 // Validates multiple fields
 runValidation(["fieldName1", "fieldName2"]);
+// With applies focus to the first field with an error (i.e. "fieldName1" → "fieldName2")
+runValidation(["fieldName1", "fieldName2"], true);
 
 // With result
 const validateForm = async () => {

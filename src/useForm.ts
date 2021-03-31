@@ -352,6 +352,33 @@ export default <V extends FormValues = FormValues>({
     [setError, setStateRef]
   );
 
+  const handleFocus = useCallback(
+    (fieldName: string | string[]) => {
+      const focus = (name: string) => {
+        const field =
+          fieldsRef.current.get(name)?.field ||
+          fieldsRef.current.get(
+            Array.from(fieldsRef.current.keys()).find((n) =>
+              n.startsWith(name)
+            ) || ""
+          )?.field;
+
+        if (field && isFunction(field.focus)) field.focus();
+      };
+
+      if (Array.isArray(fieldName)) {
+        for (const name of fieldName)
+          if (get(stateRef.current.errors, name)) {
+            focus(name);
+            break;
+          }
+      } else {
+        focus(fieldName);
+      }
+    },
+    [stateRef]
+  );
+
   const runBuiltInValidation = useCallback(
     (name: string) => {
       if (builtInValidationMode === false || !fieldsRef.current.has(name))
@@ -492,17 +519,32 @@ export default <V extends FormValues = FormValues>({
   ]);
 
   const runValidation = useCallback<RunValidation>(
-    (name) => {
-      if (!name) return validateForm().then((errors) => isEmptyObject(errors));
+    async (name, shouldFocus) => {
+      let fieldName;
+      let isValid = true;
 
-      if (Array.isArray(name))
-        return Promise.all(name.map((n) => validateField(n))).then(
-          (errors) => !compact(errors).length
-        );
+      try {
+        if (!name) {
+          isValid = isEmptyObject(await validateForm());
+          fieldName = Array.from(fieldsRef.current.keys());
+        } else if (Array.isArray(name)) {
+          isValid = !compact(
+            await Promise.all(name.map((n) => validateField(n)))
+          ).length;
+          fieldName = name;
+        } else {
+          isValid = !(await validateField(name));
+          fieldName = name;
+        }
 
-      return validateField(name).then((error) => !error);
+        if (shouldFocus) handleFocus(fieldName);
+
+        return isValid;
+      } catch (exception) {
+        return exception;
+      }
     },
-    [validateField, validateForm]
+    [handleFocus, validateField, validateForm]
   );
 
   const getFormState = useCallback<GetFormState<V>>(
@@ -582,17 +624,6 @@ export default <V extends FormValues = FormValues>({
       }),
     [getFormState, setUsedState]
   );
-
-  const handleFocus = useCallback((name: string) => {
-    const field =
-      fieldsRef.current.get(name)?.field ||
-      fieldsRef.current.get(
-        Array.from(fieldsRef.current.keys()).find((n) => n.startsWith(name)) ||
-          ""
-      )?.field;
-
-    if (field && isFunction(field.focus)) field.focus();
-  }, []);
 
   const focus = useCallback<Focus>(
     (name, delay) => {
@@ -783,11 +814,7 @@ export default <V extends FormValues = FormValues>({
             if (Array.isArray(focusOnError)) names = focusOnError;
             if (isFunction(focusOnError)) names = focusOnError(names);
 
-            for (const name of names)
-              if (get(errors, name)) {
-                handleFocus(name);
-                break;
-              }
+            handleFocus(names);
           }
 
           return { errors };
