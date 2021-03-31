@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { useForm } from "react-cool-form";
+import { useForm, useFieldArray } from "react-cool-form";
 
 export default () => {
   const { form, focus } = useForm({
@@ -21,7 +21,7 @@ export default () => {
         type="button"
         onClick={() => {
           push({ a: "test-2", b: "test-2" });
-          focus(`foo[${fields.length}]`, 300);
+          focus(`foo[${fields.length}]`, 0);
           // focus(`foo[${fields.length}].b`, 300);
         }}
       >
