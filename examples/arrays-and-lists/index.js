@@ -45,9 +45,9 @@ function App() {
           type="button"
           onClick={() => {
             push({ name: "Loki", quote: "Your Savior Is Here" });
-            // Waiting for the item rendered then apply focus to the first field
+            // We need to wait for the item rendered (delay = 0 is acceptable) then apply focus to the first field
             focus(`foo[${fields.length}]`, 300);
-            // Or apply focus to a specified field
+            // You can also apply focus to a specified field
             // focus(`foo[${fields.length}].quote`, 300);
           }}
         >
