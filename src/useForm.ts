@@ -353,8 +353,8 @@ export default <V extends FormValues = FormValues>({
   );
 
   const handleFocus = useCallback(
-    (fieldName: string | string[]) => {
-      const focus = (name: string) => {
+    (name: string | string[]) => {
+      if (!Array.isArray(name)) {
         const field =
           fieldsRef.current.get(name)?.field ||
           fieldsRef.current.get(
@@ -364,17 +364,15 @@ export default <V extends FormValues = FormValues>({
           )?.field;
 
         if (field && isFunction(field.focus)) field.focus();
-      };
 
-      if (Array.isArray(fieldName)) {
-        for (const name of fieldName)
-          if (get(stateRef.current.errors, name)) {
-            focus(name);
-            break;
-          }
-      } else {
-        focus(fieldName);
+        return;
       }
+
+      for (const n of name)
+        if (get(stateRef.current.errors, n)) {
+          handleFocus(n);
+          break;
+        }
     },
     [stateRef]
   );
