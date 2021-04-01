@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { useForm } from "react-cool-form";
+import { useForm, useFormState } from "react-cool-form";
 
 export default () => {
   const { form } = useForm({
@@ -9,9 +9,11 @@ export default () => {
     onError: (errors) => console.log("onError: ", errors),
   });
 
+  console.log("LOG ===> ", useFormState("foo"));
+
   return (
     <form ref={form} noValidate>
-      <input data-rcf-exclude />
+      <input name="foo" />
     </form>
   );
 };
