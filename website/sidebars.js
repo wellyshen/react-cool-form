@@ -33,6 +33,7 @@ module.exports = {
       "examples/react-select",
       "examples/custom-field",
       "examples/isolating-rerendering",
+      "examples/wizard-form",
       "examples/without-form-element",
     ],
     "API Reference": [
