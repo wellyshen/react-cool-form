@@ -238,7 +238,7 @@ const App = () => {
       <input name="firstName" required />
       <input name="lastName" required />
       <input name="email" type="email" required />
-      {/* Validate a single field */}
+      {/* Validate single field */}
       <button onClick={() => runValidation("firstName")}>
         Validate Single
       </button>
@@ -248,7 +248,7 @@ const App = () => {
       </button>
       {/* Validate the form (i.e. all the fields) */}
       <button onClick={() => runValidation()}>Validate All</button>
-      {/* Apply focus to the first field with an error */}
+      {/* Validate the form (or fields) and apply focus to the field with an error */}
       <button onClick={() => runValidation(null, true)}>Validate All</button>
       {/* With result */}
       <button
