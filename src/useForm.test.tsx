@@ -126,12 +126,15 @@ describe("useForm", () => {
     });
 
     it("should not warn for a missing name field", () => {
-      renderHelper({ children: <input data-testid="foo" name="foo" /> });
+      renderHelper({ children: <input name="foo" /> });
       expect(console.warn).not.toHaveBeenCalled();
     });
 
     it("should not warn for a missing name field when it's excluded", () => {
-      renderHelper({ children: <input data-rcf-exclude /> });
+      renderHelper({ children: <input data-testid="foo" data-rcf-exclude /> });
+      expect(console.warn).not.toHaveBeenCalled();
+
+      fireEvent.input(getByTestId("foo"), { target: { value: "🍎" } });
       expect(console.warn).not.toHaveBeenCalled();
     });
 
