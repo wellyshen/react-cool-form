@@ -19,7 +19,9 @@ form {
 
   input,
   select,
-  textarea {
+  textarea,
+  button,
+  a {
     margin: 0.5rem 0;
     padding: 0.5rem;
     width: inherit;
@@ -29,7 +31,10 @@ form {
     box-sizing: border-box;
   }
 
-  input[type="submit"] {
+  input[type="submit"],
+  button,
+  a {
+    width: 7rem;
     height: 2.5rem;
     font-size: 1rem;
     color: #fff;
@@ -37,7 +42,32 @@ form {
     cursor: pointer;
   }
 
+  button,
+  a {
+    border: 1px solid #fff;
+    background: none;
+  }
+
+  button {
+    margin-left: auto;
+  }
+
+  a {
+    text-align: center;
+    text-decoration: none;
+  }
+
   textarea {
     height: 5rem;
+  }
+
+  p {
+    margin-top: 0;
+    color: #ff9900;
+  }
+
+  .btn {
+    display: flex;
+    justify-content: space-between;
   }
 }

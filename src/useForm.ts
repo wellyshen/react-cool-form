@@ -882,9 +882,9 @@ export default <V extends FormValues = FormValues>({
       setNodesOrValues(initialStateRef.current.values);
 
       handlersRef.current.change = ({ target }: Event) => {
-        const { name } = target as FieldElement;
+        const { dataset, name } = target as FieldElement;
 
-        if (!name) {
+        if (!dataset.rcfExclude && !name) {
           warn('💡 react-cool-form > field: Missing "name" attribute.');
           return;
         }
