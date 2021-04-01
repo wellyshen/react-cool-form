@@ -1,31 +1,33 @@
 /* eslint-disable no-console */
 
-import { useForm, useFieldArray } from "react-cool-form";
+import { useForm } from "react-cool-form";
 
 export default () => {
-  const { form, focus } = useForm({
-    defaultValues: { foo: [{ a: "test-1", b: "test-1" }] },
+  const { form, runValidation, mon, field } = useForm({
+    defaultValues: { foo: "" },
+    // validate: async () => {
+    //   // eslint-disable-next-line compat/compat
+    //   await new Promise((resolve) => setTimeout(resolve, 1000));
+    //   return { foo: "Required" };
+    // },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [fields, { push }] = useFieldArray("foo");
+
+  console.log("LOG ===> ", mon("errors"));
 
   return (
-    <form ref={form}>
-      {fields.map((name) => (
-        <div key={name}>
-          <input name={`${name}.a`} />
-          <input name={`${name}.b`} />
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={() => {
-          push({ a: "test-2", b: "test-2" });
-          focus(`foo[${fields.length}]`, 0);
-          // focus(`foo[${fields.length}].b`, 300);
-        }}
-      >
-        Push
+    <form ref={form} noValidate>
+      <input
+        name="foo"
+        ref={field(async () => {
+          // eslint-disable-next-line compat/compat
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          return false;
+          // return "Required";
+        })}
+      />
+      <button type="button" onClick={() => runValidation(null, true)}>
+        Validate
       </button>
     </form>
   );
