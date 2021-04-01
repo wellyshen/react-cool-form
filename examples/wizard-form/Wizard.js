@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 const Wizard = () => {
   const { form } = useForm({
-    shouldRemoveField: false,
+    shouldRemoveField: false, // Keep the data of every step
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
     onError: (errors) => console.log("onError :", errors)
   });

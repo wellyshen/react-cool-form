@@ -5,11 +5,12 @@ import Field from "./Field";
 
 const Step1 = () => {
   const nav = useNavigate();
-  const { runValidation, field } = useFormMethods();
+  const { runValidation } = useFormMethods();
   const errors = useFormState("errors");
 
   const handleNextClick = async () => {
-    const isValid = await runValidation();
+    // Validate and apply focus to the first field with an error
+    const isValid = await runValidation(null, true);
     if (isValid) nav("step-2");
   };
 
@@ -19,15 +20,14 @@ const Step1 = () => {
         id="first-name"
         label="First Name"
         name="firstName"
-        required // Use built-in validation
+        required
         error={errors.firstName}
       />
       <Field
         id="last-name"
         label="Last Name"
         name="lastName"
-        // Use field-level validation
-        ref={field((value) => (!value.length ? "Required" : false))}
+        required
         error={errors.lastName}
       />
       <div className="btn">
