@@ -11,6 +11,7 @@ export default () => {
     //   return { foo: "Required" };
     // },
     onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (errors) => console.log("onError: ", errors),
   });
 
   console.log("LOG ===> ", mon("errors"));

@@ -583,13 +583,7 @@ export default <V extends FormValues = FormValues>({
             return !isUndefined(v) ? v : get(dfValues, p);
           }
 
-          if (
-            !errorWithTouched ||
-            !p.startsWith("errors") ||
-            !v ||
-            isEmptyObject(v)
-          )
-            return v;
+          if (!errorWithTouched || !p.startsWith("errors")) return v;
 
           p = p.replace("errors", "touched");
           usedState[p] = true;
