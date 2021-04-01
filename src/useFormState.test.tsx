@@ -155,8 +155,7 @@ describe("useFormState", () => {
   });
 
   it("should get error with touched", () => {
-    const path = "errors.foo";
-    const args = { path, isError: true };
+    const args = { path: "errors.foo", isError: true };
 
     expect(renderHelper(args)).not.toBeUndefined();
 
