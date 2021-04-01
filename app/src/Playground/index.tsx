@@ -1,32 +1,21 @@
 /* eslint-disable no-console */
 
-import { useForm, useFieldArray } from "react-cool-form";
+import { useForm, useFormState } from "react-cool-form";
 
 export default () => {
-  const { form, focus } = useForm({
-    defaultValues: { foo: [{ a: "test-1", b: "test-1" }] },
+  const { form } = useForm({
+    defaultValues: { foo: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
+    onError: (errors) => console.log("onError: ", errors),
   });
-  const [fields, { push }] = useFieldArray("foo");
+
+  const errors = useFormState("errors", { errorWithTouched: true });
 
   return (
-    <form ref={form}>
-      {fields.map((name) => (
-        <div key={name}>
-          <input name={`${name}.a`} />
-          <input name={`${name}.b`} />
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={() => {
-          push({ a: "test-2", b: "test-2" });
-          focus(`foo[${fields.length}]`, 0);
-          // focus(`foo[${fields.length}].b`, 300);
-        }}
-      >
-        Push
-      </button>
+    <form ref={form} noValidate>
+      <input name="foo" type="email" required />
+      {errors.foo && <p>{errors.foo}</p>}
+      <input type="submit" />
     </form>
   );
 };
