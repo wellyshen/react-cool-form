@@ -354,25 +354,21 @@ export default <V extends FormValues = FormValues>({
 
   const handleFocus = useCallback(
     (name: string | string[]) => {
-      if (!Array.isArray(name)) {
+      const fieldName = Array.isArray(name)
+        ? name.find((n) => get(stateRef.current.errors, n))
+        : name;
+
+      if (fieldName) {
         const field =
-          fieldsRef.current.get(name)?.field ||
+          fieldsRef.current.get(fieldName)?.field ||
           fieldsRef.current.get(
             Array.from(fieldsRef.current.keys()).find((n) =>
-              n.startsWith(name)
+              n.startsWith(fieldName)
             ) || ""
           )?.field;
 
         if (field && isFunction(field.focus)) field.focus();
-
-        return;
       }
-
-      for (const n of name)
-        if (get(stateRef.current.errors, n)) {
-          handleFocus(n);
-          break;
-        }
     },
     [stateRef]
   );
@@ -382,14 +378,15 @@ export default <V extends FormValues = FormValues>({
       if (builtInValidationMode === false || !fieldsRef.current.has(name))
         return undefined;
 
-      const { field } = fieldsRef.current.get(name)!;
+      const {
+        field: { validity, validationMessage },
+      } = fieldsRef.current.get(name)!;
 
-      if (builtInValidationMode === "message") return field.validationMessage;
+      if (builtInValidationMode === "state")
+        for (const k in validity)
+          if (k !== "valid" && validity[k as keyof ValidityState]) return k;
 
-      for (const k in field.validity)
-        if (k !== "valid" && field.validity[k as keyof ValidityState]) return k;
-
-      return undefined;
+      return validationMessage;
     },
     [builtInValidationMode]
   );
@@ -518,24 +515,21 @@ export default <V extends FormValues = FormValues>({
 
   const runValidation = useCallback<RunValidation>(
     async (name, shouldFocus) => {
-      let fieldName;
       let isValid = true;
 
       try {
         if (!name) {
           isValid = isEmptyObject(await validateForm());
-          fieldName = Array.from(fieldsRef.current.keys());
         } else if (Array.isArray(name)) {
           isValid = !compact(
             await Promise.all(name.map((n) => validateField(n)))
           ).length;
-          fieldName = name;
         } else {
           isValid = !(await validateField(name));
-          fieldName = name;
         }
 
-        if (shouldFocus) handleFocus(fieldName);
+        if (shouldFocus)
+          handleFocus(!name ? Array.from(fieldsRef.current.keys()) : name);
 
         return isValid;
       } catch (exception) {
