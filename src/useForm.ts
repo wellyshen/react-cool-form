@@ -790,10 +790,10 @@ export default <V extends FormValues = FormValues>({
       setStateRef("isSubmitting", true);
 
       try {
-        const errors = await validateForm();
+        const isValid = await runValidation();
 
-        if (!isEmptyObject(errors)) {
-          onErrorRef.current(errors, getOptions(), e);
+        if (!isValid) {
+          onErrorRef.current(stateRef.current.errors, getOptions(), e);
 
           if (focusOnError) {
             let names = Array.from(fieldsRef.current.keys());
@@ -803,7 +803,7 @@ export default <V extends FormValues = FormValues>({
             handleFocus(names);
           }
 
-          return { errors };
+          return { errors: stateRef.current.errors };
         }
 
         await onSubmitRef.current(stateRef.current.values, getOptions(), e);
@@ -823,9 +823,9 @@ export default <V extends FormValues = FormValues>({
       handleFocus,
       onErrorRef,
       onSubmitRef,
+      runValidation,
       setStateRef,
       stateRef,
-      validateForm,
     ]
   );
 
