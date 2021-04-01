@@ -238,7 +238,7 @@ const App = () => {
       <input name="firstName" required />
       <input name="lastName" required />
       <input name="email" type="email" required />
-      {/* Validate a single field */}
+      {/* Validate single field */}
       <button onClick={() => runValidation("firstName")}>
         Validate Single
       </button>
@@ -248,11 +248,13 @@ const App = () => {
       </button>
       {/* Validate the form (i.e. all the fields) */}
       <button onClick={() => runValidation()}>Validate All</button>
+      {/* Validate the form (or fields) and apply focus to the field with an error */}
+      <button onClick={() => runValidation(null, true)}>Validate All</button>
       {/* With result */}
       <button
         onClick={async () => {
-          const valid = await runValidation();
-          console.log("The form is: ", valid ? "valid" : "invalid");
+          const isValid = await runValidation();
+          console.log("The form is: ", isValid ? "valid" : "invalid");
         }}
       >
         Validate Results

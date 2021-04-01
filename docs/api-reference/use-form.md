@@ -133,8 +133,8 @@ const methods = useForm({
       setValue,
       setTouched,
       setDirty,
-      setFocus,
       setError,
+      focus,
       runValidation,
       submit,
       reset,
@@ -161,8 +161,8 @@ const methods = useForm({
       setValue,
       setTouched,
       setDirty,
-      setFocus,
       setError,
+      focus,
       runValidation,
       submit,
       reset,
@@ -189,8 +189,8 @@ const methods = useForm({
       setValue,
       setTouched,
       setDirty,
-      setFocus,
       setError,
+      focus,
       runValidation,
       submit,
       reset,
@@ -268,6 +268,10 @@ Mon means "monitor", the method provides us a performant way to use the form sta
 `(name: string, delay?: number) => void`
 
 This method allows us to apply focus to a field. If you want to focus on the first field of a nested fields, you can just pass in the parent path as below.
+
+:::note
+When working with [Arrays and Lists](../getting-started/arrays-and-lists), we need to set `delay` (delay = 0 is acceptable) to wait for a field rendered before applying focus to it.
+:::
 
 ```js {7,12}
 const App = () => {
@@ -409,10 +413,12 @@ clearErrors(["foo.bar", "foo.baz"]); // Clears "foo.bar" and "foo.baz" respectiv
 
 ### runValidation
 
-`(name?: string | string[]) => Promise<boolean>`
+`(name?: string | string[] | null, shouldFocus?: boolean) => Promise<boolean>`
 
-This method allows us to manually run validation for the field(s) or form. It returns a boolean that indicates the validation results, `true` means valid, `false` otherwise.
+This method allows us to manually run validation for the form or field(s).
 
+- It returns a `boolean` that indicates the validation results, `true` means valid, `false` otherwise.
+- We can apply focus to the first field with an error via the `shouldFocus` parameter (default = false). See the [use case](../examples/wizard-form).
 - Please note, when enabling the [Filter Untouched Field Errors](../getting-started/form-state#filter-untouched-field-errors), only the errors of the touched fields are accessible.
 
 ```js
@@ -420,17 +426,23 @@ const { runValidation } = useForm();
 
 // Validates the form (i.e. all the fields)
 runValidation();
+// Will apply focus to the first field with an error
+runValidation(null, true);
 
-// Validates a single field
+// Validates single field
 runValidation("fieldName");
+// Will apply focus to a field with an error
+runValidation("fieldName", true);
 
 // Validates multiple fields
 runValidation(["fieldName1", "fieldName2"]);
+// Will apply focus to the first field with an error, the focus order will be: "fieldName1" → "fieldName2"
+runValidation(["fieldName1", "fieldName2"], true);
 
 // With result
 const validateForm = async () => {
-  const valid = await runValidation();
-  console.log("The form is: ", valid ? "valid" : "invalid");
+  const isValid = await runValidation();
+  console.log("The form is: ", isValid ? "valid" : "invalid");
 };
 ```
 

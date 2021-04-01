@@ -141,15 +141,11 @@ const errors = mon("errors");
 
 // Current state: { errors: { foo: "Required" }, touched: { foo: false } }
 // Returns {}
-const errors = mon("errors", {
-  errorWithTouched: true,
-});
+const errors = mon("errors", { errorWithTouched: true });
 
 // Current state: { errors: { foo: "Required" }, touched: { foo: true } }
 // Returns { foo: "Required" }
-const errors = mon("errors", {
-  errorWithTouched: true,
-});
+const errors = mon("errors", { errorWithTouched: true });
 ```
 
 👉🏻 See the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
