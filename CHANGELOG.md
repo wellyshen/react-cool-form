@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.156
+
+### Patch Changes
+
+- [#530](https://github.com/wellyshen/react-cool-form/pull/530) [`62762d0`](https://github.com/wellyshen/react-cool-form/commit/62762d09701265ac5e8c68ffaade17dd37295e63) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFormState): `errorWithTouched` option not works in some cases
+
+* [#529](https://github.com/wellyshen/react-cool-form/pull/529) [`dc35110`](https://github.com/wellyshen/react-cool-form/commit/dc35110c7f93aa09d3d7cbaf672282a29c21699f) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): add `shouldFocus` for `runValidation` API
+
+- [#532](https://github.com/wellyshen/react-cool-form/pull/532) [`4c6fe9e`](https://github.com/wellyshen/react-cool-form/commit/4c6fe9ece87304ab2baa0db627176e7060f9e685) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): do not warn missing name when excluding a field via data attribute
+
 ## 0.0.155
 
 ### Patch Changes
