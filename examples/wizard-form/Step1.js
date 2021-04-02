@@ -1,41 +1,33 @@
-import { useFormState, useFormMethods } from "react-cool-form";
+import { useForm } from "react-cool-form";
 import { useNavigate } from "react-router-dom";
 
 import Field from "./Field";
 
 const Step1 = () => {
+  const { form, mon, submit } = useForm({
+    onSubmit: (values) => nav("/step-2", { state: { formValues: values } })
+  });
   const nav = useNavigate();
-  const { runValidation } = useFormMethods();
-  const errors = useFormState("errors");
-
-  const handleNextClick = async () => {
-    // Validate and apply focus to the first field with an error
-    const isValid = await runValidation(null, true);
-    if (isValid) nav("step-2");
-  };
+  // Show error message only when the field is touched
+  const errors = mon("errors", { errorWithTouched: true });
 
   return (
-    <>
+    <form ref={form} noValidate>
+      <Field id="name" label="Name" name="name" required error={errors.name} />
       <Field
-        id="first-name"
-        label="First Name"
-        name="firstName"
+        id="email"
+        label="Email"
+        name="email"
+        type="email"
         required
-        error={errors.firstName}
-      />
-      <Field
-        id="last-name"
-        label="Last Name"
-        name="lastName"
-        required
-        error={errors.lastName}
+        error={errors.email}
       />
       <div className="btn">
-        <button type="button" onClick={handleNextClick}>
+        <button type="button" onClick={submit}>
           Next
         </button>
       </div>
-    </>
+    </form>
   );
 };
 

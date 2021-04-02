@@ -1,11 +1,9 @@
-import { forwardRef } from "react";
-
-const Field = ({ label, id, error, ...rest }, ref) => (
+const Field = ({ label, id, error, ...rest }) => (
   <div>
     <label htmlFor={id}>{label}</label>
-    <input id={id} ref={ref} {...rest} />
+    <input id={id} {...rest} />
     {error && <p>{error}</p>}
   </div>
 );
 
-export default forwardRef(Field);
+export default Field;

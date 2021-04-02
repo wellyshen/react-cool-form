@@ -19,7 +19,6 @@ form {
 
   input,
   select,
-  textarea,
   button,
   a {
     margin: 0.5rem 0;
@@ -57,8 +56,8 @@ form {
     text-decoration: none;
   }
 
-  textarea {
-    height: 5rem;
+  select {
+    height: 10rem;
   }
 
   p {
