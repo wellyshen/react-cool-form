@@ -50,7 +50,7 @@ const Step2 = () => {
           Next
         </button>
       </div>
-      <pre>{JSON.stringify({ ...prevValues, ...values }, 0, 2)}</pre>
+      <pre>{JSON.stringify({ ...prevValues, ...values }, undefined, 2)}</pre>
     </form>
   );
 };

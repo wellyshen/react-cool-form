@@ -16,7 +16,7 @@ const Step2 = () => {
       return fruit && !fruit.length ? { fruit: "Required" } : {};
     },
     onSubmit: (values) =>
-      alert(JSON.stringify({ ...prevValues, ...values }, 0, 2))
+      alert(JSON.stringify({ ...prevValues, ...values }, undefined, 2))
   });
   const [errors, values] = mon(["errors", "values"]);
 
@@ -70,7 +70,7 @@ const Step2 = () => {
         <Link to="/step-2">Previous</Link>
         <input type="submit" />
       </div>
-      <pre>{JSON.stringify({ ...prevValues, ...values }, 0, 2)}</pre>
+      <pre>{JSON.stringify({ ...prevValues, ...values }, undefined, 2)}</pre>
     </form>
   );
 };
