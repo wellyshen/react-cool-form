@@ -248,8 +248,6 @@ const App = () => {
       </button>
       {/* Validate the form (i.e. all the fields) */}
       <button onClick={() => runValidation()}>Validate All</button>
-      {/* Validate the form (or fields) and apply focus to the field with an error */}
-      <button onClick={() => runValidation(null, true)}>Validate All</button>
       {/* With result */}
       <button
         onClick={async () => {

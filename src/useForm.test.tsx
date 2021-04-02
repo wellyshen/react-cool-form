@@ -144,7 +144,7 @@ describe("useForm", () => {
       mon("values");
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.warn).toHaveBeenCalledWith(
-        '💡 react-cool-form > mon: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+        '💡 react-cool-form > mon: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, just ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
       );
     });
 
@@ -1451,32 +1451,6 @@ describe("useForm", () => {
       expect(isValid).toBeFalsy();
       isValid = await runValidation(["foo"]);
       expect(isValid).toBeFalsy();
-    });
-
-    it("should focus correctly", async () => {
-      const { runValidation } = renderHelper({
-        children: (
-          <>
-            <input data-testid="foo" name="foo" />
-            <input data-testid="bar" name="bar" required />
-            <input data-testid="baz" name="baz" required />
-          </>
-        ),
-      });
-
-      runValidation();
-      await waitFor(() => expect(getByTestId("foo")).not.toHaveFocus());
-
-      runValidation(null, true);
-      await waitFor(() => expect(getByTestId("bar")).toHaveFocus());
-
-      runValidation("foo", true);
-      await waitFor(() => expect(getByTestId("foo")).not.toHaveFocus());
-      runValidation("bar", true);
-      await waitFor(() => expect(getByTestId("bar")).toHaveFocus());
-
-      runValidation(["foo", "baz", "bar"], true);
-      await waitFor(() => expect(getByTestId("baz")).toHaveFocus());
     });
   });
 

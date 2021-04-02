@@ -83,7 +83,7 @@ declare module "react-cool-form" {
   }
 
   interface RunValidation {
-    (name?: string | string[] | null, shouldFocus?: boolean): Promise<boolean>;
+    (name?: string | string[]): Promise<boolean>;
   }
 
   interface Reset<V> {

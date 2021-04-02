@@ -31,24 +31,23 @@ export default <V extends FormValues = FormValues>(
   const { getFormState, subscribeObserver, unsubscribeObserver } = methods;
   const callback = isFunction(configOrCallback) ? configOrCallback : undefined;
 
-  useEffect(() => {
-    subscribeObserver(observerRef.current!);
-
-    return () => unsubscribeObserver(observerRef.current!);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => () => unsubscribeObserver(observerRef.current!), []);
 
   return getFormState(path, {
     ...config,
     methodName: callback ? "useFormStateCallback" : "useFormState",
     callback: (usedState) => {
-      if (!observerRef.current)
+      if (!observerRef.current) {
         observerRef.current = {
           usedState,
           notify: callback
             ? (state) => callback(parseState(path, state))
             : forceUpdate,
         };
+
+        subscribeObserver(observerRef.current);
+      }
     },
   });
 };

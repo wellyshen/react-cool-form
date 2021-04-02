@@ -1,27 +1,57 @@
-import { useFormState } from "react-cool-form";
-import { Link } from "react-router-dom";
+import { forwardRef } from "react";
+import { useForm } from "react-cool-form";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
-import Field from "./Field";
+const Select = forwardRef(({ label, id, children, error, ...rest }, ref) => (
+  <div>
+    <label htmlFor={id}>{label}</label>
+    <select id={id} ref={ref} {...rest}>
+      {children}
+    </select>
+    {error && <p>{error}</p>}
+  </div>
+));
 
 const Step2 = () => {
-  // Show error message only when the field is touched
-  const errors = useFormState("errors", { errorWithTouched: true });
+  const nav = useNavigate();
+  const { state: prevValues } = useLocation();
+  const { form, mon, field, submit } = useForm({
+    // Pack current form values and pass it to the next step
+    onSubmit: (values) =>
+      nav("/step-3", { state: { ...prevValues, ...values } })
+  });
+  const [errors, values] = mon(["errors", "values"], {
+    errorWithTouched: true
+  });
 
   return (
-    <>
-      <Field
-        id="email"
-        label="Email"
-        name="email"
-        type="email"
-        required
-        error={errors.email}
-      />
+    <form ref={form} noValidate>
+      <Select
+        id="sports"
+        label="Sports"
+        name="sports"
+        multiple
+        ref={field((value) => {
+          if (!value.length) return "Required";
+          return value.length < 2 ? "Choose more" : false;
+        })}
+        error={errors.sports}
+      >
+        <option value="football">🏈</option>
+        <option value="soccer">⚽️</option>
+        <option value="basketball">🏀</option>
+        <option value="baseball">⚾️</option>
+        <option value="tennis">🎾</option>
+        <option value="volleyball">🏐</option>
+      </Select>
       <div className="btn">
         <Link to="/">Previous</Link>
-        <input type="submit" />
+        <button id="step-2" type="button" onClick={submit}>
+          Next
+        </button>
       </div>
-    </>
+      <pre>{JSON.stringify({ ...prevValues, ...values }, 0, 2)}</pre>
+    </form>
   );
 };
 

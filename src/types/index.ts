@@ -246,7 +246,7 @@ export interface ClearErrors {
 }
 
 export interface RunValidation {
-  (name?: string | string[] | null, shouldFocus?: boolean): Promise<boolean>;
+  (name?: string | string[]): Promise<boolean>;
 }
 
 export interface Reset<V = any> {

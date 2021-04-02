@@ -72,7 +72,7 @@ describe("useFormState", () => {
     console.warn = jest.fn();
     renderHelper({ path: "values" });
     expect(console.warn).toHaveBeenCalledWith(
-      '💡 react-cool-form > useFormState: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, please ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+      '💡 react-cool-form > useFormState: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, just ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
     );
   });
 
