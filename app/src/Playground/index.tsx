@@ -2,18 +2,33 @@
 
 import { useForm, useFormState } from "react-cool-form";
 
+const Field = ({ name, error, ...rest }: any) => {
+  const errors = useFormState("errors", { errorWithTouched: true });
+
+  return (
+    <>
+      <input name={name} {...rest} />
+      {errors && <p>{errors[name]}</p>}
+    </>
+  );
+};
+
 export default () => {
-  const { form } = useForm({
+  const { form, mon } = useForm({
     defaultValues: { foo: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
 
-  console.log("LOG ===> ", useFormState("foo"));
+  // const errors = mon("errors", { errorWithTouched: true });
+  // const errors = useFormState("errors", { errorWithTouched: true });
 
   return (
     <form ref={form} noValidate>
-      <input name="foo" />
+      <Field name="foo" required />
+      {/* <input name="foo" required />
+      {errors.foo && <p>{errors.foo}</p>} */}
+      <input type="submit" />
     </form>
   );
 };
