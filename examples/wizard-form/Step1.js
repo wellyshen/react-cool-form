@@ -5,7 +5,7 @@ import Field from "./Field";
 
 const Step1 = () => {
   const { form, mon, submit } = useForm({
-    onSubmit: (values) => nav("/step-2", { state: { formValues: values } })
+    onSubmit: (values) => nav("/step-2", { state: values })
   });
   const nav = useNavigate();
   // Show error message only when the field is touched

@@ -1,13 +1,13 @@
 import { useForm } from "react-cool-form";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 import Select from "./Select";
 
-const Step2 = (props) => {
-  console.log("LOG ===> ", props);
+const Step2 = () => {
   const nav = useNavigate();
+  const { state } = useLocation();
   const { form, mon, field, submit } = useForm({
-    onSubmit: (values) => nav("/step-3", { state: { formValues: values } })
+    onSubmit: (values) => nav("/step-3", { state: { ...state, ...values } })
   });
   const errors = mon("errors", { errorWithTouched: true });
 

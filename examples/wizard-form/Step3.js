@@ -1,9 +1,11 @@
 import { useForm } from "react-cool-form";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
-const Step2 = ({ formValues }) => {
+const Step2 = () => {
+  const { state } = useLocation();
   const { form } = useForm({
-    onSubmit: (values) => console.log("LOG ===> ", { ...formValues, values })
+    onSubmit: (values) =>
+      alert(JSON.stringify({ ...state, ...values }, undefined, 2))
   });
 
   return (
