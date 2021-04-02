@@ -1,24 +1,40 @@
+import { forwardRef } from "react";
 import { useForm } from "react-cool-form";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
-import Select from "./Select";
+const Select = forwardRef(({ label, id, children, error, ...rest }, ref) => (
+  <div>
+    <label htmlFor={id}>{label}</label>
+    <select id={id} ref={ref} {...rest}>
+      {children}
+    </select>
+    {error && <p>{error}</p>}
+  </div>
+));
 
 const Step2 = () => {
   const nav = useNavigate();
-  const { state } = useLocation();
+  const { state: prevValues } = useLocation();
   const { form, mon, field, submit } = useForm({
-    onSubmit: (values) => nav("/step-3", { state: { ...state, ...values } })
+    // Merge previous form values and pass it to the next step
+    onSubmit: (values) =>
+      nav("/step-3", { state: { ...prevValues, ...values } })
   });
-  const errors = mon("errors", { errorWithTouched: true });
+  const [errors, values] = mon(["errors", "values"], {
+    errorWithTouched: true
+  });
 
   return (
     <form ref={form} noValidate>
       <Select
-        label="Sports"
         id="sports"
+        label="Sports"
         name="sports"
         multiple
-        ref={field((value) => (value.length < 2 ? "Choose more" : false))}
+        ref={field((value) => {
+          if (!value.length) return "Required";
+          return value.length < 2 ? "Choose more" : false;
+        })}
         error={errors.sports}
       >
         <option value="football">🏈</option>
@@ -34,6 +50,7 @@ const Step2 = () => {
           Next
         </button>
       </div>
+      <pre>{JSON.stringify({ ...prevValues, ...values }, 0, 2)}</pre>
     </form>
   );
 };

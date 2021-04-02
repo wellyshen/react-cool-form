@@ -1,15 +1,24 @@
 import { useForm } from "react-cool-form";
 import { useNavigate } from "react-router-dom";
 
-import Field from "./Field";
+const Field = ({ label, id, error, ...rest }) => (
+  <div>
+    <label htmlFor={id}>{label}</label>
+    <input id={id} {...rest} />
+    {error && <p>{error}</p>}
+  </div>
+);
 
 const Step1 = () => {
+  const nav = useNavigate();
   const { form, mon, submit } = useForm({
+    // Pass form values to the next step
     onSubmit: (values) => nav("/step-2", { state: values })
   });
-  const nav = useNavigate();
   // Show error message only when the field is touched
-  const errors = mon("errors", { errorWithTouched: true });
+  const [errors, values] = mon(["errors", "values"], {
+    errorWithTouched: true
+  });
 
   return (
     <form ref={form} noValidate>
@@ -27,6 +36,7 @@ const Step1 = () => {
           Next
         </button>
       </div>
+      <pre>{JSON.stringify(values, 0, 2)}</pre>
     </form>
   );
 };
