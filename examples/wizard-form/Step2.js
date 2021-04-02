@@ -14,11 +14,12 @@ const Select = forwardRef(({ label, id, children, error, ...rest }, ref) => (
 
 const Step2 = () => {
   const nav = useNavigate();
-  const { state: prevValues } = useLocation();
-  const { form, mon, field, submit } = useForm({
-    // Pack current form values and pass it to the next step
-    onSubmit: (values) =>
-      nav("/step-3", { state: { ...prevValues, ...values } })
+  const { state: formValues } = useLocation();
+  const { form, mon, field, submit, getState } = useForm({
+    // Fill in form values from other steps
+    defaultValues: { sports: ["football"], ...formValues },
+    // Pass form values to the next step
+    onSubmit: (values) => nav("/step-3", { state: values })
   });
   const [errors, values] = mon(["errors", "values"], {
     errorWithTouched: true
@@ -45,12 +46,15 @@ const Step2 = () => {
         <option value="volleyball">🏐</option>
       </Select>
       <div className="btn">
-        <Link to="/">Previous</Link>
+        {/* Pass form values to the previous step */}
+        <Link to="/" state={getState("values")}>
+          Previous
+        </Link>
         <button id="step-2" type="button" onClick={submit}>
           Next
         </button>
       </div>
-      <pre>{JSON.stringify({ ...prevValues, ...values }, undefined, 2)}</pre>
+      <pre>{JSON.stringify(values, undefined, 2)}</pre>
     </form>
   );
 };
