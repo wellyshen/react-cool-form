@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.157
+
+### Patch Changes
+
+- [#535](https://github.com/wellyshen/react-cool-form/pull/535) [`7491432`](https://github.com/wellyshen/react-cool-form/commit/749143284089fe956efbaab9de2d3869dabd4430) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): deprecate the `shouldFocus` parameter of `runValidation` API
+
+* [`341aa21`](https://github.com/wellyshen/react-cool-form/commit/341aa214d02dd7de8834827b4c3158d7e1acefb8) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: refine the warning of getting `values` only
+
+- [`9dc4993`](https://github.com/wellyshen/react-cool-form/commit/9dc4993824083c9086927281135fb9265fd3936e) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useFormState): code refactor for smaller bundle size
+
 ## 0.0.156
 
 ### Patch Changes
