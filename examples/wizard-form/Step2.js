@@ -16,7 +16,7 @@ const Step2 = () => {
   const nav = useNavigate();
   const { state: prevValues } = useLocation();
   const { form, mon, field, submit } = useForm({
-    // Merge previous form values and pass it to the next step
+    // Pack current form values and pass it to the next step
     onSubmit: (values) =>
       nav("/step-3", { state: { ...prevValues, ...values } })
   });
