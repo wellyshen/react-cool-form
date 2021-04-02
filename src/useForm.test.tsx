@@ -1452,32 +1452,6 @@ describe("useForm", () => {
       isValid = await runValidation(["foo"]);
       expect(isValid).toBeFalsy();
     });
-
-    it("should focus correctly", async () => {
-      const { runValidation } = renderHelper({
-        children: (
-          <>
-            <input data-testid="foo" name="foo" />
-            <input data-testid="bar" name="bar" required />
-            <input data-testid="baz" name="baz" required />
-          </>
-        ),
-      });
-
-      runValidation();
-      await waitFor(() => expect(getByTestId("foo")).not.toHaveFocus());
-
-      runValidation(null, true);
-      await waitFor(() => expect(getByTestId("bar")).toHaveFocus());
-
-      runValidation("foo", true);
-      await waitFor(() => expect(getByTestId("foo")).not.toHaveFocus());
-      runValidation("bar", true);
-      await waitFor(() => expect(getByTestId("bar")).toHaveFocus());
-
-      runValidation(["foo", "baz", "bar"], true);
-      await waitFor(() => expect(getByTestId("baz")).toHaveFocus());
-    });
   });
 
   describe("mon", () => {
