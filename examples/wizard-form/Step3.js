@@ -9,14 +9,14 @@ const Checkbox = ({ id, label, ...rest }) => (
 );
 
 const Step2 = () => {
-  const [toggle, setToggle] = useState(false);
-  const { state: prevValues } = useLocation();
-  const { form, mon } = useForm({
-    validate: ({ fruit }) => {
-      return fruit && !fruit.length ? { fruit: "Required" } : {};
-    },
-    onSubmit: (values) =>
-      alert(JSON.stringify({ ...prevValues, ...values }, undefined, 2))
+  const { state: formValues } = useLocation();
+  const [toggle, setToggle] = useState(!!formValues?.fruit?.length);
+  const { form, mon, getState } = useForm({
+    // Fill in form values from other steps
+    defaultValues: formValues || undefined,
+    validate: ({ fruit }) =>
+      fruit && !fruit.length ? { fruit: "Required" } : {},
+    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const [errors, values] = mon(["errors", "values"]);
 
@@ -28,8 +28,10 @@ const Step2 = () => {
           <input
             id="fruit"
             type="checkbox"
-            data-rcf-exclude
+            defaultChecked={toggle}
             onClick={() => setToggle(!toggle)}
+            // Exclude the toggle from form values
+            data-rcf-exclude
           />
         </label>
       </div>
@@ -67,10 +69,13 @@ const Step2 = () => {
       )}
       {errors.fruit && <p>{errors.fruit}</p>}
       <div className="btn">
-        <Link to="/step-2">Previous</Link>
+        {/* Pass form values to the previous step */}
+        <Link to="/step-2" state={getState("values")}>
+          Previous
+        </Link>
         <input type="submit" />
       </div>
-      <pre>{JSON.stringify({ ...prevValues, ...values }, undefined, 2)}</pre>
+      <pre>{JSON.stringify(values, undefined, 2)}</pre>
     </form>
   );
 };

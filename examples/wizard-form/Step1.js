@@ -1,5 +1,5 @@
 import { useForm } from "react-cool-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Field = ({ label, id, error, ...rest }) => (
   <div>
@@ -11,7 +11,10 @@ const Field = ({ label, id, error, ...rest }) => (
 
 const Step1 = () => {
   const nav = useNavigate();
+  const { state: formValues } = useLocation();
   const { form, mon, submit } = useForm({
+    // Fill in form values from other steps
+    defaultValues: formValues || undefined,
     // Pass form values to the next step
     onSubmit: (values) => nav("/step-2", { state: values })
   });

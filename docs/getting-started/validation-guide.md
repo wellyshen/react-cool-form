@@ -98,21 +98,17 @@ const App = () => {
 };
 ```
 
-In addition to write your own logic, it's also possible to use a 3rd-party library such as [Yup](https://github.com/jquense/yup), [Joi](https://github.com/sideway/joi), and many others with form-level validation. Let's take a look at the following example:
+In addition to write your own logic, it's also possible to run form-level validation with any 3rd-party libraries (e.g. [Yup](https://github.com/jquense/yup), [Joi](https://github.com/sideway/joi), and many others). Let's see how to make it by the following example:
 
-[![Edit RCF - Yup](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-yup-lsk6f?fontsize=14&hidenavigation=1&theme=dark)
+[![Edit RCF - Schema](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-schema-lsk6f?fontsize=14&hidenavigation=1&theme=dark)
 
 ```js
 import { useForm, set } from "react-cool-form";
 import * as yup from "yup";
+import Joi from "joi";
 
-const schema = yup.object().shape({
-  username: yup.string().required(),
-  email: yup.string().email().required(),
-  password: yup.string().required().min(6),
-});
-
-const validate = async (values) => {
+// Reusable validation function for Yup
+const validateWithYup = (schema) => async (values) => {
   let errors = {};
 
   try {
@@ -126,10 +122,37 @@ const validate = async (values) => {
   return errors;
 };
 
+// Reusable validation function for Joi
+const validateWithJoi = (schema) => (values) => {
+  let errors = {};
+
+  const { error: joiError } = schema.validate(values, { abortEarly: false });
+
+  if (joiError)
+    joiError.details.forEach(({ path, message }) =>
+      set(errors, path[0], message)
+    );
+
+  return errors;
+};
+
+const yupSchema = yup.object().shape({
+  username: yup.string().required(),
+  email: yup.string().email().required(),
+  password: yup.string().required().min(6),
+});
+
+const JoiSchema = Joi.object({
+  username: Joi.string().required(),
+  email: Joi.string().email({ tlds: false }).required(),
+  password: Joi.string().required().min(6),
+});
+
 const App = () => {
   const { form } = useForm({
     defaultValues: { username: "", email: "", password: "" },
-    validate,
+    validate: validateWithYup(yupSchema),
+    // validate: validateWithJoi(JoiSchema),
     onSubmit: (values) => console.log("onSubmit: ", values),
     onError: (errors) => console.log("onError: ", errors),
   });
@@ -144,8 +167,6 @@ const App = () => {
   );
 };
 ```
-
-👀 Looking for the example of Joi? Right [here](../examples/validation-with-joi).
 
 ## Field-level Validation
 
