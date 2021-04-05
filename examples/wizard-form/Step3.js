@@ -8,7 +8,7 @@ const Checkbox = ({ id, label, ...rest }) => (
   </label>
 );
 
-const Step2 = () => {
+const Step3 = () => {
   const { state: formValues } = useLocation();
   const [toggle, setToggle] = useState(!!formValues?.fruit?.length);
   const { form, mon, getState } = useForm({
@@ -80,4 +80,4 @@ const Step2 = () => {
   );
 };
 
-export default Step2;
+export default Step3;
