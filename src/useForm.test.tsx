@@ -1,3 +1,4 @@
+import { Dispatch, useState } from "react";
 import {
   render,
   fireEvent,
@@ -16,10 +17,12 @@ jest.mock("./shared", () => ({ set: jest.fn(), remove: jest.fn() }));
 
 type Children = JSX.Element | JSX.Element[] | null;
 
-type Methods = Omit<FormMethods, "form">;
+// eslint-disable-next-line react/no-unused-prop-types
+type Methods = Omit<FormMethods, "form"> & { setToggle: Dispatch<boolean> };
 
 interface Config extends FormConfig {
   children: Children | ((methods: Methods) => Children);
+  isToggle: boolean;
   onSubmit: (values: any) => void;
   onSubmitFull: SubmitHandler;
   onError: (errors: any) => void;
@@ -31,6 +34,7 @@ type Props = Partial<Config>;
 
 const Form = ({
   children,
+  isToggle = true,
   onSubmit = () => null,
   onSubmitFull,
   onError = () => null,
@@ -38,6 +42,7 @@ const Form = ({
   onRender = () => null,
   ...config
 }: Props) => {
+  const [toggle, setToggle] = useState(isToggle);
   const methods = useForm({
     ...config,
     onSubmit: (...args) =>
@@ -48,9 +53,13 @@ const Form = ({
 
   onRender();
 
+  const fields = isFunction(children)
+    ? children({ ...methods, setToggle })
+    : children;
+
   return (
     <form data-testid="form" ref={methods.form}>
-      {isFunction(children) ? children(methods) : children}
+      {toggle && fields}
     </form>
   );
 };
@@ -204,7 +213,7 @@ describe("useForm", () => {
 
   it("should return methods correctly", () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { unmount, ...methods } = renderHelper();
+    const { unmount, setToggle, ...methods } = renderHelper();
     expect(methods).toEqual({
       form: expect.any(Function),
       field: expect.any(Function),
@@ -664,8 +673,13 @@ describe("useForm", () => {
     it.each(["text", "number", "range"])(
       "should handle %s correctly",
       async (type) => {
-        renderHelper({
-          defaultValues: { foo: "" },
+        const defaultValues: any = {
+          text: "",
+          number: "",
+          range: 50,
+        };
+        const { getState } = renderHelper({
+          defaultValues: { foo: defaultValues[type] },
           onSubmit,
           children: <input data-testid="foo" name="foo" type={type} />,
         });
@@ -681,6 +695,19 @@ describe("useForm", () => {
         await waitFor(() =>
           expect(onSubmit).toHaveBeenCalledWith({ foo: values[type] })
         );
+        expect(getState("touched.foo")).toBeTruthy();
+        expect(getState("dirty.foo")).toBeTruthy();
+        expect(getState("isDirty")).toBeTruthy();
+
+        fireEvent.input(getByTestId("foo"), {
+          target: { value: defaultValues[type] },
+        });
+        fireEvent.submit(getByTestId("form"));
+        await waitFor(() =>
+          expect(onSubmit).toHaveBeenCalledWith({ foo: defaultValues[type] })
+        );
+        expect(getState("dirty.foo")).toBeUndefined();
+        expect(getState("isDirty")).toBeFalsy();
       }
     );
 
@@ -1454,96 +1481,6 @@ describe("useForm", () => {
     });
   });
 
-  describe("mon", () => {
-    const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
-
-    it('should return undefined if "path" isn\'t set', () => {
-      const { mon } = renderHelper();
-      // @ts-expect-error
-      expect(mon()).toBeUndefined();
-    });
-
-    it("should get default value correctly", () => {
-      const formValue = { foo: null };
-      const selectValue = { foo: "🍎" };
-      let { mon } = renderHelper({ defaultValues: formValue });
-      expect(mon("values.foo")).toBe(formValue.foo);
-
-      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
-        formValue.foo
-      );
-
-      mon = renderHelper().mon;
-      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
-        selectValue.foo
-      );
-
-      expect(mon("values.foo")).toBeUndefined();
-    });
-
-    it.todo("should get default value correctly with conditional field");
-
-    it("should get state with correct format", () => {
-      const { mon } = renderHelper({ defaultValues: values });
-
-      expect(mon("values")).toEqual(values);
-      expect(mon("values.foo")).toBe(values.foo);
-      expect(mon("isValid")).toBe(isValid);
-
-      expect(mon(["values", "values.foo", "isValid"])).toEqual([
-        values,
-        values.foo,
-        isValid,
-      ]);
-
-      expect(
-        mon({
-          values: "values",
-          foo: "values.foo",
-          isValid: "isValid",
-        })
-      ).toEqual({ values, foo: values.foo, isValid });
-    });
-
-    it("should get form's values by shortcut", () => {
-      const { mon } = renderHelper({ defaultValues: values });
-      const { foo } = values;
-      expect(mon("foo")).toBe(foo);
-      expect(mon(["foo"])).toEqual([foo]);
-      expect(mon({ foo: "foo" })).toEqual({ foo });
-    });
-
-    it("should get error with touched", async () => {
-      const { mon } = renderHelper({
-        children: <input data-testid="foo" name="foo" required />,
-      });
-      const foo = getByTestId("foo");
-
-      fireEvent.input(foo, { target: { value: "" } });
-      await waitFor(() => {
-        expect(mon("errors.foo")).not.toBeUndefined();
-        expect(mon("errors.foo", { errorWithTouched: true })).toBeUndefined();
-      });
-
-      fireEvent.focusOut(foo);
-      await waitFor(() => {
-        expect(
-          mon("errors.foo", { errorWithTouched: true })
-        ).not.toBeUndefined();
-      });
-    });
-
-    it("should trigger re-rendering", () => {
-      const { mon } = renderHelper({
-        onRender,
-        children: <input data-testid="foo" name="foo" />,
-      });
-      mon("foo");
-      fireEvent.input(getByTestId("foo"));
-      expect(onRender).toHaveBeenCalledTimes(2);
-    });
-  });
-
   describe("focus", () => {
     it("should focus on error", async () => {
       renderHelper({
@@ -1644,6 +1581,96 @@ describe("useForm", () => {
     });
   });
 
+  describe("mon", () => {
+    const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
+
+    it('should return undefined if "path" isn\'t set', () => {
+      const { mon } = renderHelper();
+      // @ts-expect-error
+      expect(mon()).toBeUndefined();
+    });
+
+    it("should get default value correctly", () => {
+      const formValue = { foo: null };
+      const selectValue = { foo: "🍎" };
+      let { mon } = renderHelper({ defaultValues: formValue });
+      expect(mon("values.foo")).toBe(formValue.foo);
+
+      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
+        formValue.foo
+      );
+
+      mon = renderHelper().mon;
+      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
+        selectValue.foo
+      );
+
+      expect(mon("values.foo")).toBeUndefined();
+    });
+
+    it.todo("should get default value correctly with conditional field");
+
+    it("should get state with correct format", () => {
+      const { mon } = renderHelper({ defaultValues: values });
+
+      expect(mon("values")).toEqual(values);
+      expect(mon("values.foo")).toBe(values.foo);
+      expect(mon("isValid")).toBe(isValid);
+
+      expect(mon(["values", "values.foo", "isValid"])).toEqual([
+        values,
+        values.foo,
+        isValid,
+      ]);
+
+      expect(
+        mon({
+          values: "values",
+          foo: "values.foo",
+          isValid: "isValid",
+        })
+      ).toEqual({ values, foo: values.foo, isValid });
+    });
+
+    it("should get form's values by shortcut", () => {
+      const { mon } = renderHelper({ defaultValues: values });
+      const { foo } = values;
+      expect(mon("foo")).toBe(foo);
+      expect(mon(["foo"])).toEqual([foo]);
+      expect(mon({ foo: "foo" })).toEqual({ foo });
+    });
+
+    it("should get error with touched", async () => {
+      const { mon } = renderHelper({
+        children: <input data-testid="foo" name="foo" required />,
+      });
+      const foo = getByTestId("foo");
+
+      fireEvent.input(foo, { target: { value: "" } });
+      await waitFor(() => {
+        expect(mon("errors.foo")).not.toBeUndefined();
+        expect(mon("errors.foo", { errorWithTouched: true })).toBeUndefined();
+      });
+
+      fireEvent.focusOut(foo);
+      await waitFor(() => {
+        expect(
+          mon("errors.foo", { errorWithTouched: true })
+        ).not.toBeUndefined();
+      });
+    });
+
+    it("should trigger re-rendering", () => {
+      const { mon } = renderHelper({
+        onRender,
+        children: <input data-testid="foo" name="foo" />,
+      });
+      mon("foo");
+      fireEvent.input(getByTestId("foo"));
+      expect(onRender).toHaveBeenCalledTimes(2);
+    });
+  });
+
   describe("getState", () => {
     const state = { ...initialState, values: { foo: "🍎" } };
     const { values, isValid } = state;
@@ -1692,6 +1719,8 @@ describe("useForm", () => {
       fireEvent.input(getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(1);
     });
+
+    it.todo("should not get default value with conditional field");
   });
 
   describe("setValue", () => {
@@ -1892,5 +1921,39 @@ describe("useForm", () => {
         values: { foo: value },
       });
     });
+  });
+
+  it("should handle conditional fields correctly", async () => {
+    const value = "🍎";
+    const { getState, setTouched, setDirty, setToggle } = renderHelper({
+      defaultValues: { foo: value },
+      onSubmit,
+      children: <input name="foo" />,
+    });
+    act(() => {
+      setTouched("foo");
+      setDirty("foo");
+    });
+    expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+      value,
+      true,
+      true,
+    ]);
+    act(() => setToggle(false));
+    await waitFor(() =>
+      expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+        undefined,
+        undefined,
+        undefined,
+      ])
+    );
+    act(() => setToggle(true));
+    await waitFor(() =>
+      expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+        value,
+        undefined,
+        undefined,
+      ])
+    );
   });
 });
