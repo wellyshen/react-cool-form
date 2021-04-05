@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.158
+
+### Patch Changes
+
+- [#536](https://github.com/wellyshen/react-cool-form/pull/536) [`ed0a7a6`](https://github.com/wellyshen/react-cool-form/commit/ed0a7a62cb9437a29e05012f1806a74f0f3f3e63) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): when dynamically hidding a field `getState` method will get default value
+
 ## 0.0.157
 
 ### Patch Changes
