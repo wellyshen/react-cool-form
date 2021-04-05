@@ -541,6 +541,8 @@ export default <V extends FormValues = FormValues>({
           return p;
         },
         (p, v) => {
+          if (methodName === "getState") return v;
+
           if (p.startsWith("values")) {
             if (!isUndefined(v)) return v;
 
