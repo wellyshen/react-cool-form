@@ -5,8 +5,8 @@ import { useForm } from "react-cool-form";
 
 export default () => {
   const [show, setShow] = useState(true);
-  const { form, getState } = useForm({
-    defaultValues: { foo: "test" },
+  const { form, reset } = useForm({
+    defaultValues: { foo: "form test" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
@@ -19,9 +19,9 @@ export default () => {
       </button>
       <button
         type="button"
-        onClick={() => console.log("LOG ===> ", getState("foo"))}
+        onClick={() => console.log("LOG ===> ", reset({ foo: "reset test" }))}
       >
-        Get State
+        Reset
       </button>
     </form>
   );
