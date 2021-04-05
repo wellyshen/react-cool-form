@@ -1,6 +1,8 @@
 import { forwardRef } from "react";
 import { useForm } from "react-cool-form";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
+import { useFormValues } from "./formValues";
 
 const Select = forwardRef(({ label, id, children, error, ...rest }, ref) => (
   <div>
@@ -13,13 +15,16 @@ const Select = forwardRef(({ label, id, children, error, ...rest }, ref) => (
 ));
 
 const Step2 = () => {
+  const [formValues, setFormValues] = useFormValues();
   const nav = useNavigate();
-  const { state: formValues } = useLocation();
-  const { form, mon, field, submit, getState } = useForm({
-    // Fill in form values from other steps
+  const { form, mon, field, submit } = useForm({
+    // Fill in form values from context
     defaultValues: { sports: ["football"], ...formValues },
-    // Pass form values to the next step
-    onSubmit: (values) => nav("/step-3", { state: values })
+    // Pass form values for other steps via conext
+    onSubmit: (values) => {
+      setFormValues(values);
+      nav("/step-3");
+    }
   });
   const [errors, values] = mon(["errors", "values"], {
     errorWithTouched: true
@@ -46,10 +51,7 @@ const Step2 = () => {
         <option value="volleyball">🏐</option>
       </Select>
       <div className="btn">
-        {/* Pass form values to the previous step */}
-        <Link to="/" state={getState("values")}>
-          Previous
-        </Link>
+        <Link to="/">Previous</Link>
         <button id="step-2" type="button" onClick={submit}>
           Next
         </button>
