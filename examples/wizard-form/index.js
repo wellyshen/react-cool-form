@@ -9,7 +9,7 @@ import Step3 from "./Step3";
 import "./styles.scss";
 
 render(
-  // Share form values for all the steps by Context API
+  // Share form values for all the steps via Context API
   <FormValuesProvider>
     <Router>
       <Routes>
