@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unused-prop-types */
+
 import { Dispatch, useState } from "react";
 import {
   render,
@@ -17,12 +19,14 @@ jest.mock("./shared", () => ({ set: jest.fn(), remove: jest.fn() }));
 
 type Children = JSX.Element | JSX.Element[] | null;
 
-// eslint-disable-next-line react/no-unused-prop-types
-type Methods = Omit<FormMethods, "form"> & { setToggle: Dispatch<boolean> };
+type API = Omit<FormMethods, "form"> & {
+  show: boolean;
+  setShow: Dispatch<boolean>;
+};
 
 interface Config extends FormConfig {
-  children: Children | ((methods: Methods) => Children);
-  isToggle: boolean;
+  children: Children | ((api: API) => Children);
+  isShow: boolean;
   onSubmit: (values: any) => void;
   onSubmitFull: SubmitHandler;
   onError: (errors: any) => void;
@@ -34,7 +38,7 @@ type Props = Partial<Config>;
 
 const Form = ({
   children,
-  isToggle = true,
+  isShow = true,
   onSubmit = () => null,
   onSubmitFull,
   onError = () => null,
@@ -42,7 +46,7 @@ const Form = ({
   onRender = () => null,
   ...config
 }: Props) => {
-  const [toggle, setToggle] = useState(isToggle);
+  const [show, setShow] = useState(isShow);
   const methods = useForm({
     ...config,
     onSubmit: (...args) =>
@@ -53,31 +57,29 @@ const Form = ({
 
   onRender();
 
-  const fields = isFunction(children)
-    ? children({ ...methods, setToggle })
-    : children;
-
   return (
     <form data-testid="form" ref={methods.form}>
-      {toggle && fields}
+      {isFunction(children)
+        ? children({ ...methods, show, setShow })
+        : children}
     </form>
   );
 };
 
 const renderHelper = ({ children = null, ...rest }: Props = {}) => {
-  let methods: Methods;
+  let api: API;
 
   const { unmount } = render(
     <Form {...rest}>
-      {(m) => {
-        methods = m;
-        return isFunction(children) ? children(m) : children;
+      {(a) => {
+        api = a;
+        return isFunction(children) ? children(a) : children;
       }}
     </Form>
   );
 
   // @ts-expect-error
-  return { unmount, ...methods };
+  return { unmount, ...api };
 };
 
 describe("useForm", () => {
@@ -183,7 +185,7 @@ describe("useForm", () => {
     it("should warn field-level validation exception", async () => {
       const id = "foo";
       renderHelper({
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             data-testid={id}
             name="foo"
@@ -213,7 +215,7 @@ describe("useForm", () => {
 
   it("should return methods correctly", () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { unmount, setToggle, ...methods } = renderHelper();
+    const { unmount, show, setShow, ...methods } = renderHelper();
     expect(methods).toEqual({
       form: expect.any(Function),
       field: expect.any(Function),
@@ -1094,7 +1096,7 @@ describe("useForm", () => {
         const { getState } = renderHelper({
           onSubmit,
           onError,
-          children: ({ field }: Methods) => (
+          children: ({ field }: API) => (
             <input
               data-testid="foo"
               name="foo"
@@ -1129,7 +1131,7 @@ describe("useForm", () => {
       const errors = { foo: { a: "Required", b: "Required" } };
       renderHelper({
         onError,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <>
             <input
               name="foo.a"
@@ -1151,7 +1153,7 @@ describe("useForm", () => {
       renderHelper({
         onSubmit,
         onError,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <>
             <input
               name="foo"
@@ -1237,7 +1239,7 @@ describe("useForm", () => {
       const { getState } = renderHelper({
         onSubmit,
         onError,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             data-testid="foo"
             name="foo"
@@ -1256,7 +1258,7 @@ describe("useForm", () => {
         validate: async () => ({ foo: error }),
         onSubmit,
         onError,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             data-testid="foo"
             name="foo"
@@ -1319,7 +1321,7 @@ describe("useForm", () => {
         defaultValues: { foo: mockDate },
         excludeFields: ["foo"],
         onSubmit,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             name="foo"
             type="date"
@@ -1380,7 +1382,7 @@ describe("useForm", () => {
       const validate = async (value: string) =>
         !value.length ? "Required" : false;
       const { runValidation, getState } = renderHelper({
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <>
             <input name="foo" ref={field(validate)} />
             <input name="bar" ref={field(validate)} />
@@ -1880,7 +1882,7 @@ describe("useForm", () => {
       };
       renderHelper({
         onSubmit,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             data-testid="foo"
             name="foo"
@@ -1923,37 +1925,39 @@ describe("useForm", () => {
     });
   });
 
-  it("should handle conditional fields correctly", async () => {
-    const value = "🍎";
-    const { getState, setTouched, setDirty, setToggle } = renderHelper({
-      defaultValues: { foo: value },
-      onSubmit,
-      children: <input name="foo" />,
-    });
-    act(() => {
-      setTouched("foo");
-      setDirty("foo");
-    });
-    expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-      value,
-      true,
-      true,
-    ]);
-    act(() => setToggle(false));
-    await waitFor(() =>
-      expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-        undefined,
-        undefined,
-        undefined,
-      ])
-    );
-    act(() => setToggle(true));
-    await waitFor(() =>
+  describe("conditional fields", () => {
+    it("should handle conditional fields correctly", async () => {
+      const value = "🍎";
+      const { getState, setTouched, setDirty, setShow } = renderHelper({
+        defaultValues: { foo: value },
+        onSubmit,
+        children: ({ show }: API) => <>{show && <input name="foo" />}</>,
+      });
+      act(() => {
+        setTouched("foo");
+        setDirty("foo");
+      });
       expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
         value,
-        undefined,
-        undefined,
-      ])
-    );
+        true,
+        true,
+      ]);
+      act(() => setShow(false));
+      await waitFor(() =>
+        expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+          undefined,
+          undefined,
+          undefined,
+        ])
+      );
+      act(() => setShow(true));
+      await waitFor(() =>
+        expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+          value,
+          undefined,
+          undefined,
+        ])
+      );
+    });
   });
 });
