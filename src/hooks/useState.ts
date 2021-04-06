@@ -19,7 +19,7 @@ export default <V>(
 ): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const stateRef = useRef(initialState);
-  const stateObserversRef = useRef<Observer<V>[]>([
+  const observersRef = useRef<Observer<V>[]>([
     { usedState: {}, notify: forceUpdate },
   ]);
   const onChangeRef = useLatest(onChange || (() => undefined));
@@ -33,7 +33,7 @@ export default <V>(
           stateRef.current = value;
           onChangeRef.current(stateRef.current);
 
-          stateObserversRef.current.forEach(({ usedState, notify }) => {
+          observersRef.current.forEach(({ usedState, notify }) => {
             if (shouldUpdate && !isEmptyObject(usedState))
               notify(stateRef.current);
           });
@@ -67,7 +67,7 @@ export default <V>(
         if (!shouldUpdate) return;
 
         path = fieldPath || path;
-        stateObserversRef.current.forEach(({ usedState, notify }) => {
+        observersRef.current.forEach(({ usedState, notify }) => {
           if (
             Object.keys(usedState).some(
               (k) => path.startsWith(k) || k.startsWith(path)
@@ -83,18 +83,16 @@ export default <V>(
   );
 
   const setUsedState = useCallback<SetUsedState>((usedState) => {
-    stateObserversRef.current[0].usedState = usedState;
+    observersRef.current[0].usedState = usedState;
   }, []);
 
   const subscribeObserver = useCallback<ObserverHandler<V>>(
-    (observer) => stateObserversRef.current.push(observer),
+    (observer) => observersRef.current.push(observer),
     []
   );
 
   const unsubscribeObserver = useCallback<ObserverHandler<V>>((observer) => {
-    stateObserversRef.current = stateObserversRef.current.filter(
-      (o) => o !== observer
-    );
+    observersRef.current = observersRef.current.filter((o) => o !== observer);
   }, []);
 
   return {
