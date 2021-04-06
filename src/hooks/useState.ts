@@ -83,7 +83,10 @@ export default <V>(
   );
 
   const setUsedState = useCallback<SetUsedState>((usedState) => {
-    observersRef.current[0].usedState = usedState;
+    observersRef.current[0].usedState = {
+      ...observersRef.current[0].usedState,
+      ...usedState,
+    };
   }, []);
 
   const subscribeObserver = useCallback<ObserverHandler<V>>(
