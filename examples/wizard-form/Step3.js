@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-cool-form";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+import { useFormValues } from "./formValues";
 
 const Checkbox = ({ id, label, ...rest }) => (
   <label htmlFor={id}>
@@ -8,15 +10,19 @@ const Checkbox = ({ id, label, ...rest }) => (
   </label>
 );
 
-const Step2 = () => {
-  const { state: formValues } = useLocation();
+const Step3 = () => {
+  const [formValues, setFormValues] = useFormValues();
   const [toggle, setToggle] = useState(!!formValues?.fruit?.length);
-  const { form, mon, getState } = useForm({
-    // Fill in form values from other steps
-    defaultValues: formValues || undefined,
+  const { form, mon } = useForm({
+    // Fill in form values from context
+    defaultValues: formValues,
     validate: ({ fruit }) =>
       fruit && !fruit.length ? { fruit: "Required" } : {},
-    onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
+    onSubmit: (values) => {
+      // Pass form values for other steps via conext
+      setFormValues(values);
+      alert(JSON.stringify(values, undefined, 2));
+    }
   });
   const [errors, values] = mon(["errors", "values"]);
 
@@ -69,10 +75,7 @@ const Step2 = () => {
       )}
       {errors.fruit && <p>{errors.fruit}</p>}
       <div className="btn">
-        {/* Pass form values to the previous step */}
-        <Link to="/step-2" state={getState("values")}>
-          Previous
-        </Link>
+        <Link to="/step-2">Previous</Link>
         <input type="submit" />
       </div>
       <pre>{JSON.stringify(values, undefined, 2)}</pre>
@@ -80,4 +83,4 @@ const Step2 = () => {
   );
 };
 
-export default Step2;
+export default Step3;

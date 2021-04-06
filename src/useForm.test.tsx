@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unused-prop-types */
+
+import { Dispatch, useState } from "react";
 import {
   render,
   fireEvent,
@@ -16,10 +19,14 @@ jest.mock("./shared", () => ({ set: jest.fn(), remove: jest.fn() }));
 
 type Children = JSX.Element | JSX.Element[] | null;
 
-type Methods = Omit<FormMethods, "form">;
+type API = Omit<FormMethods, "form"> & {
+  show?: boolean;
+  setShow: Dispatch<boolean>;
+};
 
 interface Config extends FormConfig {
-  children: Children | ((methods: Methods) => Children);
+  children: Children | ((api: API) => Children);
+  isShow: boolean;
   onSubmit: (values: any) => void;
   onSubmitFull: SubmitHandler;
   onError: (errors: any) => void;
@@ -31,6 +38,7 @@ type Props = Partial<Config>;
 
 const Form = ({
   children,
+  isShow,
   onSubmit = () => null,
   onSubmitFull,
   onError = () => null,
@@ -38,6 +46,7 @@ const Form = ({
   onRender = () => null,
   ...config
 }: Props) => {
+  const [show, setShow] = useState(isShow);
   const methods = useForm({
     ...config,
     onSubmit: (...args) =>
@@ -50,25 +59,27 @@ const Form = ({
 
   return (
     <form data-testid="form" ref={methods.form}>
-      {isFunction(children) ? children(methods) : children}
+      {isFunction(children)
+        ? children({ ...methods, show, setShow })
+        : children}
     </form>
   );
 };
 
 const renderHelper = ({ children = null, ...rest }: Props = {}) => {
-  let methods: Methods;
+  let api: API;
 
   const { unmount } = render(
     <Form {...rest}>
-      {(m) => {
-        methods = m;
-        return isFunction(children) ? children(m) : children;
+      {(a) => {
+        api = a;
+        return isFunction(children) ? children(a) : children;
       }}
     </Form>
   );
 
   // @ts-expect-error
-  return { unmount, ...methods };
+  return { unmount, ...api };
 };
 
 describe("useForm", () => {
@@ -174,7 +185,7 @@ describe("useForm", () => {
     it("should warn field-level validation exception", async () => {
       const id = "foo";
       renderHelper({
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             data-testid={id}
             name="foo"
@@ -204,7 +215,7 @@ describe("useForm", () => {
 
   it("should return methods correctly", () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { unmount, ...methods } = renderHelper();
+    const { unmount, show, setShow, ...methods } = renderHelper();
     expect(methods).toEqual({
       form: expect.any(Function),
       field: expect.any(Function),
@@ -664,8 +675,13 @@ describe("useForm", () => {
     it.each(["text", "number", "range"])(
       "should handle %s correctly",
       async (type) => {
-        renderHelper({
-          defaultValues: { foo: "" },
+        const defaultValues: any = {
+          text: "",
+          number: "",
+          range: 50,
+        };
+        const { getState } = renderHelper({
+          defaultValues: { foo: defaultValues[type] },
           onSubmit,
           children: <input data-testid="foo" name="foo" type={type} />,
         });
@@ -681,6 +697,19 @@ describe("useForm", () => {
         await waitFor(() =>
           expect(onSubmit).toHaveBeenCalledWith({ foo: values[type] })
         );
+        expect(getState("touched.foo")).toBeTruthy();
+        expect(getState("dirty.foo")).toBeTruthy();
+        expect(getState("isDirty")).toBeTruthy();
+
+        fireEvent.input(getByTestId("foo"), {
+          target: { value: defaultValues[type] },
+        });
+        fireEvent.submit(getByTestId("form"));
+        await waitFor(() =>
+          expect(onSubmit).toHaveBeenCalledWith({ foo: defaultValues[type] })
+        );
+        expect(getState("dirty.foo")).toBeUndefined();
+        expect(getState("isDirty")).toBeFalsy();
       }
     );
 
@@ -1059,7 +1088,7 @@ describe("useForm", () => {
     });
 
     it.each(["normal", "shortcut"])(
-      "should run field-level validation via %s way",
+      "should run field-level validation in %s way",
       async (type) => {
         const errors = { foo: "Required" };
         const validate = async (val: string) =>
@@ -1067,7 +1096,7 @@ describe("useForm", () => {
         const { getState } = renderHelper({
           onSubmit,
           onError,
-          children: ({ field }: Methods) => (
+          children: ({ field }: API) => (
             <input
               data-testid="foo"
               name="foo"
@@ -1102,7 +1131,7 @@ describe("useForm", () => {
       const errors = { foo: { a: "Required", b: "Required" } };
       renderHelper({
         onError,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <>
             <input
               name="foo.a"
@@ -1124,7 +1153,7 @@ describe("useForm", () => {
       renderHelper({
         onSubmit,
         onError,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <>
             <input
               name="foo"
@@ -1210,7 +1239,7 @@ describe("useForm", () => {
       const { getState } = renderHelper({
         onSubmit,
         onError,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             data-testid="foo"
             name="foo"
@@ -1229,7 +1258,7 @@ describe("useForm", () => {
         validate: async () => ({ foo: error }),
         onSubmit,
         onError,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             data-testid="foo"
             name="foo"
@@ -1292,7 +1321,7 @@ describe("useForm", () => {
         defaultValues: { foo: mockDate },
         excludeFields: ["foo"],
         onSubmit,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             name="foo"
             type="date"
@@ -1353,7 +1382,7 @@ describe("useForm", () => {
       const validate = async (value: string) =>
         !value.length ? "Required" : false;
       const { runValidation, getState } = renderHelper({
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <>
             <input name="foo" ref={field(validate)} />
             <input name="bar" ref={field(validate)} />
@@ -1451,96 +1480,6 @@ describe("useForm", () => {
       expect(isValid).toBeFalsy();
       isValid = await runValidation(["foo"]);
       expect(isValid).toBeFalsy();
-    });
-  });
-
-  describe("mon", () => {
-    const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
-
-    it('should return undefined if "path" isn\'t set', () => {
-      const { mon } = renderHelper();
-      // @ts-expect-error
-      expect(mon()).toBeUndefined();
-    });
-
-    it("should get default value correctly", () => {
-      const formValue = { foo: null };
-      const selectValue = { foo: "🍎" };
-      let { mon } = renderHelper({ defaultValues: formValue });
-      expect(mon("values.foo")).toBe(formValue.foo);
-
-      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
-        formValue.foo
-      );
-
-      mon = renderHelper().mon;
-      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
-        selectValue.foo
-      );
-
-      expect(mon("values.foo")).toBeUndefined();
-    });
-
-    it.todo("should get default value correctly with conditional field");
-
-    it("should get state with correct format", () => {
-      const { mon } = renderHelper({ defaultValues: values });
-
-      expect(mon("values")).toEqual(values);
-      expect(mon("values.foo")).toBe(values.foo);
-      expect(mon("isValid")).toBe(isValid);
-
-      expect(mon(["values", "values.foo", "isValid"])).toEqual([
-        values,
-        values.foo,
-        isValid,
-      ]);
-
-      expect(
-        mon({
-          values: "values",
-          foo: "values.foo",
-          isValid: "isValid",
-        })
-      ).toEqual({ values, foo: values.foo, isValid });
-    });
-
-    it("should get form's values by shortcut", () => {
-      const { mon } = renderHelper({ defaultValues: values });
-      const { foo } = values;
-      expect(mon("foo")).toBe(foo);
-      expect(mon(["foo"])).toEqual([foo]);
-      expect(mon({ foo: "foo" })).toEqual({ foo });
-    });
-
-    it("should get error with touched", async () => {
-      const { mon } = renderHelper({
-        children: <input data-testid="foo" name="foo" required />,
-      });
-      const foo = getByTestId("foo");
-
-      fireEvent.input(foo, { target: { value: "" } });
-      await waitFor(() => {
-        expect(mon("errors.foo")).not.toBeUndefined();
-        expect(mon("errors.foo", { errorWithTouched: true })).toBeUndefined();
-      });
-
-      fireEvent.focusOut(foo);
-      await waitFor(() => {
-        expect(
-          mon("errors.foo", { errorWithTouched: true })
-        ).not.toBeUndefined();
-      });
-    });
-
-    it("should trigger re-rendering", () => {
-      const { mon } = renderHelper({
-        onRender,
-        children: <input data-testid="foo" name="foo" />,
-      });
-      mon("foo");
-      fireEvent.input(getByTestId("foo"));
-      expect(onRender).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -1644,6 +1583,96 @@ describe("useForm", () => {
     });
   });
 
+  describe("mon", () => {
+    const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
+
+    it('should return undefined if "path" isn\'t set', () => {
+      const { mon } = renderHelper();
+      // @ts-expect-error
+      expect(mon()).toBeUndefined();
+    });
+
+    it("should get default value correctly", () => {
+      const formValue = { foo: null };
+      const selectValue = { foo: "🍎" };
+      let { mon } = renderHelper({ defaultValues: formValue });
+      expect(mon("values.foo")).toBe(formValue.foo);
+
+      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
+        formValue.foo
+      );
+
+      mon = renderHelper().mon;
+      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
+        selectValue.foo
+      );
+
+      expect(mon("values.foo")).toBeUndefined();
+    });
+
+    it.todo("should get default value correctly with conditional field");
+
+    it("should get state with correct format", () => {
+      const { mon } = renderHelper({ defaultValues: values });
+
+      expect(mon("values")).toEqual(values);
+      expect(mon("values.foo")).toBe(values.foo);
+      expect(mon("isValid")).toBe(isValid);
+
+      expect(mon(["values", "values.foo", "isValid"])).toEqual([
+        values,
+        values.foo,
+        isValid,
+      ]);
+
+      expect(
+        mon({
+          values: "values",
+          foo: "values.foo",
+          isValid: "isValid",
+        })
+      ).toEqual({ values, foo: values.foo, isValid });
+    });
+
+    it("should get form's values by shortcut", () => {
+      const { mon } = renderHelper({ defaultValues: values });
+      const { foo } = values;
+      expect(mon("foo")).toBe(foo);
+      expect(mon(["foo"])).toEqual([foo]);
+      expect(mon({ foo: "foo" })).toEqual({ foo });
+    });
+
+    it("should get error with touched", async () => {
+      const { mon } = renderHelper({
+        children: <input data-testid="foo" name="foo" required />,
+      });
+      const foo = getByTestId("foo");
+
+      fireEvent.input(foo, { target: { value: "" } });
+      await waitFor(() => {
+        expect(mon("errors.foo")).not.toBeUndefined();
+        expect(mon("errors.foo", { errorWithTouched: true })).toBeUndefined();
+      });
+
+      fireEvent.focusOut(foo);
+      await waitFor(() => {
+        expect(
+          mon("errors.foo", { errorWithTouched: true })
+        ).not.toBeUndefined();
+      });
+    });
+
+    it("should trigger re-rendering", () => {
+      const { mon } = renderHelper({
+        onRender,
+        children: <input data-testid="foo" name="foo" />,
+      });
+      mon("foo");
+      fireEvent.input(getByTestId("foo"));
+      expect(onRender).toHaveBeenCalledTimes(2);
+    });
+  });
+
   describe("getState", () => {
     const state = { ...initialState, values: { foo: "🍎" } };
     const { values, isValid } = state;
@@ -1692,6 +1721,8 @@ describe("useForm", () => {
       fireEvent.input(getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(1);
     });
+
+    it.todo("should not get default value with conditional field");
   });
 
   describe("setValue", () => {
@@ -1851,7 +1882,7 @@ describe("useForm", () => {
       };
       renderHelper({
         onSubmit,
-        children: ({ field }: Methods) => (
+        children: ({ field }: API) => (
           <input
             data-testid="foo"
             name="foo"
@@ -1891,6 +1922,158 @@ describe("useForm", () => {
         },
         values: { foo: value },
       });
+    });
+  });
+
+  describe("conditional fields", () => {
+    it.each(["form", "field"])(
+      "should set %s-level default value for single field correctly",
+      async (type) => {
+        const formValue = "🍎";
+        const fieldValue = "🍋";
+        const { getState, setTouched, setDirty, setShow } = renderHelper({
+          defaultValues: type === "form" ? { foo: formValue } : undefined,
+          children: ({ show }: API) => (
+            <>
+              {show && (
+                <input
+                  data-testid="foo"
+                  name="foo"
+                  defaultValue={type === "field" ? fieldValue : undefined}
+                />
+              )}
+            </>
+          ),
+        });
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState("foo")).toBe(
+            type === "form" ? formValue : fieldValue
+          );
+          expect(getByTestId("foo").value).toBe(
+            type === "form" ? formValue : fieldValue
+          );
+        });
+
+        act(() => {
+          setTouched("foo");
+          setDirty("foo");
+          setShow(false);
+        });
+        await waitFor(() =>
+          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+            undefined,
+            undefined,
+            undefined,
+          ])
+        );
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+            type === "field" ? fieldValue : undefined,
+            undefined,
+            undefined,
+          ]);
+          expect(getByTestId("foo").value).toBe(
+            type === "field" ? fieldValue : ""
+          );
+        });
+      }
+    );
+
+    it.each(["form", "field"])(
+      "should set %s-level default value for multiple fields correctly",
+      async (type) => {
+        const value = ["🍎", "🍋"];
+        const { getState, setTouched, setDirty, setShow } = renderHelper({
+          defaultValues: type === "form" ? { foo: value } : undefined,
+          children: ({ show }: API) => (
+            <>
+              <input
+                data-testid="foo-0"
+                name="foo"
+                type="checkbox"
+                value={value[0]}
+                defaultChecked={type === "field"}
+              />
+              {show && (
+                <input
+                  data-testid="foo-1"
+                  name="foo"
+                  type="checkbox"
+                  value={value[1]}
+                  defaultChecked={type === "field"}
+                />
+              )}
+            </>
+          ),
+        });
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState("foo")).toEqual(type === "form" ? value : [value[0]]);
+          expect(getByTestId("foo-0")).toBeChecked();
+          expect(getByTestId("foo-1")).toBeChecked();
+        });
+
+        act(() => {
+          setTouched("foo");
+          setDirty("foo");
+          setShow(false);
+        });
+        await waitFor(() =>
+          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+            [value[0]],
+            true,
+            true,
+          ])
+        );
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+            [value[0]],
+            true,
+            true,
+          ]);
+          expect(getByTestId("foo-0")).toBeChecked();
+          expect(getByTestId("foo-1")).toBeChecked();
+        });
+      }
+    );
+
+    it("should not remove field", async () => {
+      const {
+        getState,
+        setValue,
+        setTouched,
+        setDirty,
+        setShow,
+      } = renderHelper({
+        isShow: true,
+        shouldRemoveField: false,
+        children: ({ show }: API) => (
+          <>{show && <input data-testid="foo" name="foo" />}</>
+        ),
+      });
+      const value = "🍎";
+      act(() => {
+        setValue("foo", value);
+        setTouched("foo");
+        setDirty("foo");
+        setShow(false);
+      });
+      await waitFor(() =>
+        expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+          value,
+          true,
+          true,
+        ])
+      );
+      act(() => setShow(true));
+      await waitFor(() => expect(getByTestId("foo").value).toBe(value));
     });
   });
 });

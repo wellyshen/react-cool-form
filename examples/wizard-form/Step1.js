@@ -1,5 +1,7 @@
 import { useForm } from "react-cool-form";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { useFormValues } from "./formValues";
 
 const Field = ({ label, id, error, ...rest }) => (
   <div>
@@ -10,13 +12,16 @@ const Field = ({ label, id, error, ...rest }) => (
 );
 
 const Step1 = () => {
+  const [formValues, setFormValues] = useFormValues();
   const nav = useNavigate();
-  const { state: formValues } = useLocation();
   const { form, mon, submit } = useForm({
-    // Fill in form values from other steps
-    defaultValues: formValues || undefined,
-    // Pass form values to the next step
-    onSubmit: (values) => nav("/step-2", { state: values })
+    // Fill in form values from context
+    defaultValues: formValues,
+    // Pass form values for other steps via conext
+    onSubmit: (values) => {
+      setFormValues(values);
+      nav("/step-2");
+    }
   });
   // Show error message only when the field is touched
   const [errors, values] = mon(["errors", "values"], {

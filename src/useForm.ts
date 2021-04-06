@@ -99,9 +99,8 @@ export default <V extends FormValues = FormValues>({
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
   const hasWarnValues = useRef(false);
-  const defaultValuesRef = useRef(defaultValues);
   const initialStateRef = useRef<FormState<V>>({
-    values: defaultValuesRef.current,
+    values: defaultValues,
     touched: {},
     errors: {},
     isDirty: false,
@@ -308,18 +307,15 @@ export default <V extends FormValues = FormValues>({
       fields.forEach((name) => {
         if (controlsRef.current[name]) return;
 
-        let value = get(values, name);
+        const value = get(values, name);
 
         if (!isUndefined(value)) setNodeValue(name, value);
 
-        if (shouldSetValues) {
-          value = get(defaultValuesRef.current, name);
-
+        if (shouldSetValues)
           setDefaultValue(
             name,
             !isUndefined(value) ? value : getNodeValue(name)
           );
-        }
       }),
     [getNodeValue, setDefaultValue, setNodeValue]
   );
@@ -541,11 +537,13 @@ export default <V extends FormValues = FormValues>({
           return p;
         },
         (p, v) => {
+          if (methodName === "getState") return v;
+
           if (p.startsWith("values")) {
             if (!isUndefined(v)) return v;
 
             p = p.replace("values.", "");
-            v = get(defaultValuesRef.current, p);
+            v = get(initialStateRef.current, p);
 
             return !isUndefined(v) ? v : get(dfValues, p);
           }
@@ -904,6 +902,7 @@ export default <V extends FormValues = FormValues>({
         if (type !== "childList") return;
 
         const fields = getFields(form);
+        let { values } = initialStateRef.current;
 
         if (shouldRemoveField)
           fieldsRef.current.forEach((_, name) => {
@@ -923,15 +922,10 @@ export default <V extends FormValues = FormValues>({
                 shouldUpdate: false,
               });
             } else if (currOptions < nextOptions) {
-              setNodeValue(
-                name,
-                get(initialStateRef.current.values, name),
-                fields
-              );
+              setNodeValue(name, get(values, name), fields);
             }
           });
 
-        let values = defaultValuesRef.current;
         const addedNodes: string[] = [];
 
         fields.forEach((_, name) => {

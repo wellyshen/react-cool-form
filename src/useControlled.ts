@@ -77,7 +77,11 @@ export default <V extends FormValues = FormValues>(
   controlsRef.current[name] = true;
   if (validate) fieldValidatorsRef.current[name] = validate;
 
-  if (isUndefined(get(initialStateRef.current.values, name))) {
+  let value = get(initialStateRef.current.values, name);
+
+  if (isUndefined(value)) {
+    value = defaultValue;
+
     if (!isUndefined(defaultValue)) {
       setDefaultValue(name, defaultValue);
     } else if (!isFieldArray(fieldArrayRef.current, name) && !hasWarn.current) {
@@ -89,7 +93,7 @@ export default <V extends FormValues = FormValues>(
   }
 
   const { onChange, onBlur, ...restProps } = props;
-  let value = !isUndefined(meta.value) ? meta.value : defaultValue;
+  value = !isUndefined(meta.value) ? meta.value : value;
   value = (format ? format(value) : value) ?? "";
 
   return [
