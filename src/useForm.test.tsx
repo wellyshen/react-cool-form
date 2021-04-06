@@ -20,7 +20,7 @@ jest.mock("./shared", () => ({ set: jest.fn(), remove: jest.fn() }));
 type Children = JSX.Element | JSX.Element[] | null;
 
 type API = Omit<FormMethods, "form"> & {
-  show: boolean;
+  show?: boolean;
   setShow: Dispatch<boolean>;
 };
 
@@ -38,7 +38,7 @@ type Props = Partial<Config>;
 
 const Form = ({
   children,
-  isShow = true,
+  isShow,
   onSubmit = () => null,
   onSubmitFull,
   onError = () => null,
@@ -1088,7 +1088,7 @@ describe("useForm", () => {
     });
 
     it.each(["normal", "shortcut"])(
-      "should run field-level validation via %s way",
+      "should run field-level validation in %s way",
       async (type) => {
         const errors = { foo: "Required" };
         const validate = async (val: string) =>
@@ -1926,33 +1926,154 @@ describe("useForm", () => {
   });
 
   describe("conditional fields", () => {
-    it("should handle conditional fields correctly", async () => {
-      const value = "🍎";
-      const { getState, setTouched, setDirty, setShow } = renderHelper({
-        defaultValues: { foo: value },
-        onSubmit,
-        children: ({ show }: API) => <>{show && <input name="foo" />}</>,
+    it.each(["form", "field"])(
+      "should set %s-level default value for single field correctly",
+      async (type) => {
+        const formValue = "🍎";
+        const fieldValue = "🍋";
+        const { getState, setTouched, setDirty, setShow } = renderHelper({
+          defaultValues: type === "form" ? { foo: formValue } : undefined,
+          children: ({ show }: API) => (
+            <>
+              {show && (
+                <input
+                  data-testid="foo"
+                  name="foo"
+                  defaultValue={type === "field" ? fieldValue : undefined}
+                />
+              )}
+            </>
+          ),
+        });
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState("foo")).toBe(
+            type === "form" ? formValue : fieldValue
+          );
+          expect(getByTestId("foo").value).toBe(
+            type === "form" ? formValue : fieldValue
+          );
+        });
+
+        act(() => {
+          setTouched("foo");
+          setDirty("foo");
+          setShow(false);
+        });
+        await waitFor(() =>
+          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+            undefined,
+            undefined,
+            undefined,
+          ])
+        );
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+            type === "field" ? fieldValue : undefined,
+            undefined,
+            undefined,
+          ]);
+          expect(getByTestId("foo").value).toBe(
+            type === "field" ? fieldValue : ""
+          );
+        });
+      }
+    );
+
+    it.each(["form", "field"])(
+      "should set %s-level default value for multiple fields correctly",
+      async (type) => {
+        const value = ["🍎", "🍋"];
+        const { getState, setTouched, setDirty, setShow } = renderHelper({
+          defaultValues: type === "form" ? { foo: value } : undefined,
+          children: ({ show }: API) => (
+            <>
+              <input
+                data-testid="foo-0"
+                name="foo"
+                type="checkbox"
+                value={value[0]}
+                defaultChecked={type === "field"}
+              />
+              {show && (
+                <input
+                  data-testid="foo-1"
+                  name="foo"
+                  type="checkbox"
+                  value={value[1]}
+                  defaultChecked={type === "field"}
+                />
+              )}
+            </>
+          ),
+        });
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState("foo")).toEqual(type === "form" ? value : [value[0]]);
+          expect(getByTestId("foo-0")).toBeChecked();
+          expect(getByTestId("foo-1")).toBeChecked();
+        });
+
+        act(() => {
+          setTouched("foo");
+          setDirty("foo");
+          setShow(false);
+        });
+        await waitFor(() =>
+          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+            [value[0]],
+            true,
+            true,
+          ])
+        );
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
+            [value[0]],
+            true,
+            true,
+          ]);
+          expect(getByTestId("foo-0")).toBeChecked();
+          expect(getByTestId("foo-1")).toBeChecked();
+        });
+      }
+    );
+
+    it("should not remove field", async () => {
+      const {
+        getState,
+        setValue,
+        setTouched,
+        setDirty,
+        setShow,
+      } = renderHelper({
+        isShow: true,
+        shouldRemoveField: false,
+        children: ({ show }: API) => (
+          <>{show && <input data-testid="foo" name="foo" />}</>
+        ),
       });
+      const value = "🍎";
       act(() => {
+        setValue("foo", value);
         setTouched("foo");
         setDirty("foo");
         setShow(false);
       });
       await waitFor(() =>
         expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-          undefined,
-          undefined,
-          undefined,
+          value,
+          true,
+          true,
         ])
       );
       act(() => setShow(true));
-      await waitFor(() =>
-        expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-          undefined,
-          undefined,
-          undefined,
-        ])
-      );
+      await waitFor(() => expect(getByTestId("foo").value).toBe(value));
     });
   });
 });
