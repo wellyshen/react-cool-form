@@ -829,12 +829,12 @@ export default <V extends FormValues = FormValues>({
       name,
       shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
     ) => {
-      const { values, touched, dirty, errors } = stateRef.current;
-
-      if (!isUndefined(get(values, name))) handleUnset(`values.${name}`);
-      if (!isUndefined(get(touched, name))) handleUnset(`touched.${name}`);
-      if (!isUndefined(get(dirty, name))) handleUnset(`dirty.${name}`);
-      if (!isUndefined(get(errors, name))) handleUnset(`errors.${name}`);
+      ["values", "touched", "dirty", "errors"].forEach(
+        (key) =>
+          !isUndefined(
+            get(stateRef.current[key as keyof FormState<V>], name)
+          ) && handleUnset(`${key}.${name}`)
+      );
 
       if (shouldUpdateDefaultValue)
         initialStateRef.current = unset(
