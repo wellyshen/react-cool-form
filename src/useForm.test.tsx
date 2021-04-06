@@ -1936,13 +1936,8 @@ describe("useForm", () => {
       act(() => {
         setTouched("foo");
         setDirty("foo");
+        setShow(false);
       });
-      expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-        value,
-        true,
-        true,
-      ]);
-      act(() => setShow(false));
       await waitFor(() =>
         expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
           undefined,
@@ -1953,7 +1948,7 @@ describe("useForm", () => {
       act(() => setShow(true));
       await waitFor(() =>
         expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-          value,
+          undefined,
           undefined,
           undefined,
         ])
