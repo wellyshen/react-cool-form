@@ -1610,9 +1610,7 @@ describe("useForm", () => {
       expect(mon("values.foo")).toBeUndefined();
     });
 
-    it.todo("should get default value correctly with conditional field");
-
-    it("should get state with correct format", () => {
+    it("should get state's values with correct format", () => {
       const { mon } = renderHelper({ defaultValues: values });
 
       expect(mon("values")).toEqual(values);
@@ -1682,7 +1680,7 @@ describe("useForm", () => {
       expect(getState()).toEqual(state);
     });
 
-    it("should get state with correct format", () => {
+    it("should get state's values with correct format", () => {
       const { getState } = renderHelper({ defaultValues: values });
 
       expect(getState("values")).toEqual(values);
@@ -1704,6 +1702,12 @@ describe("useForm", () => {
       ).toEqual({ values, foo: values.foo, isValid });
     });
 
+    it("should get delete value correctly", () => {
+      const { getState, setValue } = renderHelper({ defaultValues: values });
+      act(() => setValue("foo"));
+      expect(getState("foo")).toBeUndefined();
+    });
+
     it("should get form's values by shortcut", () => {
       const { getState } = renderHelper({ defaultValues: values });
       const { foo } = values;
@@ -1721,8 +1725,6 @@ describe("useForm", () => {
       fireEvent.input(getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(1);
     });
-
-    it.todo("should not get default value with conditional field");
   });
 
   describe("setValue", () => {
@@ -2059,6 +2061,7 @@ describe("useForm", () => {
         ),
       });
       const value = "🍎";
+
       act(() => {
         setValue("foo", value);
         setTouched("foo");
@@ -2072,6 +2075,7 @@ describe("useForm", () => {
           true,
         ])
       );
+
       act(() => setShow(true));
       await waitFor(() => expect(getByTestId("foo").value).toBe(value));
     });
