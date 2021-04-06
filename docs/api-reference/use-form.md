@@ -59,8 +59,9 @@ const App = () => {
 
 `boolean`
 
-By default, React Cool Form auto removes the related state (i.e. `values`, `errors`, `touched`, `dirty`) of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. See the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
+By default, React Cool Form auto removes the **related state** (i.e. `values`, `errors`, `touched`, `dirty`) and **default value** of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. See the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
 
+- To keep a default value existing between a dynamically show/hide field, we can set it via `defaultValue` attribute or option.
 - If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)), we need to clear the related state by ourselves.
 
 ### builtInValidationMode
