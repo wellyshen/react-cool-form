@@ -1933,7 +1933,13 @@ describe("useForm", () => {
       async (type) => {
         const formValue = "🍎";
         const fieldValue = "🍋";
-        const { getState, setTouched, setDirty, setShow } = renderHelper({
+        const {
+          getState,
+          setError,
+          setTouched,
+          setDirty,
+          setShow,
+        } = renderHelper({
           defaultValues: type === "form" ? { foo: formValue } : undefined,
           children: ({ show }: API) => (
             <>
@@ -1959,25 +1965,19 @@ describe("useForm", () => {
         });
 
         act(() => {
-          setTouched("foo");
+          setError("foo", "Required");
+          setTouched("foo", true, false);
           setDirty("foo");
           setShow(false);
         });
-        await waitFor(() =>
-          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-            undefined,
-            undefined,
-            undefined,
-          ])
-        );
+        await waitFor(() => expect(getState()).toEqual(initialState));
 
         act(() => setShow(true));
         await waitFor(() => {
-          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-            type === "field" ? fieldValue : undefined,
-            undefined,
-            undefined,
-          ]);
+          expect(getState()).toEqual({
+            ...initialState,
+            values: { foo: type === "field" ? fieldValue : undefined },
+          });
           expect(getByTestId("foo").value).toBe(
             type === "field" ? fieldValue : ""
           );
@@ -1989,7 +1989,13 @@ describe("useForm", () => {
       "should set %s-level default value for multiple fields correctly",
       async (type) => {
         const value = ["🍎", "🍋"];
-        const { getState, setTouched, setDirty, setShow } = renderHelper({
+        const {
+          getState,
+          setError,
+          setTouched,
+          setDirty,
+          setShow,
+        } = renderHelper({
           defaultValues: type === "form" ? { foo: value } : undefined,
           children: ({ show }: API) => (
             <>
@@ -2021,25 +2027,22 @@ describe("useForm", () => {
         });
 
         act(() => {
-          setTouched("foo");
+          setError("foo", "Required");
+          setTouched("foo", true, false);
           setDirty("foo");
           setShow(false);
         });
         await waitFor(() =>
-          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-            [value[0]],
-            true,
-            true,
-          ])
+          expect(
+            getState(["foo", "errors.foo", "touched.foo", "dirty.foo"])
+          ).toEqual([[value[0]], "Required", true, true])
         );
 
         act(() => setShow(true));
         await waitFor(() => {
-          expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-            [value[0]],
-            true,
-            true,
-          ]);
+          expect(
+            getState(["foo", "errors.foo", "touched.foo", "dirty.foo"])
+          ).toEqual([[value[0]], "Required", true, true]);
           expect(getByTestId("foo-0")).toBeChecked();
           expect(getByTestId("foo-1")).toBeChecked();
         });
@@ -2050,6 +2053,7 @@ describe("useForm", () => {
       const {
         getState,
         setValue,
+        setError,
         setTouched,
         setDirty,
         setShow,
@@ -2063,17 +2067,16 @@ describe("useForm", () => {
       const value = "🍎";
 
       act(() => {
-        setValue("foo", value);
-        setTouched("foo");
+        setValue("foo", value, { shouldValidate: false });
+        setError("foo", "Required");
+        setTouched("foo", true, false);
         setDirty("foo");
         setShow(false);
       });
       await waitFor(() =>
-        expect(getState(["foo", "touched.foo", "dirty.foo"])).toEqual([
-          value,
-          true,
-          true,
-        ])
+        expect(
+          getState(["foo", "errors.foo", "touched.foo", "dirty.foo"])
+        ).toEqual([value, "Required", true, true])
       );
 
       act(() => setShow(true));
