@@ -1,5 +1,17 @@
 # react-cool-form
 
+## 0.0.159
+
+### Patch Changes
+
+- [`f457e82`](https://github.com/wellyshen/react-cool-form/commit/f457e829256e85400212fddf3d3697cfbd3541f8) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useControlled): form-level default value might not working with conditional fields
+
+* [`b3ec2f7`](https://github.com/wellyshen/react-cool-form/commit/b3ec2f7c105b53922ded53d84deffd8d0eaf012b) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): reduce bundle size
+
+- [`b31f0a2`](https://github.com/wellyshen/react-cool-form/commit/b31f0a2a3b18f0cd8c51e761379a62f02935e464) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): should remove form-level default value for conditional fields
+
+* [`b2d04e8`](https://github.com/wellyshen/react-cool-form/commit/b2d04e89197d0b38b255f06b9274a90025239014) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): when multiple `mon` method are using, only the latest one can work
+
 ## 0.0.158
 
 ### Patch Changes
