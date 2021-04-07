@@ -291,7 +291,7 @@ export default <V extends FormValues = FormValues>({
         );
 
       if (!dequal(get(stateRef.current.values, name), value))
-        setStateRef(`values.${name}`, value, { shouldUpdate: false });
+        setStateRef(`values.${name}`, value, { shouldSkipUpdate: false });
     },
     [setStateRef, stateRef]
   );
@@ -919,7 +919,7 @@ export default <V extends FormValues = FormValues>({
 
             if (currOptions > nextOptions) {
               setStateRef(`values.${name}`, getNodeValue(name, fields), {
-                shouldUpdate: false,
+                shouldSkipUpdate: false,
               });
             } else if (currOptions < nextOptions) {
               setNodeValue(name, get(values, name), fields);

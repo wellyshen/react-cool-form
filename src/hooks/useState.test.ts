@@ -228,7 +228,7 @@ describe("useState", () => {
     setStateRef(
       "",
       { ...initialState, values: { foo: "🍎" } },
-      { shouldUpdate: false }
+      { shouldSkipUpdate: false }
     );
     expect(debug).toHaveBeenCalled();
     expect(forceUpdate).not.toHaveBeenCalled();
@@ -238,7 +238,7 @@ describe("useState", () => {
     const debug = jest.fn();
     const { setStateRef, setUsedState } = renderHelper(debug);
     setUsedState({ values: true });
-    setStateRef("values.foo", "🍎", { shouldUpdate: false });
+    setStateRef("values.foo", "🍎", { shouldSkipUpdate: false });
     expect(debug).toHaveBeenCalled();
     expect(forceUpdate).not.toHaveBeenCalled();
   });
