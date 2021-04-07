@@ -17,7 +17,7 @@ const Step1 = () => {
   const { form, mon, submit } = useForm({
     // Fill in form values from context
     defaultValues: formValues,
-    // Pass form values for other steps via conext
+    // Pass form values for other steps via context
     onSubmit: (values) => {
       setFormValues(values);
       nav("/step-2");
