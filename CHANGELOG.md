@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.160
+
+### Patch Changes
+
+- [`2a18eca`](https://github.com/wellyshen/react-cool-form/commit/2a18eca80cf9ed0ec6c2cd9d6c479c0ea1c52449) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): reduce re-rendering times when a field un-mounted
+
+* [`088842d`](https://github.com/wellyshen/react-cool-form/commit/088842d2d825893b3246d9d381ef2b7b7071a04c) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFormState): unsubscribe the hook when the component is unmounted
+
+- [`3fb100e`](https://github.com/wellyshen/react-cool-form/commit/3fb100e263cae996acc28e87d611434f5a862836) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): `mon("submitCount")` not triggering re-rendering
+
 ## 0.0.159
 
 ### Patch Changes
