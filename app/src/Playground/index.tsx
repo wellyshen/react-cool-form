@@ -9,25 +9,23 @@ const Field = ({ name, ...rest }: any) => {
 };
 
 export default () => {
-  const [show, setShow] = useState(false);
-  const { form, reset } = useForm({
-    defaultValues: { foo: ["1", "2"] },
+  const [show, setShow] = useState(true);
+  const { form, mon } = useForm({
+    defaultValues: { foo: "t" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
+  console.log(
+    "LOG ===> ",
+    mon(["foo", "touched.foo", "dirty.foo", "errors.foo"])
+  );
+
   return (
     <form ref={form}>
-      <input name="foo" type="checkbox" value="1" defaultChecked />
-      {show && <input name="foo" type="checkbox" value="2" defaultChecked />}
+      {show && <input name="foo" required />}
       <input type="submit" />
       <button type="button" onClick={() => setShow(!show)}>
         Toggle
-      </button>
-      <button
-        type="button"
-        onClick={() => console.log("LOG ===> ", reset({ foo: [] }))}
-      >
-        Reset
       </button>
     </form>
   );
