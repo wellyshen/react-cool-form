@@ -66,7 +66,7 @@ describe("useState", () => {
     expect(forceUpdate).not.toHaveBeenCalled();
   });
 
-  it("should set state's values without re-render", () => {
+  it("should set values without re-render", () => {
     const { stateRef, setStateRef } = renderHelper();
     const foo = "🍎";
     const error = "Required";
@@ -95,7 +95,7 @@ describe("useState", () => {
     });
   });
 
-  it("should set state's values and re-render correctly", () => {
+  it("should set values and re-render correctly", () => {
     const { stateRef, setStateRef, setUsedState } = renderHelper();
 
     const value = "🍎";
@@ -227,27 +227,34 @@ describe("useState", () => {
     expect(forceUpdate).toHaveBeenCalledTimes(4);
   });
 
-  it("should skip re-render when setting state", () => {
-    const debug = jest.fn();
-    const { setStateRef, setUsedState } = renderHelper(debug);
-    setUsedState({ values: true });
-    setStateRef(
-      "",
-      { ...initialState, values: { foo: "🍎" } },
-      { shouldSkipUpdate: false }
-    );
-    expect(debug).toHaveBeenCalled();
-    expect(forceUpdate).not.toHaveBeenCalled();
-  });
+  it.each(["state", "values"])(
+    "should skip re-render when setting %s",
+    (type) => {
+      const debug = jest.fn();
+      const { setStateRef, setUsedState } = renderHelper(debug);
+      setUsedState({ values: true });
+      setStateRef(
+        type === "form" ? "" : "values.foo",
+        type === "form" ? { ...initialState, values: { foo: "🍎" } } : "🍎",
+        { shouldSkipUpdate: true }
+      );
+      expect(debug).toHaveBeenCalled();
+      expect(forceUpdate).not.toHaveBeenCalled();
+    }
+  );
 
-  it("should skip re-render when setting state's value", () => {
-    const debug = jest.fn();
-    const { setStateRef, setUsedState } = renderHelper(debug);
-    setUsedState({ values: true });
-    setStateRef("values.foo", "🍎", { shouldSkipUpdate: false });
-    expect(debug).toHaveBeenCalled();
-    expect(forceUpdate).not.toHaveBeenCalled();
-  });
+  it.each(["state", "values"])(
+    "should force re-render when setting %s",
+    (type) => {
+      const { setStateRef } = renderHelper();
+      setStateRef(
+        type === "form" ? "" : "values.foo",
+        type === "form" ? { ...initialState, values: { foo: "🍎" } } : "🍎",
+        { shouldForceUpdate: true }
+      );
+      expect(forceUpdate).toHaveBeenCalled();
+    }
+  );
 
   it('should re-render correctly based on "fieldPath"', () => {
     const { setStateRef, setUsedState } = renderHelper();
@@ -274,7 +281,7 @@ describe("useState", () => {
     expect(debug).toHaveBeenCalledWith(state);
   });
 
-  it("should call debug correctly when setting state's value", () => {
+  it("should call debug correctly when setting values", () => {
     const debug = jest.fn();
     const { setStateRef } = renderHelper(debug);
     const errors = { foo: "Required" };
