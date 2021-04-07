@@ -2082,5 +2082,29 @@ describe("useForm", () => {
       act(() => setShow(true));
       await waitFor(() => expect(getByTestId("foo").value).toBe(value));
     });
+
+    it("should trigger re-rendering correctly", async () => {
+      const {
+        setValue,
+        setError,
+        setTouched,
+        setDirty,
+        setShow,
+        mon,
+      } = renderHelper({
+        isShow: true,
+        onRender,
+        children: ({ show }: API) => <>{show && <input name="foo" />}</>,
+      });
+      mon(["foo", "errors.foo", "touched.foo", "dirty.foo"]);
+      act(() => {
+        setValue("foo", "🍎", { shouldValidate: false });
+        setError("foo", "Required");
+        setTouched("foo", true, false);
+        setDirty("foo");
+      });
+      act(() => setShow(false));
+      await waitFor(() => expect(onRender).toHaveBeenCalledTimes(4));
+    });
   });
 });
