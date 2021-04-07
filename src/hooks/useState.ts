@@ -53,14 +53,15 @@ export default <V>(
           dirty,
           isDirty: prevIsDirty,
           isValid: prevIsValid,
+          submitCount: prevSubmitCount,
         } = state;
-        let { submitCount: prevSubmitCount } = state;
+        let { submitCount: currSubmitCount } = state;
         const isDirty = key === "dirty" ? getIsDirty(dirty) : prevIsDirty;
         const isValid = key === "errors" ? isEmptyObject(errors) : prevIsValid;
         const submitCount =
           key === "isSubmitting" && value
-            ? (prevSubmitCount += 1)
-            : prevSubmitCount;
+            ? (currSubmitCount += 1)
+            : currSubmitCount;
 
         stateRef.current = { ...state, isDirty, isValid, submitCount };
         onChangeRef.current(stateRef.current);
@@ -74,7 +75,8 @@ export default <V>(
               (k) => path.startsWith(k) || k.startsWith(path)
             ) ||
             (usedState.isDirty && isDirty !== prevIsDirty) ||
-            (usedState.isValid && isValid !== prevIsValid)
+            (usedState.isValid && isValid !== prevIsValid) ||
+            (usedState.submitCount && submitCount !== prevSubmitCount)
           )
             notify(stateRef.current);
         });

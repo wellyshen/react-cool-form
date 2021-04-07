@@ -160,14 +160,15 @@ describe("useState", () => {
     });
   });
 
-  it("should set state.isValid and state.isDirty without re-render", () => {
+  it('should set "isValid", "isDirty", "submitCount" without re-render', () => {
     const { setStateRef } = renderHelper();
     setStateRef("errors", { foo: "Required" });
     setStateRef("dirty", { foo: true });
+    setStateRef("isSubmitting", true);
     expect(forceUpdate).not.toHaveBeenCalled();
   });
 
-  it("should set state.isValid, state.isDirty and re-render correctly", () => {
+  it('should set "isValid", "isDirty", "submitCount" and re-render correctly', () => {
     const { setStateRef, setUsedState } = renderHelper();
 
     setUsedState({ isValid: true });
@@ -179,6 +180,11 @@ describe("useState", () => {
     setStateRef("dirty", { foo: true });
     setStateRef("dirty", { foo: true });
     expect(forceUpdate).toHaveBeenCalledTimes(2);
+
+    setUsedState({ submitCount: true });
+    setStateRef("isSubmitting", true);
+    setStateRef("isSubmitting", true);
+    expect(forceUpdate).toHaveBeenCalledTimes(3);
   });
 
   it("should re-render due to match parent path (parent = used-state)", () => {
