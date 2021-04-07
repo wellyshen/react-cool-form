@@ -49,7 +49,11 @@ export interface SetStateRef {
   (
     path: string,
     value?: any,
-    options?: { fieldPath?: string; shouldSkipUpdate?: boolean }
+    options?: {
+      fieldPath?: string;
+      shouldSkipUpdate?: boolean;
+      shouldForceUpdate?: boolean;
+    }
   ): void;
 }
 

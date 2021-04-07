@@ -25,7 +25,7 @@ export default <V>(
   const onChangeRef = useLatest(onChange || (() => undefined));
 
   const setStateRef = useCallback<SetStateRef>(
-    (path, value, { fieldPath, shouldSkipUpdate = true } = {}) => {
+    (path, value, { fieldPath, shouldSkipUpdate, shouldForceUpdate } = {}) => {
       const key = path.split(".")[0];
 
       if (!key) {
@@ -33,10 +33,11 @@ export default <V>(
           stateRef.current = value;
           onChangeRef.current(stateRef.current);
 
-          if (!shouldSkipUpdate) return;
+          if (shouldSkipUpdate) return;
 
           observersRef.current.forEach(({ usedState, notify }) => {
-            if (!isEmptyObject(usedState)) notify(stateRef.current);
+            if (shouldForceUpdate || !isEmptyObject(usedState))
+              notify(stateRef.current);
           });
         }
 
@@ -66,11 +67,12 @@ export default <V>(
         stateRef.current = { ...state, isDirty, isValid, submitCount };
         onChangeRef.current(stateRef.current);
 
-        if (!shouldSkipUpdate) return;
+        if (shouldSkipUpdate) return;
 
         path = fieldPath || path;
         observersRef.current.forEach(({ usedState, notify }) => {
           if (
+            shouldForceUpdate ||
             Object.keys(usedState).some(
               (k) => path.startsWith(k) || k.startsWith(path)
             ) ||

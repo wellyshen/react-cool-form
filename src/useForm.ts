@@ -120,7 +120,10 @@ export default <V extends FormValues = FormValues>({
   } = useState<V>(initialStateRef.current, debug);
 
   const handleUnset = useCallback(
-    (path: string) => {
+    (
+      path: string,
+      options?: { shouldSkipUpdate?: boolean; shouldForceUpdate?: boolean }
+    ) => {
       const segs = path.split(".");
       const k = segs.shift() as string;
       setStateRef(
@@ -128,6 +131,7 @@ export default <V extends FormValues = FormValues>({
         unset(stateRef.current[k as keyof FormState<V>], segs.join("."), true),
         {
           fieldPath: path,
+          ...options,
         }
       );
     },
@@ -291,7 +295,7 @@ export default <V extends FormValues = FormValues>({
         );
 
       if (!dequal(get(stateRef.current.values, name), value))
-        setStateRef(`values.${name}`, value, { shouldSkipUpdate: false });
+        setStateRef(`values.${name}`, value, { shouldSkipUpdate: true });
     },
     [setStateRef, stateRef]
   );
@@ -830,10 +834,14 @@ export default <V extends FormValues = FormValues>({
       shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
     ) => {
       ["values", "touched", "dirty", "errors"].forEach(
-        (key) =>
+        (key, idx) =>
           !isUndefined(
             get(stateRef.current[key as keyof FormState<V>], name)
-          ) && handleUnset(`${key}.${name}`)
+          ) &&
+          handleUnset(`${key}.${name}`, {
+            shouldSkipUpdate: idx !== 3,
+            shouldForceUpdate: idx === 3,
+          })
       );
 
       if (shouldUpdateDefaultValue)
@@ -919,7 +927,7 @@ export default <V extends FormValues = FormValues>({
 
             if (currOptions > nextOptions) {
               setStateRef(`values.${name}`, getNodeValue(name, fields), {
-                shouldSkipUpdate: false,
+                shouldSkipUpdate: true,
               });
             } else if (currOptions < nextOptions) {
               setNodeValue(name, get(values, name), fields);
