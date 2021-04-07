@@ -11,6 +11,7 @@ export type Methods<V = any> = {
   excludeFieldsRef: MutableRefObject<ObjMap>;
   fieldArrayRef: MutableRefObject<FieldArray>;
   controlsRef: MutableRefObject<ObjMap>;
+  observersRef: MutableRefObject<Observer<V>[]>;
   fieldValidatorsRef: MutableRefObject<ObjMap<FieldValidator<V>>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   setStateRef: SetStateRef;
@@ -21,8 +22,6 @@ export type Methods<V = any> = {
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
   handleChangeEvent: HandleChangeEvent;
   removeField: RemoveField;
-  subscribeObserver: ObserverHandler<V>;
-  unsubscribeObserver: ObserverHandler<V>;
 } & FormMethods<V>;
 
 // useState
@@ -57,25 +56,15 @@ export interface SetStateRef {
   ): void;
 }
 
-export interface SetUsedState {
-  (usedState: ObjMap): void;
-}
-
 export interface Observer<V> {
   usedState: ObjMap;
   notify: (state: FormState<V>) => void;
 }
 
-export interface ObserverHandler<V> {
-  (observer: Observer<V>): void;
-}
-
 export interface FormStateReturn<V> {
   stateRef: MutableRefObject<FormState<V>>;
   setStateRef: SetStateRef;
-  setUsedState: SetUsedState;
-  subscribeObserver: ObserverHandler<V>;
-  unsubscribeObserver: ObserverHandler<V>;
+  observersRef: MutableRefObject<Observer<V>[]>;
 }
 
 // useForm

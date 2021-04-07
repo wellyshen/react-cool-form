@@ -28,14 +28,18 @@ export default <V extends FormValues = FormValues>(
 
   const observerRef = useRef<Observer<V>>();
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
-  const { getFormState, subscribeObserver, unsubscribeObserver } = methods;
+  const { observersRef, getFormState } = methods;
   const callback = isFunction(configOrCallback) ? configOrCallback : undefined;
 
   useEffect(() => {
-    subscribeObserver(observerRef.current!);
-    return () => unsubscribeObserver(observerRef.current!);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    observersRef.current.push(observerRef.current!);
+
+    return () => {
+      observersRef.current = observersRef.current.filter(
+        (o) => o !== observerRef.current
+      );
+    };
+  }, [observersRef]);
 
   return getFormState(path, {
     ...config,
