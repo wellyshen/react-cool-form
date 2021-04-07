@@ -98,52 +98,60 @@ describe("useState", () => {
   it("should set state's values and re-render correctly", () => {
     const { stateRef, setStateRef, setUsedState } = renderHelper();
 
-    const foo = "🍎";
+    const value = "🍎";
     setUsedState({ "values.foo": true });
-    setStateRef("values.foo", foo);
-    setStateRef("values.foo", foo);
-    expect(forceUpdate).toHaveBeenCalledTimes(2);
+    setUsedState({ "values.bar": true });
+    setStateRef("values.foo", value);
+    setStateRef("values.foo", value);
+    setStateRef("values.bar", value);
+    expect(forceUpdate).toHaveBeenCalledTimes(3);
 
     setUsedState({ "touched.foo": true });
+    setUsedState({ "touched.bar": true });
     setStateRef("touched.foo", true);
     setStateRef("touched.foo", true);
-    expect(forceUpdate).toHaveBeenCalledTimes(3);
+    setStateRef("touched.bar", true);
+    expect(forceUpdate).toHaveBeenCalledTimes(5);
 
     const error = "Required";
     setUsedState({ "errors.foo": true });
+    setUsedState({ "errors.bar": true });
     setStateRef("errors.foo", error);
     setStateRef("errors.foo", error);
-    expect(forceUpdate).toHaveBeenCalledTimes(4);
+    setStateRef("errors.bar", error);
+    expect(forceUpdate).toHaveBeenCalledTimes(7);
 
     setUsedState({ "dirty.foo": true });
+    setUsedState({ "dirty.bar": true });
     setStateRef("dirty.foo", true);
     setStateRef("dirty.foo", true);
-    expect(forceUpdate).toHaveBeenCalledTimes(5);
+    setStateRef("dirty.bar", true);
+    expect(forceUpdate).toHaveBeenCalledTimes(9);
 
     const isValidating = true;
     setUsedState({ isValidating: true });
     setStateRef("isValidating", isValidating);
     setStateRef("isValidating", isValidating);
-    expect(forceUpdate).toHaveBeenCalledTimes(6);
+    expect(forceUpdate).toHaveBeenCalledTimes(10);
 
     const isSubmitting = true;
     setUsedState({ isSubmitting: true });
     setStateRef("isSubmitting", isSubmitting);
     setStateRef("isSubmitting", isSubmitting);
-    expect(forceUpdate).toHaveBeenCalledTimes(7);
+    expect(forceUpdate).toHaveBeenCalledTimes(11);
 
     const isSubmitted = true;
     setUsedState({ isSubmitted: true });
     setStateRef("isSubmitted", isSubmitted);
     setStateRef("isSubmitted", isSubmitted);
-    expect(forceUpdate).toHaveBeenCalledTimes(8);
+    expect(forceUpdate).toHaveBeenCalledTimes(12);
 
     expect(stateRef.current).toEqual({
-      values: { foo },
-      touched: { foo: true },
-      errors: { foo: error },
+      values: { foo: value, bar: value },
+      touched: { foo: true, bar: true },
+      errors: { foo: error, bar: error },
       isDirty: true,
-      dirty: { foo: true },
+      dirty: { foo: true, bar: true },
       isValidating,
       isValid: false,
       isSubmitting,
