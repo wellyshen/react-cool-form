@@ -6,9 +6,7 @@ import {
   FormState,
   FormStateReturn,
   Observer,
-  ObserverHandler,
   SetStateRef,
-  SetUsedState,
 } from "../types";
 import useLatest from "./useLatest";
 import { get, getIsDirty, isEmptyObject, set } from "../utils";
@@ -33,12 +31,10 @@ export default <V>(
           stateRef.current = value;
           onChangeRef.current(stateRef.current);
 
-          if (shouldSkipUpdate) return;
-
-          observersRef.current.forEach(({ usedState, notify }) => {
-            if (shouldForceUpdate || !isEmptyObject(usedState))
-              notify(stateRef.current);
-          });
+          observersRef.current.forEach(
+            ({ usedState, notify }) =>
+              !isEmptyObject(usedState) && notify(stateRef.current)
+          );
         }
 
         return;
@@ -87,27 +83,5 @@ export default <V>(
     [onChangeRef]
   );
 
-  const setUsedState = useCallback<SetUsedState>((usedState) => {
-    observersRef.current[0].usedState = {
-      ...observersRef.current[0].usedState,
-      ...usedState,
-    };
-  }, []);
-
-  const subscribeObserver = useCallback<ObserverHandler<V>>(
-    (observer) => observersRef.current.push(observer),
-    []
-  );
-
-  const unsubscribeObserver = useCallback<ObserverHandler<V>>((observer) => {
-    observersRef.current = observersRef.current.filter((o) => o !== observer);
-  }, []);
-
-  return {
-    stateRef,
-    setStateRef,
-    setUsedState,
-    subscribeObserver,
-    unsubscribeObserver,
-  };
+  return { stateRef, setStateRef, observersRef };
 };

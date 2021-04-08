@@ -1660,14 +1660,24 @@ describe("useForm", () => {
       });
     });
 
-    it("should trigger re-rendering", () => {
+    it("should trigger re-rendering correctly", () => {
       const { mon } = renderHelper({
         onRender,
-        children: <input data-testid="foo" name="foo" />,
+        children: (
+          <>
+            <input data-testid="foo" name="foo" />
+            <input data-testid="bar" name="bar" />
+          </>
+        ),
       });
+
       mon("foo");
       fireEvent.input(getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(2);
+
+      mon("bar");
+      fireEvent.input(getByTestId("bar"));
+      expect(onRender).toHaveBeenCalledTimes(3);
     });
   });
 

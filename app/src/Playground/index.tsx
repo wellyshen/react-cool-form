@@ -1,28 +1,27 @@
 /* eslint-disable no-console */
 
 import { useState } from "react";
-import { useForm, useControlled } from "react-cool-form";
+import { useForm, useFormState } from "react-cool-form";
 
-const Field = ({ name, ...rest }: any) => {
-  const [props] = useControlled(name, rest);
-  return <input {...props} />;
+const Isolated = ({ name }: any) => {
+  const data = useFormState(name);
+  console.log("LOG ===> Isolated: ", data);
+  return null;
 };
 
 export default () => {
   const [show, setShow] = useState(true);
   const { form, mon } = useForm({
-    defaultValues: { foo: "t" },
+    defaultValues: { foo: "test" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
 
-  console.log(
-    "LOG ===> ",
-    mon(["foo", "touched.foo", "dirty.foo", "errors.foo"])
-  );
+  console.log("LOG ===> Re-render");
 
   return (
     <form ref={form}>
-      {show && <input name="foo" required />}
+      <input name="foo" />
+      {show && <Isolated name="foo" />}
       <input type="submit" />
       <button type="button" onClick={() => setShow(!show)}>
         Toggle
