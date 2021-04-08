@@ -277,26 +277,4 @@ describe("useState", () => {
       isValid: false,
     });
   });
-
-  /* it("should subscribe/unsubscribe observer correctly", () => {
-    const {
-      subscribeObserver,
-      unsubscribeObserver,
-      setStateRef,
-    } = renderHelper();
-    const path = "values.foo";
-    const foo = "🍎";
-    const observer = { usedState: { [path]: true }, notify: forceUpdate };
-
-    subscribeObserver(observer);
-    setStateRef(path, foo);
-    expect(forceUpdate).toHaveBeenCalledWith({
-      ...initialState,
-      values: { foo },
-    });
-
-    unsubscribeObserver(observer);
-    setStateRef(path, foo);
-    expect(forceUpdate).toHaveBeenCalledTimes(1);
-  }); */
 });
