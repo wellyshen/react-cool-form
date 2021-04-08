@@ -39,7 +39,8 @@ export default <V extends FormValues = FormValues>(
         (o) => o !== observerRef.current
       );
     };
-  }, [observersRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return getFormState(path, {
     ...config,

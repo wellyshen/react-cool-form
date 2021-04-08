@@ -90,14 +90,8 @@ export default <T = any, V extends FormValues = FormValues>(
     return () => {
       if (shouldRemoveField) removeField(name, true);
     };
-  }, [
-    initialStateRef,
-    name,
-    removeField,
-    setDefaultValue,
-    shouldRemoveField,
-    updateFields,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!fieldArrayRef.current[name])
     fieldArrayRef.current[name] = {
