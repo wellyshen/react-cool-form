@@ -172,7 +172,7 @@ export interface SetNodesOrValues<V> {
 }
 
 export interface RemoveField {
-  (name: string, shouldUpdateDefaultValue?: boolean): void;
+  (name: string, shouldRemoveDefaultValue?: boolean): void;
 }
 
 export interface SetTouchedMaybeValidate {

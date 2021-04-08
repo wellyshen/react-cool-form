@@ -833,7 +833,7 @@ export default <V extends FormValues = FormValues>({
   const removeField = useCallback<RemoveField>(
     (
       name,
-      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
+      shouldRemoveDefaultValue = !isFieldArray(fieldArrayRef.current, name)
     ) => {
       ["values", "touched", "dirty", "errors"].forEach(
         (key, idx) =>
@@ -846,7 +846,7 @@ export default <V extends FormValues = FormValues>({
           })
       );
 
-      if (shouldUpdateDefaultValue)
+      if (shouldRemoveDefaultValue)
         initialStateRef.current = unset(
           initialStateRef.current,
           `values.${name}`,
