@@ -59,10 +59,11 @@ const App = () => {
 
 `boolean`
 
-By default, React Cool Form auto removes the **related state** (i.e. `values`, `errors`, `touched`, `dirty`) and **default value** of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. See the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
+By default, React Cool Form automatically removes the **related state** (i.e. value, error, touched, dirty) and **default value** of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. See the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
 
 - To keep a default value existing between a dynamically show/hide field, we can set it via `defaultValue` attribute or option.
-- If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)), we need to clear the related state by ourselves.
+- If this feature doesn't meet your needs, you can use the [removeField](#removefield) to control what data that you want to remove instead.
+- If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)), we need to manually remove it by the [removeField](#removefield) method.
 
 ### builtInValidationMode
 
@@ -137,6 +138,7 @@ const methods = useForm({
       setError,
       focus,
       runValidation,
+      removeField,
       submit,
       reset,
     } = options;
@@ -165,6 +167,7 @@ const methods = useForm({
       setError,
       focus,
       runValidation,
+      removeField,
       submit,
       reset,
     } = options;
@@ -193,6 +196,7 @@ const methods = useForm({
       setError,
       focus,
       runValidation,
+      removeField,
       submit,
       reset,
     } = options;
@@ -442,6 +446,37 @@ const validateForm = async () => {
 
 👉🏻 See the [Validation Guide](../getting-started/validation-guide) to learn more.
 
+### removeField
+
+`(name: string, exclude?: string[]) => void`
+
+This method allows us to manually remove the **related state** (i.e. value, error, touched, dirty) and **default value** of a field, it also excludes a field from the form.
+
+- By default, React Cool Form automatically [removes an unmounted field](#shouldremovefield) for us but this method gives us the ability to control the data that we want to remove.
+
+```js {4,10}
+const App = () => {
+  const [show, setShow] = useState(true);
+  const { form, removeField } = useForm({
+    shouldRemoveField: false, // Disable the feature of automatically removing fields
+  });
+
+  const handleToggle = () => {
+    setShow(!show);
+    // Exclude option: ["defaultValue", "value", "error", "touched", "dirty"]
+    removeField("foo", ["value", "error"]); // Keep "value" and "error"
+  };
+
+  return (
+    <form ref={form}>
+      <input type="checkbox" onClick={handleToggle} data-rcf-exclude />
+      {show && <input name="foo" />}
+      {/* Other fields... */}
+    </form>
+  );
+};
+```
+
 ### submit
 
 `(e?: Event) => Promise<Result>`
@@ -477,7 +512,7 @@ const handleFormSubmit = async (e) => {
 This method allows us to manually reset the form. It will restore the form to its default values as well as reset/clear all the [related state](../getting-started/form-state#about-the-form-state).
 
 - We can pass `values` as an optional parameter to update the default values.
-- We can pass `exclude` as an optional parameter to prevent specific state from reset.
+- We can pass `exclude` as an optional parameter to prevent specific [state](../getting-started/form-state#about-the-form-state) from reset.
 
 ```js
 const { reset } = useForm({
