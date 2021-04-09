@@ -1,30 +1,40 @@
 /* eslint-disable no-console */
 
-import { useState } from "react";
-import { useForm, useFormState } from "react-cool-form";
+import { useForm, useFieldArray, useControlled } from "react-cool-form";
 
-const Isolated = ({ name }: any) => {
-  const data = useFormState(name);
-  console.log("LOG ===> Isolated: ", data);
-  return null;
+const Field = ({ name, ...rest }: any) => {
+  const [props] = useControlled(name, rest);
+  return <input {...props} />;
 };
 
 export default () => {
-  const [show, setShow] = useState(true);
-  const { form, mon } = useForm({
-    defaultValues: { foo: "test" },
+  const { form, reset } = useForm({
+    defaultValues: {
+      foo: [
+        { a: "a1", b: "b1" },
+        { a: "a2", b: "b2" },
+      ],
+    },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
+  const [fields, { remove }] = useFieldArray("foo");
 
   console.log("LOG ===> Re-render");
 
   return (
     <form ref={form}>
-      <input name="foo" />
-      {show && <Isolated name="foo" />}
+      {fields.map((fieldName) => (
+        <div key={fieldName}>
+          <input name={`${fieldName}.a`} />
+          <Field name={`${fieldName}.b`} />
+        </div>
+      ))}
       <input type="submit" />
-      <button type="button" onClick={() => setShow(!show)}>
-        Toggle
+      <button type="button" onClick={() => remove(0)}>
+        Remove
+      </button>
+      <button type="button" onClick={() => reset()}>
+        Reset
       </button>
     </form>
   );
