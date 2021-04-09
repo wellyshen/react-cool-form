@@ -21,7 +21,6 @@ export type Methods<V = any> = {
   setNodesOrValues: SetNodesOrValues<V>;
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
   handleChangeEvent: HandleChangeEvent;
-  removeField: RemoveField;
 } & FormMethods<V>;
 
 // useState
@@ -90,7 +89,7 @@ export type Fields = Map<
 export type FieldArray = ObjMap<{ fields: ObjMap; reset: () => void }>;
 
 interface EventOptions<V> {
-  focus: Focus;
+  removeField: RemoveField;
   getState: GetState;
   setValue: SetValue;
   setError: SetError;
@@ -98,6 +97,7 @@ interface EventOptions<V> {
   setDirty: SetDirty;
   clearErrors: ClearErrors;
   runValidation: RunValidation;
+  focus: Focus;
   reset: Reset<V>;
   submit: Submit<V>;
 }
@@ -171,10 +171,6 @@ export interface SetNodesOrValues<V> {
   (values: V, options?: { shouldSetValues?: boolean; fields?: string[] }): void;
 }
 
-export interface RemoveField {
-  (name: string, shouldRemoveDefaultValue?: boolean): void;
-}
-
 export interface SetTouchedMaybeValidate {
   (name: string): void;
 }
@@ -206,6 +202,13 @@ export interface Mon<V> {
 
 export interface Focus {
   (name: string, delay?: number): void;
+}
+
+export interface RemoveField {
+  (
+    name: string,
+    exclude?: ("defaultValue" | "value" | "touched" | "dirty" | "error")[]
+  ): void;
 }
 
 export interface GetState {
@@ -284,6 +287,7 @@ export interface FormMethods<V = any> {
   field: RegisterField<V>;
   mon: Mon<V>;
   focus: Focus;
+  removeField: RemoveField;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;

@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.162
+
+### Patch Changes
+
+- [#549](https://github.com/wellyshen/react-cool-form/pull/549) [`b1cfeae`](https://github.com/wellyshen/react-cool-form/commit/b1cfeaea9d43d037d467789ff9c9db45e8cd6724) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): new `removeField` API
+
 ## 0.0.161
 
 ### Patch Changes

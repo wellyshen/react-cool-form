@@ -697,7 +697,6 @@ export default <V extends FormValues = FormValues>({
 
   const getOptions = useCallback(
     () => ({
-      focus,
       getState,
       setValue,
       setTouched,
@@ -705,6 +704,8 @@ export default <V extends FormValues = FormValues>({
       setError,
       clearErrors,
       runValidation,
+      removeField,
+      focus,
       reset,
       submit,
     }),
@@ -831,32 +832,38 @@ export default <V extends FormValues = FormValues>({
   );
 
   const removeField = useCallback<RemoveField>(
-    (
-      name,
-      shouldRemoveDefaultValue = !isFieldArray(fieldArrayRef.current, name)
-    ) => {
-      ["values", "touched", "dirty", "errors"].forEach(
-        (key, idx) =>
-          !isUndefined(
-            get(stateRef.current[key as keyof FormState<V>], name)
-          ) &&
-          handleUnset(`${key}.${name}`, {
-            shouldSkipUpdate: idx !== 3,
-            shouldForceUpdate: idx === 3,
-          })
-      );
+    (name, exclude) => {
+      const { defaultValue, ...rest } = arrayToMap(exclude || [], {
+        value: "values",
+        error: "errors",
+      });
 
-      if (shouldRemoveDefaultValue)
+      if (!defaultValue)
         initialStateRef.current = unset(
           initialStateRef.current,
           `values.${name}`,
           true
         );
 
+      ["values", "touched", "dirty", "errors"].forEach((key, idx, arr) => {
+        const shouldForceUpdate = idx === arr.length - 1;
+
+        if (
+          !rest[key] &&
+          !isUndefined(get(stateRef.current[key as keyof FormState<V>], name))
+        )
+          handleUnset(`${key}.${name}`, {
+            shouldSkipUpdate: !shouldForceUpdate,
+            shouldForceUpdate,
+          });
+      });
+
       delete fieldParsersRef.current[name];
       delete fieldValidatorsRef.current[name];
       delete fieldArrayRef.current[name];
       delete controlsRef.current[name];
+
+      if (fieldsRef.current.has(name)) fieldsRef.current.delete(name);
     },
     [handleUnset, stateRef]
   );
@@ -919,7 +926,12 @@ export default <V extends FormValues = FormValues>({
             if (controlsRef.current[name]) return;
 
             if (!fields.has(name)) {
-              removeField(name);
+              removeField(
+                name,
+                isFieldArray(fieldArrayRef.current, name)
+                  ? ["defaultValue"]
+                  : undefined
+              );
               return;
             }
 
@@ -1049,6 +1061,7 @@ export default <V extends FormValues = FormValues>({
     field: registerField,
     mon,
     focus,
+    removeField,
     getState,
     setValue,
     setTouched,

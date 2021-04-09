@@ -48,6 +48,7 @@ describe("useFormMethods", () => {
         field: expect.any(Function),
         mon: expect.any(Function),
         focus: expect.any(Function),
+        removeField: expect.any(Function),
         getState: expect.any(Function),
         setValue: expect.any(Function),
         setTouched: expect.any(Function),
