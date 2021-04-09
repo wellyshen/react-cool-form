@@ -1,7 +1,7 @@
 import { ObjMap } from "../types";
 
-export default (arr: any[]): ObjMap =>
+export default (arr: any[], map: Record<string, string> = {}): ObjMap =>
   arr.reduce((obj, key) => {
-    obj[key] = true;
+    obj[map[key] || key] = true;
     return obj;
   }, {});
