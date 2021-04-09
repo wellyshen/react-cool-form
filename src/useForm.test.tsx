@@ -104,6 +104,7 @@ describe("useForm", () => {
   };
   const options = {
     focus: expect.any(Function),
+    removeField: expect.any(Function),
     getState: expect.any(Function),
     setValue: expect.any(Function),
     setTouched: expect.any(Function),
@@ -221,6 +222,7 @@ describe("useForm", () => {
       field: expect.any(Function),
       mon: expect.any(Function),
       focus: expect.any(Function),
+      removeField: expect.any(Function),
       getState: expect.any(Function),
       setValue: expect.any(Function),
       setTouched: expect.any(Function),
@@ -1918,6 +1920,43 @@ describe("useForm", () => {
     }
   );
 
+  it.each(["normal", "exclude"])("should remove field correctly", (type) => {
+    const value = "🍎";
+    const {
+      setError,
+      setTouched,
+      setDirty,
+      removeField,
+      reset,
+      getState,
+    } = renderHelper({
+      children: <input data-testid="foo" name="foo" defaultValue="🍎" />,
+    });
+
+    act(() => {
+      setError("foo", "Required");
+      setTouched("foo", true, false);
+      setDirty("foo");
+      removeField(
+        "foo",
+        type === "normal"
+          ? undefined
+          : ["defaultValue", "values", "errors", "touched", "dirty"]
+      );
+    });
+    expect(getState(["foo", "errors.foo", "touched.foo", "dirty.foo"])).toEqual(
+      type === "normal"
+        ? [undefined, undefined, undefined, undefined]
+        : [value, "Required", true, true]
+    );
+
+    act(() => reset());
+    expect(getState("foo")).toEqual(type === "normal" ? undefined : value);
+
+    fireEvent.input(getByTestId("foo"), { target: { value: "🍋" } });
+    expect(getState("foo")).toBe(type === "normal" ? undefined : value);
+  });
+
   it("should call debug callback", async () => {
     const debug = jest.fn();
     renderHelper({ debug, children: <input data-testid="foo" name="foo" /> });
@@ -2060,9 +2099,9 @@ describe("useForm", () => {
     );
 
     it("should not remove field", async () => {
+      const value = "🍎";
       const {
         getState,
-        setValue,
         setError,
         setTouched,
         setDirty,
@@ -2071,13 +2110,15 @@ describe("useForm", () => {
         isShow: true,
         shouldRemoveField: false,
         children: ({ show }: API) => (
-          <>{show && <input data-testid="foo" name="foo" />}</>
+          <>
+            {show && (
+              <input data-testid="foo" name="foo" defaultValue={value} />
+            )}
+          </>
         ),
       });
-      const value = "🍎";
 
       act(() => {
-        setValue("foo", value, { shouldValidate: false });
         setError("foo", "Required");
         setTouched("foo", true, false);
         setDirty("foo");
