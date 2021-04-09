@@ -66,18 +66,17 @@ export default <V>(
         if (shouldSkipUpdate) return;
 
         path = fieldPath || path;
-        observersRef.current.forEach(({ usedState, notify }) => {
-          if (
-            shouldForceUpdate ||
-            Object.keys(usedState).some(
-              (k) => path.startsWith(k) || k.startsWith(path)
-            ) ||
-            (usedState.isDirty && isDirty !== prevIsDirty) ||
-            (usedState.isValid && isValid !== prevIsValid) ||
-            (usedState.submitCount && submitCount !== prevSubmitCount)
-          )
-            notify(stateRef.current);
-        });
+        observersRef.current.forEach(
+          ({ usedState, notify }) =>
+            (shouldForceUpdate ||
+              Object.keys(usedState).some(
+                (k) => path.startsWith(k) || k.startsWith(path)
+              ) ||
+              (usedState.isDirty && isDirty !== prevIsDirty) ||
+              (usedState.isValid && isValid !== prevIsValid) ||
+              (usedState.submitCount && submitCount !== prevSubmitCount)) &&
+            notify(stateRef.current)
+        );
       }
     },
     [onChangeRef]
