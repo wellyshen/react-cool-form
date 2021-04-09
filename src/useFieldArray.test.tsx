@@ -302,7 +302,7 @@ describe("useFieldArray", () => {
     expect(getState("touched.foo")).toEqual([]);
   });
 
-  it.each(["set-value", "reset"])("should set value correctly", (type) => {
+  it.each(["set", "reset"])("should %s value correctly", (type) => {
     const defaultValue = [...value, { a: "🍋", b: "🍋" }];
     const { setValue, reset, getState, push, remove, container } = renderHelper(
       {
@@ -323,7 +323,7 @@ describe("useFieldArray", () => {
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
     act(() => {
-      if (type === "set-value") {
+      if (type === "set") {
         setValue("foo", defaultValue);
       } else {
         reset();
@@ -338,13 +338,13 @@ describe("useFieldArray", () => {
     }
 
     act(() => {
-      if (type === "set-value") reset();
+      if (type === "set") reset();
       push({ a: "🥝", b: "🥝" });
     });
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
     act(() => {
-      if (type === "set-value") {
+      if (type === "set") {
         setValue("foo", defaultValue);
       } else {
         reset();
@@ -360,13 +360,13 @@ describe("useFieldArray", () => {
     }
 
     act(() => {
-      if (type === "set-value") reset();
+      if (type === "set") reset();
       remove(1);
     });
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
     act(() => {
-      if (type === "set-value") {
+      if (type === "set") {
         setValue("foo", defaultValue);
       } else {
         reset();
