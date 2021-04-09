@@ -464,7 +464,7 @@ const App = () => {
   const handleToggle = () => {
     setShow(!show);
     // Exclude option: ["defaultValue", "value", "error", "touched", "dirty"]
-    removeField("foo", ["value", "error"]); // Keep "value" and "error"
+    if (!show) removeField("foo", ["value", "error"]); // Keep "value" and "error"
   };
 
   return (
