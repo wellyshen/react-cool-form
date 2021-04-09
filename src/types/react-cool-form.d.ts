@@ -10,7 +10,7 @@ declare module "react-cool-form" {
   };
 
   interface EventOptions<V> {
-    focus: Focus;
+    removeField: RemoveField;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
@@ -18,6 +18,7 @@ declare module "react-cool-form" {
     setError: SetError;
     clearErrors: ClearErrors;
     runValidation: RunValidation;
+    focus: Focus;
     reset: Reset<V>;
     submit: Submit<V>;
   }
@@ -31,6 +32,13 @@ declare module "react-cool-form" {
 
   interface Focus {
     (name: string, delay?: number): void;
+  }
+
+  interface RemoveField {
+    (
+      name: string,
+      exclude?: ("defaultValue" | "value" | "touched" | "dirty" | "error")[]
+    ): void;
   }
 
   interface GetState {
@@ -195,6 +203,7 @@ declare module "react-cool-form" {
     field: RegisterField<V>;
     mon: Mon<V>;
     focus: Focus;
+    removeField: RemoveField;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;

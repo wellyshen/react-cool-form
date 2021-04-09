@@ -64,10 +64,12 @@ export default <V extends FormValues = FormValues>(
     removeField,
   } = methods;
   const hasWarn = useRef(false);
+  const isFieldArr = isFieldArray(fieldArrayRef.current, name);
 
   useEffect(
     () => () => {
-      if (shouldRemoveField) removeField(name);
+      if (shouldRemoveField)
+        removeField(name, isFieldArr ? ["defaultValue"] : undefined);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -83,7 +85,7 @@ export default <V extends FormValues = FormValues>(
 
     if (!isUndefined(defaultValue)) {
       setDefaultValue(name, defaultValue);
-    } else if (!isFieldArray(fieldArrayRef.current, name) && !hasWarn.current) {
+    } else if (!isFieldArr && !hasWarn.current) {
       warn(
         `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
       );

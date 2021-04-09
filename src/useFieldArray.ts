@@ -88,7 +88,7 @@ export default <T = any, V extends FormValues = FormValues>(
     }
 
     return () => {
-      if (shouldRemoveField) removeField(name, true);
+      if (shouldRemoveField) removeField(name);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
