@@ -469,7 +469,7 @@ const App = () => {
 
   return (
     <form ref={form}>
-      <input type="checkbox" onClick={handleToggle} data-rcf-exclude />
+      <input type="checkbox" onChange={handleToggle} data-rcf-exclude />
       {show && <input name="foo" />}
       {/* Other fields... */}
     </form>
