@@ -1941,13 +1941,21 @@ describe("useForm", () => {
         "foo",
         type === "normal"
           ? undefined
-          : ["defaultValue", "values", "errors", "touched", "dirty"]
+          : ["defaultValue", "value", "error", "touched", "dirty"]
       );
     });
-    expect(getState(["foo", "errors.foo", "touched.foo", "dirty.foo"])).toEqual(
+    expect(getState()).toEqual(
       type === "normal"
-        ? [undefined, undefined, undefined, undefined]
-        : [value, "Required", true, true]
+        ? initialState
+        : {
+            ...initialState,
+            values: { foo: value },
+            errors: { foo: "Required" },
+            isValid: false,
+            touched: { foo: true },
+            dirty: { foo: true },
+            isDirty: true,
+          }
     );
 
     act(() => reset());
