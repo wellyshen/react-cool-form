@@ -40,12 +40,10 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-    "react-select": "^4.3.0",
-    "typescript": "~4.2.3"
+    "typescript": "~4.2.4"
   },
   "devDependencies": {
-    "@types/react-select": "^4.0.13",
-    "eslint-config-welly": "^1.8.17",
+    "eslint-config-welly": "^1.9.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
