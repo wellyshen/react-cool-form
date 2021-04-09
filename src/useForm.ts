@@ -85,7 +85,7 @@ export default <V extends FormValues = FormValues>({
   debug,
 }: FormConfig<V> = {}): FormMethods<V> => {
   const handlersRef = useRef<Handlers>({});
-  const observerRef = useRef<MutationObserver>();
+  const mutationObserverRef = useRef<MutationObserver>();
   const formRef = useRef<HTMLElement>();
   const fieldsRef = useRef<Fields>(new Map());
   const fieldParsersRef = useRef<Parsers>({});
@@ -111,16 +111,16 @@ export default <V extends FormValues = FormValues>({
     isSubmitted: false,
     submitCount: 0,
   });
-  const {
-    stateRef,
-    setStateRef,
-    setUsedState,
-    subscribeObserver,
-    unsubscribeObserver,
-  } = useState<V>(initialStateRef.current, debug);
+  const { stateRef, setStateRef, observersRef } = useState<V>(
+    initialStateRef.current,
+    debug
+  );
 
   const handleUnset = useCallback(
-    (path: string) => {
+    (
+      path: string,
+      options?: { shouldSkipUpdate?: boolean; shouldForceUpdate?: boolean }
+    ) => {
       const segs = path.split(".");
       const k = segs.shift() as string;
       setStateRef(
@@ -128,6 +128,7 @@ export default <V extends FormValues = FormValues>({
         unset(stateRef.current[k as keyof FormState<V>], segs.join("."), true),
         {
           fieldPath: path,
+          ...options,
         }
       );
     },
@@ -291,7 +292,7 @@ export default <V extends FormValues = FormValues>({
         );
 
       if (!dequal(get(stateRef.current.values, name), value))
-        setStateRef(`values.${name}`, value, { shouldUpdate: false });
+        setStateRef(`values.${name}`, value, { shouldSkipUpdate: true });
     },
     [setStateRef, stateRef]
   );
@@ -571,9 +572,14 @@ export default <V extends FormValues = FormValues>({
         errorWithTouched,
         defaultValues: dfValues,
         methodName: "mon",
-        callback: (usedState) => setUsedState(usedState),
+        callback: (usedState) => {
+          observersRef.current[0].usedState = {
+            ...observersRef.current[0].usedState,
+            ...usedState,
+          };
+        },
       }),
-    [getFormState, setUsedState]
+    [getFormState, observersRef]
   );
 
   const handleFocus = useCallback((name: string) => {
@@ -827,16 +833,20 @@ export default <V extends FormValues = FormValues>({
   const removeField = useCallback<RemoveField>(
     (
       name,
-      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
+      shouldRemoveDefaultValue = !isFieldArray(fieldArrayRef.current, name)
     ) => {
       ["values", "touched", "dirty", "errors"].forEach(
-        (key) =>
+        (key, idx) =>
           !isUndefined(
             get(stateRef.current[key as keyof FormState<V>], name)
-          ) && handleUnset(`${key}.${name}`)
+          ) &&
+          handleUnset(`${key}.${name}`, {
+            shouldSkipUpdate: idx !== 3,
+            shouldForceUpdate: idx === 3,
+          })
       );
 
-      if (shouldUpdateDefaultValue)
+      if (shouldRemoveDefaultValue)
         initialStateRef.current = unset(
           initialStateRef.current,
           `values.${name}`,
@@ -898,7 +908,7 @@ export default <V extends FormValues = FormValues>({
       form.addEventListener("submit", handlersRef.current.submit);
       form.addEventListener("reset", handlersRef.current.reset);
 
-      observerRef.current = new MutationObserver(([{ type }]) => {
+      mutationObserverRef.current = new MutationObserver(([{ type }]) => {
         if (type !== "childList") return;
 
         const fields = getFields(form);
@@ -919,7 +929,7 @@ export default <V extends FormValues = FormValues>({
 
             if (currOptions > nextOptions) {
               setStateRef(`values.${name}`, getNodeValue(name, fields), {
-                shouldUpdate: false,
+                shouldSkipUpdate: true,
               });
             } else if (currOptions < nextOptions) {
               setNodeValue(name, get(values, name), fields);
@@ -941,7 +951,10 @@ export default <V extends FormValues = FormValues>({
         if (addedNodes.length) setNodesOrValues(values, { fields: addedNodes });
       });
 
-      observerRef.current.observe(form, { childList: true, subtree: true });
+      mutationObserverRef.current.observe(form, {
+        childList: true,
+        subtree: true,
+      });
     },
     [
       getFields,
@@ -987,6 +1000,7 @@ export default <V extends FormValues = FormValues>({
     initialStateRef,
     fieldArrayRef,
     controlsRef,
+    observersRef,
     fieldValidatorsRef,
     changedFieldRef,
     excludeFieldsRef,
@@ -998,8 +1012,6 @@ export default <V extends FormValues = FormValues>({
     setTouchedMaybeValidate,
     handleChangeEvent,
     removeField,
-    subscribeObserver,
-    unsubscribeObserver,
     form: registerForm,
     field: registerField,
     mon,
@@ -1024,7 +1036,7 @@ export default <V extends FormValues = FormValues>({
         formRef.current.removeEventListener("focusout", handlers.blur);
         formRef.current.removeEventListener("submit", handlers.submit);
         formRef.current.removeEventListener("reset", handlers.reset);
-        observerRef.current?.disconnect();
+        mutationObserverRef.current?.disconnect();
       }
 
       shared.remove(id);

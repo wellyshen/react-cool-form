@@ -7,7 +7,6 @@ import {
   Methods,
 } from "./types";
 import * as shared from "./shared";
-import { useLatest } from "./hooks";
 import {
   get,
   invariant,
@@ -65,13 +64,13 @@ export default <V extends FormValues = FormValues>(
     removeField,
   } = methods;
   const hasWarn = useRef(false);
-  const nameRef = useLatest(name);
 
   useEffect(
     () => () => {
-      if (shouldRemoveField) removeField(nameRef.current);
+      if (shouldRemoveField) removeField(name);
     },
-    [nameRef, removeField, shouldRemoveField]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   controlsRef.current[name] = true;

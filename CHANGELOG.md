@@ -1,5 +1,33 @@
 # react-cool-form
 
+## 0.0.161
+
+### Patch Changes
+
+- [#542](https://github.com/wellyshen/react-cool-form/pull/542) [`2e008df`](https://github.com/wellyshen/react-cool-form/commit/2e008dfc3cd933249eebe3d1c9e8f5203383e3e6) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: reduce bundle size
+
+## 0.0.160
+
+### Patch Changes
+
+- [`2a18eca`](https://github.com/wellyshen/react-cool-form/commit/2a18eca80cf9ed0ec6c2cd9d6c479c0ea1c52449) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): reduce re-rendering times when a field un-mounted
+
+* [`088842d`](https://github.com/wellyshen/react-cool-form/commit/088842d2d825893b3246d9d381ef2b7b7071a04c) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFormState): unsubscribe the hook when the component is unmounted
+
+- [`3fb100e`](https://github.com/wellyshen/react-cool-form/commit/3fb100e263cae996acc28e87d611434f5a862836) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): `mon("submitCount")` not triggering re-rendering
+
+## 0.0.159
+
+### Patch Changes
+
+- [`f457e82`](https://github.com/wellyshen/react-cool-form/commit/f457e829256e85400212fddf3d3697cfbd3541f8) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useControlled): form-level default value might not working with conditional fields
+
+* [`b3ec2f7`](https://github.com/wellyshen/react-cool-form/commit/b3ec2f7c105b53922ded53d84deffd8d0eaf012b) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): reduce bundle size
+
+- [`b31f0a2`](https://github.com/wellyshen/react-cool-form/commit/b31f0a2a3b18f0cd8c51e761379a62f02935e464) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): should remove form-level default value for conditional fields
+
+* [`b2d04e8`](https://github.com/wellyshen/react-cool-form/commit/b2d04e89197d0b38b255f06b9274a90025239014) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): when multiple `mon` method are using, only the latest one can work
+
 ## 0.0.158
 
 ### Patch Changes

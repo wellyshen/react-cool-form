@@ -19,7 +19,7 @@ const Step3 = () => {
     validate: ({ fruit }) =>
       fruit && !fruit.length ? { fruit: "Required" } : {},
     onSubmit: (values) => {
-      // Pass form values for other steps via conext
+      // Pass form values for other steps via context
       setFormValues(values);
       alert(JSON.stringify(values, undefined, 2));
     }
@@ -36,7 +36,7 @@ const Step3 = () => {
             type="checkbox"
             defaultChecked={toggle}
             onClick={() => setToggle(!toggle)}
-            // Exclude the toggle from form values
+            // Exclude the toggler from form values
             data-rcf-exclude
           />
         </label>

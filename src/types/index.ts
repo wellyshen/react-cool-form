@@ -11,6 +11,7 @@ export type Methods<V = any> = {
   excludeFieldsRef: MutableRefObject<ObjMap>;
   fieldArrayRef: MutableRefObject<FieldArray>;
   controlsRef: MutableRefObject<ObjMap>;
+  observersRef: MutableRefObject<Observer<V>[]>;
   fieldValidatorsRef: MutableRefObject<ObjMap<FieldValidator<V>>>;
   changedFieldRef: MutableRefObject<string | undefined>;
   setStateRef: SetStateRef;
@@ -21,8 +22,6 @@ export type Methods<V = any> = {
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
   handleChangeEvent: HandleChangeEvent;
   removeField: RemoveField;
-  subscribeObserver: ObserverHandler<V>;
-  unsubscribeObserver: ObserverHandler<V>;
 } & FormMethods<V>;
 
 // useState
@@ -49,12 +48,12 @@ export interface SetStateRef {
   (
     path: string,
     value?: any,
-    options?: { fieldPath?: string; shouldUpdate?: boolean }
+    options?: {
+      fieldPath?: string;
+      shouldSkipUpdate?: boolean;
+      shouldForceUpdate?: boolean;
+    }
   ): void;
-}
-
-export interface SetUsedState {
-  (usedState: ObjMap): void;
 }
 
 export interface Observer<V> {
@@ -62,16 +61,10 @@ export interface Observer<V> {
   notify: (state: FormState<V>) => void;
 }
 
-export interface ObserverHandler<V> {
-  (observer: Observer<V>): void;
-}
-
 export interface FormStateReturn<V> {
   stateRef: MutableRefObject<FormState<V>>;
   setStateRef: SetStateRef;
-  setUsedState: SetUsedState;
-  subscribeObserver: ObserverHandler<V>;
-  unsubscribeObserver: ObserverHandler<V>;
+  observersRef: MutableRefObject<Observer<V>[]>;
 }
 
 // useForm
@@ -179,7 +172,7 @@ export interface SetNodesOrValues<V> {
 }
 
 export interface RemoveField {
-  (name: string, shouldUpdateDefaultValue?: boolean): void;
+  (name: string, shouldRemoveDefaultValue?: boolean): void;
 }
 
 export interface SetTouchedMaybeValidate {
