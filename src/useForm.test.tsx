@@ -2089,17 +2089,20 @@ describe("useForm", () => {
           setDirty("foo");
           setShow(false);
         });
-        await waitFor(() =>
-          expect(
-            getState(["foo", "errors.foo", "touched.foo", "dirty.foo"])
-          ).toEqual([[value[0]], "Required", true, true])
-        );
+        const state = {
+          ...initialState,
+          values: { foo: [value[0]] },
+          errors: { foo: "Required" },
+          isValid: false,
+          touched: { foo: true },
+          dirty: { foo: true },
+          isDirty: true,
+        };
+        await waitFor(() => expect(getState()).toEqual(state));
 
         act(() => setShow(true));
         await waitFor(() => {
-          expect(
-            getState(["foo", "errors.foo", "touched.foo", "dirty.foo"])
-          ).toEqual([[value[0]], "Required", true, true]);
+          expect(getState()).toEqual(state);
           expect(getByTestId("foo-0")).toBeChecked();
           expect(getByTestId("foo-1")).toBeChecked();
         });
@@ -2133,9 +2136,15 @@ describe("useForm", () => {
         setShow(false);
       });
       await waitFor(() =>
-        expect(
-          getState(["foo", "errors.foo", "touched.foo", "dirty.foo"])
-        ).toEqual([value, "Required", true, true])
+        expect(getState()).toEqual({
+          ...initialState,
+          values: { foo: value },
+          errors: { foo: "Required" },
+          isValid: false,
+          touched: { foo: true },
+          dirty: { foo: true },
+          isDirty: true,
+        })
       );
 
       act(() => setShow(true));
