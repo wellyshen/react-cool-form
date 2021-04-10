@@ -3,6 +3,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import babel from "@rollup/plugin-babel";
 import replace from "@rollup/plugin-replace";
 import { sizeSnapshot } from "rollup-plugin-size-snapshot";
+import compiler from "@ampproject/rollup-plugin-closure-compiler";
 import { terser } from "rollup-plugin-terser";
 
 import pkg from "../../package.json";
@@ -54,6 +55,11 @@ export default ({ name, umdName, format, env, measure }) => {
         ...(env ? { "process.env.NODE_ENV": JSON.stringify(env) } : {}),
       }),
       measure && sizeSnapshot(),
+      shouldMinify &&
+        compiler({
+          formatting: "PRETTY_PRINT",
+          compilation_level: "SIMPLE_OPTIMIZATIONS",
+        }),
       shouldMinify &&
         terser({
           output: { comments: false },
