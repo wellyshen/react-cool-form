@@ -20,15 +20,15 @@ const FieldArray = ({ name, ...rest }: any) => {
 };
 
 export default () => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const { form, getState, setValue } = useForm({
     defaultValues: {
-      // foo: [{ a: "form test", b: "form test" }],
+      foo: [{ b: "form test" }],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
   const [fields] = useFieldArray("foo", {
-    defaultValue: [{ a: "field test", b: "field test" }],
+    // defaultValue: [{ a: "field test", b: "field test" }],
   });
 
   return (
@@ -36,7 +36,9 @@ export default () => {
       {fields.map((name) => (
         <div key={name}>
           {show && <input name={`${name}.a`} />}
-          {show && <Field name={`${name}.b`} />}
+          {/* <input name={`${name}.a`} /> */}
+          {/* {show && <Field name={`${name}.b`} />} */}
+          <Field name={`${name}.b`} />
         </div>
       ))}
       <button type="button" onClick={() => setShow(!show)}>
@@ -52,6 +54,7 @@ export default () => {
         Set Value
       </button>
       <input type="submit" />
+      <input type="reset" />
     </form>
   );
 };
