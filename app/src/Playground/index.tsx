@@ -23,11 +23,11 @@ export default () => {
   const [show, setShow] = useState(false);
   const { form, getState, setValue } = useForm({
     defaultValues: {
-      foo: [{}],
+      // foo: "test",
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [fields] = useFieldArray("foo", {
+  const [fields, { push }] = useFieldArray("foo", {
     // defaultValue: [{ a: "field test", b: "field test" }],
   });
 
@@ -35,14 +35,18 @@ export default () => {
     <form ref={form}>
       {fields.map((name) => (
         <div key={name}>
-          {show && <input name={`${name}.a`} />}
+          {show && <input name={`${name}.a`} defaultValue="field test" />}
           {/* <input name={`${name}.a`} /> */}
-          {show && <Field name={`${name}.b`} defaultValue="" />}
+          {show && <Field name={`${name}.b`} defaultValue="field test" />}
           {/* <Field name={`${name}.b`} /> */}
         </div>
       ))}
+      <Field name="foo" defaultValue="field test" />
       <button type="button" onClick={() => setShow(!show)}>
         Toggle
+      </button>
+      <button type="button" onClick={() => push({ a: "form test" })}>
+        Push
       </button>
       <button
         type="button"
