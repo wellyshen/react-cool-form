@@ -617,5 +617,23 @@ describe("useControlled", () => {
       act(() => setShow(true));
       await waitFor(() => expect(getByTestId("foo").value).toBe(value));
     });
+
+    it("should initialize value correctly", () => {
+      const value = "🍎";
+      const { getState, setShow, removeField } = renderHelper({
+        isShow: true,
+        shouldRemoveField: false,
+        children: ({ show }: API) => (
+          <>{show && <Field defaultValue={value} />}</>
+        ),
+      });
+      act(() => {
+        setShow(false);
+        removeField("foo", ["defaultValue"]);
+      });
+      expect(getState("foo")).toBeUndefined();
+      act(() => setShow(true));
+      expect(getState("foo")).toBe(value);
+    });
   });
 });

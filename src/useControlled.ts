@@ -57,6 +57,7 @@ export default <V extends FormValues = FormValues>(
     controlsRef,
     fieldValidatorsRef,
     changedFieldRef,
+    getState,
     getNodeValue,
     setDefaultValue,
     setTouchedMaybeValidate,
@@ -67,9 +68,16 @@ export default <V extends FormValues = FormValues>(
   const isFieldArr = isFieldArray(fieldArrayRef.current, name);
 
   useEffect(
-    () => () => {
-      if (shouldRemoveField)
-        removeField(name, isFieldArr ? ["defaultValue"] : undefined);
+    () => {
+      const value = get(initialStateRef.current.values, name);
+
+      if (!isUndefined(value) && isUndefined(getState(name)))
+        setDefaultValue(name, value);
+
+      return () => {
+        if (shouldRemoveField)
+          removeField(name, isFieldArr ? ["defaultValue"] : undefined);
+      };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
