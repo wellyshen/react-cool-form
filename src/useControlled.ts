@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import {
   ControlledConfig,
@@ -64,15 +64,23 @@ export default <V extends FormValues = FormValues>(
     handleChangeEvent,
     removeField,
   } = methods;
-  const hasWarn = useRef(false);
-  const isFieldArr = isFieldArray(fieldArrayRef.current, name);
 
   useEffect(
     () => {
+      const isFieldArr = isFieldArray(fieldArrayRef.current, name);
       const value = get(initialStateRef.current.values, name);
 
-      if (!isUndefined(value) && isUndefined(getState(name)))
+      if (isUndefined(value)) {
+        if (!isUndefined(defaultValue)) {
+          setDefaultValue(name, defaultValue);
+        } else if (!isFieldArr) {
+          warn(
+            `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
+          );
+        }
+      } else if (isUndefined(getState(name))) {
         setDefaultValue(name, value);
+      }
 
       return () => {
         if (shouldRemoveField)
@@ -86,22 +94,9 @@ export default <V extends FormValues = FormValues>(
   controlsRef.current[name] = true;
   if (validate) fieldValidatorsRef.current[name] = validate;
 
-  let value = get(initialStateRef.current.values, name);
-
-  if (isUndefined(value)) {
-    value = defaultValue;
-
-    if (!isUndefined(defaultValue)) {
-      setDefaultValue(name, defaultValue, true);
-    } else if (!isFieldArr && !hasWarn.current) {
-      warn(
-        `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
-      );
-      hasWarn.current = true;
-    }
-  }
-
   const { onChange, onBlur, ...restProps } = props;
+  let value = get(initialStateRef.current.values, name);
+  value = !isUndefined(value) ? value : defaultValue;
   value = !isUndefined(meta.value) ? meta.value : value;
   value = (format ? format(value) : value) ?? "";
 
