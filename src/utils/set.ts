@@ -11,8 +11,8 @@ export default (
 ): any => {
   if (!isPlainObject(object)) throw new TypeError("Expected an object.");
 
-  const segs = stringToPath(path);
   const newObject = immutable ? cloneObject(object) : object;
+  const segs = stringToPath(path);
 
   segs.slice(0, -1).reduce((obj, key, idx) => {
     const nextIsNumber = !Number.isNaN(+segs[idx + 1]);
