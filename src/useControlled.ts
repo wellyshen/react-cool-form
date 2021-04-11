@@ -92,7 +92,7 @@ export default <V extends FormValues = FormValues>(
     value = defaultValue;
 
     if (!isUndefined(defaultValue)) {
-      setDefaultValue(name, defaultValue);
+      setDefaultValue(name, defaultValue, true);
     } else if (!isFieldArr && !hasWarn.current) {
       warn(
         `💡 react-cool-form > useControlled: Please provide a default value for "${name}" field.`
