@@ -299,27 +299,6 @@ describe("useControlled", () => {
     }
   );
 
-  it.each(["form", "controlled"])(
-    "should reset value correctly from %s option for field-array",
-    (type) => {
-      const defaultValues = { foo: "🍎" };
-      const { reset } = renderHelper({
-        isFieldArray: true,
-        defaultValues: type === "form" ? defaultValues : undefined,
-        onReset,
-        children: (
-          <Field
-            defaultValue={type === "controlled" ? defaultValues.foo : undefined}
-          />
-        ),
-      });
-      act(() => reset());
-      expect(onReset).toHaveBeenCalledWith(
-        type === "controlled" ? {} : defaultValues
-      );
-    }
-  );
-
   it("should run validation on submit", async () => {
     const onMeta = jest.fn();
     const errors = { foo: "Required" };
