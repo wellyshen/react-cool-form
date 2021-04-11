@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
-import { useForm, useFieldArray, useControlled } from "react-cool-form";
+import { useState } from "react";
+import { useForm, useControlled } from "react-cool-form";
 
 const Field = ({ name, ...rest }: any) => {
   const [props] = useControlled(name, rest);
@@ -8,34 +9,28 @@ const Field = ({ name, ...rest }: any) => {
 };
 
 export default () => {
-  const { form, reset } = useForm({
+  const [show, setShow] = useState(true);
+  const { form, getState } = useForm({
+    shouldRemoveField: false,
     defaultValues: {
-      foo: [
-        { a: "a1", b: "b1" },
-        { a: "a2", b: "b2" },
-      ],
+      foo: "test",
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [fields, { remove }] = useFieldArray("foo");
-
-  console.log("LOG ===> Re-render");
 
   return (
     <form ref={form}>
-      {fields.map((fieldName) => (
-        <div key={fieldName}>
-          <input name={`${fieldName}.a`} />
-          <Field name={`${fieldName}.b`} />
-        </div>
-      ))}
+      {show && <Field name="foo" />}
+      <button type="button" onClick={() => setShow(!show)}>
+        Toggle
+      </button>
+      <button
+        type="button"
+        onClick={() => console.log("LOG ===> ", getState())}
+      >
+        Get State
+      </button>
       <input type="submit" />
-      <button type="button" onClick={() => remove(0)}>
-        Remove
-      </button>
-      <button type="button" onClick={() => reset()}>
-        Reset
-      </button>
     </form>
   );
 };

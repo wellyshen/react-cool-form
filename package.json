@@ -1,6 +1,6 @@
 {
   "name": "react-cool-form",
-  "version": "0.0.162",
+  "version": "0.0.163",
   "description": "React hooks for forms state and validation, less code more performant.",
   "license": "MIT",
   "homepage": "https://react-cool-form.netlify.app",
@@ -68,6 +68,7 @@
     "dequal": "^2.0.2"
   },
   "devDependencies": {
+    "@ampproject/rollup-plugin-closure-compiler": "^0.26.0",
     "@babel/core": "^7.13.15",
     "@babel/plugin-transform-runtime": "^7.13.15",
     "@babel/preset-env": "^7.13.15",
