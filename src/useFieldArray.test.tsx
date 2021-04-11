@@ -139,12 +139,12 @@ describe("useFieldArray", () => {
     );
   });
 
-  it.each(["form", "field-array"])(
+  it.each(["form", "array"])(
     "should set default value correctly from %s option",
     async (type) => {
       const { container } = renderHelper({
         defaultValues: type === "form" ? { foo: value } : undefined,
-        defaultValue: type === "field-array" ? value : undefined,
+        defaultValue: type === "array" ? value : undefined,
         onSubmit,
         children: ({ fields }: API) =>
           fields.map((name) => (
@@ -407,7 +407,7 @@ describe("useFieldArray", () => {
     }
   });
 
-  it.each(["form", "field"])("should run %s-level validation", async (type) => {
+  it.each(["form", "array"])("should run %s-level validation", async (type) => {
     const error = "Required";
     const { remove, getState } = renderHelper({
       defaultValues: { foo: value },
@@ -416,7 +416,7 @@ describe("useFieldArray", () => {
           ? ({ foo }) => (!foo.length ? { foo: error } : {})
           : undefined,
       validate:
-        type === "field" ? (val) => (!val.length ? error : false) : undefined,
+        type === "array" ? (val) => (!val.length ? error : false) : undefined,
     });
     act(() => {
       remove(0);
@@ -440,7 +440,7 @@ describe("useFieldArray", () => {
     const formValue = value;
     const fieldValue = [{ a: "🍋", b: "🍋" }];
 
-    it.each(["form", "field"])(
+    it.each(["form", "array"])(
       "should set %s-level default value correctly",
       async (type) => {
         const {
@@ -456,7 +456,7 @@ describe("useFieldArray", () => {
             <>
               {show && (
                 <FieldArray
-                  defaultValue={type === "field" ? fieldValue : undefined}
+                  defaultValue={type === "array" ? fieldValue : undefined}
                 />
               )}
             </>
@@ -491,7 +491,7 @@ describe("useFieldArray", () => {
         await waitFor(() => {
           expect(getState()).toEqual({
             ...initialState,
-            values: { foo: type === "field" ? fieldValue : undefined },
+            values: { foo: type === "array" ? fieldValue : undefined },
           });
           if (type === "form") {
             expect(container.querySelectorAll("input")).toHaveLength(0);
@@ -503,7 +503,7 @@ describe("useFieldArray", () => {
       }
     );
 
-    it.each(["form", "field"])(
+    it.each(["form", "array", "field"])(
       "should set %s-level default value correctly",
       async (type) => {
         const {
@@ -514,12 +514,30 @@ describe("useFieldArray", () => {
           setShow,
         } = renderHelper({
           defaultValues: type === "form" ? { foo: formValue } : undefined,
-          defaultValue: type === "field" ? fieldValue : undefined,
+          defaultValue:
+            // eslint-disable-next-line no-nested-ternary
+            type === "array" ? fieldValue : type === "field" ? [{}] : undefined,
           children: ({ fields, show }: API) =>
             fields.map((name) => (
               <div key={name}>
-                {show && <input data-testid={`${name}.a`} name={`${name}.a`} />}
-                {show && <Field data-testid={`${name}.b`} name={`${name}.b`} />}
+                {show && (
+                  <input
+                    data-testid={`${name}.a`}
+                    name={`${name}.a`}
+                    defaultValue={
+                      type === "field" ? fieldValue[0].a : undefined
+                    }
+                  />
+                )}
+                {show && (
+                  <Field
+                    data-testid={`${name}.b`}
+                    name={`${name}.b`}
+                    defaultValue={
+                      type === "field" ? fieldValue[0].b : undefined
+                    }
+                  />
+                )}
               </div>
             )),
         });
