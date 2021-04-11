@@ -299,6 +299,24 @@ describe("useControlled", () => {
     }
   );
 
+  it.each([false, true])(
+    'should update value correctly when using "defaultValue" option',
+    async (isFieldArray) => {
+      renderHelper({
+        isFieldArray,
+        onSubmit,
+        children: <Field defaultValue="🍎" />,
+      });
+      const value = "🍋";
+      fireEvent.input(getByTestId("foo"), { target: { value } });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => {
+        expect(getByTestId("foo").value).toBe(value);
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value });
+      });
+    }
+  );
+
   it("should run validation on submit", async () => {
     const onMeta = jest.fn();
     const errors = { foo: "Required" };
