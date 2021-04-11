@@ -1,5 +1,15 @@
 # react-cool-form
 
+## 0.0.164
+
+### Patch Changes
+
+- [#555](https://github.com/wellyshen/react-cool-form/pull/555) [`546645a`](https://github.com/wellyshen/react-cool-form/commit/546645a9945092582237e47c28040e54716a7821) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useControlled): value not updated when working with conditional fields and setting default value from `defaultValue` option
+
+* [#553](https://github.com/wellyshen/react-cool-form/pull/553) [`6b33570`](https://github.com/wellyshen/react-cool-form/commit/6b33570e999ccd8e445aa227dbea386f3e3ec0d8) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useControlled): sync field value with its default value for a conditional field
+
+- [#556](https://github.com/wellyshen/react-cool-form/pull/556) [`b3edba8`](https://github.com/wellyshen/react-cool-form/commit/b3edba847372e8a7baf556bf78c71c1d25eba738) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useControlled): do not update default value when working with field-array
+
 ## 0.0.163
 
 ### Patch Changes

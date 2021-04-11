@@ -17,7 +17,7 @@ import useFieldArray from "./useFieldArray";
 import useControlled from "./useControlled";
 
 type API = Omit<FormMethods, "form"> & {
-  show?: boolean;
+  show: boolean;
   setShow: Dispatch<boolean>;
 };
 
@@ -40,7 +40,7 @@ const Form = ({
   onReset = () => null,
   ...config
 }: Props) => {
-  const [show, setShow] = useState(isShow);
+  const [show, setShow] = useState(!!isShow);
   const { form, ...methods } = useForm({
     id,
     ...config,
@@ -299,24 +299,21 @@ describe("useControlled", () => {
     }
   );
 
-  it.each(["form", "controlled"])(
-    "should reset value correctly from %s option for field-array",
-    (type) => {
-      const defaultValues = { foo: "🍎" };
-      const { reset } = renderHelper({
-        isFieldArray: true,
-        defaultValues: type === "form" ? defaultValues : undefined,
-        onReset,
-        children: (
-          <Field
-            defaultValue={type === "controlled" ? defaultValues.foo : undefined}
-          />
-        ),
+  it.each([false, true])(
+    'should update value correctly when using "defaultValue" option',
+    async (isFieldArray) => {
+      renderHelper({
+        isFieldArray,
+        onSubmit,
+        children: <Field defaultValue="🍎" />,
       });
-      act(() => reset());
-      expect(onReset).toHaveBeenCalledWith(
-        type === "controlled" ? {} : defaultValues
-      );
+      const value = "🍋";
+      fireEvent.input(getByTestId("foo"), { target: { value } });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => {
+        expect(getByTestId("foo").value).toBe(value);
+        expect(onSubmit).toHaveBeenCalledWith({ foo: value });
+      });
     }
   );
 
@@ -616,6 +613,24 @@ describe("useControlled", () => {
 
       act(() => setShow(true));
       await waitFor(() => expect(getByTestId("foo").value).toBe(value));
+    });
+
+    it("should initialize value correctly", () => {
+      const value = "🍎";
+      const { getState, setShow, removeField } = renderHelper({
+        isShow: true,
+        shouldRemoveField: false,
+        children: ({ show }: API) => (
+          <>{show && <Field defaultValue={value} />}</>
+        ),
+      });
+      act(() => {
+        setShow(false);
+        removeField("foo", ["defaultValue"]);
+      });
+      expect(getState("foo")).toBeUndefined();
+      act(() => setShow(true));
+      expect(getState("foo")).toBe(value);
     });
   });
 });

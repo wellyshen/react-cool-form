@@ -61,6 +61,7 @@ const App = () => {
 
 By default, React Cool Form automatically removes the **related state** (i.e. value, error, touched, dirty) and **default value** of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. See the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
 
+- It won't remove the default value of a field-array.
 - To keep a default value existing between a dynamically show/hide field, we can set it via `defaultValue` attribute or option.
 - If this feature doesn't meet your needs, you can use the [removeField](#removefield) to control what data that you want to remove instead.
 - If the field isn't a form input element (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)), we need to manually remove it by the [removeField](#removefield) method.
@@ -463,8 +464,8 @@ const App = () => {
 
   const handleToggle = () => {
     setShow(!show);
-    // Exclude option: ["defaultValue", "value", "error", "touched", "dirty"]
-    if (!show) removeField("foo", ["value", "error"]); // Keep "value" and "error"
+    // These data can be excluded: ["defaultValue", "value", "error", "touched", "dirty"]
+    if (!show) removeField("foo", ["defaultValue"]); // Keep the default value
   };
 
   return (
