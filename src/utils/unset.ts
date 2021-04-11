@@ -1,5 +1,3 @@
-/* eslint-disable no-prototype-builtins */
-
 import cloneObject from "./cloneObject";
 import isEmptyObject from "./isEmptyObject";
 import isPlainObject from "./isPlainObject";
@@ -13,6 +11,7 @@ const unset = (object: any, path: string, immutable?: boolean): any => {
   const refObject = immutable ? cloneObject(object) : object;
   const newObject = refObject;
 
+  // eslint-disable-next-line no-prototype-builtins
   if (newObject.hasOwnProperty(path)) {
     delete newObject[path];
     return refObject;
