@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unused-prop-types */
+
+import { Dispatch, useState } from "react";
 import {
   render,
   fireEvent,
@@ -8,33 +11,31 @@ import {
 
 import {
   FieldArrayConfig,
-  GetState,
-  SetValue,
+  FormMethods,
   Insert,
   Move,
   Push,
   Remove,
-  Reset,
   Swap,
 } from "./types";
 import useForm from "./useForm";
 import useFieldArray from "./useFieldArray";
 import useControlled from "./useControlled";
 
-interface API {
+type API = Omit<FormMethods, "form"> & {
   fields: string[];
   insert: Insert;
   move: Move;
   push: Push;
   remove: Remove;
   swap: Swap;
-  getState: GetState;
-  setValue: SetValue;
-  reset: Reset;
-}
+  show: boolean;
+  setShow: Dispatch<boolean>;
+};
 
 interface Config extends FieldArrayConfig {
-  children: (api: API) => JSX.Element[] | null;
+  children: (api: API) => JSX.Element | JSX.Element[] | null;
+  isShow: boolean;
   defaultValues: any;
   formValidate: (values: any) => void;
   onSubmit: (values: any) => void;
@@ -45,6 +46,7 @@ type Props = Partial<Config>;
 
 const Form = ({
   children,
+  isShow,
   formId,
   defaultValues,
   formValidate,
@@ -52,21 +54,27 @@ const Form = ({
   onRender = () => null,
   ...rest
 }: Props) => {
-  const { form, getState, setValue, reset } = useForm({
+  const [show, setShow] = useState(!!isShow);
+  const { form, ...methods } = useForm({
     id: formId,
     defaultValues,
     validate: formValidate,
     onSubmit: (values) => onSubmit(values),
   });
-  // @ts-expect-error
-  const [fields, helpers] = useFieldArray("foo", { ...rest, formId }, formId);
+  const [fields, helpers] = useFieldArray("foo", { ...rest, formId });
 
   onRender();
 
   return (
     <form data-testid="form" ref={form}>
       {children
-        ? children({ getState, setValue, reset, fields, ...helpers })
+        ? children({
+            ...methods,
+            fields,
+            ...helpers,
+            show,
+            setShow,
+          })
         : null}
     </form>
   );
@@ -91,6 +99,20 @@ const renderHelper = ({ children, ...rest }: Props = {}) => {
 const Field = ({ name, ...rest }: any) => {
   const [props] = useControlled(name, rest);
   return <input {...props} />;
+};
+
+const FieldArray = (props: any) => {
+  const [fields] = useFieldArray("foo", props);
+  return (
+    <>
+      {fields.map((name) => (
+        <div key={name}>
+          <input data-testid={`${name}.a`} name={`${name}.a`} />
+          <Field data-testid={`${name}.b`} name={`${name}.b`} />
+        </div>
+      ))}
+    </>
+  );
 };
 
 describe("useFieldArray", () => {
@@ -397,5 +419,143 @@ describe("useFieldArray", () => {
       remove(0);
     });
     await waitFor(() => expect(getState("errors.foo")).toBe(error));
+  });
+
+  describe("conditional fields", () => {
+    const initialState = {
+      values: {},
+      touched: {},
+      errors: {},
+      isDirty: false,
+      dirty: {},
+      isValidating: false,
+      isValid: true,
+      isSubmitting: false,
+      isSubmitted: false,
+      submitCount: 0,
+    };
+    const formValue = value;
+    const fieldValue = [{ a: "🍋", b: "🍋" }];
+
+    it.each(["form", "field"])(
+      "should set %s-level default value correctly",
+      async (type) => {
+        const {
+          getState,
+          setError,
+          setTouched,
+          setDirty,
+          setShow,
+          container,
+        } = renderHelper({
+          defaultValues: type === "form" ? { foo: formValue } : undefined,
+          children: ({ show }: API) => (
+            <>
+              {show && (
+                <FieldArray
+                  defaultValue={type === "field" ? fieldValue : undefined}
+                />
+              )}
+            </>
+          ),
+        });
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState("foo")).toBe(
+            type === "form" ? formValue : fieldValue
+          );
+          expect(getByTestId("foo[0].a").value).toBe(
+            type === "form" ? formValue[0].a : fieldValue[0].a
+          );
+          expect(getByTestId("foo[0].b").value).toBe(
+            type === "form" ? formValue[0].b : fieldValue[0].b
+          );
+        });
+
+        act(() => {
+          setError("foo", [{ a: "Required", b: "Required" }]);
+          setTouched("foo[0].a", true, false);
+          setTouched("foo[0].b", true, false);
+          setDirty("foo[0].a");
+          setDirty("foo[0].b");
+          setShow(false);
+        });
+        await waitFor(() => expect(getState()).toEqual(initialState));
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState()).toEqual({
+            ...initialState,
+            values: { foo: type === "field" ? fieldValue : undefined },
+          });
+          if (type === "form") {
+            expect(container.querySelectorAll("input")).toHaveLength(0);
+          } else {
+            expect(getByTestId("foo[0].a").value).toBe(fieldValue[0].a);
+            expect(getByTestId("foo[0].b").value).toBe(fieldValue[0].b);
+          }
+        });
+      }
+    );
+
+    it.each(["form", "field"])(
+      "should set %s-level default value correctly",
+      async (type) => {
+        const {
+          getState,
+          setError,
+          setTouched,
+          setDirty,
+          setShow,
+        } = renderHelper({
+          defaultValues: type === "form" ? { foo: formValue } : undefined,
+          defaultValue: type === "field" ? fieldValue : undefined,
+          children: ({ fields, show }: API) =>
+            fields.map((name) => (
+              <div key={name}>
+                {show && <input data-testid={`${name}.a`} name={`${name}.a`} />}
+                {show && <Field data-testid={`${name}.b`} name={`${name}.b`} />}
+              </div>
+            )),
+        });
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState("foo")).toEqual(
+            type === "form" ? formValue : fieldValue
+          );
+          expect(getByTestId("foo[0].a").value).toBe(
+            type === "form" ? formValue[0].a : fieldValue[0].a
+          );
+          expect(getByTestId("foo[0].b").value).toBe(
+            type === "form" ? formValue[0].b : fieldValue[0].b
+          );
+        });
+
+        act(() => {
+          setError("foo", [{ a: "Required", b: "Required" }]);
+          setTouched("foo[0].a", true, false);
+          setTouched("foo[0].b", true, false);
+          setDirty("foo[0].a");
+          setDirty("foo[0].b");
+          setShow(false);
+        });
+        await waitFor(() => expect(getState()).toEqual(initialState));
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getState("foo")).toEqual(
+            type === "form" ? formValue : fieldValue
+          );
+          expect(getByTestId("foo[0].a").value).toBe(
+            type === "form" ? formValue[0].a : fieldValue[0].a
+          );
+          expect(getByTestId("foo[0].b").value).toBe(
+            type === "form" ? formValue[0].b : fieldValue[0].b
+          );
+        });
+      }
+    );
   });
 });

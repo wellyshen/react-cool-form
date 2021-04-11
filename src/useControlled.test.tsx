@@ -17,7 +17,7 @@ import useFieldArray from "./useFieldArray";
 import useControlled from "./useControlled";
 
 type API = Omit<FormMethods, "form"> & {
-  show?: boolean;
+  show: boolean;
   setShow: Dispatch<boolean>;
 };
 
@@ -40,7 +40,7 @@ const Form = ({
   onReset = () => null,
   ...config
 }: Props) => {
-  const [show, setShow] = useState(isShow);
+  const [show, setShow] = useState(!!isShow);
   const { form, ...methods } = useForm({
     id,
     ...config,
