@@ -37,6 +37,7 @@ interface Config extends FieldArrayConfig {
   children: (api: API) => JSX.Element | JSX.Element[] | null;
   isShow: boolean;
   defaultValues: any;
+  shouldRemoveField: boolean;
   formValidate: (values: any) => void;
   onSubmit: (values: any) => void;
   onRender: () => void;
@@ -49,6 +50,7 @@ const Form = ({
   isShow,
   formId,
   defaultValues,
+  shouldRemoveField,
   formValidate,
   onSubmit = () => null,
   onRender = () => null,
@@ -58,6 +60,7 @@ const Form = ({
   const { form, ...methods } = useForm({
     id: formId,
     defaultValues,
+    shouldRemoveField,
     validate: formValidate,
     onSubmit: (values) => onSubmit(values),
   });
@@ -462,9 +465,10 @@ describe("useFieldArray", () => {
 
         act(() => setShow(true));
         await waitFor(() => {
-          expect(getState("foo")).toBe(
-            type === "form" ? formValue : fieldValue
-          );
+          expect(getState()).toEqual({
+            ...initialState,
+            values: { foo: type === "form" ? formValue : fieldValue },
+          });
           expect(getByTestId("foo[0].a").value).toBe(
             type === "form" ? formValue[0].a : fieldValue[0].a
           );
@@ -521,10 +525,12 @@ describe("useFieldArray", () => {
         });
 
         act(() => setShow(true));
+        const state = {
+          ...initialState,
+          values: { foo: type === "form" ? formValue : fieldValue },
+        };
         await waitFor(() => {
-          expect(getState("foo")).toEqual(
-            type === "form" ? formValue : fieldValue
-          );
+          expect(getState()).toEqual(state);
           expect(getByTestId("foo[0].a").value).toBe(
             type === "form" ? formValue[0].a : fieldValue[0].a
           );
@@ -545,9 +551,7 @@ describe("useFieldArray", () => {
 
         act(() => setShow(true));
         await waitFor(() => {
-          expect(getState("foo")).toEqual(
-            type === "form" ? formValue : fieldValue
-          );
+          expect(getState()).toEqual(state);
           expect(getByTestId("foo[0].a").value).toBe(
             type === "form" ? formValue[0].a : fieldValue[0].a
           );
@@ -557,5 +561,46 @@ describe("useFieldArray", () => {
         });
       }
     );
+
+    it("should not remove field", async () => {
+      const {
+        getState,
+        setError,
+        setTouched,
+        setDirty,
+        setShow,
+      } = renderHelper({
+        isShow: true,
+        defaultValues: { foo: formValue },
+        shouldRemoveField: false,
+        children: ({ show }: API) => <>{show && <FieldArray />}</>,
+      });
+
+      act(() => {
+        setError("foo", [{ a: "Required", b: "Required" }]);
+        setTouched("foo[0].a", true, false);
+        setTouched("foo[0].b", true, false);
+        setDirty("foo[0].a");
+        setDirty("foo[0].b");
+        setShow(false);
+      });
+      await waitFor(() => {
+        expect(getState()).toEqual({
+          ...initialState,
+          values: { foo: formValue },
+          errors: { foo: [{ a: "Required", b: "Required" }] },
+          isValid: false,
+          touched: { foo: [{ a: true, b: true }] },
+          dirty: { foo: [{ a: true, b: true }] },
+          isDirty: true,
+        });
+      });
+
+      act(() => setShow(true));
+      await waitFor(() => {
+        expect(getByTestId("foo[0].a").value).toBe(formValue[0].a);
+        expect(getByTestId("foo[0].b").value).toBe(formValue[0].b);
+      });
+    });
   });
 });
