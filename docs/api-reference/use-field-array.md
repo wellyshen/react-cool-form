@@ -83,7 +83,7 @@ const handleAdd = () => {
 
 `(index: number, value: FieldValue, options?: Object) => void`
 
-Insert a value at a given index into the array.
+Insert an element at a given index into the array.
 
 ```js
 const handleInsert = () => {
@@ -108,13 +108,13 @@ Swap two values in an array.
 
 `(from: number, to: number) => void`
 
-Move a value in an array to another index.
+Move an element in an array to another index.
 
 ### remove
 
 `(index: number) => FieldValue`
 
-Remove a value at an index of an array and return it.
+Remove an element at an index of an array and return it.
 
 ## Example
 
