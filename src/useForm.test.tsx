@@ -20,7 +20,7 @@ jest.mock("./shared", () => ({ set: jest.fn(), remove: jest.fn() }));
 type Children = JSX.Element | JSX.Element[] | null;
 
 type API = Omit<FormMethods, "form"> & {
-  show?: boolean;
+  show: boolean;
   setShow: Dispatch<boolean>;
 };
 
@@ -46,7 +46,7 @@ const Form = ({
   onRender = () => null,
   ...config
 }: Props) => {
-  const [show, setShow] = useState(isShow);
+  const [show, setShow] = useState(!!isShow);
   const methods = useForm({
     ...config,
     onSubmit: (...args) =>
