@@ -620,5 +620,34 @@ describe("useFieldArray", () => {
         expect(getByTestId("foo[0].b").value).toBe(formValue[0].b);
       });
     });
+
+    it("should reset correctly", async () => {
+      const defaultValues = { foo: [{}] };
+      const { getState, setShow, reset } = renderHelper({
+        defaultValues,
+        children: ({ fields, show }: API) =>
+          fields.map((name) => (
+            <div key={name}>
+              {show && (
+                <input
+                  data-testid={`${name}.a`}
+                  name={`${name}.a`}
+                  defaultValue={fieldValue[0].a}
+                />
+              )}
+              {show && (
+                <Field
+                  data-testid={`${name}.b`}
+                  name={`${name}.b`}
+                  defaultValue={fieldValue[0].b}
+                />
+              )}
+            </div>
+          )),
+      });
+      act(() => setShow(true));
+      act(() => reset());
+      await waitFor(() => expect(getState("values")).toEqual(defaultValues));
+    });
   });
 });
