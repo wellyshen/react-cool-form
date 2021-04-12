@@ -62,23 +62,15 @@ Enable/disable the feature of **filtering untouched errors**, which can help the
 ```js
 // Current state: { errors: { foo: "Required" }, touched: { foo: false } }
 // Returns "Required"
-const [, { error }] = useControlled("foo", {
-  // Some options...
-});
+const [, { error }] = useControlled("foo");
 
 // Current state: { errors: { foo: "Required" }, touched: { foo: false } }
 // Returns undefined
-const [, { error }] = useControlled("foo", {
-  errorWithTouched: true,
-  // Other options...
-});
+const [, { error }] = useControlled("foo", { errorWithTouched: true });
 
 // Current state: { errors: { foo: "Required" }, touched: { foo: true } }
 // Returns "Required"
-const [, { error }] = useControlled("foo", {
-  errorWithTouched: true,
-  // Other options...
-});
+const [, { error }] = useControlled("foo", { errorWithTouched: true });
 ```
 
 ### ...restProps
