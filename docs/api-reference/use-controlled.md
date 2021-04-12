@@ -60,11 +60,11 @@ A function that takes the field's value from the [form state](../getting-started
 Enable/disable the feature of **filtering untouched errors**, which can help the user focus on typing without being annoyed by the error message. Default is `false`.
 
 ```js
-// Current state: { errors: { foo: "Required" }, touched: { foo: false } }
+// Current state: { errors: { foo: "Required" }, touched: {} }
 // Returns "Required"
 const [, { error }] = useControlled("foo");
 
-// Current state: { errors: { foo: "Required" }, touched: { foo: false } }
+// Current state: { errors: { foo: "Required" }, touched: {} }
 // Returns undefined
 const [, { error }] = useControlled("foo", { errorWithTouched: true });
 

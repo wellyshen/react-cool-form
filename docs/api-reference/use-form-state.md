@@ -65,11 +65,11 @@ The alternative default values for this hook to return when we didn't provide th
 Enable/disable the feature of **filtering untouched errors**, which can help the user focus on typing without being annoyed by the error message. Default is `false`.
 
 ```js
-// Current state: { errors: { foo: "Required" }, touched: { foo: false } }
+// Current state: { errors: { foo: "Required" }, touched: {} }
 // Returns { foo: "Required" }
 const errors = useFormState("errors");
 
-// Current state: { errors: { foo: "Required" }, touched: { foo: false } }
+// Current state: { errors: { foo: "Required" }, touched: {} }
 // Returns {}
 const errors = useFormState("errors", { errorWithTouched: true );
 
