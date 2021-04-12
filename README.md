@@ -1,7 +1,4 @@
 <p align="center">
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
   <a href="https://react-cool-form.netlify.app" title="React Cool Form"><img src="https://react-cool-form.netlify.app/img/logo-github.svg" width="300px" alt="React Cool Form"></a>
 </p>
 
@@ -12,6 +9,7 @@
 [![npm version](https://img.shields.io/npm/v/react-cool-form?style=flat-square)](https://www.npmjs.com/package/react-cool-form)
 [![npm downloads](https://img.shields.io/npm/dt/react-cool-form?style=flat-square)](https://www.npmtrends.com/react-cool-form)
 [![coverage status](https://img.shields.io/coveralls/github/wellyshen/react-cool-form?style=flat-square)](https://coveralls.io/github/wellyshen/react-cool-form?branch=master)
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 [![netlify deploy](https://img.shields.io/netlify/3c201e27-b611-4512-b827-9523af7a1ae5?style=flat-square)](https://app.netlify.com/sites/react-cool-form/deploys)
 
 </div>
