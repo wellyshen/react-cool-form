@@ -38,6 +38,7 @@ interface Config extends FieldArrayConfig {
   isShow: boolean;
   defaultValues: any;
   shouldRemoveField: boolean;
+  validateOnChange: boolean;
   formValidate: (values: any) => void;
   onSubmit: (values: any) => void;
   onRender: () => void;
@@ -51,6 +52,7 @@ const Form = ({
   formId,
   defaultValues,
   shouldRemoveField,
+  validateOnChange,
   formValidate,
   onSubmit = () => null,
   onRender = () => null,
@@ -61,6 +63,7 @@ const Form = ({
     id: formId,
     defaultValues,
     shouldRemoveField,
+    validateOnChange,
     validate: formValidate,
     onSubmit: (values) => onSubmit(values),
   });
@@ -422,6 +425,18 @@ describe("useFieldArray", () => {
       remove(0);
     });
     await waitFor(() => expect(getState("errors.foo")).toBe(error));
+  });
+
+  it("should not run validation", () => {
+    const validate = jest.fn();
+    const { remove } = renderHelper({
+      validateOnChange: false,
+      validate,
+    });
+    act(() => {
+      remove(0);
+    });
+    expect(validate).not.toHaveBeenCalled();
   });
 
   describe("conditional fields", () => {
