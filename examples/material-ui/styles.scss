@@ -18,4 +18,12 @@ form {
   .MuiTextField-root {
     margin-bottom: 1rem;
   }
+
+  .MuiFormControl-root:nth-child(2) {
+    margin-bottom: 1.5rem;
+  }
+
+  .MuiFormGroup-root .MuiFormControlLabel-root {
+    margin-bottom: 0;
+  }
 }
