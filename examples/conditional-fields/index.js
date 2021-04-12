@@ -18,7 +18,7 @@ const RadioButtons = ({ name, buttons }) => {
   ));
 };
 
-const NoteArray = ({ name, notes }) => {
+const FieldArray = ({ name, notes }) => {
   const [fields] = useFieldArray(name, {
     defaultValue: notes
   });
@@ -75,7 +75,7 @@ function App() {
             ]}
           /> */}
           {/* When working with conditional fields, please ensure the "useFieldArray" hook is wrapped in a component */}
-          <NoteArray name="note" notes={[{ text: "" }]} />
+          <FieldArray name="note" notes={[{ text: "" }]} />
         </>
       )}
       <input type="submit" />
