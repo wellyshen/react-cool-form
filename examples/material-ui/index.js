@@ -1,6 +1,7 @@
 import { render } from "react-dom";
 import { useForm } from "react-cool-form";
 import {
+  FormGroup,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -42,28 +43,29 @@ function App() {
           <option value="svelte">Svelte</option>
         </Select>
       </FormControl>
-      <FormControl component="fieldset"></FormControl>
-      <div>
+      <FormControl component="fieldset">
         <FormLabel component="legend">Fruit</FormLabel>
-        <FormControlLabel
-          control={<Checkbox />}
-          name="fruit"
-          value="🍎"
-          label="🍎"
-        />
-        <FormControlLabel
-          control={<Checkbox />}
-          name="fruit"
-          value="🍋"
-          label="🍋"
-        />
-        <FormControlLabel
-          control={<Checkbox />}
-          name="fruit"
-          value="🥝"
-          label="🥝"
-        />
-      </div>
+        <FormGroup row>
+          <FormControlLabel
+            control={<Checkbox />}
+            name="fruit"
+            value="🍎"
+            label="🍎"
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="fruit"
+            value="🍋"
+            label="🍋"
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            name="fruit"
+            value="🥝"
+            label="🥝"
+          />
+        </FormGroup>
+      </FormControl>
       <FormControl component="fieldset">
         <FormLabel component="legend">Race</FormLabel>
         <RadioGroup name="race" aria-label="race" row>
