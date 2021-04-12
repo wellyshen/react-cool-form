@@ -6,15 +6,6 @@
   "commit": false,
   "contributors": [
     {
-      "login": "Chris-James",
-      "name": "Chris",
-      "avatar_url": "https://avatars.githubusercontent.com/u/4596428?v=4",
-      "profile": "https://github.com/Chris-James",
-      "contributions": [
-        "bug"
-      ]
-    },
-    {
       "login": "wellyshen",
       "name": "Welly",
       "avatar_url": "https://avatars.githubusercontent.com/u/21308003?v=4",
@@ -25,6 +16,15 @@
         "doc",
         "infra",
         "maintenance"
+      ]
+    },
+    {
+      "login": "Chris-James",
+      "name": "Chris",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4596428?v=4",
+      "profile": "https://github.com/Chris-James",
+      "contributions": [
+        "bug"
       ]
     }
   ],
