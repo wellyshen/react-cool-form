@@ -23,7 +23,7 @@ export default () => {
   const [show, setShow] = useState(false);
   const { form, getState, setValue } = useForm({
     defaultValues: {
-      // foo: "test",
+      // foo: [],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
@@ -41,7 +41,6 @@ export default () => {
           {/* <Field name={`${name}.b`} /> */}
         </div>
       ))}
-      <Field name="foo" defaultValue="field test" />
       <button type="button" onClick={() => setShow(!show)}>
         Toggle
       </button>

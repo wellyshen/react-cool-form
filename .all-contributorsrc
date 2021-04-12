@@ -1,0 +1,37 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "wellyshen",
+      "name": "Welly",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21308003?v=4",
+      "profile": "http://wellyshen.com",
+      "contributions": [
+        "ideas",
+        "code",
+        "doc",
+        "infra",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "Chris-James",
+      "name": "Chris",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4596428?v=4",
+      "profile": "https://github.com/Chris-James",
+      "contributions": [
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "react-cool-form",
+  "projectOwner": "wellyshen",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
