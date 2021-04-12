@@ -1,0 +1,27 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "wellyshen",
+      "name": "Welly",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21308003?v=4",
+      "profile": "http://wellyshen.com",
+      "contributions": [
+        "ideas",
+        "code",
+        "doc",
+        "maintenance"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "react-cool-form",
+  "projectOwner": "wellyshen",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
