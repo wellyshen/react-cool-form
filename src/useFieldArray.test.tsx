@@ -38,6 +38,7 @@ interface Config extends FieldArrayConfig {
   isShow: boolean;
   defaultValues: any;
   shouldRemoveField: boolean;
+  validateOnChange: boolean;
   formValidate: (values: any) => void;
   onSubmit: (values: any) => void;
   onRender: () => void;
@@ -51,6 +52,7 @@ const Form = ({
   formId,
   defaultValues,
   shouldRemoveField,
+  validateOnChange,
   formValidate,
   onSubmit = () => null,
   onRender = () => null,
@@ -61,6 +63,7 @@ const Form = ({
     id: formId,
     defaultValues,
     shouldRemoveField,
+    validateOnChange,
     validate: formValidate,
     onSubmit: (values) => onSubmit(values),
   });
@@ -424,6 +427,18 @@ describe("useFieldArray", () => {
     await waitFor(() => expect(getState("errors.foo")).toBe(error));
   });
 
+  it("should not run validation", () => {
+    const validate = jest.fn();
+    const { remove } = renderHelper({
+      validateOnChange: false,
+      validate,
+    });
+    act(() => {
+      remove(0);
+    });
+    expect(validate).not.toHaveBeenCalled();
+  });
+
   describe("conditional fields", () => {
     const initialState = {
       values: {},
@@ -621,9 +636,10 @@ describe("useFieldArray", () => {
       });
     });
 
-    it("should reset correctly", async () => {
-      const defaultValues = { foo: [{}] };
+    it.each(["show", "hide"])("should reset correctly", async (type) => {
+      const defaultValues = { foo: type === "show" ? [{}] : formValue };
       const { getState, setShow, reset } = renderHelper({
+        isShow: type !== "show",
         defaultValues,
         children: ({ fields, show }: API) =>
           fields.map((name) => (
@@ -632,14 +648,14 @@ describe("useFieldArray", () => {
                 <input
                   data-testid={`${name}.a`}
                   name={`${name}.a`}
-                  defaultValue={fieldValue[0].a}
+                  defaultValue={type === "show" ? fieldValue[0].a : undefined}
                 />
               )}
               {show && (
                 <Field
                   data-testid={`${name}.b`}
                   name={`${name}.b`}
-                  defaultValue={fieldValue[0].b}
+                  defaultValue={type === "show" ? fieldValue[0].b : undefined}
                 />
               )}
             </div>

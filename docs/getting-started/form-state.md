@@ -135,11 +135,11 @@ This feature filters any errors of the untouched fields. So when validating with
 ```js
 const { mon } = useForm();
 
-// Current state: { errors: { foo: "Required" }, touched: { foo: false } }
+// Current state: { errors: { foo: "Required" }, touched: {} }
 // Returns { foo: "Required" }
 const errors = mon("errors");
 
-// Current state: { errors: { foo: "Required" }, touched: { foo: false } }
+// Current state: { errors: { foo: "Required" }, touched: {} }
 // Returns {}
 const errors = mon("errors", { errorWithTouched: true });
 
