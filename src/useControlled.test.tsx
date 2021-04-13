@@ -178,18 +178,22 @@ describe("useControlled", () => {
     expect(onBlur).toHaveBeenCalled();
   });
 
-  it.each(["form", "controlled"])(
+  it.each(["form", "controlled", "both-array"])(
     "should set default value correctly from %s option",
     async (type) => {
       const value = "🍎";
       const format = jest.fn(() => value);
       renderHelper({
-        defaultValues: type === "form" ? { foo: value } : undefined,
+        isFieldArray: type === "both-array",
+        defaultValues:
+          type === "form" || type === "both-array" ? { foo: value } : undefined,
         onSubmit,
         children: (
           <Field
             format={format}
-            defaultValue={type === "controlled" ? value : undefined}
+            defaultValue={
+              type === "controlled" || type === "both-array" ? value : undefined
+            }
           />
         ),
       });
@@ -206,31 +210,6 @@ describe("useControlled", () => {
     const { getState } = renderHelper({ children: <Field /> });
     expect(getState("foo")).toBeUndefined();
   });
-
-  it.each(["form", "controlled"])(
-    "should set default value correctly from %s option for field-array",
-    async (type) => {
-      const value = "🍎";
-      const format = jest.fn(() => value);
-      renderHelper({
-        isFieldArray: true,
-        defaultValues: type === "form" ? { foo: value } : undefined,
-        onSubmit,
-        children: (
-          <Field
-            format={format}
-            defaultValue={type === "controlled" ? value : undefined}
-          />
-        ),
-      });
-      expect(format).toHaveBeenCalledWith(value);
-      expect(getByTestId("foo").value).toBe(value);
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
-      );
-    }
-  );
 
   it.each([true, false])(
     "should use form-level default value first",
