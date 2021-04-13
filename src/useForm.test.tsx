@@ -2109,6 +2109,21 @@ describe("useForm", () => {
       }
     );
 
+    it("should remove array fields correctly", async () => {
+      const { getState, setShow } = renderHelper({
+        defaultValues: { foo: ["🍎", "🍋"] },
+        isShow: true,
+        children: ({ show }: API) => (
+          <>
+            {show && <input name="foo[0]" />}
+            {show && <input name="foo[1]" />}
+          </>
+        ),
+      });
+      act(() => setShow(false));
+      await waitFor(() => expect(getState("values")).toEqual({}));
+    });
+
     it("should not remove field", async () => {
       const value = "🍎";
       const {
