@@ -346,7 +346,7 @@ describe("useFieldArray", () => {
     );
     const fooA = getByTestId("foo[0].a");
     const fooB = getByTestId("foo[0].b");
-    const target = { value: "🍒" };
+    const target = { value: "🥝" };
 
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
@@ -367,7 +367,7 @@ describe("useFieldArray", () => {
 
     act(() => {
       if (type === "set") reset();
-      push({ a: "🥝", b: "🥝" });
+      push({ a: "🍒", b: "🍒" });
     });
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
@@ -646,14 +646,12 @@ describe("useFieldArray", () => {
             <div key={name}>
               {show && (
                 <input
-                  data-testid={`${name}.a`}
                   name={`${name}.a`}
                   defaultValue={type === "show" ? fieldValue[0].a : undefined}
                 />
               )}
               {show && (
                 <Field
-                  data-testid={`${name}.b`}
                   name={`${name}.b`}
                   defaultValue={type === "show" ? fieldValue[0].b : undefined}
                 />
