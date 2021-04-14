@@ -1973,13 +1973,10 @@ describe("useForm", () => {
     await waitFor(() => {
       expect(debug).toHaveBeenCalledTimes(3);
       expect(debug).toHaveBeenCalledWith({
-        ...{
-          ...initialState,
-          values: { foo: "" },
-          dirty: { foo: true },
-          isDirty: true,
-        },
+        ...initialState,
         values: { foo: value },
+        dirty: { foo: true },
+        isDirty: true,
       });
     });
   });
