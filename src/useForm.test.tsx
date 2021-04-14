@@ -1977,14 +1977,8 @@ describe("useForm", () => {
     const value = "🍎";
     fireEvent.input(getByTestId("foo"), { target: { value } });
     await waitFor(() => {
-      expect(debug).toHaveBeenCalledTimes(2);
-      expect(debug).toHaveBeenNthCalledWith(1, {
-        ...initialState,
-        values: { foo: value },
-        dirty: {},
-        isDirty: false,
-      });
-      expect(debug).toHaveBeenNthCalledWith(2, {
+      expect(debug).toHaveBeenCalledTimes(3);
+      expect(debug).toHaveBeenCalledWith({
         ...initialState,
         values: { foo: value },
         dirty: { foo: true },

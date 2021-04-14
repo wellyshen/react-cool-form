@@ -284,10 +284,15 @@ export default <V extends FormValues = FormValues>({
       shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
     ) => {
       if (shouldUpdateDefaultValue)
-        set(initialStateRef.current.values, name, value);
+        if (!dequal(get(stateRef.current.values, name), value))
+          initialStateRef.current.values = set(
+            initialStateRef.current.values,
+            name,
+            value,
+            true
+          );
 
-      if (!dequal(get(stateRef.current.values, name), value))
-        setStateRef(`values.${name}`, value, { shouldSkipUpdate: true });
+      setStateRef(`values.${name}`, value, { shouldSkipUpdate: true });
     },
     [setStateRef, stateRef]
   );
@@ -725,7 +730,7 @@ export default <V extends FormValues = FormValues>({
             initialStateRef.current.values;
 
           state[key] = nextValues;
-          set(initialStateRef.current, "values", nextValues);
+          initialStateRef.current.values = nextValues;
           setNodesOrValues(nextValues, {
             shouldSetValues: false,
             fields: Array.from(fieldsRef.current.keys()).filter(
@@ -828,7 +833,12 @@ export default <V extends FormValues = FormValues>({
         error: "errors",
       });
 
-      if (!defaultValue) unset(initialStateRef.current.values, name);
+      if (!defaultValue)
+        initialStateRef.current.values = unset(
+          initialStateRef.current.values,
+          name,
+          true
+        );
 
       ["values", "touched", "dirty", "errors"].forEach((key, idx, arr) => {
         const shouldForceUpdate = idx === arr.length - 1;
