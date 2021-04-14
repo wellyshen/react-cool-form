@@ -484,6 +484,12 @@ describe("useForm", () => {
       </>
     );
 
+    it("should get empty values", async () => {
+      renderHelper({ onSubmit });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({}));
+    });
+
     it("should set values correctly via value attribute", async () => {
       renderHelper({ onSubmit, children: getChildren() });
       const values: any = {
@@ -1973,13 +1979,10 @@ describe("useForm", () => {
     await waitFor(() => {
       expect(debug).toHaveBeenCalledTimes(3);
       expect(debug).toHaveBeenCalledWith({
-        ...{
-          ...initialState,
-          values: { foo: "" },
-          dirty: { foo: true },
-          isDirty: true,
-        },
+        ...initialState,
         values: { foo: value },
+        dirty: { foo: true },
+        isDirty: true,
       });
     });
   });

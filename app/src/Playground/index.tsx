@@ -18,12 +18,13 @@ export default () => {
       {show1 && <input name="foo[0].a" />}
       {show2 && <input name="foo[1].a" />}
       <button type="button" onClick={() => setShow1(!show1)}>
-        Toggle
+        Toggle 1
       </button>
       <button type="button" onClick={() => setShow2(!show2)}>
-        Toggle
+        Toggle 2
       </button>
       <input type="submit" />
+      <input type="reset" />
     </form>
   );
 };

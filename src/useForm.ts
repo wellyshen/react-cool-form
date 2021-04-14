@@ -284,15 +284,15 @@ export default <V extends FormValues = FormValues>({
       shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
     ) => {
       if (shouldUpdateDefaultValue)
-        initialStateRef.current = set(
-          initialStateRef.current,
-          `values.${name}`,
-          value,
-          true
-        );
+        if (!dequal(get(stateRef.current.values, name), value))
+          initialStateRef.current.values = set(
+            initialStateRef.current.values,
+            name,
+            value,
+            true
+          );
 
-      if (!dequal(get(stateRef.current.values, name), value))
-        setStateRef(`values.${name}`, value, { shouldSkipUpdate: true });
+      setStateRef(`values.${name}`, value, { shouldSkipUpdate: true });
     },
     [setStateRef, stateRef]
   );
@@ -730,12 +730,7 @@ export default <V extends FormValues = FormValues>({
             initialStateRef.current.values;
 
           state[key] = nextValues;
-          initialStateRef.current = set(
-            initialStateRef.current,
-            "values",
-            nextValues,
-            true
-          );
+          initialStateRef.current.values = nextValues;
           setNodesOrValues(nextValues, {
             shouldSetValues: false,
             fields: Array.from(fieldsRef.current.keys()).filter(
@@ -839,9 +834,9 @@ export default <V extends FormValues = FormValues>({
       });
 
       if (!defaultValue)
-        initialStateRef.current = unset(
-          initialStateRef.current,
-          `values.${name}`,
+        initialStateRef.current.values = unset(
+          initialStateRef.current.values,
+          name,
           true
         );
 

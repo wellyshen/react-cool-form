@@ -117,10 +117,6 @@ describe("useFormState", () => {
     expect(renderHelper({ path: "values.foo", defaultValues })).toBe(
       defaultValues.foo
     );
-
-    expect(
-      renderHelper({ path: "values.foo", formDefaultValues: null })
-    ).toBeUndefined();
   });
 
   it("should get state with correct format", () => {
