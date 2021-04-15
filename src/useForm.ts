@@ -126,10 +126,7 @@ export default <V extends FormValues = FormValues>({
       setStateRef(
         k,
         unset(stateRef.current[k as keyof FormState<V>], segs.join("."), true),
-        {
-          fieldPath: path,
-          ...options,
-        }
+        { fieldPath: path, ...options }
       );
     },
     [setStateRef, stateRef]
