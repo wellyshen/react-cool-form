@@ -8,53 +8,39 @@ const Field = ({ name, ...rest }: any) => {
   return <input {...props} />;
 };
 
-const FieldArray = ({ name, ...rest }: any) => {
-  const [fields] = useFieldArray(name, rest);
-  return (
-    <>
-      {fields.map((fieldName) => (
-        <input key={fieldName} name={`${fieldName}.a`} />
-      ))}
-    </>
-  );
-};
-
 export default () => {
-  const [show, setShow] = useState(false);
-  const { form, getState, setValue } = useForm({
+  const [show1, setShow1] = useState(true);
+  const [show2, setShow2] = useState(true);
+  const { form } = useForm({
     defaultValues: {
-      // foo: [],
+      foo: [{}],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [fields, { push }] = useFieldArray("foo", {
-    // defaultValue: [{ a: "field test", b: "field test" }],
-  });
+  const [fields, { remove, push }] = useFieldArray("foo");
 
   return (
     <form ref={form}>
-      {fields.map((name) => (
-        <div key={name}>
-          {show && <input name={`${name}.a`} defaultValue="field test" />}
-          {/* <input name={`${name}.a`} /> */}
-          {show && <Field name={`${name}.b`} defaultValue="field test" />}
-          {/* <Field name={`${name}.b`} /> */}
+      {fields.map((n, i) => (
+        <div key={n}>
+          {show1 && <input name={`${n}.a`} defaultValue={`field t-${i}`} />}
+          {show2 && <Field name={`${n}.b`} defaultValue={`field t-${i}`} />}
         </div>
       ))}
-      <button type="button" onClick={() => setShow(!show)}>
-        Toggle
+      <button type="button" onClick={() => setShow1(!show1)}>
+        Toggle 1
       </button>
-      <button type="button" onClick={() => push({ a: "form test" })}>
-        Push
+      <button type="button" onClick={() => setShow2(!show2)}>
+        Toggle 2
       </button>
       <button
         type="button"
-        onClick={() => console.log("LOG ===> ", getState())}
+        onClick={() => push({ a: "push t3", b: "push t3" })}
       >
-        Get State
+        Push
       </button>
-      <button type="button" onClick={() => setValue("foo[0].b", undefined)}>
-        Set Value
+      <button type="button" onClick={() => remove(1)}>
+        Remove
       </button>
       <input type="submit" />
       <input type="reset" />

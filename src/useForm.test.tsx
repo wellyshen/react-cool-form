@@ -124,16 +124,9 @@ describe("useForm", () => {
 
   describe("warning", () => {
     it("should warn for a missing name field", () => {
-      renderHelper({ children: <input data-testid="foo" /> });
-      fireEvent.input(getByTestId("foo"));
-      expect(console.warn).toHaveBeenCalledTimes(2);
-      expect(console.warn).toHaveBeenNthCalledWith(
-        1,
+      renderHelper({ children: <input /> });
+      expect(console.warn).toHaveBeenCalledWith(
         '💡 react-cool-form > field: Missing "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
-      );
-      expect(console.warn).toHaveBeenNthCalledWith(
-        2,
-        '💡 react-cool-form > field: Missing "name" attribute.'
       );
     });
 
@@ -483,6 +476,12 @@ describe("useForm", () => {
         </select>
       </>
     );
+
+    it("should get empty values", async () => {
+      renderHelper({ onSubmit });
+      fireEvent.submit(getByTestId("form"));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({}));
+    });
 
     it("should set values correctly via value attribute", async () => {
       renderHelper({ onSubmit, children: getChildren() });
@@ -1217,23 +1216,21 @@ describe("useForm", () => {
     );
 
     it("should avoid repeatedly validation", async () => {
-      const { getState, clearErrors } = renderHelper({
-        children: <input data-testid="foo" name="foo" required />,
+      const validate = jest.fn();
+      renderHelper({
+        validate,
+        children: <input data-testid="foo" name="foo" />,
       });
       const foo = getByTestId("foo");
 
-      fireEvent.focusOut(getByTestId("foo"));
-      await waitFor(() =>
-        expect(getState("errors")).toEqual({ foo: builtInError })
-      );
-
-      fireEvent.input(foo, { target: { value: "" } });
-      await waitFor(() =>
-        expect(getState("errors")).toEqual({ foo: builtInError })
-      );
-      act(() => clearErrors("foo"));
       fireEvent.focusOut(foo);
-      await waitFor(() => expect(getState("errors")).toEqual({}));
+      await waitFor(() => expect(validate).toHaveBeenCalled());
+
+      validate.mockClear();
+      fireEvent.input(foo);
+      await waitFor(() => expect(validate).toHaveBeenCalled());
+      fireEvent.focusOut(foo);
+      await waitFor(() => expect(validate).toHaveBeenCalledTimes(1));
     });
 
     it("should merge form-level error correctly", async () => {
@@ -1696,7 +1693,7 @@ describe("useForm", () => {
       const { getState } = renderHelper({ defaultValues: values });
 
       expect(getState("values")).toEqual(values);
-      expect(getState("values.foo")).toBe(values.foo);
+      expect(getState("foo")).toBe(values.foo);
       expect(getState("isValid")).toBe(isValid);
 
       expect(getState(["values", "values.foo", "isValid"])).toEqual([
@@ -1971,15 +1968,16 @@ describe("useForm", () => {
     const value = "🍎";
     fireEvent.input(getByTestId("foo"), { target: { value } });
     await waitFor(() => {
-      expect(debug).toHaveBeenCalledTimes(3);
-      expect(debug).toHaveBeenCalledWith({
-        ...{
-          ...initialState,
-          values: { foo: "" },
-          dirty: { foo: true },
-          isDirty: true,
-        },
+      expect(debug).toHaveBeenCalledTimes(2);
+      expect(debug).toHaveBeenNthCalledWith(1, {
+        ...initialState,
         values: { foo: value },
+      });
+      expect(debug).toHaveBeenNthCalledWith(2, {
+        ...initialState,
+        values: { foo: value },
+        dirty: { foo: true },
+        isDirty: true,
       });
     });
   });
@@ -2108,6 +2106,21 @@ describe("useForm", () => {
         });
       }
     );
+
+    it("should remove array fields correctly", async () => {
+      const { getState, setShow } = renderHelper({
+        defaultValues: { foo: ["🍎", "🍋"] },
+        isShow: true,
+        children: ({ show }: API) => (
+          <>
+            {show && <input name="foo[0]" />}
+            {show && <input name="foo[1]" />}
+          </>
+        ),
+      });
+      act(() => setShow(false));
+      await waitFor(() => expect(getState("values")).toEqual({}));
+    });
 
     it("should not remove field", async () => {
       const value = "🍎";

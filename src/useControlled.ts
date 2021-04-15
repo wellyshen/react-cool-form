@@ -29,11 +29,6 @@ export default <V extends FormValues = FormValues>(
     ...props
   }: ControlledConfig<V> = {}
 ): ControlledReturn => {
-  invariant(
-    !name,
-    '💡 react-cool-form > useControlled: Missing "name" parameter.'
-  );
-
   const methods: Methods<V> = shared.get(formId);
 
   invariant(
@@ -68,10 +63,16 @@ export default <V extends FormValues = FormValues>(
   useEffect(
     () => {
       const isFieldArr = isFieldArray(fieldArrayRef.current, name);
-      const value = get(initialStateRef.current.values, name);
+      const initialVal = get(initialStateRef.current.values, name);
 
-      if (isUndefined(value)) {
-        if (!isUndefined(defaultValue)) {
+      if (isUndefined(initialVal)) {
+        if (
+          !isUndefined(defaultValue) &&
+          (!isFieldArr ||
+            !isUndefined(
+              get(initialStateRef.current.values, name.split(".")[0])
+            ))
+        ) {
           setDefaultValue(name, defaultValue);
         } else if (!isFieldArr) {
           warn(
@@ -79,12 +80,21 @@ export default <V extends FormValues = FormValues>(
           );
         }
       } else if (isUndefined(getState(name))) {
-        setDefaultValue(name, value);
+        setDefaultValue(name, initialVal);
       }
 
       return () => {
         if (shouldRemoveField)
-          removeField(name, isFieldArr ? ["defaultValue"] : undefined);
+          removeField(
+            name,
+            !isFieldArr ||
+              isUndefined(
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+                get(initialStateRef.current.values, name.split(".")[0])
+              )
+              ? undefined
+              : ["defaultValue"]
+          );
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

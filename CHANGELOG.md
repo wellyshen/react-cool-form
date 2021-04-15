@@ -1,5 +1,17 @@
 # react-cool-form
 
+## 0.0.167
+
+### Patch Changes
+
+- [#565](https://github.com/wellyshen/react-cool-form/pull/565) [`f1796dd`](https://github.com/wellyshen/react-cool-form/commit/f1796dd459f641544f0365ff6e4d331f8d5c45d7) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): reset form will cause `undefined` form values
+
+## 0.0.166
+
+### Patch Changes
+
+- [#562](https://github.com/wellyshen/react-cool-form/pull/562) [`310cecf`](https://github.com/wellyshen/react-cool-form/commit/310cecf66a658c615f38e3b243c0491321189ffc) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useForm): automatically remove array fields getting wrong form values
+
 ## 0.0.164
 
 ### Patch Changes

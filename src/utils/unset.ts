@@ -28,7 +28,7 @@ const unset = (object: any, path: string, immutable?: boolean): any => {
     let index = +last;
 
     if (index < target.length - 1) {
-      target.splice(index, 1);
+      delete target[index];
     } else {
       while (index >= 0) {
         // @ts-expect-error
@@ -44,7 +44,8 @@ const unset = (object: any, path: string, immutable?: boolean): any => {
     delete target[last];
   }
 
-  return isEmptyObject(target) || (Array.isArray(target) && !target.length)
+  return isEmptyObject(target) ||
+    (Array.isArray(target) && !target.filter((t) => !isUndefined(t)).length)
     ? unset(refObject, segs.join("."))
     : refObject;
 };

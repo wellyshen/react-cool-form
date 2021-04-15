@@ -126,10 +126,7 @@ export default <V extends FormValues = FormValues>({
       setStateRef(
         k,
         unset(stateRef.current[k as keyof FormState<V>], segs.join("."), true),
-        {
-          fieldPath: path,
-          ...options,
-        }
+        { fieldPath: path, ...options }
       );
     },
     [setStateRef, stateRef]
@@ -197,6 +194,8 @@ export default <V extends FormValues = FormValues>({
 
   const getNodeValue = useCallback<GetNodeValue>(
     (name, fields = fieldsRef.current) => {
+      if (!fields.has(name)) return undefined;
+
       const { field, options } = fields.get(name)!;
 
       if (isInputElement(field)) {
@@ -281,12 +280,13 @@ export default <V extends FormValues = FormValues>({
     (
       name,
       value,
-      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
+      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name) ||
+        !isUndefined(get(initialStateRef.current.values, name.split(".")[0]))
     ) => {
       if (shouldUpdateDefaultValue)
-        initialStateRef.current = set(
-          initialStateRef.current,
-          `values.${name}`,
+        initialStateRef.current.values = set(
+          initialStateRef.current.values,
+          name,
           value,
           true
         );
@@ -730,12 +730,7 @@ export default <V extends FormValues = FormValues>({
             initialStateRef.current.values;
 
           state[key] = nextValues;
-          initialStateRef.current = set(
-            initialStateRef.current,
-            "values",
-            nextValues,
-            true
-          );
+          initialStateRef.current.values = nextValues;
           setNodesOrValues(nextValues, {
             shouldSetValues: false,
             fields: Array.from(fieldsRef.current.keys()).filter(
@@ -839,9 +834,9 @@ export default <V extends FormValues = FormValues>({
       });
 
       if (!defaultValue)
-        initialStateRef.current = unset(
-          initialStateRef.current,
-          `values.${name}`,
+        initialStateRef.current.values = unset(
+          initialStateRef.current.values,
+          name,
           true
         );
 
@@ -879,12 +874,7 @@ export default <V extends FormValues = FormValues>({
       setNodesOrValues(initialStateRef.current.values);
 
       handlersRef.current.change = ({ target }: Event) => {
-        const { dataset, name } = target as FieldElement;
-
-        if (!dataset.rcfExclude && !name) {
-          warn('💡 react-cool-form > field: Missing "name" attribute.');
-          return;
-        }
+        const { name } = target as FieldElement;
 
         if (fieldsRef.current.has(name) && !controlsRef.current[name]) {
           const parse = fieldParsersRef.current[name]?.parse;
@@ -928,10 +918,14 @@ export default <V extends FormValues = FormValues>({
             if (!fields.has(name)) {
               removeField(
                 name,
-                isFieldArray(fieldArrayRef.current, name)
-                  ? ["defaultValue"]
-                  : undefined
+                !isFieldArray(fieldArrayRef.current, name) ||
+                  isUndefined(
+                    get(initialStateRef.current.values, name.split(".")[0])
+                  )
+                  ? undefined
+                  : ["defaultValue"]
               );
+
               return;
             }
 

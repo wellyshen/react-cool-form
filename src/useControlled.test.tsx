@@ -108,14 +108,7 @@ describe("useControlled", () => {
 
   beforeEach(() => jest.clearAllMocks());
 
-  it("should throw missing name error", () => {
-    // @ts-expect-error
-    expect(() => useControlled()).toThrow(
-      '💡 react-cool-form > useControlled: Missing "name" parameter.'
-    );
-  });
-
-  it("should throw form id errors", () => {
+  it("should throw form ID error", () => {
     expect(() => useControlled("foo", { formId: "form-1" })).toThrow(
       '💡 react-cool-form > useControlled: It must work with an "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form'
     );
@@ -178,18 +171,22 @@ describe("useControlled", () => {
     expect(onBlur).toHaveBeenCalled();
   });
 
-  it.each(["form", "controlled"])(
+  it.each(["form", "controlled", "both-array"])(
     "should set default value correctly from %s option",
     async (type) => {
       const value = "🍎";
       const format = jest.fn(() => value);
       renderHelper({
-        defaultValues: type === "form" ? { foo: value } : undefined,
+        isFieldArray: type === "both-array",
+        defaultValues:
+          type === "form" || type === "both-array" ? { foo: value } : undefined,
         onSubmit,
         children: (
           <Field
             format={format}
-            defaultValue={type === "controlled" ? value : undefined}
+            defaultValue={
+              type === "controlled" || type === "both-array" ? value : undefined
+            }
           />
         ),
       });
@@ -206,31 +203,6 @@ describe("useControlled", () => {
     const { getState } = renderHelper({ children: <Field /> });
     expect(getState("foo")).toBeUndefined();
   });
-
-  it.each(["form", "controlled"])(
-    "should set default value correctly from %s option for field-array",
-    async (type) => {
-      const value = "🍎";
-      const format = jest.fn(() => value);
-      renderHelper({
-        isFieldArray: true,
-        defaultValues: type === "form" ? { foo: value } : undefined,
-        onSubmit,
-        children: (
-          <Field
-            format={format}
-            defaultValue={type === "controlled" ? value : undefined}
-          />
-        ),
-      });
-      expect(format).toHaveBeenCalledWith(value);
-      expect(getByTestId("foo").value).toBe(value);
-      fireEvent.submit(getByTestId("form"));
-      await waitFor(() =>
-        expect(onSubmit).toHaveBeenCalledWith({ foo: value })
-      );
-    }
-  );
 
   it.each([true, false])(
     "should use form-level default value first",
@@ -260,42 +232,27 @@ describe("useControlled", () => {
     expect(getState("foo")).toBeUndefined();
   });
 
-  it.each(["form", "controlled"])(
+  it.each(["form", "controlled", "both-array"])(
     "should reset value correctly from %s option",
     (type) => {
       const defaultValues = { foo: "🍎" };
       const { reset } = renderHelper({
-        defaultValues: type === "form" ? defaultValues : undefined,
+        isFieldArray: type === "both-array",
+        defaultValues:
+          type === "form" || type === "both-array" ? defaultValues : undefined,
         onReset,
         children: (
           <Field
-            defaultValue={type === "controlled" ? defaultValues.foo : undefined}
+            defaultValue={
+              type === "controlled" || type === "both-array"
+                ? defaultValues.foo
+                : undefined
+            }
           />
         ),
       });
       act(() => reset());
       expect(onReset).toHaveBeenCalledWith(defaultValues);
-    }
-  );
-
-  it.each(["form", "controlled"])(
-    "should reset value correctly from %s option for field-array",
-    (type) => {
-      const defaultValues = { foo: "🍎" };
-      const { reset } = renderHelper({
-        isFieldArray: true,
-        defaultValues: type === "form" ? defaultValues : undefined,
-        onReset,
-        children: (
-          <Field
-            defaultValue={type === "controlled" ? defaultValues.foo : undefined}
-          />
-        ),
-      });
-      act(() => reset());
-      expect(onReset).toHaveBeenCalledWith(
-        type === "controlled" ? {} : defaultValues
-      );
     }
   );
 
@@ -386,6 +343,24 @@ describe("useControlled", () => {
     });
     fireEvent.focusOut(getByTestId("foo"));
     await waitFor(() => expect(getState("errors")).toEqual({ foo: error }));
+  });
+
+  it("should avoid repeatedly validation", async () => {
+    const validate = jest.fn();
+    renderHelper({
+      validate,
+      children: <input data-testid="foo" name="foo" />,
+    });
+    const foo = getByTestId("foo");
+
+    fireEvent.focusOut(foo);
+    await waitFor(() => expect(validate).toHaveBeenCalled());
+
+    validate.mockClear();
+    fireEvent.input(foo);
+    await waitFor(() => expect(validate).toHaveBeenCalled());
+    fireEvent.focusOut(foo);
+    await waitFor(() => expect(validate).toHaveBeenCalledTimes(1));
   });
 
   it('should ignore "field" method', async () => {
