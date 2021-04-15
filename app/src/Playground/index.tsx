@@ -1,27 +1,46 @@
 /* eslint-disable no-console */
 
 import { useState } from "react";
-import { useForm } from "react-cool-form";
+import { useForm, useFieldArray, useControlled } from "react-cool-form";
+
+const Field = ({ name, ...rest }: any) => {
+  const [props] = useControlled(name, rest);
+  return <input {...props} />;
+};
 
 export default () => {
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(true);
   const { form } = useForm({
     defaultValues: {
-      foo: [{ a: "t1" }, { a: "t2" }],
+      foo: [{}],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
+  const [fields, { remove, push }] = useFieldArray("foo");
 
   return (
     <form ref={form}>
-      {show1 && <input name="foo[0].a" />}
-      {show2 && <input name="foo[1].a" />}
+      {fields.map((n, i) => (
+        <div key={n}>
+          {show1 && <input name={`${n}.a`} defaultValue={`field t-${i}`} />}
+          {show2 && <Field name={`${n}.b`} defaultValue={`field t-${i}`} />}
+        </div>
+      ))}
       <button type="button" onClick={() => setShow1(!show1)}>
         Toggle 1
       </button>
       <button type="button" onClick={() => setShow2(!show2)}>
         Toggle 2
+      </button>
+      <button
+        type="button"
+        onClick={() => push({ a: "push t3", b: "push t3" })}
+      >
+        Push
+      </button>
+      <button type="button" onClick={() => remove(1)}>
+        Remove
       </button>
       <input type="submit" />
       <input type="reset" />

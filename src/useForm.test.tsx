@@ -1702,7 +1702,7 @@ describe("useForm", () => {
       const { getState } = renderHelper({ defaultValues: values });
 
       expect(getState("values")).toEqual(values);
-      expect(getState("values.foo")).toBe(values.foo);
+      expect(getState("foo")).toBe(values.foo);
       expect(getState("isValid")).toBe(isValid);
 
       expect(getState(["values", "values.foo", "isValid"])).toEqual([
@@ -1977,8 +1977,12 @@ describe("useForm", () => {
     const value = "🍎";
     fireEvent.input(getByTestId("foo"), { target: { value } });
     await waitFor(() => {
-      expect(debug).toHaveBeenCalledTimes(3);
-      expect(debug).toHaveBeenCalledWith({
+      expect(debug).toHaveBeenCalledTimes(2);
+      expect(debug).toHaveBeenNthCalledWith(1, {
+        ...initialState,
+        values: { foo: value },
+      });
+      expect(debug).toHaveBeenNthCalledWith(2, {
         ...initialState,
         values: { foo: value },
         dirty: { foo: true },

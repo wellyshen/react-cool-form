@@ -239,42 +239,27 @@ describe("useControlled", () => {
     expect(getState("foo")).toBeUndefined();
   });
 
-  it.each(["form", "controlled"])(
+  it.each(["form", "controlled", "both-array"])(
     "should reset value correctly from %s option",
     (type) => {
       const defaultValues = { foo: "🍎" };
       const { reset } = renderHelper({
-        defaultValues: type === "form" ? defaultValues : undefined,
+        isFieldArray: type === "both-array",
+        defaultValues:
+          type === "form" || type === "both-array" ? defaultValues : undefined,
         onReset,
         children: (
           <Field
-            defaultValue={type === "controlled" ? defaultValues.foo : undefined}
+            defaultValue={
+              type === "controlled" || type === "both-array"
+                ? defaultValues.foo
+                : undefined
+            }
           />
         ),
       });
       act(() => reset());
       expect(onReset).toHaveBeenCalledWith(defaultValues);
-    }
-  );
-
-  it.each(["form", "controlled"])(
-    "should reset value correctly from %s option for field-array",
-    (type) => {
-      const defaultValues = { foo: "🍎" };
-      const { reset } = renderHelper({
-        isFieldArray: true,
-        defaultValues: type === "form" ? defaultValues : undefined,
-        onReset,
-        children: (
-          <Field
-            defaultValue={type === "controlled" ? defaultValues.foo : undefined}
-          />
-        ),
-      });
-      act(() => reset());
-      expect(onReset).toHaveBeenCalledWith(
-        type === "controlled" ? {} : defaultValues
-      );
     }
   );
 

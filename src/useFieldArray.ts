@@ -57,7 +57,7 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const getFields = useCallback(
     (init = false): string[] => {
-      let fields = getState(`values.${name}`);
+      let fields = getState(name);
 
       if (init && isUndefined(fields)) fields = defaultValueRef.current;
 
@@ -191,7 +191,7 @@ export default <T = any, V extends FormValues = FormValues>(
         f.splice(index, 1);
         return compact(f).length ? f : [];
       };
-      const value = (getState(`values.${name}`) || [])[index];
+      const value = (getState(name) || [])[index];
 
       setState(handler);
 
