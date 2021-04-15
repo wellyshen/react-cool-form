@@ -345,6 +345,24 @@ describe("useControlled", () => {
     await waitFor(() => expect(getState("errors")).toEqual({ foo: error }));
   });
 
+  it("should avoid repeatedly validation", async () => {
+    const validate = jest.fn();
+    renderHelper({
+      validate,
+      children: <input data-testid="foo" name="foo" />,
+    });
+    const foo = getByTestId("foo");
+
+    fireEvent.focusOut(foo);
+    await waitFor(() => expect(validate).toHaveBeenCalled());
+
+    validate.mockClear();
+    fireEvent.input(foo);
+    await waitFor(() => expect(validate).toHaveBeenCalled());
+    fireEvent.focusOut(foo);
+    await waitFor(() => expect(validate).toHaveBeenCalledTimes(1));
+  });
+
   it('should ignore "field" method', async () => {
     const mockDate = "2050-01-09";
     renderHelper({
