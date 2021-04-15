@@ -2132,7 +2132,7 @@ describe("useForm", () => {
         setShow,
       } = renderHelper({
         isShow: true,
-        shouldRemoveField: false,
+        removeOnUnmounted: false,
         children: ({ show }: API) => (
           <>
             {show && (

@@ -11,6 +11,7 @@ import {
 
 import {
   FieldArrayConfig,
+  FieldNamesLike,
   FormMethods,
   Insert,
   Move,
@@ -37,8 +38,8 @@ interface Config extends FieldArrayConfig {
   children: (api: API) => JSX.Element | JSX.Element[] | null;
   isShow: boolean;
   defaultValues: any;
-  shouldRemoveField: boolean;
   validateOnChange: boolean;
+  removeOnUnmounted: FieldNamesLike;
   formValidate: (values: any) => void;
   onSubmit: (values: any) => void;
   onRender: () => void;
@@ -51,8 +52,8 @@ const Form = ({
   isShow,
   formId,
   defaultValues,
-  shouldRemoveField,
   validateOnChange,
+  removeOnUnmounted,
   formValidate,
   onSubmit = () => null,
   onRender = () => null,
@@ -62,7 +63,7 @@ const Form = ({
   const { form, ...methods } = useForm({
     id: formId,
     defaultValues,
-    shouldRemoveField,
+    removeOnUnmounted,
     validateOnChange,
     validate: formValidate,
     onSubmit: (values) => onSubmit(values),
@@ -614,7 +615,7 @@ describe("useFieldArray", () => {
       } = renderHelper({
         isShow: true,
         defaultValues: { foo: formValue },
-        shouldRemoveField: false,
+        removeOnUnmounted: false,
         children: ({ show }: API) => <>{show && <FieldArray />}</>,
       });
 

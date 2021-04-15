@@ -562,7 +562,7 @@ describe("useControlled", () => {
         setShow,
       } = renderHelper({
         isShow: true,
-        shouldRemoveField: false,
+        removeOnUnmounted: false,
         children: ({ show }: API) => (
           <>{show && <Field defaultValue={value} />}</>
         ),
@@ -594,7 +594,7 @@ describe("useControlled", () => {
       const value = "🍎";
       const { getState, setShow, removeField } = renderHelper({
         isShow: true,
-        shouldRemoveField: false,
+        removeOnUnmounted: false,
         children: ({ show }: API) => (
           <>{show && <Field defaultValue={value} />}</>
         ),

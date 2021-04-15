@@ -18,6 +18,7 @@ import {
   FormValues,
   GetFormState,
   GetNodeValue,
+  GetRemoveFieldNames,
   GetState,
   HandleChangeEvent,
   Handlers,
@@ -76,8 +77,8 @@ export default <V extends FormValues = FormValues>({
   validateOnChange = true,
   validateOnBlur = true,
   focusOnError = true,
+  removeOnUnmounted = true,
   builtInValidationMode = "message",
-  shouldRemoveField = true,
   excludeFields = [],
   onReset,
   onSubmit,
@@ -826,6 +827,22 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
+  const getRemoveFieldNames = useCallback<GetRemoveFieldNames>(() => {
+    if (!removeOnUnmounted) return {};
+
+    const names = Array.isArray(removeOnUnmounted)
+      ? removeOnUnmounted
+      : [
+          ...Array.from(fieldsRef.current.keys()),
+          ...Object.keys(controlsRef.current),
+          ...Object.keys(fieldArrayRef.current),
+        ];
+
+    return arrayToMap(
+      isFunction(removeOnUnmounted) ? removeOnUnmounted(names) : names
+    );
+  }, [removeOnUnmounted]);
+
   const removeField = useCallback<RemoveField>(
     (name, exclude) => {
       const { defaultValue, ...rest } = arrayToMap(exclude || [], {
@@ -911,36 +928,36 @@ export default <V extends FormValues = FormValues>({
         const fields = getFields(form);
         let { values } = initialStateRef.current;
 
-        if (shouldRemoveField)
-          fieldsRef.current.forEach((_, name) => {
-            if (controlsRef.current[name]) return;
+        fieldsRef.current.forEach((_, name) => {
+          if (!getRemoveFieldNames()[name]) return;
+          if (controlsRef.current[name]) return;
 
-            if (!fields.has(name)) {
-              removeField(
-                name,
-                !isFieldArray(fieldArrayRef.current, name) ||
-                  isUndefined(
-                    get(initialStateRef.current.values, name.split(".")[0])
-                  )
-                  ? undefined
-                  : ["defaultValue"]
-              );
+          if (!fields.has(name)) {
+            removeField(
+              name,
+              !isFieldArray(fieldArrayRef.current, name) ||
+                isUndefined(
+                  get(initialStateRef.current.values, name.split(".")[0])
+                )
+                ? undefined
+                : ["defaultValue"]
+            );
 
-              return;
-            }
+            return;
+          }
 
-            const currOptions = fieldsRef.current.get(name)?.options
-              ?.length as number;
-            const nextOptions = fields.get(name).options?.length as number;
+          const currOptions = fieldsRef.current.get(name)?.options
+            ?.length as number;
+          const nextOptions = fields.get(name).options?.length as number;
 
-            if (currOptions > nextOptions) {
-              setStateRef(`values.${name}`, getNodeValue(name, fields), {
-                shouldSkipUpdate: true,
-              });
-            } else if (currOptions < nextOptions) {
-              setNodeValue(name, get(values, name), fields);
-            }
-          });
+          if (currOptions > nextOptions) {
+            setStateRef(`values.${name}`, getNodeValue(name, fields), {
+              shouldSkipUpdate: true,
+            });
+          } else if (currOptions < nextOptions) {
+            setNodeValue(name, get(values, name), fields);
+          }
+        });
 
         const addedNodes: string[] = [];
 
@@ -965,6 +982,7 @@ export default <V extends FormValues = FormValues>({
     [
       getFields,
       getNodeValue,
+      getRemoveFieldNames,
       handleChangeEvent,
       removeField,
       reset,
@@ -972,7 +990,6 @@ export default <V extends FormValues = FormValues>({
       setNodesOrValues,
       setStateRef,
       setTouchedMaybeValidate,
-      shouldRemoveField,
       stateRef,
       submit,
     ]
@@ -1002,7 +1019,6 @@ export default <V extends FormValues = FormValues>({
 
   shared.set(id, {
     validateOnChange,
-    shouldRemoveField,
     initialStateRef,
     fieldArrayRef,
     controlsRef,
@@ -1013,6 +1029,7 @@ export default <V extends FormValues = FormValues>({
     setStateRef,
     getNodeValue,
     getFormState,
+    getRemoveFieldNames,
     setDefaultValue,
     setNodesOrValues,
     setTouchedMaybeValidate,
