@@ -13,7 +13,10 @@ export default () => {
   const [show2, setShow2] = useState(true);
   const { form } = useForm({
     defaultValues: {
-      foo: [{}],
+      foo: [
+        { a: "form t-1", b: "form t-1" },
+        { a: "form t-2", b: "form t-2" },
+      ],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
@@ -35,7 +38,9 @@ export default () => {
       </button>
       <button
         type="button"
-        onClick={() => push({ a: "push t3", b: "push t3" })}
+        onClick={() =>
+          push({ a: `push t-${fields.length}`, b: `push t-${fields.length}` })
+        }
       >
         Push
       </button>
