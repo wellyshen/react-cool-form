@@ -193,41 +193,36 @@ describe("useFieldArray", () => {
     }
   );
 
-  it.each([{ shouldDirty: false }, { shouldTouched: true }])(
-    "should push value correctly",
-    async (options) => {
-      const { push, container, getState } = renderHelper({
-        defaultValues: { foo: value },
-        onRender,
-        children: ({ fields }: API) =>
-          fields.map((name) => (
-            <div key={name}>
-              <input data-testid={`${name}.a`} name={`${name}.a`} />
-              <Field data-testid={`${name}.b`} name={`${name}.b`} />
-            </div>
-          )),
-      });
-      const newValue = { a: "🍋", b: "🍋" };
-      act(() => push(newValue, options));
-      expect(container.querySelectorAll("input")).toHaveLength(4);
-      await waitFor(() => {
-        expect(getByTestId("foo[1].a").value).toBe(newValue.a);
-        expect(getByTestId("foo[1].b").value).toBe(newValue.b);
-      });
-      expect(getState("foo")).toEqual([...value, newValue]);
-      if (options?.shouldDirty === false) {
-        expect(getState("dirty.foo")).toBeUndefined();
-      } else {
-        expect(getState("dirty.foo")).toEqual([, { a: true, b: true }]);
-      }
-      if (options?.shouldTouched) {
-        expect(getState("touched.foo")).toEqual([, { a: true, b: true }]);
-      } else {
-        expect(getState("touched.foo")).toBeUndefined();
-      }
-      expect(onRender).toHaveBeenCalledTimes(2);
-    }
-  );
+  it("should push value correctly", async () => {
+    const { push, container, getState } = renderHelper({
+      defaultValues: { foo: value },
+      onRender,
+      children: ({ fields }: API) =>
+        fields.map((name) => (
+          <div key={name}>
+            <input data-testid={`${name}.a`} name={`${name}.a`} />
+            <Field data-testid={`${name}.b`} name={`${name}.b`} />
+          </div>
+        )),
+    });
+    const newValue1 = { a: "🍋", b: "🍋" };
+    const newValue2 = { a: "🥝", b: "🥝" };
+    act(() => {
+      push(newValue1, { shouldDirty: false });
+      push(newValue2, { shouldTouched: true });
+    });
+    expect(container.querySelectorAll("input")).toHaveLength(6);
+    await waitFor(() => {
+      expect(getByTestId("foo[1].a").value).toBe(newValue1.a);
+      expect(getByTestId("foo[1].b").value).toBe(newValue1.b);
+      expect(getByTestId("foo[2].a").value).toBe(newValue2.a);
+      expect(getByTestId("foo[2].b").value).toBe(newValue2.b);
+    });
+    expect(getState("foo")).toEqual([...value, newValue1, newValue2]);
+    expect(getState("dirty.foo")).toEqual([, , { a: true, b: true }]);
+    expect(getState("touched.foo")).toEqual([, , { a: true, b: true }]);
+    expect(onRender).toHaveBeenCalledTimes(2);
+  });
 
   it("should insert value correctly", async () => {
     const { insert, container, getState } = renderHelper({
@@ -310,8 +305,8 @@ describe("useFieldArray", () => {
       children: ({ fields }: API) =>
         fields.map((name) => (
           <div key={name}>
-            <input data-testid={`${name}.a`} name={`${name}.a`} />
-            <Field data-testid={`${name}.b`} name={`${name}.b`} />
+            <input name={`${name}.a`} />
+            <Field name={`${name}.b`} />
           </div>
         )),
     });
@@ -330,7 +325,7 @@ describe("useFieldArray", () => {
     expect(getState("touched.foo")).toEqual([]);
   });
 
-  it.each(["set", "reset"])("should %s value correctly", (type) => {
+  it("should set value correctly", () => {
     const defaultValue = [...value, { a: "🍋", b: "🍋" }];
     const { setValue, reset, getState, push, remove, container } = renderHelper(
       {
@@ -350,65 +345,86 @@ describe("useFieldArray", () => {
 
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
-    act(() => {
-      if (type === "set") {
-        setValue("foo", defaultValue);
-      } else {
-        reset();
-      }
-    });
+    act(() => setValue("foo", defaultValue));
     expect(fooA.value).toBe(defaultValue[0].a);
     expect(fooB.value).toBe(defaultValue[0].b);
     expect(getState("foo")).toEqual(defaultValue);
-    if (type === "reset") {
-      expect(getState("touched.foo")).toBeUndefined();
-      expect(getState("dirty.foo")).toBeUndefined();
-    }
 
-    act(() => {
-      if (type === "set") reset();
-      push({ a: "🍒", b: "🍒" });
-    });
+    act(() => push({ a: "🍒", b: "🍒" }));
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
-    act(() => {
-      if (type === "set") {
-        setValue("foo", defaultValue);
-      } else {
-        reset();
-      }
-    });
+    act(() => setValue("foo", defaultValue));
     expect(container.querySelectorAll("input")).toHaveLength(4);
     expect(fooA.value).toBe(defaultValue[0].a);
     expect(fooB.value).toBe(defaultValue[0].b);
     expect(getState("foo")).toEqual(defaultValue);
-    if (type === "reset") {
-      expect(getState("touched.foo")).toBeUndefined();
-      expect(getState("dirty.foo")).toBeUndefined();
-    }
 
     act(() => {
-      if (type === "set") reset();
+      reset();
       remove(1);
     });
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
-    act(() => {
-      if (type === "set") {
-        setValue("foo", defaultValue);
-      } else {
-        reset();
-      }
-    });
+    act(() => setValue("foo", defaultValue));
     expect(container.querySelectorAll("input")).toHaveLength(4);
     expect(fooA.value).toBe(defaultValue[0].a);
     expect(fooB.value).toBe(defaultValue[0].b);
     expect(getState("foo")).toEqual(defaultValue);
-    if (type === "reset") {
+  });
+
+  it.each(["form", "array"])(
+    "should reset value correctly from %s default option",
+    (type) => {
+      const defaultValue = [...value, { a: "🍋", b: "🍋" }];
+      const { reset, getState, push, remove, container } = renderHelper({
+        defaultValues: type === "form" ? { foo: defaultValue } : undefined,
+        defaultValue: type === "array" ? defaultValue : undefined,
+        children: ({ fields }: API) =>
+          fields.map((name) => (
+            <div key={name}>
+              <input data-testid={`${name}.a`} name={`${name}.a`} />
+              <Field data-testid={`${name}.b`} name={`${name}.b`} />
+            </div>
+          )),
+      });
+      const fooA = getByTestId("foo[0].a");
+      const fooB = getByTestId("foo[0].b");
+      const target = { value: "🥝" };
+
+      fireEvent.input(fooA, { target });
+      fireEvent.input(fooB, { target });
+      act(() => reset());
+      expect(fooA.value).toBe(defaultValue[0].a);
+      expect(fooB.value).toBe(defaultValue[0].b);
+      expect(getState("foo")).toEqual(defaultValue);
+      expect(getState("touched.foo")).toBeUndefined();
+      expect(getState("dirty.foo")).toBeUndefined();
+
+      act(() => push({ a: "🍒", b: "🍒" }));
+      fireEvent.input(fooA, { target });
+      fireEvent.input(fooB, { target });
+      act(() => reset());
+      expect(container.querySelectorAll("input")).toHaveLength(4);
+      expect(fooA.value).toBe(defaultValue[0].a);
+      expect(fooB.value).toBe(defaultValue[0].b);
+      expect(getState("foo")).toEqual(defaultValue);
+      expect(getState("touched.foo")).toBeUndefined();
+      expect(getState("dirty.foo")).toBeUndefined();
+
+      act(() => {
+        remove(1);
+      });
+      fireEvent.input(fooA, { target });
+      fireEvent.input(fooB, { target });
+      act(() => reset());
+      expect(container.querySelectorAll("input")).toHaveLength(4);
+      expect(fooA.value).toBe(defaultValue[0].a);
+      expect(fooB.value).toBe(defaultValue[0].b);
+      expect(getState("foo")).toEqual(defaultValue);
       expect(getState("touched.foo")).toBeUndefined();
       expect(getState("dirty.foo")).toBeUndefined();
     }
-  });
+  );
 
   it.each(["form", "array"])("should run %s-level validation", async (type) => {
     const error = "Required";
@@ -456,7 +472,7 @@ describe("useFieldArray", () => {
     const fieldValue = [{ a: "🍋", b: "🍋" }];
 
     it.each(["form", "array"])(
-      "should set %s-level default value correctly",
+      "should set %s-level default value correctly (FieldArray)",
       async (type) => {
         const {
           getState,
@@ -519,7 +535,7 @@ describe("useFieldArray", () => {
     );
 
     it.each(["form", "array", "field"])(
-      "should set %s-level default value correctly",
+      "should set %s-level default value correctly (input/Field)",
       async (type) => {
         const {
           getState,
@@ -636,32 +652,46 @@ describe("useFieldArray", () => {
       });
     });
 
-    it.each(["show", "hide"])("should reset correctly", async (type) => {
-      const defaultValues = { foo: type === "show" ? [{}] : formValue };
-      const { getState, setShow, reset } = renderHelper({
-        isShow: type !== "show",
+    it.each([true, false])("should reset correctly", async (isShow) => {
+      const defaultValues = { foo: isShow ? [{}] : formValue };
+      const { getState, setShow, setValue, reset } = renderHelper({
+        isShow: !isShow,
         defaultValues,
         children: ({ fields, show }: API) =>
           fields.map((name) => (
             <div key={name}>
               {show && (
                 <input
+                  data-testid={`${name}.a`}
                   name={`${name}.a`}
-                  defaultValue={type === "show" ? fieldValue[0].a : undefined}
+                  defaultValue={fieldValue[0].a}
                 />
               )}
               {show && (
                 <Field
+                  data-testid={`${name}.b`}
                   name={`${name}.b`}
-                  defaultValue={type === "show" ? fieldValue[0].b : undefined}
+                  defaultValue={fieldValue[0].b}
                 />
               )}
             </div>
           )),
       });
-      act(() => setShow(true));
-      act(() => reset());
-      await waitFor(() => expect(getState("values")).toEqual(defaultValues));
+      act(() => {
+        setShow(true);
+        setValue("foo[0].a", "🥝");
+        setValue("foo[0].b", "🥝");
+        reset();
+      });
+      await waitFor(() =>
+        expect(getState("foo")).toEqual(isShow ? fieldValue : formValue)
+      );
+      expect(getByTestId("foo[0].a").value).toBe(
+        isShow ? fieldValue[0].a : formValue[0].a
+      );
+      expect(getByTestId("foo[0].b").value).toBe(
+        isShow ? fieldValue[0].b : formValue[0].b
+      );
     });
   });
 });

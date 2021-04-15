@@ -197,6 +197,8 @@ export default <V extends FormValues = FormValues>({
 
   const getNodeValue = useCallback<GetNodeValue>(
     (name, fields = fieldsRef.current) => {
+      if (!fields.has(name)) return undefined;
+
       const { field, options } = fields.get(name)!;
 
       if (isInputElement(field)) {
@@ -281,18 +283,19 @@ export default <V extends FormValues = FormValues>({
     (
       name,
       value,
-      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name)
+      shouldUpdateDefaultValue = !isFieldArray(fieldArrayRef.current, name) ||
+        !isUndefined(get(initialStateRef.current.values, name.split(".")[0]))
     ) => {
       if (shouldUpdateDefaultValue)
-        if (!dequal(get(stateRef.current.values, name), value))
-          initialStateRef.current.values = set(
-            initialStateRef.current.values,
-            name,
-            value,
-            true
-          );
+        initialStateRef.current.values = set(
+          initialStateRef.current.values,
+          name,
+          value,
+          true
+        );
 
-      setStateRef(`values.${name}`, value, { shouldSkipUpdate: true });
+      if (!dequal(get(stateRef.current.values, name), value))
+        setStateRef(`values.${name}`, value, { shouldSkipUpdate: true });
     },
     [setStateRef, stateRef]
   );
@@ -923,10 +926,14 @@ export default <V extends FormValues = FormValues>({
             if (!fields.has(name)) {
               removeField(
                 name,
-                isFieldArray(fieldArrayRef.current, name)
-                  ? ["defaultValue"]
-                  : undefined
+                !isFieldArray(fieldArrayRef.current, name) ||
+                  isUndefined(
+                    get(initialStateRef.current.values, name.split(".")[0])
+                  )
+                  ? undefined
+                  : ["defaultValue"]
               );
+
               return;
             }
 
