@@ -124,16 +124,9 @@ describe("useForm", () => {
 
   describe("warning", () => {
     it("should warn for a missing name field", () => {
-      renderHelper({ children: <input data-testid="foo" /> });
-      fireEvent.input(getByTestId("foo"));
-      expect(console.warn).toHaveBeenCalledTimes(2);
-      expect(console.warn).toHaveBeenNthCalledWith(
-        1,
+      renderHelper({ children: <input /> });
+      expect(console.warn).toHaveBeenCalledWith(
         '💡 react-cool-form > field: Missing "name" attribute. Do you want to exclude the field? See: https://react-cool-form.netlify.app/docs/api-reference/use-form/#excludefields'
-      );
-      expect(console.warn).toHaveBeenNthCalledWith(
-        2,
-        '💡 react-cool-form > field: Missing "name" attribute.'
       );
     });
 

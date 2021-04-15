@@ -108,14 +108,7 @@ describe("useControlled", () => {
 
   beforeEach(() => jest.clearAllMocks());
 
-  it("should throw missing name error", () => {
-    // @ts-expect-error
-    expect(() => useControlled()).toThrow(
-      '💡 react-cool-form > useControlled: Missing "name" parameter.'
-    );
-  });
-
-  it("should throw form id errors", () => {
+  it("should throw form ID error", () => {
     expect(() => useControlled("foo", { formId: "form-1" })).toThrow(
       '💡 react-cool-form > useControlled: It must work with an "useForm" hook. See: https://react-cool-form.netlify.app/docs/api-reference/use-form'
     );

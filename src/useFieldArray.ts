@@ -28,11 +28,6 @@ export default <T = any, V extends FormValues = FormValues>(
   name: string,
   { formId, defaultValue, validate }: FieldArrayConfig<T, V> = {}
 ): FieldArrayReturn<T> => {
-  invariant(
-    !name,
-    '💡 react-cool-form > useFieldArray: Missing "name" parameter.'
-  );
-
   const methods: Methods<V> = shared.get(formId);
 
   invariant(

@@ -29,11 +29,6 @@ export default <V extends FormValues = FormValues>(
     ...props
   }: ControlledConfig<V> = {}
 ): ControlledReturn => {
-  invariant(
-    !name,
-    '💡 react-cool-form > useControlled: Missing "name" parameter.'
-  );
-
   const methods: Methods<V> = shared.get(formId);
 
   invariant(
