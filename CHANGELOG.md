@@ -1,5 +1,13 @@
 # react-cool-form
 
+## 0.0.168
+
+### Patch Changes
+
+- [`35516ad`](https://github.com/wellyshen/react-cool-form/commit/35516ad867efb6d1314a2580af360f9143423775) Thanks [@wellyshen](https://github.com/wellyshen)! - Fix(useFieldArray): reset values not working for conditional fields
+
+* [`c865f58`](https://github.com/wellyshen/react-cool-form/commit/c865f58504e416ccd55b4b2022f3092c1c841c80) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor: remove "missing field name" warnings
+
 ## 0.0.167
 
 ### Patch Changes
