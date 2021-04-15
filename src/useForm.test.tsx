@@ -1216,23 +1216,21 @@ describe("useForm", () => {
     );
 
     it("should avoid repeatedly validation", async () => {
-      const { getState, clearErrors } = renderHelper({
-        children: <input data-testid="foo" name="foo" required />,
+      const validate = jest.fn();
+      renderHelper({
+        validate,
+        children: <input data-testid="foo" name="foo" />,
       });
       const foo = getByTestId("foo");
 
-      fireEvent.focusOut(getByTestId("foo"));
-      await waitFor(() =>
-        expect(getState("errors")).toEqual({ foo: builtInError })
-      );
-
-      fireEvent.input(foo, { target: { value: "" } });
-      await waitFor(() =>
-        expect(getState("errors")).toEqual({ foo: builtInError })
-      );
-      act(() => clearErrors("foo"));
       fireEvent.focusOut(foo);
-      await waitFor(() => expect(getState("errors")).toEqual({}));
+      await waitFor(() => expect(validate).toHaveBeenCalled());
+
+      validate.mockClear();
+      fireEvent.input(foo);
+      await waitFor(() => expect(validate).toHaveBeenCalled());
+      fireEvent.focusOut(foo);
+      await waitFor(() => expect(validate).toHaveBeenCalledTimes(1));
     });
 
     it("should merge form-level error correctly", async () => {
