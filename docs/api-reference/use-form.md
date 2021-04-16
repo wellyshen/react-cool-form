@@ -123,7 +123,9 @@ const methods = useForm({ removeOnUnmounted: false });
 const methods = useForm({ removeOnUnmounted: ["foo"] });
 
 // Keep partial data (i.e. "bar" and "baz") by modifying existing field names
-const methods = useForm({ removeOnUnmounted: (names) => names.slice(0, 1) });
+const methods = useForm({
+  removeOnUnmounted: (names) => names.filter((name) => name === "foo"),
+});
 ```
 
 👉🏻 See the [conditional fields](../examples/conditional-fields) example to learn more.
