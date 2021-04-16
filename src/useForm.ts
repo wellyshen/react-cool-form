@@ -95,8 +95,6 @@ export default <V extends FormValues = FormValues>({
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<ObjMap<FieldValidator<V>>>({});
   const changedFieldRef = useRef<string>();
-  const focusOnErrorRef = useRef(focusOnError);
-  const removeOnUnmountedRef = useRef(removeOnUnmounted);
   const excludeFieldsRef = useRef<ObjMap>(arrayToMap(excludeFields));
   const onResetRef = useLatest(onReset || (() => undefined));
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
@@ -777,13 +775,11 @@ export default <V extends FormValues = FormValues>({
 
           onErrorRef.current(errors, getOptions(), e);
 
-          if (focusOnErrorRef.current) {
-            let names = Array.isArray(focusOnErrorRef.current)
-              ? focusOnErrorRef.current
+          if (focusOnError) {
+            let names = Array.isArray(focusOnError)
+              ? focusOnError
               : Array.from(fieldsRef.current.keys());
-            names = isFunction(focusOnErrorRef.current)
-              ? focusOnErrorRef.current(names)
-              : names;
+            names = isFunction(focusOnError) ? focusOnError(names) : names;
             const name = names.find((n) => get(errors, n));
 
             if (name) handleFocus(name);
@@ -803,8 +799,8 @@ export default <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      focusOnErrorRef,
       getOptions,
       handleFocus,
       onErrorRef,
@@ -832,22 +828,21 @@ export default <V extends FormValues = FormValues>({
 
   const shouldRemoveField = useCallback<ShouldRemoveField>(
     (name) => {
-      if (!removeOnUnmountedRef.current) return false;
+      if (!removeOnUnmounted) return false;
 
-      let names = Array.isArray(removeOnUnmountedRef.current)
-        ? removeOnUnmountedRef.current
+      let names = Array.isArray(removeOnUnmounted)
+        ? removeOnUnmounted
         : [
             ...Array.from(fieldsRef.current.keys()),
             ...Object.keys(controlsRef.current),
             ...Object.keys(fieldArrayRef.current),
           ];
-      names = isFunction(removeOnUnmountedRef.current)
-        ? removeOnUnmountedRef.current(names)
-        : names;
+      names = isFunction(removeOnUnmounted) ? removeOnUnmounted(names) : names;
 
       return names.includes(name);
     },
-    [removeOnUnmountedRef]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const removeField = useCallback<RemoveField>(
@@ -1033,7 +1028,6 @@ export default <V extends FormValues = FormValues>({
     observersRef,
     fieldValidatorsRef,
     changedFieldRef,
-    excludeFieldsRef,
     setStateRef,
     getNodeValue,
     getFormState,

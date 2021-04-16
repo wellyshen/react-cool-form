@@ -8,7 +8,6 @@ export type Methods<V = any> = {
   validateOnChange: boolean;
   shouldRemoveField: ShouldRemoveField;
   initialStateRef: MutableRefObject<FormState<V>>;
-  excludeFieldsRef: MutableRefObject<ObjMap>;
   fieldArrayRef: MutableRefObject<FieldArray>;
   controlsRef: MutableRefObject<ObjMap>;
   observersRef: MutableRefObject<Observer<V>[]>;

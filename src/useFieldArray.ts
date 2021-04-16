@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   FieldArrayConfig,
@@ -48,18 +48,18 @@ export default <T = any, V extends FormValues = FormValues>(
     runValidation,
     removeField,
   } = methods;
-  const defaultValueRef = useRef<T[] | undefined>(defaultValue);
 
   const getFields = useCallback(
     (init = false): string[] => {
       let fields = getState(name);
 
-      if (init && isUndefined(fields)) fields = defaultValueRef.current;
+      if (init && isUndefined(fields)) fields = defaultValue;
 
       return Array.isArray(fields)
         ? fields.map((_, index) => `${name}[${index}]`)
         : [];
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [getState, name]
   );
 
@@ -76,9 +76,9 @@ export default <T = any, V extends FormValues = FormValues>(
   useEffect(() => {
     if (
       isUndefined(get(initialStateRef.current.values, name)) &&
-      !isUndefined(defaultValueRef.current)
+      !isUndefined(defaultValue)
     ) {
-      setDefaultValue(name, defaultValueRef.current, true);
+      setDefaultValue(name, defaultValue, true);
       updateFields();
     }
 
