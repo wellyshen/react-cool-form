@@ -552,49 +552,52 @@ describe("useControlled", () => {
       }
     );
 
-    it("should not remove field", async () => {
-      const value = "🍎";
-      const {
-        getState,
-        setError,
-        setTouched,
-        setDirty,
-        setShow,
-      } = renderHelper({
-        isShow: true,
-        shouldRemoveField: false,
-        children: ({ show }: API) => (
-          <>{show && <Field defaultValue={value} />}</>
-        ),
-      });
+    it.each([false, [], () => []])(
+      "should not remove field",
+      async (removeOnUnmounted) => {
+        const value = "🍎";
+        const {
+          getState,
+          setError,
+          setTouched,
+          setDirty,
+          setShow,
+        } = renderHelper({
+          isShow: true,
+          removeOnUnmounted,
+          children: ({ show }: API) => (
+            <>{show && <Field defaultValue={value} />}</>
+          ),
+        });
 
-      act(() => {
-        setError("foo", "Required");
-        setTouched("foo", true, false);
-        setDirty("foo");
-        setShow(false);
-      });
-      await waitFor(() =>
-        expect(getState()).toEqual({
-          ...initialState,
-          values: { foo: value },
-          errors: { foo: "Required" },
-          isValid: false,
-          touched: { foo: true },
-          dirty: { foo: true },
-          isDirty: true,
-        })
-      );
+        act(() => {
+          setError("foo", "Required");
+          setTouched("foo", true, false);
+          setDirty("foo");
+          setShow(false);
+        });
+        await waitFor(() =>
+          expect(getState()).toEqual({
+            ...initialState,
+            values: { foo: value },
+            errors: { foo: "Required" },
+            isValid: false,
+            touched: { foo: true },
+            dirty: { foo: true },
+            isDirty: true,
+          })
+        );
 
-      act(() => setShow(true));
-      await waitFor(() => expect(getByTestId("foo").value).toBe(value));
-    });
+        act(() => setShow(true));
+        await waitFor(() => expect(getByTestId("foo").value).toBe(value));
+      }
+    );
 
     it("should initialize value correctly", () => {
       const value = "🍎";
       const { getState, setShow, removeField } = renderHelper({
         isShow: true,
-        shouldRemoveField: false,
+        removeOnUnmounted: false,
         children: ({ show }: API) => (
           <>{show && <Field defaultValue={value} />}</>
         ),

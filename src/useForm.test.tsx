@@ -2122,33 +2122,35 @@ describe("useForm", () => {
       await waitFor(() => expect(getState("values")).toEqual({}));
     });
 
-    it("should not remove field", async () => {
-      const value = "🍎";
-      const {
-        getState,
-        setError,
-        setTouched,
-        setDirty,
-        setShow,
-      } = renderHelper({
-        isShow: true,
-        shouldRemoveField: false,
-        children: ({ show }: API) => (
-          <>
-            {show && (
-              <input data-testid="foo" name="foo" defaultValue={value} />
-            )}
-          </>
-        ),
-      });
+    it.each([false, [], () => []])(
+      "should not remove field",
+      async (removeOnUnmounted) => {
+        const value = "🍎";
+        const {
+          getState,
+          setError,
+          setTouched,
+          setDirty,
+          setShow,
+        } = renderHelper({
+          isShow: true,
+          removeOnUnmounted,
+          children: ({ show }: API) => (
+            <>
+              {show && (
+                <input data-testid="foo" name="foo" defaultValue={value} />
+              )}
+            </>
+          ),
+        });
 
-      act(() => {
-        setError("foo", "Required");
-        setTouched("foo", true, false);
-        setDirty("foo");
-        setShow(false);
-      });
-      await waitFor(() =>
+        act(() => {
+          setError("foo", "Required");
+          setTouched("foo", true, false);
+          setDirty("foo");
+          setShow(false);
+        });
+        await Promise.resolve();
         expect(getState()).toEqual({
           ...initialState,
           values: { foo: value },
@@ -2157,12 +2159,12 @@ describe("useForm", () => {
           touched: { foo: true },
           dirty: { foo: true },
           isDirty: true,
-        })
-      );
+        });
 
-      act(() => setShow(true));
-      await waitFor(() => expect(getByTestId("foo").value).toBe(value));
-    });
+        act(() => setShow(true));
+        await waitFor(() => expect(getByTestId("foo").value).toBe(value));
+      }
+    );
 
     it("should trigger re-rendering correctly", async () => {
       const {

@@ -11,6 +11,7 @@ import {
 
 import {
   FieldArrayConfig,
+  FieldNamesLike,
   FormMethods,
   Insert,
   Move,
@@ -37,8 +38,8 @@ interface Config extends FieldArrayConfig {
   children: (api: API) => JSX.Element | JSX.Element[] | null;
   isShow: boolean;
   defaultValues: any;
-  shouldRemoveField: boolean;
   validateOnChange: boolean;
+  removeOnUnmounted: FieldNamesLike;
   formValidate: (values: any) => void;
   onSubmit: (values: any) => void;
   onRender: () => void;
@@ -51,8 +52,8 @@ const Form = ({
   isShow,
   formId,
   defaultValues,
-  shouldRemoveField,
   validateOnChange,
+  removeOnUnmounted,
   formValidate,
   onSubmit = () => null,
   onRender = () => null,
@@ -62,7 +63,7 @@ const Form = ({
   const { form, ...methods } = useForm({
     id: formId,
     defaultValues,
-    shouldRemoveField,
+    removeOnUnmounted,
     validateOnChange,
     validate: formValidate,
     onSubmit: (values) => onSubmit(values),
@@ -604,29 +605,81 @@ describe("useFieldArray", () => {
       }
     );
 
-    it("should not remove field", async () => {
-      const {
-        getState,
-        setError,
-        setTouched,
-        setDirty,
-        setShow,
-      } = renderHelper({
-        isShow: true,
-        defaultValues: { foo: formValue },
-        shouldRemoveField: false,
-        children: ({ show }: API) => <>{show && <FieldArray />}</>,
-      });
+    it.each([false, [], () => []])(
+      "should not remove field (FieldArray)",
+      async (removeOnUnmounted) => {
+        const {
+          getState,
+          setError,
+          setTouched,
+          setDirty,
+          setShow,
+        } = renderHelper({
+          isShow: true,
+          defaultValues: { foo: formValue },
+          removeOnUnmounted,
+          children: ({ show }: API) => <>{show && <FieldArray />}</>,
+        });
 
-      act(() => {
-        setError("foo", [{ a: "Required", b: "Required" }]);
-        setTouched("foo[0].a", true, false);
-        setTouched("foo[0].b", true, false);
-        setDirty("foo[0].a");
-        setDirty("foo[0].b");
-        setShow(false);
-      });
-      await waitFor(() => {
+        act(() => {
+          setError("foo", [{ a: "Required", b: "Required" }]);
+          setTouched("foo[0].a", true, false);
+          setTouched("foo[0].b", true, false);
+          setDirty("foo[0].a");
+          setDirty("foo[0].b");
+          setShow(false);
+        });
+        await waitFor(() =>
+          expect(getState()).toEqual({
+            ...initialState,
+            values: { foo: formValue },
+            errors: { foo: [{ a: "Required", b: "Required" }] },
+            isValid: false,
+            touched: { foo: [{ a: true, b: true }] },
+            dirty: { foo: [{ a: true, b: true }] },
+            isDirty: true,
+          })
+        );
+
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getByTestId("foo[0].a").value).toBe(formValue[0].a);
+          expect(getByTestId("foo[0].b").value).toBe(formValue[0].b);
+        });
+      }
+    );
+
+    it.each([false, [], () => []])(
+      "should not remove field (input/Field)",
+      async (removeOnUnmounted) => {
+        const {
+          getState,
+          setError,
+          setTouched,
+          setDirty,
+          setShow,
+        } = renderHelper({
+          isShow: true,
+          defaultValues: { foo: formValue },
+          removeOnUnmounted,
+          children: ({ fields, show }: API) =>
+            fields.map((name) => (
+              <div key={name}>
+                {show && <input data-testid={`${name}.a`} name={`${name}.a`} />}
+                {show && <Field data-testid={`${name}.b`} name={`${name}.b`} />}
+              </div>
+            )),
+        });
+
+        act(() => {
+          setError("foo", [{ a: "Required", b: "Required" }]);
+          setTouched("foo[0].a", true, false);
+          setTouched("foo[0].b", true, false);
+          setDirty("foo[0].a");
+          setDirty("foo[0].b");
+          setShow(false);
+        });
+        await Promise.resolve();
         expect(getState()).toEqual({
           ...initialState,
           values: { foo: formValue },
@@ -636,14 +689,14 @@ describe("useFieldArray", () => {
           dirty: { foo: [{ a: true, b: true }] },
           isDirty: true,
         });
-      });
 
-      act(() => setShow(true));
-      await waitFor(() => {
-        expect(getByTestId("foo[0].a").value).toBe(formValue[0].a);
-        expect(getByTestId("foo[0].b").value).toBe(formValue[0].b);
-      });
-    });
+        act(() => setShow(true));
+        await waitFor(() => {
+          expect(getByTestId("foo[0].a").value).toBe(formValue[0].a);
+          expect(getByTestId("foo[0].b").value).toBe(formValue[0].b);
+        });
+      }
+    );
 
     it.each([true, false])("should reset correctly", async (isShow) => {
       const defaultValues = { foo: isShow ? [{}] : formValue };
