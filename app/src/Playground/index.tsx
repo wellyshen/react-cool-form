@@ -12,9 +12,9 @@ export default () => {
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(true);
   const { form, getState } = useForm({
-    // removeOnUnmounted: ["bar"],
+    removeOnUnmounted: ["foo"],
     defaultValues: {
-      foo: "test",
+      foo: [{ a: "form t-1", b: "form t-2" }],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
@@ -22,16 +22,15 @@ export default () => {
 
   return (
     <form ref={form}>
-      {show2 && <input name="foo" />}
-      {/* {fields.map((n, i) => (
+      {fields.map((n, i) => (
         <div key={n}>
           {show1 && <input name={`${n}.a`} defaultValue={`field t-${i}`} />}
           {show2 && <Field name={`${n}.b`} defaultValue={`field t-${i}`} />}
         </div>
-      ))} */}
-      {/* <button type="button" onClick={() => setShow1(!show1)}>
+      ))}
+      <button type="button" onClick={() => setShow1(!show1)}>
         Toggle 1
-      </button> */}
+      </button>
       <button type="button" onClick={() => setShow2(!show2)}>
         Toggle 2
       </button>
@@ -41,7 +40,7 @@ export default () => {
       >
         Get State
       </button>
-      {/* <button
+      <button
         type="button"
         onClick={() =>
           push({ a: `push t-${fields.length}`, b: `push t-${fields.length}` })
@@ -51,7 +50,7 @@ export default () => {
       </button>
       <button type="button" onClick={() => remove(1)}>
         Remove
-      </button> */}
+      </button>
       <input type="submit" />
       <input type="reset" />
     </form>
