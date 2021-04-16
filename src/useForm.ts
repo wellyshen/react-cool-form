@@ -147,7 +147,6 @@ export default <V extends FormValues = FormValues>({
             classList,
             dataset: { rcfExclude },
           } = field;
-
           const { current: exclude } = excludeFieldsRef;
 
           if (
