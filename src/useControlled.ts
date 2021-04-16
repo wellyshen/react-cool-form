@@ -46,6 +46,7 @@ export default <V extends FormValues = FormValues>(
     { formId, errorWithTouched }
   );
   const {
+    shouldRemoveField,
     initialStateRef,
     fieldArrayRef,
     controlsRef,
@@ -53,7 +54,6 @@ export default <V extends FormValues = FormValues>(
     changedFieldRef,
     getState,
     getNodeValue,
-    getRemoveFieldNames,
     setDefaultValue,
     setTouchedMaybeValidate,
     handleChangeEvent,
@@ -84,7 +84,7 @@ export default <V extends FormValues = FormValues>(
       }
 
       return () => {
-        if (getRemoveFieldNames()[name])
+        if (shouldRemoveField(name))
           removeField(
             name,
             !isFieldArr ||

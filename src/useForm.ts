@@ -18,7 +18,6 @@ import {
   FormValues,
   GetFormState,
   GetNodeValue,
-  GetRemoveFieldNames,
   GetState,
   HandleChangeEvent,
   Handlers,
@@ -37,6 +36,7 @@ import {
   SetTouched,
   SetTouchedMaybeValidate,
   SetValue,
+  ShouldRemoveField,
   Submit,
 } from "./types";
 import { useLatest, useState } from "./hooks";
@@ -92,10 +92,12 @@ export default <V extends FormValues = FormValues>({
   const fieldParsersRef = useRef<Parsers>({});
   const fieldArrayRef = useRef<FieldArray>({});
   const controlsRef = useRef<ObjMap>({});
-  const excludeFieldsRef = useRef<ObjMap>(arrayToMap(excludeFields));
-  const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<ObjMap<FieldValidator<V>>>({});
+  const changedFieldRef = useRef<string>();
+  const focusOnErrorRef = useRef(focusOnError);
+  const removeOnUnmountedRef = useRef(removeOnUnmounted);
+  const excludeFieldsRef = useRef<ObjMap>(arrayToMap(excludeFields));
   const onResetRef = useLatest(onReset || (() => undefined));
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
@@ -776,11 +778,13 @@ export default <V extends FormValues = FormValues>({
 
           onErrorRef.current(errors, getOptions(), e);
 
-          if (focusOnError) {
-            let names = Array.isArray(focusOnError)
-              ? focusOnError
+          if (focusOnErrorRef.current) {
+            let names = Array.isArray(focusOnErrorRef.current)
+              ? focusOnErrorRef.current
               : Array.from(fieldsRef.current.keys());
-            names = isFunction(focusOnError) ? focusOnError(names) : names;
+            names = isFunction(focusOnErrorRef.current)
+              ? focusOnErrorRef.current(names)
+              : names;
             const name = names.find((n) => get(errors, n));
 
             if (name) handleFocus(name);
@@ -801,7 +805,7 @@ export default <V extends FormValues = FormValues>({
       }
     },
     [
-      focusOnError,
+      focusOnErrorRef,
       getOptions,
       handleFocus,
       onErrorRef,
@@ -827,21 +831,25 @@ export default <V extends FormValues = FormValues>({
     ]
   );
 
-  const getRemoveFieldNames = useCallback<GetRemoveFieldNames>(() => {
-    if (!removeOnUnmounted) return {};
+  const shouldRemoveField = useCallback<ShouldRemoveField>(
+    (name) => {
+      if (!removeOnUnmountedRef.current) return false;
 
-    const names = Array.isArray(removeOnUnmounted)
-      ? removeOnUnmounted
-      : [
-          ...Array.from(fieldsRef.current.keys()),
-          ...Object.keys(controlsRef.current),
-          ...Object.keys(fieldArrayRef.current),
-        ];
+      let names = Array.isArray(removeOnUnmountedRef.current)
+        ? removeOnUnmountedRef.current
+        : [
+            ...Array.from(fieldsRef.current.keys()),
+            ...Object.keys(controlsRef.current),
+            ...Object.keys(fieldArrayRef.current),
+          ];
+      names = isFunction(removeOnUnmountedRef.current)
+        ? removeOnUnmountedRef.current(names)
+        : names;
 
-    return arrayToMap(
-      isFunction(removeOnUnmounted) ? removeOnUnmounted(names) : names
-    );
-  }, [removeOnUnmounted]);
+      return names.includes(name);
+    },
+    [removeOnUnmountedRef]
+  );
 
   const removeField = useCallback<RemoveField>(
     (name, exclude) => {
@@ -929,7 +937,7 @@ export default <V extends FormValues = FormValues>({
         let { values } = initialStateRef.current;
 
         fieldsRef.current.forEach((_, name) => {
-          if (!getRemoveFieldNames()[name]) return;
+          if (!shouldRemoveField(name)) return;
           if (controlsRef.current[name]) return;
 
           if (!fields.has(name)) {
@@ -982,7 +990,6 @@ export default <V extends FormValues = FormValues>({
     [
       getFields,
       getNodeValue,
-      getRemoveFieldNames,
       handleChangeEvent,
       removeField,
       reset,
@@ -990,6 +997,7 @@ export default <V extends FormValues = FormValues>({
       setNodesOrValues,
       setStateRef,
       setTouchedMaybeValidate,
+      shouldRemoveField,
       stateRef,
       submit,
     ]
@@ -1019,6 +1027,7 @@ export default <V extends FormValues = FormValues>({
 
   shared.set(id, {
     validateOnChange,
+    shouldRemoveField,
     initialStateRef,
     fieldArrayRef,
     controlsRef,
@@ -1029,7 +1038,6 @@ export default <V extends FormValues = FormValues>({
     setStateRef,
     getNodeValue,
     getFormState,
-    getRemoveFieldNames,
     setDefaultValue,
     setNodesOrValues,
     setTouchedMaybeValidate,

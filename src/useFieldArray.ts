@@ -37,11 +37,11 @@ export default <T = any, V extends FormValues = FormValues>(
 
   const {
     validateOnChange,
+    shouldRemoveField,
     initialStateRef,
     fieldArrayRef,
     fieldValidatorsRef,
     getState,
-    getRemoveFieldNames,
     setDefaultValue,
     setNodesOrValues,
     setStateRef,
@@ -83,7 +83,7 @@ export default <T = any, V extends FormValues = FormValues>(
     }
 
     return () => {
-      if (getRemoveFieldNames()[name]) removeField(name);
+      if (shouldRemoveField(name)) removeField(name);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

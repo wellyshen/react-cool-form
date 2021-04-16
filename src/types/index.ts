@@ -6,6 +6,7 @@ export type ObjMap<T = boolean> = Record<string, T>;
 // Global
 export type Methods<V = any> = {
   validateOnChange: boolean;
+  shouldRemoveField: ShouldRemoveField;
   initialStateRef: MutableRefObject<FormState<V>>;
   excludeFieldsRef: MutableRefObject<ObjMap>;
   fieldArrayRef: MutableRefObject<FieldArray>;
@@ -16,7 +17,6 @@ export type Methods<V = any> = {
   setStateRef: SetStateRef;
   getNodeValue: GetNodeValue;
   getFormState: GetFormState<V>;
-  getRemoveFieldNames: GetRemoveFieldNames;
   setDefaultValue: SetDefaultValue;
   setNodesOrValues: SetNodesOrValues<V>;
   setTouchedMaybeValidate: SetTouchedMaybeValidate;
@@ -180,6 +180,10 @@ export interface SetTouchedMaybeValidate {
   (name: string): void;
 }
 
+export interface ShouldRemoveField {
+  (name: string): boolean;
+}
+
 export interface GetNodeValue {
   (name: string, fields?: Fields): any;
 }
@@ -196,10 +200,6 @@ export interface GetFormState<V> {
       callback?: (usedState: ObjMap) => void;
     }
   ): any;
-}
-
-export interface GetRemoveFieldNames {
-  (): ObjMap;
 }
 
 export interface Mon<V> {
