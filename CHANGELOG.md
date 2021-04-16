@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.169
+
+### Patch Changes
+
+- [#568](https://github.com/wellyshen/react-cool-form/pull/568) [`d6bcac6`](https://github.com/wellyshen/react-cool-form/commit/d6bcac62266057f71bac0ceedaf731f3a62aea70) Thanks [@wellyshen](https://github.com/wellyshen)! - Feat(useForm): new `removeOnUnmounted` option
+
 ## 0.0.168
 
 ### Patch Changes
