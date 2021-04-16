@@ -36,6 +36,7 @@ import {
   SetTouched,
   SetTouchedMaybeValidate,
   SetValue,
+  ShouldRemoveField,
   Submit,
 } from "./types";
 import { useLatest, useState } from "./hooks";
@@ -76,8 +77,8 @@ export default <V extends FormValues = FormValues>({
   validateOnChange = true,
   validateOnBlur = true,
   focusOnError = true,
+  removeOnUnmounted = true,
   builtInValidationMode = "message",
-  shouldRemoveField = true,
   excludeFields = [],
   onReset,
   onSubmit,
@@ -91,10 +92,10 @@ export default <V extends FormValues = FormValues>({
   const fieldParsersRef = useRef<Parsers>({});
   const fieldArrayRef = useRef<FieldArray>({});
   const controlsRef = useRef<ObjMap>({});
-  const excludeFieldsRef = useRef<ObjMap>(arrayToMap(excludeFields));
-  const changedFieldRef = useRef<string>();
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<ObjMap<FieldValidator<V>>>({});
+  const changedFieldRef = useRef<string>();
+  const excludeFieldsRef = useRef<ObjMap>(arrayToMap(excludeFields));
   const onResetRef = useLatest(onReset || (() => undefined));
   const onSubmitRef = useLatest(onSubmit || (() => undefined));
   const onErrorRef = useLatest(onError || (() => undefined));
@@ -144,7 +145,6 @@ export default <V extends FormValues = FormValues>({
             classList,
             dataset: { rcfExclude },
           } = field;
-
           const { current: exclude } = excludeFieldsRef;
 
           if (
@@ -799,8 +799,8 @@ export default <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      focusOnError,
       getOptions,
       handleFocus,
       onErrorRef,
@@ -824,6 +824,25 @@ export default <V extends FormValues = FormValues>({
       validateFieldWithLowPriority,
       validateOnChange,
     ]
+  );
+
+  const shouldRemoveField = useCallback<ShouldRemoveField>(
+    (name) => {
+      if (!removeOnUnmounted) return false;
+
+      let names = Array.isArray(removeOnUnmounted)
+        ? removeOnUnmounted
+        : [
+            ...Array.from(fieldsRef.current.keys()),
+            ...Object.keys(controlsRef.current),
+            ...Object.keys(fieldArrayRef.current),
+          ];
+      names = isFunction(removeOnUnmounted) ? removeOnUnmounted(names) : names;
+
+      return names.includes(name);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const removeField = useCallback<RemoveField>(
@@ -911,36 +930,36 @@ export default <V extends FormValues = FormValues>({
         const fields = getFields(form);
         let { values } = initialStateRef.current;
 
-        if (shouldRemoveField)
-          fieldsRef.current.forEach((_, name) => {
-            if (controlsRef.current[name]) return;
+        fieldsRef.current.forEach((_, name) => {
+          if (!shouldRemoveField(name)) return;
+          if (controlsRef.current[name]) return;
 
-            if (!fields.has(name)) {
-              removeField(
-                name,
-                !isFieldArray(fieldArrayRef.current, name) ||
-                  isUndefined(
-                    get(initialStateRef.current.values, name.split(".")[0])
-                  )
-                  ? undefined
-                  : ["defaultValue"]
-              );
+          if (!fields.has(name)) {
+            removeField(
+              name,
+              !isFieldArray(fieldArrayRef.current, name) ||
+                isUndefined(
+                  get(initialStateRef.current.values, name.split(".")[0])
+                )
+                ? undefined
+                : ["defaultValue"]
+            );
 
-              return;
-            }
+            return;
+          }
 
-            const currOptions = fieldsRef.current.get(name)?.options
-              ?.length as number;
-            const nextOptions = fields.get(name).options?.length as number;
+          const currOptions = fieldsRef.current.get(name)?.options
+            ?.length as number;
+          const nextOptions = fields.get(name).options?.length as number;
 
-            if (currOptions > nextOptions) {
-              setStateRef(`values.${name}`, getNodeValue(name, fields), {
-                shouldSkipUpdate: true,
-              });
-            } else if (currOptions < nextOptions) {
-              setNodeValue(name, get(values, name), fields);
-            }
-          });
+          if (currOptions > nextOptions) {
+            setStateRef(`values.${name}`, getNodeValue(name, fields), {
+              shouldSkipUpdate: true,
+            });
+          } else if (currOptions < nextOptions) {
+            setNodeValue(name, get(values, name), fields);
+          }
+        });
 
         const addedNodes: string[] = [];
 
@@ -1009,7 +1028,6 @@ export default <V extends FormValues = FormValues>({
     observersRef,
     fieldValidatorsRef,
     changedFieldRef,
-    excludeFieldsRef,
     setStateRef,
     getNodeValue,
     getFormState,

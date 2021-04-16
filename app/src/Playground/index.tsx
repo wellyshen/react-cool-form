@@ -11,12 +11,10 @@ const Field = ({ name, ...rest }: any) => {
 export default () => {
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(true);
-  const { form } = useForm({
+  const { form, getState } = useForm({
+    removeOnUnmounted: ["foo"],
     defaultValues: {
-      foo: [
-        { a: "form t-1", b: "form t-1" },
-        { a: "form t-2", b: "form t-2" },
-      ],
+      foo: [{ a: "form t-1", b: "form t-2" }],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
@@ -35,6 +33,12 @@ export default () => {
       </button>
       <button type="button" onClick={() => setShow2(!show2)}>
         Toggle 2
+      </button>
+      <button
+        type="button"
+        onClick={() => console.log("LOG ===> ", getState("foo"))}
+      >
+        Get State
       </button>
       <button
         type="button"

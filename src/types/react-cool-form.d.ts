@@ -154,7 +154,7 @@ declare module "react-cool-form" {
     (value: V): R;
   }
 
-  export interface FocusOnErrorFn<N extends string[] = string[]> {
+  export interface FieldNamesFn<N extends string[] = string[]> {
     (names: N): N;
   }
 
@@ -188,9 +188,9 @@ declare module "react-cool-form" {
     validate: FormValidator<V>;
     validateOnChange: boolean;
     validateOnBlur: boolean;
-    focusOnError: boolean | string[] | FocusOnErrorFn;
+    focusOnError: boolean | string[] | FieldNamesFn;
+    removeOnUnmounted: boolean | string[] | FieldNamesFn;
     builtInValidationMode: "message" | "state" | false;
-    shouldRemoveField: boolean;
     excludeFields: string[];
     onReset: ResetHandler<V>;
     onSubmit: SubmitHandler<V>;

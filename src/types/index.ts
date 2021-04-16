@@ -6,9 +6,8 @@ export type ObjMap<T = boolean> = Record<string, T>;
 // Global
 export type Methods<V = any> = {
   validateOnChange: boolean;
-  shouldRemoveField: boolean;
+  shouldRemoveField: ShouldRemoveField;
   initialStateRef: MutableRefObject<FormState<V>>;
-  excludeFieldsRef: MutableRefObject<ObjMap>;
   fieldArrayRef: MutableRefObject<FieldArray>;
   controlsRef: MutableRefObject<ObjMap>;
   observersRef: MutableRefObject<Observer<V>[]>;
@@ -102,6 +101,11 @@ interface EventOptions<V> {
   submit: Submit<V>;
 }
 
+export type FieldNamesLike =
+  | boolean
+  | string[]
+  | ((names: string[]) => string[]);
+
 interface ResetHandler<V> {
   (values: V, options: EventOptions<V>, event?: Event | SyntheticEvent): void;
 }
@@ -173,6 +177,10 @@ export interface SetNodesOrValues<V> {
 
 export interface SetTouchedMaybeValidate {
   (name: string): void;
+}
+
+export interface ShouldRemoveField {
+  (name: string): boolean;
 }
 
 export interface GetNodeValue {
@@ -272,9 +280,9 @@ export type FormConfig<V = any> = Partial<{
   validate: FormValidator<V>;
   validateOnChange: boolean;
   validateOnBlur: boolean;
-  focusOnError: boolean | string[] | ((names: string[]) => string[]);
+  focusOnError: FieldNamesLike;
+  removeOnUnmounted: FieldNamesLike;
   builtInValidationMode: "message" | "state" | false;
-  shouldRemoveField: boolean;
   excludeFields: string[];
   onReset: ResetHandler<V>;
   onSubmit: SubmitHandler<V>;

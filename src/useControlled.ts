@@ -84,7 +84,7 @@ export default <V extends FormValues = FormValues>(
       }
 
       return () => {
-        if (shouldRemoveField)
+        if (shouldRemoveField(name))
           removeField(
             name,
             !isFieldArr ||
