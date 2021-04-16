@@ -55,15 +55,6 @@ const App = () => {
 
 👉🏻 See the [Exclude Fields](../getting-started/integration-an-existing-form#exclude-fields) to learn more.
 
-### shouldRemoveField
-
-`boolean`
-
-By default, React Cool Form automatically removes the **related state** (i.e. value, error, touched, dirty) and **default value** of an unmounted field for us. However, we can set the `shouldRemoveField` to `false` to maintain the state. See the [conditional fields](../examples/conditional-fields) example to learn more. Default is `true`.
-
-- To keep a default value existing between a dynamically show/hide field, we can set it via `defaultValue` attribute or option.
-- If this feature doesn't meet your needs, you can use the [removeField](#removefield) to control what data that you want to remove instead.
-
 ### builtInValidationMode
 
 `"message" | "state" | false`
@@ -95,24 +86,47 @@ Tell React Cool Form to apply focus to the first field with an error upon an att
 - Only native input elements that support [HTMLElement.focus()](https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/focus) will work.
 - The focus order is based on the field order (i.e. top-to-bottom and left-to-right).
 
-```js {6,12-15}
-const defaultValues = { foo: "", bar: "", baz: "" };
+```js
+// Current fields: { foo: "", bar: "", baz: "" }
 
-// Change the focus order by passing in a field names
-const methods = useForm({
-  defaultValues,
-  focusOnError: ["bar", "foo", "baz"],
-});
+// Disable this feature
+const methods = useForm({ focusOnError: false });
 
-// Change the focus order by modifying the field names
+// Change the focus order by passing in field names
+const methods = useForm({ focusOnError: ["bar", "foo", "baz"] });
+
+// Change the focus order by modifying existing field names
 const methods = useForm({
-  defaultValues,
   focusOnError: (names) => {
     [names[0], names[1]] = [names[1], names[0]];
     return names;
   },
 });
 ```
+
+### removeOnUnmounted
+
+`boolean | string[] | (names: string[]) => string[]`
+
+By default, React Cool Form automatically removes the **related state** (i.e. value, error, touched, dirty) and **default value** of an unmounted field for us. However, we can set the `removeOnUnmounted` to `false` to maintain all the data or give it field names to maintain partial data. Default is `true`.
+
+- To keep a default value existing between a dynamically show/hide field, we can set it via `defaultValue` attribute or option.
+- If this feature doesn't meet your needs, you can use the [removeField](#removefield) to control what data that you want to remove instead.
+
+```js
+// Current values: { foo: "🍎", bar: "🍋", baz: "🥝" }
+
+// Keep all the data
+const methods = useForm({ removeOnUnmounted: false });
+
+// Keep partial data by passing in field names
+const methods = useForm({ removeOnUnmounted: ["foo"] });
+
+// Keep partial data modifying existing field names
+const methods = useForm({ removeOnUnmounted: (names) => names.slice(0, 1) });
+```
+
+👉🏻 See the [conditional fields](../examples/conditional-fields) example to learn more.
 
 ### validate
 
@@ -451,18 +465,18 @@ const validateForm = async () => {
 
 This method allows us to manually remove the **related state** (i.e. value, error, touched, dirty) and **default value** of a field, it also excludes a field from the form.
 
-- By default, React Cool Form automatically [removes an unmounted field](#shouldremovefield) for us but this method gives us the ability to control what data that we want to remove.
+- By default, React Cool Form automatically [removes an unmounted field](#removeonunmounted) for us but this method gives us the ability to control what data that we want to remove.
 
 ```js {4,10}
 const App = () => {
   const [show, setShow] = useState(true);
   const { form, removeField } = useForm({
-    shouldRemoveField: false, // Disable the feature of automatically removing fields
+    removeOnUnmounted: false, // Disable the feature of automatically removing fields
   });
 
   const handleToggle = () => {
     setShow(!show);
-    // These data can be excluded: ["defaultValue", "value", "error", "touched", "dirty"]
+    // We can exclude these data: ["defaultValue", "value", "error", "touched", "dirty"]
     if (!show) removeField("foo", ["defaultValue"]); // Keep the default value
   };
 
