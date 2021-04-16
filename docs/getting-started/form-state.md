@@ -89,7 +89,7 @@ const [touched, dirty] = mon(["touched", "dirty"]);
 The form's values might be the most frequent one that we need to get in a specific way, it's kind of verbose. However there's a shortcut for it, we can get the form's values without the `values.` prefix:
 
 ```diff
-// Current state: { values: { foo: "🍎", bar: "🥝", baz: "🍋" } }
+// Current state: { values: { foo: "🍎", bar: "🍋", baz: "🥝" } }
 
 -const [foo, bar, baz] = mon(["values.foo", "values.bar", "values.baz"]);
 +const [foo, bar, baz] = mon(["foo", "bar", "baz"]);
