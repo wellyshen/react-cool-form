@@ -119,10 +119,10 @@ By default, React Cool Form automatically removes the **related state** (i.e. va
 // Keep all the data
 const methods = useForm({ removeOnUnmounted: false });
 
-// Keep partial data by passing in field names
+// Keep partial data (i.e. "bar" and "baz") by passing in field names
 const methods = useForm({ removeOnUnmounted: ["foo"] });
 
-// Keep partial data modifying existing field names
+// Keep partial data (i.e. "bar" and "baz") by modifying existing field names
 const methods = useForm({ removeOnUnmounted: (names) => names.slice(0, 1) });
 ```
 
