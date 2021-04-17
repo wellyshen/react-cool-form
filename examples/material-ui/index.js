@@ -18,7 +18,7 @@ import "./styles.scss";
 
 function App() {
   const { form, mon } = useForm({
-    defaultValues: { username: "", framework: "", fruit: [], race: "" },
+    defaultValues: { username: "", framework: "", fruit: [], mood: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const errors = mon("errors");
@@ -67,11 +67,12 @@ function App() {
         </FormGroup>
       </FormControl>
       <FormControl component="fieldset">
-        <FormLabel component="legend">Race</FormLabel>
-        <RadioGroup name="race" aria-label="race" row>
-          <FormControlLabel control={<Radio />} value="🦸🏻‍♂️" label="🦸🏻‍♂️" />
-          <FormControlLabel control={<Radio />} value="🧛🏻‍♂️" label="🧛🏻‍♂️" />
-          <FormControlLabel control={<Radio />} value="🧝🏻‍♂️" label="🧝🏻‍♂️" />
+        <FormLabel component="legend">Mood</FormLabel>
+        <RadioGroup name="mood" aria-label="mood" row>
+          <FormControlLabel control={<Radio />} value="😊" label="😊" />
+          <FormControlLabel control={<Radio />} value="🤬" label="🤬" />
+          <FormControlLabel control={<Radio />} value="😭" label="😭" />
+          <FormControlLabel control={<Radio />} value="🤣" label="🤣" />
         </RadioGroup>
       </FormControl>
       <Button type="submit" variant="contained" color="primary">
