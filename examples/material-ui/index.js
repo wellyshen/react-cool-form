@@ -36,6 +36,7 @@ function App() {
         <InputLabel htmlFor="framework">Framework</InputLabel>
         {/* When working with select, we need to enable the native mon element or you can use the "NativeSelect" instead */}
         <Select inputProps={{ id: "framework", name: "framework" }} native>
+          <option aria-label="None" value="" />
           <option value="react">React</option>
           <option value="vue">Vue</option>
           <option value="angular">Angular</option>
