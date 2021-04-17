@@ -60,7 +60,7 @@ const Field = ({ label, id, error, ...rest }) => (
 
 const App = () => {
   const { form, mon } = useForm({
-    // (Strongly advise) Provide the default values just like we use React state
+    // (Strongly advise) Provide the default values
     defaultValues: { username: "", email: "", password: "" },
     // The event only triggered when the form is valid
     onSubmit: (values) => console.log("onSubmit: ", values),

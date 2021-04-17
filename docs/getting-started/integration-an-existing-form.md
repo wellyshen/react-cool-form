@@ -39,7 +39,7 @@ const Textarea = ({ label, id, ...rest }) => (
 
 const App = () => {
   const { form } = useForm({
-    // (Strongly advise) Provide the default values just like we use React state
+    // (Strongly advise) Provide the default values
     defaultValues: { firstName: "", lastName: "", framework: "", message: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
