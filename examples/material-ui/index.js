@@ -18,7 +18,7 @@ import "./styles.scss";
 
 function App() {
   const { form, mon } = useForm({
-    defaultValues: { username: "", framework: "", fruit: [], race: "" },
+    defaultValues: { username: "", framework: "", fruit: [], mood: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
   const errors = mon("errors");
@@ -34,9 +34,9 @@ function App() {
       />
       <FormControl>
         <InputLabel htmlFor="framework">Framework</InputLabel>
-        {/* When working with mon, we need to enable the native mon element or you can use the "NativeSelect" instead */}
+        {/* When working with select, we need to enable the native mon element or you can use the "NativeSelect" instead */}
         <Select inputProps={{ id: "framework", name: "framework" }} native>
-          <option aria-label="None" value="I'm interesting in..." />
+          <option aria-label="None" value="" />
           <option value="react">React</option>
           <option value="vue">Vue</option>
           <option value="angular">Angular</option>
@@ -67,11 +67,12 @@ function App() {
         </FormGroup>
       </FormControl>
       <FormControl component="fieldset">
-        <FormLabel component="legend">Race</FormLabel>
-        <RadioGroup name="race" aria-label="race" row>
-          <FormControlLabel control={<Radio />} value="🦸🏻‍♂️" label="🦸🏻‍♂️" />
-          <FormControlLabel control={<Radio />} value="🧛🏻‍♂️" label="🧛🏻‍♂️" />
-          <FormControlLabel control={<Radio />} value="🧝🏻‍♂️" label="🧝🏻‍♂️" />
+        <FormLabel component="legend">Mood</FormLabel>
+        <RadioGroup name="mood" aria-label="mood" row>
+          <FormControlLabel control={<Radio />} value="😊" label="😊" />
+          <FormControlLabel control={<Radio />} value="🤬" label="🤬" />
+          <FormControlLabel control={<Radio />} value="😭" label="😭" />
+          <FormControlLabel control={<Radio />} value="🤣" label="🤣" />
         </RadioGroup>
       </FormControl>
       <Button type="submit" variant="contained" color="primary">
