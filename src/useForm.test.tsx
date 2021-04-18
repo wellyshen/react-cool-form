@@ -247,6 +247,7 @@ describe("useForm", () => {
           </>
         ),
       });
+
       const value = "🍎";
       fireEvent.input(getByTestId("foo"), { target: { value } });
       fireEvent.submit(getByTestId("form"));
@@ -275,6 +276,11 @@ describe("useForm", () => {
         isSubmitting: false,
         isSubmitted: true,
       });
+
+      fireEvent.submit(getByTestId("form"));
+      expect(getState("isSubmitted")).toBeFalsy();
+      await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+      expect(getState("isSubmitted")).toBeTruthy();
     });
 
     it('should call "onError" event correctly', async () => {
