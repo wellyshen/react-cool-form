@@ -126,7 +126,7 @@ export interface ErrorHandler<V = any> {
   ): void;
 }
 
-export interface Debug<V> {
+export interface OnStateChange<V> {
   (formState: FormState<V>): void;
 }
 
@@ -287,7 +287,7 @@ export type FormConfig<V = any> = Partial<{
   onReset: ResetHandler<V>;
   onSubmit: SubmitHandler<V>;
   onError: ErrorHandler<V>;
-  debug: Debug<V>;
+  onStateChange: OnStateChange<V>;
 }>;
 
 export interface FormMethods<V = any> {
