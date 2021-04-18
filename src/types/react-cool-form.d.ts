@@ -178,7 +178,7 @@ declare module "react-cool-form" {
     ): void;
   }
 
-  export interface Debug<V extends FormValues = FormValues> {
+  export interface OnStateChange<V extends FormValues = FormValues> {
     (formState: FormState<V>): void;
   }
 
@@ -195,7 +195,7 @@ declare module "react-cool-form" {
     onReset: ResetHandler<V>;
     onSubmit: SubmitHandler<V>;
     onError: ErrorHandler<V>;
-    debug: Debug<V>;
+    onStateChange: OnStateChange<V>;
   }>;
 
   export interface FormMethods<V extends FormValues = FormValues> {
