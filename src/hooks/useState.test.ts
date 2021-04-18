@@ -24,9 +24,9 @@ describe("useState", () => {
     isSubmitted: false,
     submitCount: 0,
   };
-  const renderHelper = (debug?: (state: any) => void) => {
+  const renderHelper = (onChange?: (state: any) => void) => {
     const { observersRef, ...rest } = renderHook(() =>
-      useState(initialState, debug)
+      useState(initialState, onChange)
     ).result.current;
 
     return { observer: observersRef.current[0], ...rest };
@@ -225,11 +225,11 @@ describe("useState", () => {
   });
 
   it("should skip re-render", () => {
-    const debug = jest.fn();
-    const { setStateRef, observer } = renderHelper(debug);
+    const onChange = jest.fn();
+    const { setStateRef, observer } = renderHelper(onChange);
     observer.usedState = { values: true };
     setStateRef("values.foo", "🍎", { shouldSkipUpdate: true });
-    expect(debug).toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalled();
     expect(forceUpdate).not.toHaveBeenCalled();
   });
 
@@ -251,27 +251,27 @@ describe("useState", () => {
     expect(forceUpdate).toHaveBeenCalledTimes(1);
   });
 
-  it("should call debug correctly when setting state", () => {
-    const debug = jest.fn();
-    const { setStateRef } = renderHelper(debug);
+  it('should trigger "onChange" correctly when setting state', () => {
+    const onChange = jest.fn();
+    const { setStateRef } = renderHelper(onChange);
     const state = {
       ...initialState,
       values: { ...initialState.values, foo: "🍎" },
     };
     setStateRef("", state);
     setStateRef("", state);
-    expect(debug).toHaveBeenCalledTimes(1);
-    expect(debug).toHaveBeenCalledWith(state);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith(state);
   });
 
-  it("should call debug correctly when setting values", () => {
-    const debug = jest.fn();
-    const { setStateRef } = renderHelper(debug);
+  it('should trigger "onChange" correctly when setting values', () => {
+    const onChange = jest.fn();
+    const { setStateRef } = renderHelper(onChange);
     const errors = { foo: "Required" };
     setStateRef("errors", errors);
     setStateRef("errors", errors);
-    expect(debug).toHaveBeenCalledTimes(1);
-    expect(debug).toHaveBeenCalledWith({
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith({
       ...initialState,
       errors,
       isValid: false,

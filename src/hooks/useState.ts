@@ -2,10 +2,10 @@ import { useReducer, useRef, useCallback } from "react";
 import { dequal } from "dequal/lite";
 
 import {
-  Debug,
   FormState,
   FormStateReturn,
   Observer,
+  OnStateChange,
   SetStateRef,
 } from "../types";
 import useLatest from "./useLatest";
@@ -13,7 +13,7 @@ import { get, getIsDirty, isEmptyObject, set } from "../utils";
 
 export default <V>(
   initialState: FormState<V>,
-  onChange?: Debug<V>
+  onChange?: OnStateChange<V>
 ): FormStateReturn<V> => {
   const [, forceUpdate] = useReducer((c) => c + 1, 0);
   const stateRef = useRef(initialState);

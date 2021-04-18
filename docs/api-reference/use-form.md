@@ -223,17 +223,18 @@ const methods = useForm({
 
 👉🏻 See the [Reset Form](../getting-started/reset-form) to learn more.
 
-### debug
-
-A callback for debugging that receives the form state. It's called on every state change.
+### onStateChange
 
 `(formState: FormState) => void`
 
+The form state change handler that is called on every state change. It's useful for **debugging** or **triggering a handler**.
+
+- Want to trigger a handler based on certain properties in the form state? Check out the [useFormState](../api-reference/use-form-state) to learn more.
 - `formState` is readonly and should not be mutated directly.
 
 ```js
 const methods = useForm({
-  debug: (formState) => console.log("Debug: ", formState),
+  onStateChange: (formState) => console.log("State: ", formState),
 });
 ```
 

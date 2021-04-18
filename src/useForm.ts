@@ -83,7 +83,7 @@ export default <V extends FormValues = FormValues>({
   onReset,
   onSubmit,
   onError,
-  debug,
+  onStateChange,
 }: FormConfig<V> = {}): FormMethods<V> => {
   const handlersRef = useRef<Handlers>({});
   const mutationObserverRef = useRef<MutationObserver>();
@@ -114,7 +114,7 @@ export default <V extends FormValues = FormValues>({
   });
   const { stateRef, setStateRef, observersRef } = useState<V>(
     initialStateRef.current,
-    debug
+    onStateChange
   );
 
   const handleUnset = useCallback(

@@ -1962,18 +1962,21 @@ describe("useForm", () => {
     expect(getState("foo")).toBe(type === "normal" ? undefined : value);
   });
 
-  it("should call debug callback", async () => {
-    const debug = jest.fn();
-    renderHelper({ debug, children: <input data-testid="foo" name="foo" /> });
+  it('should trigger "onStateChange" correctly', async () => {
+    const onStateChange = jest.fn();
+    renderHelper({
+      onStateChange,
+      children: <input data-testid="foo" name="foo" />,
+    });
     const value = "🍎";
     fireEvent.input(getByTestId("foo"), { target: { value } });
     await waitFor(() => {
-      expect(debug).toHaveBeenCalledTimes(2);
-      expect(debug).toHaveBeenNthCalledWith(1, {
+      expect(onStateChange).toHaveBeenCalledTimes(2);
+      expect(onStateChange).toHaveBeenNthCalledWith(1, {
         ...initialState,
         values: { foo: value },
       });
-      expect(debug).toHaveBeenNthCalledWith(2, {
+      expect(onStateChange).toHaveBeenNthCalledWith(2, {
         ...initialState,
         values: { foo: value },
         dirty: { foo: true },
