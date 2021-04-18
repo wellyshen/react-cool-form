@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.170
+
+### Patch Changes
+
+- [#570](https://github.com/wellyshen/react-cool-form/pull/570) [`21bac87`](https://github.com/wellyshen/react-cool-form/commit/21bac870b3063a6f6c8ee976d07a6b07e2192bd9) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): rename `debug` event to `onStateChange`
+
 ## 0.0.169
 
 ### Patch Changes
