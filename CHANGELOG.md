@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.0.171
+
+### Patch Changes
+
+- [#572](https://github.com/wellyshen/react-cool-form/pull/572) [`2401051`](https://github.com/wellyshen/react-cool-form/commit/2401051c8128ffd8a17468bd8ec1f9ed0bf5b281) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(form-state): reset `isSubmitted` state when the user attempts to submnit the form
+
 ## 0.0.170
 
 ### Patch Changes

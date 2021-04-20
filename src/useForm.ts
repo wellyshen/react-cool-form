@@ -765,6 +765,7 @@ export default <V extends FormValues = FormValues>({
       }, stateRef.current.touched);
 
       setStateRef("touched", nextTouched);
+      setStateRef("isSubmitted", false);
       setStateRef("isSubmitting", true);
 
       try {
