@@ -19,7 +19,7 @@ function App() {
         type="password"
         placeholder="Password"
         required
-        minLength={6}
+        minLength={8}
       />
       <input type="submit" />
     </form>
