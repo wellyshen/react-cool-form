@@ -12,6 +12,7 @@ module.exports = {
       "getting-started/arrays-and-lists",
       "getting-started/3rd-party-ui-libraries",
       "getting-started/bundle-size-overview",
+      "getting-started/accessibility",
     ],
     Examples: [
       "examples/basic",
