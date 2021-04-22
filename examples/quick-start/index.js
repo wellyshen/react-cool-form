@@ -13,7 +13,7 @@ const Field = ({ label, id, error, ...rest }) => (
 
 function App() {
   const { form, mon } = useForm({
-    // (Strongly advise) Provide the default values
+    // (Strongly advise) Provide the default values just like we use React state
     defaultValues: { username: "", email: "", password: "" },
     // The event only triggered when the form is valid
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
@@ -46,7 +46,7 @@ function App() {
         name="password"
         type="password"
         required
-        minLength={6}
+        minLength={8}
         error={errors.password}
       />
       <input type="submit" />

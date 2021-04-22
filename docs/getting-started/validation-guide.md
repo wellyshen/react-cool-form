@@ -25,7 +25,7 @@ const App = () => {
     <form ref={form} noValidate>
       <input name="username" required />
       <input name="email" type="email" required />
-      <input name="password" type="password" required minLength={6} />
+      <input name="password" type="password" required minLength={8} />
       <input type="submit" />
     </form>
   );
@@ -335,7 +335,7 @@ const App = () => {
       {errors.username && <p>{errors.username}</p>}
       <input name="email" type="email" required />
       {errors.email && <p>{errors.email}</p>}
-      <input name="password" type="password" required minLength={6} />
+      <input name="password" type="password" required minLength={8} />
       {errors.password && <p>{errors.password}</p>}
       <input type="submit" />
     </form>
