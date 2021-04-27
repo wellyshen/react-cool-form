@@ -1,4 +1,4 @@
-> Hi! friends, if you're happy with it, give it a ⭐️ will be the best reward.
+<code align="center">Hi! friends, if you're happy with it, give it a ⭐️ will be your best reward.</code>
 
 <p align="center">
   <a href="https://react-cool-form.netlify.app" title="React Cool Form"><img src="https://react-cool-form.netlify.app/img/logo-github.svg" width="300px" alt="React Cool Form"></a>
