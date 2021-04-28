@@ -13,9 +13,9 @@
     "lint": "prettier -w . -u --loglevel silent"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-alpha.73",
-    "@docusaurus/preset-classic": "2.0.0-alpha.73",
-    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-alpha.73",
+    "@docusaurus/core": "2.0.0-alpha.74",
+    "@docusaurus/preset-classic": "2.0.0-alpha.74",
+    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-alpha.74",
     "@mdx-js/react": "^1.6.22",
     "clsx": "^1.1.1",
     "docusaurus-plugin-sass": "^0.1.12",
