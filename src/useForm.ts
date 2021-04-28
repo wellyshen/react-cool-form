@@ -21,7 +21,6 @@ import {
   GetState,
   HandleChangeEvent,
   Handlers,
-  Mon,
   ObjMap,
   Parsers,
   RegisterField,
@@ -38,6 +37,7 @@ import {
   SetValue,
   ShouldRemoveField,
   Submit,
+  WatchState,
 } from "./types";
 import { useLatest, useState } from "./hooks";
 import {
@@ -566,12 +566,12 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const mon = useCallback<Mon<V>>(
+  const watchState = useCallback<WatchState<V>>(
     (path, { errorWithTouched, defaultValues: dfValues } = {}) =>
       getFormState(path, {
         errorWithTouched,
         defaultValues: dfValues,
-        methodName: "mon",
+        methodName: "watchState",
         callback: (usedState) => {
           observersRef.current[0].usedState = {
             ...observersRef.current[0].usedState,
@@ -581,6 +581,10 @@ export default <V extends FormValues = FormValues>({
       }),
     [getFormState, observersRef]
   );
+
+  const getState = useCallback<GetState>((path) => getFormState(path), [
+    getFormState,
+  ]);
 
   const handleFocus = useCallback((name: string) => {
     const field =
@@ -603,10 +607,6 @@ export default <V extends FormValues = FormValues>({
     },
     [handleFocus]
   );
-
-  const getState = useCallback<GetState>((path) => getFormState(path), [
-    getFormState,
-  ]);
 
   const setTouched = useCallback<SetTouched>(
     (name, isTouched = true, shouldValidate = validateOnBlur) => {
@@ -1039,8 +1039,8 @@ export default <V extends FormValues = FormValues>({
     removeField,
     form: registerForm,
     field: registerField,
-    mon,
     focus,
+    watchState,
     getState,
     setValue,
     setTouched,
@@ -1072,9 +1072,9 @@ export default <V extends FormValues = FormValues>({
   return {
     form: registerForm,
     field: registerField,
-    mon,
     focus,
     removeField,
+    watchState,
     getState,
     setValue,
     setTouched,

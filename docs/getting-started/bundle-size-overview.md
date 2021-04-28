@@ -8,10 +8,10 @@ React Cool Form is a tiny size library ([~ 7KB](https://bundlephobia.com/result?
 | Name                                                | Size    |
 | --------------------------------------------------- | ------- |
 | [useForm](../api-reference/use-form)                | ~ 5.6kB |
-| [useFormMethods](../api-reference/use-form-methods) | ~ 255B  |
-| [useFormState](../api-reference/use-form-state)     | ~ 302B  |
+| [useFormMethods](../api-reference/use-form-methods) | ~ 256B  |
+| [useFormState](../api-reference/use-form-state)     | ~ 303B  |
 | [useControlled](../api-reference/use-controlled)    | ~ 783B  |
-| [useFieldArray](../api-reference/use-field-array)   | ~ 870B  |
+| [useFieldArray](../api-reference/use-field-array)   | ~ 871B  |
 | [get](../api-reference/utility-functions#get)       | ~ 5B    |
 | [set](../api-reference/utility-functions#set)       | ~ 5B    |
 | [unset](../api-reference/utility-functions#unset)   | ~ 6B    |

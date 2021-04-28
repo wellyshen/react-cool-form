@@ -44,7 +44,7 @@ A synchronous/asynchronous function that is used for the [field-level validation
 An array that holds field names (e.g. `foo[0]`, `foo[1]`), which can be used for the `key` and `name` attributes of a field.
 
 - It refers to the location of the field in the [form state](../getting-started/form-state#about-the-form-state). If the referenced value isn't an `array` type, returns an empty array instead.
-- It doesn't include the field data. If you need to access the data, use the [mon](../api-reference/use-form#mon) or [getState](../api-reference/use-form#getstate) methods.
+- It doesn't include the field data. If you need to access the data, use the [watchState](../api-reference/use-form#watchstate) or [getState](../api-reference/use-form#getstate) methods.
 
 ```js
 const [fields] = useFieldArray("foo", { defaultValue: [{ name: "Iron Man" }] });
