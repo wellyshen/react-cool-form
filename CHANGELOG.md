@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.2.0
+
+### Minor Changes
+
+- [#583](https://github.com/wellyshen/react-cool-form/pull/583) [`b7d1e8b`](https://github.com/wellyshen/react-cool-form/commit/b7d1e8b66cfbba4424a27a04190b1f269e75d013) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): rename `mon` to `watchState` for better understanding
+
 ## 0.0.171
 
 ### Patch Changes
