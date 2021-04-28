@@ -201,13 +201,6 @@ export interface GetFormState<V> {
   ): any;
 }
 
-export interface Mon<V> {
-  (
-    path: Path,
-    options?: { defaultValues?: V; errorWithTouched?: boolean }
-  ): any;
-}
-
 export interface Focus {
   (name: string, delay?: number): void;
 }
@@ -217,6 +210,13 @@ export interface RemoveField {
     name: string,
     exclude?: ("defaultValue" | "value" | "touched" | "dirty" | "error")[]
   ): void;
+}
+
+export interface WatchState<V> {
+  (
+    path: Path,
+    options?: { defaultValues?: V; errorWithTouched?: boolean }
+  ): any;
 }
 
 export interface GetState {
@@ -293,9 +293,9 @@ export type FormConfig<V = any> = Partial<{
 export interface FormMethods<V = any> {
   form: RegisterForm;
   field: RegisterField<V>;
-  mon: Mon<V>;
   focus: Focus;
   removeField: RemoveField;
+  watchState: WatchState<V>;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;

@@ -23,13 +23,6 @@ declare module "react-cool-form" {
     submit: Submit<V>;
   }
 
-  interface Mon<V> {
-    (
-      path: string | string[] | ObjMap<string>,
-      options?: { defaultValues?: V; errorWithTouched?: boolean }
-    ): any;
-  }
-
   interface Focus {
     (name: string, delay?: number): void;
   }
@@ -39,6 +32,13 @@ declare module "react-cool-form" {
       name: string,
       exclude?: ("defaultValue" | "value" | "touched" | "dirty" | "error")[]
     ): void;
+  }
+
+  interface WatchState<V> {
+    (
+      path: string | string[] | ObjMap<string>,
+      options?: { defaultValues?: V; errorWithTouched?: boolean }
+    ): any;
   }
 
   interface GetState {
@@ -201,9 +201,9 @@ declare module "react-cool-form" {
   export interface FormMethods<V extends FormValues = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
-    mon: Mon<V>;
     focus: Focus;
     removeField: RemoveField;
+    watchState: WatchState<V>;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;
