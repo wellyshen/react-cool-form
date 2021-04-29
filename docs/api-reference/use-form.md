@@ -229,7 +229,7 @@ const methods = useForm({
 
 The form state change handler that is called on every state change. It's useful for **debugging** or **triggering a handler**.
 
-- Want to trigger a handler based on certain properties in the form state? Check out the [useFormState](../api-reference/use-form-state) to learn more.
+- Want to trigger a handler based on certain properties in the form state? Check out the [useFormState](./use-form-state) to learn more.
 - `formState` is readonly and should not be mutated directly.
 
 ```js
