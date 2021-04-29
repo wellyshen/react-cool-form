@@ -343,6 +343,26 @@ const App = () => {
 };
 ```
 
+When dealing with [nested fields](./complex-structures), you can shallow the errors and get free from checking valid chained properties (e.g. `?.`) by the [array/object pick feature](./form-state#monitoring-the-state) of the `mon` method.
+
+```js {4}
+const App = () => {
+  // ...
+
+  const [foo, bar] = mon(["a.b.foo", "a.b.bar"], { errorWithTouched: true });
+
+  return (
+    <form ref={form} noValidate>
+      <input name="a.b.foo" />
+      {foo && <p>{foo}</p>}
+      <input name="a.b.bar" />
+      {bar && <p>{bar}</p>}
+      <input type="submit" />
+    </form>
+  );
+};
+```
+
 The built-in validation is **turned on** by default. Which provides two forms of error reports: the `message` (refer to [validationMessage](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/validationMessage)) and the `state` (refer to [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState)). You can configure (or disable) it by the [builtInValidationMode](../api-reference/use-form#builtonvalidationmode) option.
 
 ```js {5}
