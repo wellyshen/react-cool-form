@@ -178,11 +178,7 @@ describe("useFieldArray", () => {
       const { fields, getState } = renderHelper({
         defaultValues: { foo: val },
       });
-      if (Array.isArray(val)) {
-        expect(fields).toEqual(["foo[0]"]);
-      } else {
-        expect(fields).toEqual([]);
-      }
+      expect(fields).toEqual(Array.isArray(val) ? ["foo[0]"] : []);
       expect(getState("foo")).toEqual(val);
     }
   );
