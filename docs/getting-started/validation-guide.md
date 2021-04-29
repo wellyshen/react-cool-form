@@ -343,20 +343,27 @@ const App = () => {
 };
 ```
 
-When dealing with [nested fields](./complex-structures), you can shallow the errors and get free from checking valid chained properties (e.g. `?.`) by the [array/object pick feature](./form-state#monitoring-the-state) of the `mon` method.
+When dealing with [nested fields](./complex-structures), you can shallow the errors and get free from checking valid chained properties (e.g. use `?.`) by the [array/object pick feature](./form-state#monitoring-the-state) of the `mon` method.
 
-```js {4}
+```js
 const App = () => {
   // ...
 
-  const [foo, bar] = mon(["a.b.foo", "a.b.bar"], { errorWithTouched: true });
+  const [username, email, password] = mon(
+    ["foo.username", "foo.email", "foo.password"],
+    {
+      errorWithTouched: true,
+    }
+  );
 
   return (
     <form ref={form} noValidate>
-      <input name="a.b.foo" />
-      {foo && <p>{foo}</p>}
-      <input name="a.b.bar" />
-      {bar && <p>{bar}</p>}
+      <input name="foo.username" required />
+      {username && <p>{username}</p>}
+      <input name="foo.email" type="email" required />
+      {email && <p>{email}</p>}
+      <input name="foo.password" type="password" required minLength={8} />
+      {password && <p>{password}</p>}
       <input type="submit" />
     </form>
   );
