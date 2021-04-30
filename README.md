@@ -1,5 +1,5 @@
 <p align="center">
-  <code><strong>Hi! friends, if you're happy with it, give it a ⭐️ that will be my best reward.</strong></code>
+  <code><strong>Hi! friends, if this library has helped you out, please support us with a ⭐️</strong></code>
   <br /><br />
   <a href="https://react-cool-form.netlify.app" title="React Cool Form"><img src="https://react-cool-form.netlify.app/img/logo-github.svg" width="300px" alt="React Cool Form"></a>
 </p>

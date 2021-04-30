@@ -123,7 +123,6 @@ const FieldArray = (props: any) => {
 };
 
 describe("useFieldArray", () => {
-  const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
   const onRender = jest.fn();
   const value = [{ a: "🍎", b: "🍎" }];
@@ -152,9 +151,13 @@ describe("useFieldArray", () => {
           )),
       });
       expect(container.querySelectorAll("input")).toHaveLength(2);
-      expect(getByTestId("foo[0].a").value).toBe(value[0].a);
-      expect(getByTestId("foo[0].b").value).toBe(value[0].b);
-      fireEvent.submit(getByTestId("form"));
+      expect((screen.getByTestId("foo[0].a") as HTMLInputElement).value).toBe(
+        value[0].a
+      );
+      expect((screen.getByTestId("foo[0].b") as HTMLInputElement).value).toBe(
+        value[0].b
+      );
+      fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })
       );
@@ -168,7 +171,7 @@ describe("useFieldArray", () => {
       defaultValue: [{ a: "🍋" }],
       onSubmit,
     });
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(defaultValues));
   });
 
@@ -178,11 +181,7 @@ describe("useFieldArray", () => {
       const { fields, getState } = renderHelper({
         defaultValues: { foo: val },
       });
-      if (Array.isArray(val)) {
-        expect(fields).toEqual(["foo[0]"]);
-      } else {
-        expect(fields).toEqual([]);
-      }
+      expect(fields).toEqual(Array.isArray(val) ? ["foo[0]"] : []);
       expect(getState("foo")).toEqual(val);
     }
   );
@@ -207,10 +206,18 @@ describe("useFieldArray", () => {
     });
     expect(container.querySelectorAll("input")).toHaveLength(6);
     await waitFor(() => {
-      expect(getByTestId("foo[1].a").value).toBe(newValue1.a);
-      expect(getByTestId("foo[1].b").value).toBe(newValue1.b);
-      expect(getByTestId("foo[2].a").value).toBe(newValue2.a);
-      expect(getByTestId("foo[2].b").value).toBe(newValue2.b);
+      expect((screen.getByTestId("foo[1].a") as HTMLInputElement).value).toBe(
+        newValue1.a
+      );
+      expect((screen.getByTestId("foo[1].b") as HTMLInputElement).value).toBe(
+        newValue1.b
+      );
+      expect((screen.getByTestId("foo[2].a") as HTMLInputElement).value).toBe(
+        newValue2.a
+      );
+      expect((screen.getByTestId("foo[2].b") as HTMLInputElement).value).toBe(
+        newValue2.b
+      );
     });
     expect(getState("foo")).toEqual([...value, newValue1, newValue2]);
     expect(getState("dirty.foo")).toEqual([, , { a: true, b: true }]);
@@ -235,8 +242,12 @@ describe("useFieldArray", () => {
     act(() => insert(1, val[1], { shouldTouched: true }));
     expect(container.querySelectorAll("input")).toHaveLength(4);
     await waitFor(() => {
-      expect(getByTestId("foo[1].a").value).toBe(val[1].a);
-      expect(getByTestId("foo[1].b").value).toBe(val[1].b);
+      expect((screen.getByTestId("foo[1].a") as HTMLInputElement).value).toBe(
+        val[1].a
+      );
+      expect((screen.getByTestId("foo[1].b") as HTMLInputElement).value).toBe(
+        val[1].b
+      );
     });
     expect(getState("foo")).toEqual(val);
     expect(getState("dirty.foo")).toEqual([, { a: true, b: true }]);
@@ -247,8 +258,12 @@ describe("useFieldArray", () => {
     act(() => insert(2, val[2], { shouldDirty: false }));
     expect(container.querySelectorAll("input")).toHaveLength(6);
     await waitFor(() => {
-      expect(getByTestId("foo[2].a").value).toBe(val[2].a);
-      expect(getByTestId("foo[2].b").value).toBe(val[2].b);
+      expect((screen.getByTestId("foo[2].a") as HTMLInputElement).value).toBe(
+        val[2].a
+      );
+      expect((screen.getByTestId("foo[2].b") as HTMLInputElement).value).toBe(
+        val[2].b
+      );
     });
     expect(getState("foo")).toEqual(val);
     expect(getState("dirty.foo")).toEqual([, { a: true, b: true }]);
@@ -258,8 +273,12 @@ describe("useFieldArray", () => {
     act(() => insert(0, val[0], { shouldDirty: false }));
     expect(container.querySelectorAll("input")).toHaveLength(8);
     await waitFor(() => {
-      expect(getByTestId("foo[0].a").value).toBe(val[0].a);
-      expect(getByTestId("foo[0].b").value).toBe(val[0].b);
+      expect((screen.getByTestId("foo[0].a") as HTMLInputElement).value).toBe(
+        val[0].a
+      );
+      expect((screen.getByTestId("foo[0].b") as HTMLInputElement).value).toBe(
+        val[0].b
+      );
     });
     expect(getState("foo")).toEqual(val);
     expect(getState("dirty.foo")).toEqual([, , { a: true, b: true }]);
@@ -333,8 +352,8 @@ describe("useFieldArray", () => {
           )),
       }
     );
-    const fooA = getByTestId("foo[0].a");
-    const fooB = getByTestId("foo[0].b");
+    const fooA = screen.getByTestId("foo[0].a") as HTMLInputElement;
+    const fooB = screen.getByTestId("foo[0].b") as HTMLInputElement;
     const target = { value: "🥝" };
 
     fireEvent.input(fooA, { target });
@@ -381,8 +400,8 @@ describe("useFieldArray", () => {
             </div>
           )),
       });
-      const fooA = getByTestId("foo[0].a");
-      const fooB = getByTestId("foo[0].b");
+      const fooA = screen.getByTestId("foo[0].a") as HTMLInputElement;
+      const fooB = screen.getByTestId("foo[0].b") as HTMLInputElement;
       const target = { value: "🥝" };
 
       fireEvent.input(fooA, { target });
@@ -494,12 +513,12 @@ describe("useFieldArray", () => {
             ...initialState,
             values: { foo: type === "form" ? formValue : fieldValue },
           });
-          expect(getByTestId("foo[0].a").value).toBe(
-            type === "form" ? formValue[0].a : fieldValue[0].a
-          );
-          expect(getByTestId("foo[0].b").value).toBe(
-            type === "form" ? formValue[0].b : fieldValue[0].b
-          );
+          expect(
+            (screen.getByTestId("foo[0].a") as HTMLInputElement).value
+          ).toBe(type === "form" ? formValue[0].a : fieldValue[0].a);
+          expect(
+            (screen.getByTestId("foo[0].b") as HTMLInputElement).value
+          ).toBe(type === "form" ? formValue[0].b : fieldValue[0].b);
         });
 
         act(() => {
@@ -521,8 +540,12 @@ describe("useFieldArray", () => {
           if (type === "form") {
             expect(container.querySelectorAll("input")).toHaveLength(0);
           } else {
-            expect(getByTestId("foo[0].a").value).toBe(fieldValue[0].a);
-            expect(getByTestId("foo[0].b").value).toBe(fieldValue[0].b);
+            expect(
+              (screen.getByTestId("foo[0].a") as HTMLInputElement).value
+            ).toBe(fieldValue[0].a);
+            expect(
+              (screen.getByTestId("foo[0].b") as HTMLInputElement).value
+            ).toBe(fieldValue[0].b);
           }
         });
       }
@@ -574,12 +597,12 @@ describe("useFieldArray", () => {
         };
         await waitFor(() => {
           expect(getState()).toEqual(state);
-          expect(getByTestId("foo[0].a").value).toBe(
-            type === "form" ? formValue[0].a : fieldValue[0].a
-          );
-          expect(getByTestId("foo[0].b").value).toBe(
-            type === "form" ? formValue[0].b : fieldValue[0].b
-          );
+          expect(
+            (screen.getByTestId("foo[0].a") as HTMLInputElement).value
+          ).toBe(type === "form" ? formValue[0].a : fieldValue[0].a);
+          expect(
+            (screen.getByTestId("foo[0].b") as HTMLInputElement).value
+          ).toBe(type === "form" ? formValue[0].b : fieldValue[0].b);
         });
 
         act(() => {
@@ -595,12 +618,12 @@ describe("useFieldArray", () => {
         act(() => setShow(true));
         await waitFor(() => {
           expect(getState()).toEqual(state);
-          expect(getByTestId("foo[0].a").value).toBe(
-            type === "form" ? formValue[0].a : fieldValue[0].a
-          );
-          expect(getByTestId("foo[0].b").value).toBe(
-            type === "form" ? formValue[0].b : fieldValue[0].b
-          );
+          expect(
+            (screen.getByTestId("foo[0].a") as HTMLInputElement).value
+          ).toBe(type === "form" ? formValue[0].a : fieldValue[0].a);
+          expect(
+            (screen.getByTestId("foo[0].b") as HTMLInputElement).value
+          ).toBe(type === "form" ? formValue[0].b : fieldValue[0].b);
         });
       }
     );
@@ -643,8 +666,12 @@ describe("useFieldArray", () => {
 
         act(() => setShow(true));
         await waitFor(() => {
-          expect(getByTestId("foo[0].a").value).toBe(formValue[0].a);
-          expect(getByTestId("foo[0].b").value).toBe(formValue[0].b);
+          expect(
+            (screen.getByTestId("foo[0].a") as HTMLInputElement).value
+          ).toBe(formValue[0].a);
+          expect(
+            (screen.getByTestId("foo[0].b") as HTMLInputElement).value
+          ).toBe(formValue[0].b);
         });
       }
     );
@@ -692,8 +719,12 @@ describe("useFieldArray", () => {
 
         act(() => setShow(true));
         await waitFor(() => {
-          expect(getByTestId("foo[0].a").value).toBe(formValue[0].a);
-          expect(getByTestId("foo[0].b").value).toBe(formValue[0].b);
+          expect(
+            (screen.getByTestId("foo[0].a") as HTMLInputElement).value
+          ).toBe(formValue[0].a);
+          expect(
+            (screen.getByTestId("foo[0].b") as HTMLInputElement).value
+          ).toBe(formValue[0].b);
         });
       }
     );
@@ -732,10 +763,10 @@ describe("useFieldArray", () => {
       await waitFor(() =>
         expect(getState("foo")).toEqual(isShow ? fieldValue : formValue)
       );
-      expect(getByTestId("foo[0].a").value).toBe(
+      expect((screen.getByTestId("foo[0].a") as HTMLInputElement).value).toBe(
         isShow ? fieldValue[0].a : formValue[0].a
       );
-      expect(getByTestId("foo[0].b").value).toBe(
+      expect((screen.getByTestId("foo[0].b") as HTMLInputElement).value).toBe(
         isShow ? fieldValue[0].b : formValue[0].b
       );
     });
