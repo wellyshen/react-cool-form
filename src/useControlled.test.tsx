@@ -101,7 +101,6 @@ const CustomField = () => {
 
 describe("useControlled", () => {
   console.warn = jest.fn();
-  const getByTestId = screen.getByTestId as any;
   const onSubmit = jest.fn();
   const onError = jest.fn();
   const onReset = jest.fn();
@@ -116,7 +115,7 @@ describe("useControlled", () => {
 
   it("should warn missing default value", () => {
     renderHelper({ children: <Field /> });
-    fireEvent.input(getByTestId("foo"), { target: { value: "🍎" } });
+    fireEvent.input(screen.getByTestId("foo"), { target: { value: "🍎" } });
     expect(console.warn).toHaveBeenCalledTimes(1);
     expect(console.warn).toHaveBeenCalledWith(
       '💡 react-cool-form > useControlled: Please provide a default value for "foo" field.'
@@ -125,7 +124,7 @@ describe("useControlled", () => {
 
   it("should not warn missing default value for field-array", () => {
     renderHelper({ isFieldArray: true, children: <Field /> });
-    fireEvent.input(getByTestId("foo"), { target: { value: "🍎" } });
+    fireEvent.input(screen.getByTestId("foo"), { target: { value: "🍎" } });
     expect(console.warn).not.toHaveBeenCalled();
   });
 
@@ -165,9 +164,9 @@ describe("useControlled", () => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
     renderHelper({ children: <Field onChange={onChange} onBlur={onBlur} /> });
-    fireEvent.input(getByTestId("foo"), { target: { value: "🍎" } });
+    fireEvent.input(screen.getByTestId("foo"), { target: { value: "🍎" } });
     expect(onChange).toHaveBeenCalled();
-    fireEvent.focusOut(getByTestId("foo"));
+    fireEvent.focusOut(screen.getByTestId("foo"));
     expect(onBlur).toHaveBeenCalled();
   });
 
@@ -191,8 +190,8 @@ describe("useControlled", () => {
         ),
       });
       expect(format).toHaveBeenCalledWith(value);
-      expect(getByTestId("foo").value).toBe(value);
-      fireEvent.submit(getByTestId("form"));
+      expect((screen.getByTestId("foo") as HTMLInputElement).value).toBe(value);
+      fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })
       );
@@ -216,8 +215,8 @@ describe("useControlled", () => {
         children: <Field format={format} defaultValue="🍋" />,
       });
       expect(format).toHaveBeenCalledWith(value);
-      expect(getByTestId("foo").value).toBe(value);
-      fireEvent.submit(getByTestId("form"));
+      expect((screen.getByTestId("foo") as HTMLInputElement).value).toBe(value);
+      fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ foo: value })
       );
@@ -265,10 +264,12 @@ describe("useControlled", () => {
         children: <Field defaultValue="🍎" />,
       });
       const value = "🍋";
-      fireEvent.input(getByTestId("foo"), { target: { value } });
-      fireEvent.submit(getByTestId("form"));
+      fireEvent.input(screen.getByTestId("foo"), { target: { value } });
+      fireEvent.submit(screen.getByTestId("form"));
       await waitFor(() => {
-        expect(getByTestId("foo").value).toBe(value);
+        expect((screen.getByTestId("foo") as HTMLInputElement).value).toBe(
+          value
+        );
         expect(onSubmit).toHaveBeenCalledWith({ foo: value });
       });
     }
@@ -289,7 +290,7 @@ describe("useControlled", () => {
       ),
     });
 
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.submit(screen.getByTestId("form"));
     expect(getState("isValidating")).toBeTruthy();
     await waitFor(() => expect(onError).toHaveBeenCalledWith(errors));
     expect(onMeta).toHaveBeenLastCalledWith({
@@ -301,8 +302,8 @@ describe("useControlled", () => {
     expect(getState("isValid")).toBeFalsy();
 
     const value = "🍎";
-    fireEvent.input(getByTestId("foo"), { target: { value } });
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.input(screen.getByTestId("foo"), { target: { value } });
+    fireEvent.submit(screen.getByTestId("form"));
     expect(getState("isValidating")).toBeTruthy();
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith({ foo: value });
@@ -327,7 +328,7 @@ describe("useControlled", () => {
         />
       ),
     });
-    fireEvent.input(getByTestId("foo"), { target: { value: "123" } });
+    fireEvent.input(screen.getByTestId("foo"), { target: { value: "123" } });
     await waitFor(() => expect(getState("errors")).toEqual({ foo: error }));
   });
 
@@ -341,7 +342,7 @@ describe("useControlled", () => {
         />
       ),
     });
-    fireEvent.focusOut(getByTestId("foo"));
+    fireEvent.focusOut(screen.getByTestId("foo"));
     await waitFor(() => expect(getState("errors")).toEqual({ foo: error }));
   });
 
@@ -351,7 +352,7 @@ describe("useControlled", () => {
       validate,
       children: <input data-testid="foo" name="foo" />,
     });
-    const foo = getByTestId("foo");
+    const foo = screen.getByTestId("foo");
 
     fireEvent.focusOut(foo);
     await waitFor(() => expect(validate).toHaveBeenCalled());
@@ -376,7 +377,7 @@ describe("useControlled", () => {
         />
       ),
     });
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith({ foo: mockDate });
       expect(onError).not.toHaveBeenCalled();
@@ -390,8 +391,8 @@ describe("useControlled", () => {
       children: <Field formId={formId} />,
     });
     const value = "🍎";
-    fireEvent.input(getByTestId("foo"), { target: { value } });
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.input(screen.getByTestId("foo"), { target: { value } });
+    fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
   });
 
@@ -401,8 +402,8 @@ describe("useControlled", () => {
       children: <input data-testid="text" name="text" />,
     });
     const value = "🍎";
-    fireEvent.input(getByTestId("text"), { target: { value } });
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.input(screen.getByTestId("text"), { target: { value } });
+    fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ text: value }));
   });
 
@@ -421,9 +422,9 @@ describe("useControlled", () => {
         </>
       ),
     });
-    const checkboxes0 = getByTestId("checkboxes-0");
+    const checkboxes0 = screen.getByTestId("checkboxes-0") as HTMLInputElement;
     userEvent.click(checkboxes0);
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith({ checkboxes: [checkboxes0.value] })
     );
@@ -441,9 +442,9 @@ describe("useControlled", () => {
         </select>
       ),
     });
-    const selects0 = getByTestId("selects-0");
-    userEvent.selectOptions(getByTestId("selects"), [selects0.value]);
-    fireEvent.submit(getByTestId("form"));
+    const selects0 = screen.getByTestId("selects-0") as HTMLInputElement;
+    userEvent.selectOptions(screen.getByTestId("selects"), [selects0.value]);
+    fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith({ selects: [selects0.value] })
     );
@@ -455,8 +456,8 @@ describe("useControlled", () => {
       children: <CustomField />,
     });
     const value = "🍎";
-    fireEvent.click(getByTestId("foo"), { target: { value } });
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.click(screen.getByTestId("foo"), { target: { value } });
+    fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: value }));
   });
 
@@ -465,8 +466,8 @@ describe("useControlled", () => {
       onSubmit,
       children: <Field parse={({ target }: any) => `${target.value}🍋`} />,
     });
-    fireEvent.input(getByTestId("foo"), { target: { value: "🍎" } });
-    fireEvent.submit(getByTestId("form"));
+    fireEvent.input(screen.getByTestId("foo"), { target: { value: "🍎" } });
+    fireEvent.submit(screen.getByTestId("form"));
     await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ foo: "🍎🍋" }));
   });
 
@@ -480,7 +481,7 @@ describe("useControlled", () => {
         />
       ),
     });
-    expect(getByTestId("foo").value).toBe("🍎");
+    expect((screen.getByTestId("foo") as HTMLInputElement).value).toBe("🍎");
   });
 
   describe("conditional fields", () => {
@@ -526,7 +527,7 @@ describe("useControlled", () => {
           expect(getState("foo")).toBe(
             type === "form" ? formValue : fieldValue
           );
-          expect(getByTestId("foo").value).toBe(
+          expect((screen.getByTestId("foo") as HTMLInputElement).value).toBe(
             type === "form" ? formValue : fieldValue
           );
         });
@@ -545,7 +546,7 @@ describe("useControlled", () => {
             ...initialState,
             values: { foo: type === "field" ? fieldValue : undefined },
           });
-          expect(getByTestId("foo").value).toBe(
+          expect((screen.getByTestId("foo") as HTMLInputElement).value).toBe(
             type === "field" ? fieldValue : ""
           );
         });
@@ -589,7 +590,11 @@ describe("useControlled", () => {
         );
 
         act(() => setShow(true));
-        await waitFor(() => expect(getByTestId("foo").value).toBe(value));
+        await waitFor(() =>
+          expect((screen.getByTestId("foo") as HTMLInputElement).value).toBe(
+            value
+          )
+        );
       }
     );
 
