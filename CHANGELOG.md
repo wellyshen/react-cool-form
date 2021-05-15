@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.2.1
+
+### Patch Changes
+
+- [#615](https://github.com/wellyshen/react-cool-form/pull/615) [`712bb21`](https://github.com/wellyshen/react-cool-form/commit/712bb21736bdc5990c38e1f822812f2b20081bea) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(types): use overloads for the type of `useFormState` and the `field` method of `useForm`
+
 ## 0.2.0
 
 ### Minor Changes
