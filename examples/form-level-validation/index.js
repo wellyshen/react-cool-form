@@ -28,14 +28,14 @@ const validate = async ({ username, email }) => {
 };
 
 function App() {
-  const { form, mon } = useForm({
+  const { form, use } = useForm({
     defaultValues: { username: "", email: "" },
     validate,
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2)),
     onError: (errors) => console.log("onError: ", errors)
   });
 
-  console.log("Form is validating: ", mon("isValidating"));
+  console.log("Form is validating: ", use("isValidating"));
 
   return (
     <form ref={form} noValidate>
