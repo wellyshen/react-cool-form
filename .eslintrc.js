@@ -18,6 +18,7 @@ module.exports = {
     "react/require-default-props": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "testing-library/render-result-naming-convention": "off",
   },
   settings: {
     polyfills: ["Promise"],
