@@ -278,12 +278,6 @@ If you just want to validate the field, there's a shortcut for it:
 <input nam="foo" ref={field((value) => !value.length && "Required")} />
 ```
 
-### mon
-
-`(path: string | string[] | Record<string, string>, options?: Object) => any`
-
-Mon means "monitor", the method provides us a performant way to use the form state with minimized re-renders. See the [Form State](../getting-started/form-state) to learn more.
-
 ### focus
 
 `(name: string, delay?: number) => void`
@@ -316,6 +310,12 @@ const App = () => {
 ```
 
 👉🏻 See the [Applying Focus](../getting-started/arrays-and-lists#applying-focus) to learn more.
+
+### use
+
+`(path: string | string[] | Record<string, string>, options?: Object) => any`
+
+This method provides us a performant way to use the form state with minimized re-renders. See the [Form State](../getting-started/form-state) to learn more.
 
 ### getState
 

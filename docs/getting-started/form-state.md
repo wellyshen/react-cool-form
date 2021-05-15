@@ -31,57 +31,57 @@ Form state is an `object` containing the following properties:
 
 ## Using the Form State
 
-React Cool Form provides a powerful API: [mon](../api-reference/use-form#mon) (a.k.a monitor) to help us avoid unnecessary re-renders when using the form state.
+React Cool Form provides a powerful API: [use](../api-reference/use-form#use) to help us avoid unnecessary re-renders when using the form state.
 
-### Monitoring the State
+### Watching the State
 
-Due to the support of [complex structures](./complex-structures), the `mon` method allows us to use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation)-and-[bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation to get the form state.
+Due to the support of [complex structures](./complex-structures), the `use` method allows us to use [dot](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Dot_notation)-and-[bracket](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors#Bracket_notation) notation to get the form state.
 
 ```js
-const { mon } = useForm();
+const { use } = useForm();
 
 // Returns { name: "Welly", orders: ["🍕", "🥤"] }
 // Re-renders the component when either "values.user" or "values.user.<property>" changes
-const user = mon("values.user");
+const user = use("values.user");
 
 // Returns "Welly", re-renders the component when "values.user.name" changes
-const name = mon("values.user.name");
+const name = use("values.user.name");
 
 // Returns "🍕", re-renders the component when "values.user.orders" changes
-const pizza = mon("values.user.orders[0]");
+const pizza = use("values.user.orders[0]");
 ```
 
 We can construct an array/object with multiple state-picks inside like the following example:
 
 ```js
-const { mon } = useForm();
+const { use } = useForm();
 
 // Array pick, re-renders the component when either "values.foo" or "values.bar" changes
-const [foo, bar] = mon(["values.foo", "values.bar"]);
+const [foo, bar] = use(["values.foo", "values.bar"]);
 
 // Object pick, re-renders the component when either "values.foo" or "values.bar" changes
-const { foo, bar } = mon({ foo: "values.foo", bar: "values.bar" });
+const { foo, bar } = use({ foo: "values.foo", bar: "values.bar" });
 ```
 
 ### Best Practices
 
-Every time we get a value from the form state via the `mon` method, it will listen the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, **more frequently updated value(s), need to be accessed more specific, will get more performant**.
+Every time we get a value from the form state via the `use` method, it will listen the changes of the value and trigger re-renders only when necessary. Thus, there're some guidelines for us to use the form state. General speaking, **more frequently updated value(s), need to be accessed more specific, will get more performant**.
 
 ```js
-const { mon } = useForm();
+const { use } = useForm();
 
 // 👎🏻 You can, but not recommended because it will cause the component to update on every value change
-const values = mon("values");
+const values = use("values");
 // 👍🏻 For the form's values, we always recommended getting the target value as specific as possible
-const fooValue = mon("values.foo");
+const fooValue = use("values.foo");
 
 // 👍🏻 It's OK, in most case the form's validation will be triggered less frequently
-const errors = mon("errors");
+const errors = use("errors");
 // 👍🏻 But if a validation is triggered frequently, get the target error instead
-const fooError = mon("errors.foo");
+const fooError = use("errors.foo");
 
 // 👍🏻 It's OK, they are triggered less frequently
-const [touched, dirty] = mon(["touched", "dirty"]);
+const [touched, dirty] = use(["touched", "dirty"]);
 ```
 
 ### Shortcut for Accessing the Form's Values
@@ -91,13 +91,13 @@ The form's values might be the most frequent one that we need to get in a specif
 ```diff
 // Current state: { values: { foo: "🍎", bar: "🍋", baz: "🥝" } }
 
--const [foo, bar, baz] = mon(["values.foo", "values.bar", "values.baz"]);
-+const [foo, bar, baz] = mon(["foo", "bar", "baz"]);
+-const [foo, bar, baz] = use(["values.foo", "values.bar", "values.baz"]);
++const [foo, bar, baz] = use(["foo", "bar", "baz"]);
 ```
 
 ### Missing Default Values?
 
-If we didn't initialize the default value of a field via the [defaultValues option](../api-reference/use-form#defaultvalues) of the `useForm`. The `mon` method will lose the value. Because the method is called before the field's initial render. For such cases, we can provide an alternative default value for the `mon` method to return as below:
+If we didn't initialize the default value of a field via the [defaultValues option](../api-reference/use-form#defaultvalues) of the `useForm`. The `use` method will lose the value. Because the method is called before the field's initial render. For such cases, we can provide an alternative default value for the `use` method to return as below:
 
 :::note
 If you need to refer to the status of a [conditional field](../examples/conditional-fields), we recommend to use React state instead.
@@ -107,12 +107,12 @@ If you need to refer to the status of a [conditional field](../examples/conditio
 import { useForm } from "react-cool-form";
 
 const App = () => {
-  const { form, mon } = useForm({
+  const { form, use } = useForm({
     // Some options...
   });
 
-  cosnole.log(mon("values.foo")); // Returns undefined
-  cosnole.log(mon("values.foo", { defaultValues: { foo: "🍎" } })); // Returns "🍎"
+  cosnole.log(use("values.foo")); // Returns undefined
+  cosnole.log(use("values.foo", { defaultValues: { foo: "🍎" } })); // Returns "🍎"
 
   return (
     <form ref={form}>
@@ -126,33 +126,33 @@ const App = () => {
 
 ### Filter Untouched Field Errors
 
-Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `mon`'s `errorWithTouched` option (default is `false`).
+Error messages are dependent on the form's validation (i.e. the `errors` object). To avoid annoying the user by seeing an error message while typing, we can filter the errors of untouched fields by enable the `use`'s `errorWithTouched` option (default is `false`).
 
 :::note
 This feature filters any errors of the untouched fields. So when validating with the [runValidation](../api-reference/use-form#runvalidation), please ensure it's triggered after the field(s) is (are) touched.
 :::
 
 ```js
-const { mon } = useForm();
+const { use } = useForm();
 
 // Current state: { errors: { foo: "Required" }, touched: {} }
 // Returns { foo: "Required" }
-const errors = mon("errors");
+const errors = use("errors");
 
 // Current state: { errors: { foo: "Required" }, touched: {} }
 // Returns {}
-const errors = mon("errors", { errorWithTouched: true });
+const errors = use("errors", { errorWithTouched: true });
 
 // Current state: { errors: { foo: "Required" }, touched: { foo: true } }
 // Returns { foo: "Required" }
-const errors = mon("errors", { errorWithTouched: true });
+const errors = use("errors", { errorWithTouched: true });
 ```
 
 👉🏻 See the [Displaying Error Messages](./validation-guide#displaying-error-messages) to learn more about it.
 
 ## Isolating Re-rendering
 
-Whenever a [monitored value](#monitoring-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via the [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to the `mon` method that maintain a consistent DX for us.
+Whenever a [monitored value](#watching-the-state) of the form state is updated, it will trigger re-renders. Re-renders are not bad but **slow re-renders** are (refer to the [article](https://kentcdodds.com/blog/fix-the-slow-render-before-you-fix-the-re-render#unnecessary-re-renders)). So, if you are building a complex form with large number of fields, you can isolate re-rendering at the component level via the [useFormState](../api-reference/use-form-state) hook for better performance. The hook has the similar API design to the `use` method that maintain a consistent DX for us.
 
 :::note
 We must provide a valid path to use the hook, or it will return `undefined`.

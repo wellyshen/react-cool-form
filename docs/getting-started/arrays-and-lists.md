@@ -10,7 +10,7 @@ There can be situations in which the user needs to add or remove fields from a f
 The `useFieldArray` hook helps you to deal with multiple similar fields. You pass it a `name` parameter with the path of the field that holds the relevant array. The hook will then give you the power to render an array of inputs as well as common array/list manipulations.
 
 :::note
-The returned `fields` is an array of names. If you need to access the field's data, use the [mon](../api-reference/use-form#mon) or [getState](../api-reference/use-form#getstate) methods.
+The returned `fields` is an array of names. If you need to access the field's data, use the [use](../api-reference/use-form#use) or [getState](../api-reference/use-form#getstate) methods.
 :::
 
 [![Edit RCF - Arrays and Lists](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-arrays-and-lists-crv9d?fontsize=14&hidenavigation=1&theme=dark)
