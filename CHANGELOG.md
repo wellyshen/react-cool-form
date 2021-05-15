@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.2.0
+
+### Minor Changes
+
+- [#610](https://github.com/wellyshen/react-cool-form/pull/610) [`072da4b`](https://github.com/wellyshen/react-cool-form/commit/072da4b842d741e022ba2125528095e624c0f3d4) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): rename `mon` to `use`
+
 ## 0.0.171
 
 ### Patch Changes
