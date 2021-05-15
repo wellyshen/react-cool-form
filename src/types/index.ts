@@ -201,7 +201,7 @@ export interface GetFormState<V> {
   ): any;
 }
 
-export interface Mon<V> {
+export interface Use<V> {
   (
     path: Path,
     options?: { defaultValues?: V; errorWithTouched?: boolean }
@@ -293,9 +293,9 @@ export type FormConfig<V = any> = Partial<{
 export interface FormMethods<V = any> {
   form: RegisterForm;
   field: RegisterField<V>;
-  mon: Mon<V>;
   focus: Focus;
   removeField: RemoveField;
+  use: Use<V>;
   getState: GetState;
   setValue: SetValue;
   setTouched: SetTouched;

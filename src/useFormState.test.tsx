@@ -68,7 +68,7 @@ describe("useFormState", () => {
     );
   });
 
-  it('should warn monitor "values" alone', () => {
+  it('should warn watch "values" alone', () => {
     console.warn = jest.fn();
     renderHelper({ path: "values" });
     expect(console.warn).toHaveBeenCalledWith(
@@ -77,7 +77,7 @@ describe("useFormState", () => {
   });
 
   it.each(["path", "callback"])(
-    'should not warn monitor "values" alone when %s is set',
+    'should not warn watch "values" alone when %s is set',
     (type) => {
       console.warn = jest.fn();
       renderHelper({

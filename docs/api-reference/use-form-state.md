@@ -5,7 +5,7 @@ title: useFormState
 
 This hook can be used for two purposes:
 
-- Isolating re-rendering: It helps us to isolate re-rendering at the component level for performance optimization (see [related article](https://overreacted.io/before-you-memo)). The API design similar to the [mon](./use-form#mon) method of the `useForm` that maintain a consistent DX for us. See the [Isolating Re-rendering](../getting-started/form-state#isolating-re-rendering) to learn more.
+- Isolating re-rendering: It helps us to isolate re-rendering at the component level for performance optimization (see [related article](https://overreacted.io/before-you-memo)). The API design similar to the [use](./use-form#use) method of the `useForm` that maintain a consistent DX for us. See the [Isolating Re-rendering](../getting-started/form-state#isolating-re-rendering) to learn more.
 - On state change event: To listen for changes to properties in the [form state](../getting-started/form-state#about-the-form-state) without triggering re-renders. See the [On State Change Event](../getting-started/form-state#on-state-change-event) to learn more.
 
 ```js

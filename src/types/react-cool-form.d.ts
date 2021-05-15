@@ -23,7 +23,7 @@ declare module "react-cool-form" {
     submit: Submit<V>;
   }
 
-  interface Mon<V> {
+  interface Use<V> {
     (
       path: string | string[] | ObjMap<string>,
       options?: { defaultValues?: V; errorWithTouched?: boolean }
@@ -201,9 +201,9 @@ declare module "react-cool-form" {
   export interface FormMethods<V extends FormValues = FormValues> {
     form: RegisterForm;
     field: RegisterField<V>;
-    mon: Mon<V>;
     focus: Focus;
     removeField: RemoveField;
+    use: Use<V>;
     getState: GetState;
     setValue: SetValue;
     setTouched: SetTouched;

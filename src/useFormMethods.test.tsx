@@ -46,9 +46,9 @@ describe("useFormMethods", () => {
       expect(methods).toEqual({
         form: expect.any(Function),
         field: expect.any(Function),
-        mon: expect.any(Function),
         focus: expect.any(Function),
         removeField: expect.any(Function),
+        use: expect.any(Function),
         getState: expect.any(Function),
         setValue: expect.any(Function),
         setTouched: expect.any(Function),
