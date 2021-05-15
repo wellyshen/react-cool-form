@@ -503,24 +503,19 @@ describe("useControlled", () => {
       async (type) => {
         const formValue = "🍎";
         const fieldValue = "🍋";
-        const {
-          getState,
-          setError,
-          setTouched,
-          setDirty,
-          setShow,
-        } = renderHelper({
-          defaultValues: type === "form" ? { foo: formValue } : undefined,
-          children: ({ show }: API) => (
-            <>
-              {show && (
-                <Field
-                  defaultValue={type === "field" ? fieldValue : undefined}
-                />
-              )}
-            </>
-          ),
-        });
+        const { getState, setError, setTouched, setDirty, setShow } =
+          renderHelper({
+            defaultValues: type === "form" ? { foo: formValue } : undefined,
+            children: ({ show }: API) => (
+              <>
+                {show && (
+                  <Field
+                    defaultValue={type === "field" ? fieldValue : undefined}
+                  />
+                )}
+              </>
+            ),
+          });
 
         act(() => setShow(true));
         await waitFor(() => {
@@ -557,19 +552,14 @@ describe("useControlled", () => {
       "should not remove field",
       async (removeOnUnmounted) => {
         const value = "🍎";
-        const {
-          getState,
-          setError,
-          setTouched,
-          setDirty,
-          setShow,
-        } = renderHelper({
-          isShow: true,
-          removeOnUnmounted,
-          children: ({ show }: API) => (
-            <>{show && <Field defaultValue={value} />}</>
-          ),
-        });
+        const { getState, setError, setTouched, setDirty, setShow } =
+          renderHelper({
+            isShow: true,
+            removeOnUnmounted,
+            children: ({ show }: API) => (
+              <>{show && <Field defaultValue={value} />}</>
+            ),
+          });
 
         act(() => {
           setError("foo", "Required");

@@ -1950,16 +1950,10 @@ describe("useForm", () => {
 
   it.each(["normal", "exclude"])("should remove field correctly", (type) => {
     const value = "🍎";
-    const {
-      setError,
-      setTouched,
-      setDirty,
-      removeField,
-      reset,
-      getState,
-    } = renderHelper({
-      children: <input data-testid="foo" name="foo" defaultValue="🍎" />,
-    });
+    const { setError, setTouched, setDirty, removeField, reset, getState } =
+      renderHelper({
+        children: <input data-testid="foo" name="foo" defaultValue="🍎" />,
+      });
 
     act(() => {
       setError("foo", "Required");
@@ -2022,26 +2016,21 @@ describe("useForm", () => {
       async (type) => {
         const formValue = "🍎";
         const fieldValue = "🍋";
-        const {
-          getState,
-          setError,
-          setTouched,
-          setDirty,
-          setShow,
-        } = renderHelper({
-          defaultValues: type === "form" ? { foo: formValue } : undefined,
-          children: ({ show }: API) => (
-            <>
-              {show && (
-                <input
-                  data-testid="foo"
-                  name="foo"
-                  defaultValue={type === "field" ? fieldValue : undefined}
-                />
-              )}
-            </>
-          ),
-        });
+        const { getState, setError, setTouched, setDirty, setShow } =
+          renderHelper({
+            defaultValues: type === "form" ? { foo: formValue } : undefined,
+            children: ({ show }: API) => (
+              <>
+                {show && (
+                  <input
+                    data-testid="foo"
+                    name="foo"
+                    defaultValue={type === "field" ? fieldValue : undefined}
+                  />
+                )}
+              </>
+            ),
+          });
 
         act(() => setShow(true));
         await waitFor(() => {
@@ -2078,35 +2067,30 @@ describe("useForm", () => {
       "should set %s-level default value for multiple fields correctly",
       async (type) => {
         const value = ["🍎", "🍋"];
-        const {
-          getState,
-          setError,
-          setTouched,
-          setDirty,
-          setShow,
-        } = renderHelper({
-          defaultValues: type === "form" ? { foo: value } : undefined,
-          children: ({ show }: API) => (
-            <>
-              <input
-                data-testid="foo-0"
-                name="foo"
-                type="checkbox"
-                value={value[0]}
-                defaultChecked={type === "field"}
-              />
-              {show && (
+        const { getState, setError, setTouched, setDirty, setShow } =
+          renderHelper({
+            defaultValues: type === "form" ? { foo: value } : undefined,
+            children: ({ show }: API) => (
+              <>
                 <input
-                  data-testid="foo-1"
+                  data-testid="foo-0"
                   name="foo"
                   type="checkbox"
-                  value={value[1]}
+                  value={value[0]}
                   defaultChecked={type === "field"}
                 />
-              )}
-            </>
-          ),
-        });
+                {show && (
+                  <input
+                    data-testid="foo-1"
+                    name="foo"
+                    type="checkbox"
+                    value={value[1]}
+                    defaultChecked={type === "field"}
+                  />
+                )}
+              </>
+            ),
+          });
 
         act(() => setShow(true));
         await waitFor(() => {
@@ -2160,23 +2144,18 @@ describe("useForm", () => {
       "should not remove field",
       async (removeOnUnmounted) => {
         const value = "🍎";
-        const {
-          getState,
-          setError,
-          setTouched,
-          setDirty,
-          setShow,
-        } = renderHelper({
-          isShow: true,
-          removeOnUnmounted,
-          children: ({ show }: API) => (
-            <>
-              {show && (
-                <input data-testid="foo" name="foo" defaultValue={value} />
-              )}
-            </>
-          ),
-        });
+        const { getState, setError, setTouched, setDirty, setShow } =
+          renderHelper({
+            isShow: true,
+            removeOnUnmounted,
+            children: ({ show }: API) => (
+              <>
+                {show && (
+                  <input data-testid="foo" name="foo" defaultValue={value} />
+                )}
+              </>
+            ),
+          });
 
         act(() => {
           setError("foo", "Required");
@@ -2205,18 +2184,12 @@ describe("useForm", () => {
     );
 
     it("should trigger re-rendering correctly", async () => {
-      const {
-        setValue,
-        setError,
-        setTouched,
-        setDirty,
-        setShow,
-        use,
-      } = renderHelper({
-        isShow: true,
-        onRender,
-        children: ({ show }: API) => <>{show && <input name="foo" />}</>,
-      });
+      const { setValue, setError, setTouched, setDirty, setShow, use } =
+        renderHelper({
+          isShow: true,
+          onRender,
+          children: ({ show }: API) => <>{show && <input name="foo" />}</>,
+        });
       use(["foo", "errors.foo", "touched.foo", "dirty.foo"]);
       act(() => {
         setValue("foo", "🍎", { shouldValidate: false });

@@ -604,9 +604,10 @@ export default <V extends FormValues = FormValues>({
     [getFormState, observersRef]
   );
 
-  const getState = useCallback<GetState>((path) => getFormState(path), [
-    getFormState,
-  ]);
+  const getState = useCallback<GetState>(
+    (path) => getFormState(path),
+    [getFormState]
+  );
 
   const setTouched = useCallback<SetTouched>(
     (name, isTouched = true, shouldValidate = validateOnBlur) => {

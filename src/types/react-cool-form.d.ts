@@ -304,14 +304,12 @@ declare module "react-cool-form" {
     (from: number, to: number): void;
   }
 
-  export type FieldArrayConfig<
-    T = any,
-    V extends FormValues = FormValues
-  > = Partial<{
-    formId: string;
-    defaultValue: T[];
-    validate: FieldValidator<V>;
-  }>;
+  export type FieldArrayConfig<T = any, V extends FormValues = FormValues> =
+    Partial<{
+      formId: string;
+      defaultValue: T[];
+      validate: FieldValidator<V>;
+    }>;
 
   export type FieldArrayReturn<T = any> = [
     string[],

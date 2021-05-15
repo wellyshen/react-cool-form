@@ -124,9 +124,9 @@ describe("useFormState", () => {
     expect(renderHelper({ path: "values.foo" })).toBe(defaultValues.foo);
     expect(renderHelper({ path: "isValid" })).toBeTruthy();
 
-    expect(
-      renderHelper({ path: ["values", "values.foo", "isValid"] })
-    ).toEqual([defaultValues, defaultValues.foo, true]);
+    expect(renderHelper({ path: ["values", "values.foo", "isValid"] })).toEqual(
+      [defaultValues, defaultValues.foo, true]
+    );
 
     expect(
       renderHelper({
