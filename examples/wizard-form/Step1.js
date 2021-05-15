@@ -14,7 +14,7 @@ const Field = ({ label, id, error, ...rest }) => (
 const Step1 = () => {
   const [formValues, setFormValues] = useFormValues();
   const nav = useNavigate();
-  const { form, mon, submit } = useForm({
+  const { form, use, submit } = useForm({
     // Fill in form values from context
     defaultValues: formValues,
     // Pass form values for other steps via context
@@ -24,7 +24,7 @@ const Step1 = () => {
     }
   });
   // Show error message only when the field is touched
-  const [errors, values] = mon(["errors", "values"], {
+  const [errors, values] = use(["errors", "values"], {
     errorWithTouched: true
   });
 

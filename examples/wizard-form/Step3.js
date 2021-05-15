@@ -13,7 +13,7 @@ const Checkbox = ({ id, label, ...rest }) => (
 const Step3 = () => {
   const [formValues, setFormValues] = useFormValues();
   const [toggle, setToggle] = useState(!!formValues?.fruit?.length);
-  const { form, mon } = useForm({
+  const { form, use } = useForm({
     // Fill in form values from context
     defaultValues: formValues,
     validate: ({ fruit }) =>
@@ -24,7 +24,7 @@ const Step3 = () => {
       alert(JSON.stringify(values, undefined, 2));
     }
   });
-  const [errors, values] = mon(["errors", "values"]);
+  const [errors, values] = use(["errors", "values"]);
 
   return (
     <form ref={form} noValidate>
