@@ -15,9 +15,9 @@ export default <V extends FormValues = FormValues>(
   const {
     form,
     field,
-    mon,
     focus,
     removeField,
+    use,
     getState,
     setValue,
     setTouched,
@@ -32,9 +32,9 @@ export default <V extends FormValues = FormValues>(
   return {
     form,
     field,
-    mon,
     focus,
     removeField,
+    use,
     getState,
     setValue,
     setTouched,

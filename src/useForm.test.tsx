@@ -142,19 +142,19 @@ describe("useForm", () => {
       expect(console.warn).not.toHaveBeenCalled();
     });
 
-    it('should warn monitor "values" alone', () => {
-      const { mon } = renderHelper();
-      mon("values");
-      mon("values");
+    it('should warn watch "values" alone', () => {
+      const { use } = renderHelper();
+      use("values");
+      use("values");
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.warn).toHaveBeenCalledWith(
-        '💡 react-cool-form > mon: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, just ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
+        '💡 react-cool-form > use: Getting "values" alone might cause unnecessary re-renders. If you know what you\'re doing, just ignore this warning. See: https://react-cool-form.netlify.app/docs/getting-started/form-state#best-practices'
       );
     });
 
-    it('should not warn monitor "values" alone', () => {
-      const { mon } = renderHelper();
-      mon("foo");
+    it('should not warn watch "values" alone', () => {
+      const { use } = renderHelper();
+      use("foo");
       expect(console.warn).not.toHaveBeenCalled();
     });
 
@@ -212,7 +212,7 @@ describe("useForm", () => {
     expect(methods).toEqual({
       form: expect.any(Function),
       field: expect.any(Function),
-      mon: expect.any(Function),
+      use: expect.any(Function),
       focus: expect.any(Function),
       removeField: expect.any(Function),
       getState: expect.any(Function),
@@ -1613,48 +1613,48 @@ describe("useForm", () => {
     });
   });
 
-  describe("mon", () => {
+  describe("use", () => {
     const { values, isValid } = { ...initialState, values: { foo: "🍎" } };
 
     it('should return undefined if "path" isn\'t set', () => {
-      const { mon } = renderHelper();
+      const { use } = renderHelper();
       // @ts-expect-error
-      expect(mon()).toBeUndefined();
+      expect(use()).toBeUndefined();
     });
 
     it("should get default value correctly", () => {
       const formValue = { foo: null };
       const selectValue = { foo: "🍎" };
-      let { mon } = renderHelper({ defaultValues: formValue });
-      expect(mon("values.foo")).toBe(formValue.foo);
+      let { use } = renderHelper({ defaultValues: formValue });
+      expect(use("values.foo")).toBe(formValue.foo);
 
-      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
+      expect(use("values.foo", { defaultValues: selectValue })).toBe(
         formValue.foo
       );
 
-      mon = renderHelper().mon;
-      expect(mon("values.foo", { defaultValues: selectValue })).toBe(
+      use = renderHelper().use;
+      expect(use("values.foo", { defaultValues: selectValue })).toBe(
         selectValue.foo
       );
 
-      expect(mon("values.foo")).toBeUndefined();
+      expect(use("values.foo")).toBeUndefined();
     });
 
     it("should get state's values with correct format", () => {
-      const { mon } = renderHelper({ defaultValues: values });
+      const { use } = renderHelper({ defaultValues: values });
 
-      expect(mon("values")).toEqual(values);
-      expect(mon("values.foo")).toBe(values.foo);
-      expect(mon("isValid")).toBe(isValid);
+      expect(use("values")).toEqual(values);
+      expect(use("values.foo")).toBe(values.foo);
+      expect(use("isValid")).toBe(isValid);
 
-      expect(mon(["values", "values.foo", "isValid"])).toEqual([
+      expect(use(["values", "values.foo", "isValid"])).toEqual([
         values,
         values.foo,
         isValid,
       ]);
 
       expect(
-        mon({
+        use({
           values: "values",
           foo: "values.foo",
           isValid: "isValid",
@@ -1663,35 +1663,35 @@ describe("useForm", () => {
     });
 
     it("should get form's values by shortcut", () => {
-      const { mon } = renderHelper({ defaultValues: values });
+      const { use } = renderHelper({ defaultValues: values });
       const { foo } = values;
-      expect(mon("foo")).toBe(foo);
-      expect(mon(["foo"])).toEqual([foo]);
-      expect(mon({ foo: "foo" })).toEqual({ foo });
+      expect(use("foo")).toBe(foo);
+      expect(use(["foo"])).toEqual([foo]);
+      expect(use({ foo: "foo" })).toEqual({ foo });
     });
 
     it("should get error with touched", async () => {
-      const { mon } = renderHelper({
+      const { use } = renderHelper({
         children: <input data-testid="foo" name="foo" required />,
       });
       const foo = screen.getByTestId("foo");
 
       fireEvent.input(foo, { target: { value: "" } });
       await waitFor(() => {
-        expect(mon("errors.foo")).not.toBeUndefined();
-        expect(mon("errors.foo", { errorWithTouched: true })).toBeUndefined();
+        expect(use("errors.foo")).not.toBeUndefined();
+        expect(use("errors.foo", { errorWithTouched: true })).toBeUndefined();
       });
 
       fireEvent.focusOut(foo);
       await waitFor(() => {
         expect(
-          mon("errors.foo", { errorWithTouched: true })
+          use("errors.foo", { errorWithTouched: true })
         ).not.toBeUndefined();
       });
     });
 
     it("should trigger re-rendering correctly", () => {
-      const { mon } = renderHelper({
+      const { use } = renderHelper({
         onRender,
         children: (
           <>
@@ -1701,11 +1701,11 @@ describe("useForm", () => {
         ),
       });
 
-      mon("foo");
+      use("foo");
       fireEvent.input(screen.getByTestId("foo"));
       expect(onRender).toHaveBeenCalledTimes(2);
 
-      mon("bar");
+      use("bar");
       fireEvent.input(screen.getByTestId("bar"));
       expect(onRender).toHaveBeenCalledTimes(3);
     });
@@ -2211,13 +2211,13 @@ describe("useForm", () => {
         setTouched,
         setDirty,
         setShow,
-        mon,
+        use,
       } = renderHelper({
         isShow: true,
         onRender,
         children: ({ show }: API) => <>{show && <input name="foo" />}</>,
       });
-      mon(["foo", "errors.foo", "touched.foo", "dirty.foo"]);
+      use(["foo", "errors.foo", "touched.foo", "dirty.foo"]);
       act(() => {
         setValue("foo", "🍎", { shouldValidate: false });
         setError("foo", "Required");

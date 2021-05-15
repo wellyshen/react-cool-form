@@ -4,14 +4,14 @@ import { useState } from "react";
 import { useForm, useFieldArray } from "react-cool-form";
 
 export default () => {
-  const { form, mon } = useForm({
+  const { form, use } = useForm({
     defaultValues: {
       foo: [{ a: "form t-1" }],
     },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
   const [fields, { push }] = useFieldArray("foo");
-  const foo = mon("foo");
+  const foo = use("foo");
 
   console.log("LOG ===> HI!");
 

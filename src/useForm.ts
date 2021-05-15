@@ -21,7 +21,6 @@ import {
   GetState,
   HandleChangeEvent,
   Handlers,
-  Mon,
   ObjMap,
   Parsers,
   RegisterField,
@@ -38,6 +37,7 @@ import {
   SetValue,
   ShouldRemoveField,
   Submit,
+  Use,
 } from "./types";
 import { useLatest, useState } from "./hooks";
 import {
@@ -566,22 +566,6 @@ export default <V extends FormValues = FormValues>({
     [stateRef]
   );
 
-  const mon = useCallback<Mon<V>>(
-    (path, { errorWithTouched, defaultValues: dfValues } = {}) =>
-      getFormState(path, {
-        errorWithTouched,
-        defaultValues: dfValues,
-        methodName: "mon",
-        callback: (usedState) => {
-          observersRef.current[0].usedState = {
-            ...observersRef.current[0].usedState,
-            ...usedState,
-          };
-        },
-      }),
-    [getFormState, observersRef]
-  );
-
   const handleFocus = useCallback((name: string) => {
     const field =
       fieldsRef.current.get(name)?.field ||
@@ -602,6 +586,22 @@ export default <V extends FormValues = FormValues>({
       }
     },
     [handleFocus]
+  );
+
+  const use = useCallback<Use<V>>(
+    (path, { errorWithTouched, defaultValues: dfValues } = {}) =>
+      getFormState(path, {
+        errorWithTouched,
+        defaultValues: dfValues,
+        methodName: "use",
+        callback: (usedState) => {
+          observersRef.current[0].usedState = {
+            ...observersRef.current[0].usedState,
+            ...usedState,
+          };
+        },
+      }),
+    [getFormState, observersRef]
   );
 
   const getState = useCallback<GetState>((path) => getFormState(path), [
@@ -1039,8 +1039,8 @@ export default <V extends FormValues = FormValues>({
     removeField,
     form: registerForm,
     field: registerField,
-    mon,
     focus,
+    use,
     getState,
     setValue,
     setTouched,
@@ -1072,9 +1072,9 @@ export default <V extends FormValues = FormValues>({
   return {
     form: registerForm,
     field: registerField,
-    mon,
     focus,
     removeField,
+    use,
     getState,
     setValue,
     setTouched,

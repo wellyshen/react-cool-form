@@ -15,11 +15,11 @@ Web accessibility (a.k.a [a11y](https://en.wiktionary.org/wiki/a11y)) is the des
 import { useForm } from "react-cool-form";
 
 const App = () => {
-  const { form, mon } = useForm({
+  const { form, use } = useForm({
     defaultValues: { username: "", email: "", password: "" },
     onSubmit: (values) => console.log("onSubmit: ", values),
   });
-  const [errors, isValid] = mon(["errors", "isValid"], {
+  const [errors, isValid] = use(["errors", "isValid"], {
     errorWithTouched: true,
   });
 
