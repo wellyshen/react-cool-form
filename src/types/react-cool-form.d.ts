@@ -75,19 +75,20 @@ declare module "react-cool-form" {
     (element: HTMLElement | null): void;
   }
 
-  interface RegisterField<V> {
+  interface RegisterFieldReturn {
     (
-      validateOrOptions:
-        | FieldValidator<V>
-        | {
-            validate?: FieldValidator<V>;
-            valueAsNumber?: boolean;
-            valueAsDate?: boolean;
-            parse?: FieldParser;
-          }
-    ): (
       field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
-    ) => void;
+    ): void;
+  }
+
+  interface RegisterField<V> {
+    (validate: FieldValidator<V>): RegisterFieldReturn;
+    (options: {
+      validate?: FieldValidator<V>;
+      valueAsNumber?: boolean;
+      valueAsDate?: boolean;
+      parse?: FieldParser;
+    }): RegisterFieldReturn;
   }
 
   interface RunValidation {
@@ -239,7 +240,13 @@ declare module "react-cool-form" {
 
   export function useFormState<V extends FormValues = FormValues>(
     path: Path,
-    configOrCallback?: FormStateConfig<V> | FormStateCallback,
+    config?: FormStateConfig<V>,
+    formId?: string
+  ): any;
+
+  export function useFormState(
+    path: Path,
+    callback?: FormStateCallback,
     formId?: string
   ): any;
 

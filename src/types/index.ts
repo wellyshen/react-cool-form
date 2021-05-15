@@ -150,17 +150,18 @@ interface FieldParser {
   (value: any): any;
 }
 
+interface RegisterFieldReturn {
+  (field: FieldElement | null): void;
+}
+
 export interface RegisterField<V = any> {
-  (
-    validateOrOptions:
-      | FieldValidator<V>
-      | {
-          validate?: FieldValidator<V>;
-          valueAsNumber?: boolean;
-          valueAsDate?: boolean;
-          parse?: FieldParser;
-        }
-  ): (field: FieldElement | null) => void;
+  (validate: FieldValidator<V>): RegisterFieldReturn;
+  (options: {
+    validate?: FieldValidator<V>;
+    valueAsNumber?: boolean;
+    valueAsDate?: boolean;
+    parse?: FieldParser;
+  }): RegisterFieldReturn;
 }
 
 export interface HandleChangeEvent {
