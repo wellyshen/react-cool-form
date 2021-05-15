@@ -8,7 +8,7 @@ let count = 0;
 function App() {
   count++;
 
-  const { form, focus, mon } = useForm({
+  const { form, focus, use } = useForm({
     defaultValues: {
       foo: [
         { name: "Iron Man", quote: "I'm Iron Man" },
@@ -22,7 +22,7 @@ function App() {
 
   /* console.log(
     "Field value: ",
-    mon({ value: "foo", touched: "touched.foo", dirty: "dirty.foo" })
+    use({ value: "foo", touched: "touched.foo", dirty: "dirty.foo" })
   ); */
 
   return (
