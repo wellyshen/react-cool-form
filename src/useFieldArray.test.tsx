@@ -138,7 +138,7 @@ describe("useFieldArray", () => {
   it.each(["form", "array"])(
     "should set default value correctly from %s option",
     async (type) => {
-      const { container } = renderHelper({
+      renderHelper({
         defaultValues: type === "form" ? { foo: value } : undefined,
         defaultValue: type === "array" ? value : undefined,
         onSubmit,
@@ -150,7 +150,7 @@ describe("useFieldArray", () => {
             </div>
           )),
       });
-      expect(container.querySelectorAll("input")).toHaveLength(2);
+      expect(screen.getAllByRole("textbox")).toHaveLength(2);
       expect((screen.getByTestId("foo[0].a") as HTMLInputElement).value).toBe(
         value[0].a
       );
@@ -187,7 +187,7 @@ describe("useFieldArray", () => {
   );
 
   it("should push value correctly", async () => {
-    const { push, container, getState } = renderHelper({
+    const { push, getState } = renderHelper({
       defaultValues: { foo: value },
       onRender,
       children: ({ fields }: API) =>
@@ -204,7 +204,7 @@ describe("useFieldArray", () => {
       push(newValue1, { shouldDirty: false });
       push(newValue2, { shouldTouched: true });
     });
-    expect(container.querySelectorAll("input")).toHaveLength(6);
+    expect(screen.getAllByRole("textbox")).toHaveLength(6);
     await waitFor(() => {
       expect((screen.getByTestId("foo[1].a") as HTMLInputElement).value).toBe(
         newValue1.a
@@ -226,7 +226,7 @@ describe("useFieldArray", () => {
   });
 
   it("should insert value correctly", async () => {
-    const { insert, container, getState } = renderHelper({
+    const { insert, getState } = renderHelper({
       defaultValues: { foo: value },
       onRender,
       children: ({ fields }: API) =>
@@ -240,7 +240,7 @@ describe("useFieldArray", () => {
 
     let val = [...value, { a: "🍋", b: "🍋" }];
     act(() => insert(1, val[1], { shouldTouched: true }));
-    expect(container.querySelectorAll("input")).toHaveLength(4);
+    expect(screen.getAllByRole("textbox")).toHaveLength(4);
     await waitFor(() => {
       expect((screen.getByTestId("foo[1].a") as HTMLInputElement).value).toBe(
         val[1].a
@@ -256,7 +256,7 @@ describe("useFieldArray", () => {
 
     val = [...val, { a: "🥝", b: "🥝" }];
     act(() => insert(2, val[2], { shouldDirty: false }));
-    expect(container.querySelectorAll("input")).toHaveLength(6);
+    expect(screen.getAllByRole("textbox")).toHaveLength(6);
     await waitFor(() => {
       expect((screen.getByTestId("foo[2].a") as HTMLInputElement).value).toBe(
         val[2].a
@@ -271,7 +271,7 @@ describe("useFieldArray", () => {
 
     val = [{ a: "🍒", b: "🍒" }, ...val];
     act(() => insert(0, val[0], { shouldDirty: false }));
-    expect(container.querySelectorAll("input")).toHaveLength(8);
+    expect(screen.getAllByRole("textbox")).toHaveLength(8);
     await waitFor(() => {
       expect((screen.getByTestId("foo[0].a") as HTMLInputElement).value).toBe(
         val[0].a
@@ -340,18 +340,16 @@ describe("useFieldArray", () => {
 
   it("should set value correctly", () => {
     const defaultValue = [...value, { a: "🍋", b: "🍋" }];
-    const { setValue, reset, getState, push, remove, container } = renderHelper(
-      {
-        defaultValues: { foo: defaultValue },
-        children: ({ fields }: API) =>
-          fields.map((name) => (
-            <div key={name}>
-              <input data-testid={`${name}.a`} name={`${name}.a`} />
-              <Field data-testid={`${name}.b`} name={`${name}.b`} />
-            </div>
-          )),
-      }
-    );
+    const { setValue, reset, getState, push, remove } = renderHelper({
+      defaultValues: { foo: defaultValue },
+      children: ({ fields }: API) =>
+        fields.map((name) => (
+          <div key={name}>
+            <input data-testid={`${name}.a`} name={`${name}.a`} />
+            <Field data-testid={`${name}.b`} name={`${name}.b`} />
+          </div>
+        )),
+    });
     const fooA = screen.getByTestId("foo[0].a") as HTMLInputElement;
     const fooB = screen.getByTestId("foo[0].b") as HTMLInputElement;
     const target = { value: "🥝" };
@@ -367,7 +365,7 @@ describe("useFieldArray", () => {
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
     act(() => setValue("foo", defaultValue));
-    expect(container.querySelectorAll("input")).toHaveLength(4);
+    expect(screen.getAllByRole("textbox")).toHaveLength(4);
     expect(fooA.value).toBe(defaultValue[0].a);
     expect(fooB.value).toBe(defaultValue[0].b);
     expect(getState("foo")).toEqual(defaultValue);
@@ -379,7 +377,7 @@ describe("useFieldArray", () => {
     fireEvent.input(fooA, { target });
     fireEvent.input(fooB, { target });
     act(() => setValue("foo", defaultValue));
-    expect(container.querySelectorAll("input")).toHaveLength(4);
+    expect(screen.getAllByRole("textbox")).toHaveLength(4);
     expect(fooA.value).toBe(defaultValue[0].a);
     expect(fooB.value).toBe(defaultValue[0].b);
     expect(getState("foo")).toEqual(defaultValue);
@@ -389,7 +387,7 @@ describe("useFieldArray", () => {
     "should reset value correctly from %s default option",
     (type) => {
       const defaultValue = [...value, { a: "🍋", b: "🍋" }];
-      const { reset, getState, push, remove, container } = renderHelper({
+      const { reset, getState, push, remove } = renderHelper({
         defaultValues: type === "form" ? { foo: defaultValue } : undefined,
         defaultValue: type === "array" ? defaultValue : undefined,
         children: ({ fields }: API) =>
@@ -417,7 +415,7 @@ describe("useFieldArray", () => {
       fireEvent.input(fooA, { target });
       fireEvent.input(fooB, { target });
       act(() => reset());
-      expect(container.querySelectorAll("input")).toHaveLength(4);
+      expect(screen.getAllByRole("textbox")).toHaveLength(4);
       expect(fooA.value).toBe(defaultValue[0].a);
       expect(fooB.value).toBe(defaultValue[0].b);
       expect(getState("foo")).toEqual(defaultValue);
@@ -430,7 +428,7 @@ describe("useFieldArray", () => {
       fireEvent.input(fooA, { target });
       fireEvent.input(fooB, { target });
       act(() => reset());
-      expect(container.querySelectorAll("input")).toHaveLength(4);
+      expect(screen.getAllByRole("textbox")).toHaveLength(4);
       expect(fooA.value).toBe(defaultValue[0].a);
       expect(fooB.value).toBe(defaultValue[0].b);
       expect(getState("foo")).toEqual(defaultValue);
@@ -484,111 +482,131 @@ describe("useFieldArray", () => {
     const formValue = value;
     const fieldValue = [{ a: "🍋", b: "🍋" }];
 
-    it.each(["form", "array"])(
-      "should set %s-level default value correctly (FieldArray)",
-      async (type) => {
-        const {
-          getState,
-          setError,
-          setTouched,
-          setDirty,
-          setShow,
-          container,
-        } = renderHelper({
-          defaultValues: type === "form" ? { foo: formValue } : undefined,
+    it("should set form-level default value correctly (FieldArray)", async () => {
+      const { getState, setError, setTouched, setDirty, setShow } =
+        renderHelper({
+          defaultValues: { foo: formValue },
+          children: ({ show }: API) => <>{show && <FieldArray />}</>,
+        });
+
+      act(() => setShow(true));
+      await waitFor(() => {
+        expect(getState()).toEqual({
+          ...initialState,
+          values: { foo: formValue },
+        });
+        expect((screen.getByTestId("foo[0].a") as HTMLInputElement).value).toBe(
+          formValue[0].a
+        );
+        expect((screen.getByTestId("foo[0].b") as HTMLInputElement).value).toBe(
+          formValue[0].b
+        );
+      });
+
+      act(() => {
+        setError("foo", [{ a: "Required", b: "Required" }]);
+        setTouched("foo[0].a", true, false);
+        setTouched("foo[0].b", true, false);
+        setDirty("foo[0].a");
+        setDirty("foo[0].b");
+        setShow(false);
+      });
+      await waitFor(() => expect(getState()).toEqual(initialState));
+
+      act(() => setShow(true));
+      await waitFor(() => {
+        expect(getState()).toEqual({
+          ...initialState,
+          values: {},
+        });
+        expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+      });
+    });
+
+    it("should set array-level default value correctly (FieldArray)", async () => {
+      const { getState, setError, setTouched, setDirty, setShow } =
+        renderHelper({
           children: ({ show }: API) => (
-            <>
-              {show && (
-                <FieldArray
-                  defaultValue={type === "array" ? fieldValue : undefined}
-                />
-              )}
-            </>
+            <>{show && <FieldArray defaultValue={fieldValue} />}</>
           ),
         });
 
-        act(() => setShow(true));
-        await waitFor(() => {
-          expect(getState()).toEqual({
-            ...initialState,
-            values: { foo: type === "form" ? formValue : fieldValue },
-          });
-          expect(
-            (screen.getByTestId("foo[0].a") as HTMLInputElement).value
-          ).toBe(type === "form" ? formValue[0].a : fieldValue[0].a);
-          expect(
-            (screen.getByTestId("foo[0].b") as HTMLInputElement).value
-          ).toBe(type === "form" ? formValue[0].b : fieldValue[0].b);
+      act(() => setShow(true));
+      await waitFor(() => {
+        expect(getState()).toEqual({
+          ...initialState,
+          values: { foo: fieldValue },
         });
+        expect((screen.getByTestId("foo[0].a") as HTMLInputElement).value).toBe(
+          fieldValue[0].a
+        );
+        expect((screen.getByTestId("foo[0].b") as HTMLInputElement).value).toBe(
+          fieldValue[0].b
+        );
+      });
 
-        act(() => {
-          setError("foo", [{ a: "Required", b: "Required" }]);
-          setTouched("foo[0].a", true, false);
-          setTouched("foo[0].b", true, false);
-          setDirty("foo[0].a");
-          setDirty("foo[0].b");
-          setShow(false);
-        });
-        await waitFor(() => expect(getState()).toEqual(initialState));
+      act(() => {
+        setError("foo", [{ a: "Required", b: "Required" }]);
+        setTouched("foo[0].a", true, false);
+        setTouched("foo[0].b", true, false);
+        setDirty("foo[0].a");
+        setDirty("foo[0].b");
+        setShow(false);
+      });
+      await waitFor(() => expect(getState()).toEqual(initialState));
 
-        act(() => setShow(true));
-        await waitFor(() => {
-          expect(getState()).toEqual({
-            ...initialState,
-            values: { foo: type === "array" ? fieldValue : undefined },
-          });
-          if (type === "form") {
-            expect(container.querySelectorAll("input")).toHaveLength(0);
-          } else {
-            expect(
-              (screen.getByTestId("foo[0].a") as HTMLInputElement).value
-            ).toBe(fieldValue[0].a);
-            expect(
-              (screen.getByTestId("foo[0].b") as HTMLInputElement).value
-            ).toBe(fieldValue[0].b);
-          }
+      act(() => setShow(true));
+      await waitFor(() => {
+        expect(getState()).toEqual({
+          ...initialState,
+          values: { foo: fieldValue },
         });
-      }
-    );
+        expect((screen.getByTestId("foo[0].a") as HTMLInputElement).value).toBe(
+          fieldValue[0].a
+        );
+        expect((screen.getByTestId("foo[0].b") as HTMLInputElement).value).toBe(
+          fieldValue[0].b
+        );
+      });
+    });
 
     it.each(["form", "array", "field"])(
       "should set %s-level default value correctly (input/Field)",
       async (type) => {
-        const {
-          getState,
-          setError,
-          setTouched,
-          setDirty,
-          setShow,
-        } = renderHelper({
-          defaultValues: type === "form" ? { foo: formValue } : undefined,
-          defaultValue:
-            // eslint-disable-next-line no-nested-ternary
-            type === "array" ? fieldValue : type === "field" ? [{}] : undefined,
-          children: ({ fields, show }: API) =>
-            fields.map((name) => (
-              <div key={name}>
-                {show && (
-                  <input
-                    data-testid={`${name}.a`}
-                    name={`${name}.a`}
-                    defaultValue={
-                      type === "field" ? fieldValue[0].a : undefined
-                    }
-                  />
-                )}
-                {show && (
-                  <Field
-                    data-testid={`${name}.b`}
-                    name={`${name}.b`}
-                    defaultValue={
-                      type === "field" ? fieldValue[0].b : undefined
-                    }
-                  />
-                )}
-              </div>
-            )),
-        });
+        const { getState, setError, setTouched, setDirty, setShow } =
+          renderHelper({
+            defaultValues: type === "form" ? { foo: formValue } : undefined,
+            defaultValue:
+              // eslint-disable-next-line no-nested-ternary
+              type === "array"
+                ? fieldValue
+                : type === "field"
+                ? [{}]
+                : undefined,
+            children: ({ fields, show }: API) =>
+              fields.map((name) => (
+                <div key={name}>
+                  {show && (
+                    <input
+                      data-testid={`${name}.a`}
+                      name={`${name}.a`}
+                      defaultValue={
+                        type === "field" ? fieldValue[0].a : undefined
+                      }
+                    />
+                  )}
+                  {show && (
+                    <Field
+                      data-testid={`${name}.b`}
+                      name={`${name}.b`}
+                      defaultValue={
+                        type === "field" ? fieldValue[0].b : undefined
+                      }
+                    />
+                  )}
+                </div>
+              )),
+          });
 
         act(() => setShow(true));
         const state = {
@@ -631,18 +649,13 @@ describe("useFieldArray", () => {
     it.each([false, [], () => []])(
       "should not remove field (FieldArray)",
       async (removeOnUnmounted) => {
-        const {
-          getState,
-          setError,
-          setTouched,
-          setDirty,
-          setShow,
-        } = renderHelper({
-          isShow: true,
-          defaultValues: { foo: formValue },
-          removeOnUnmounted,
-          children: ({ show }: API) => <>{show && <FieldArray />}</>,
-        });
+        const { getState, setError, setTouched, setDirty, setShow } =
+          renderHelper({
+            isShow: true,
+            defaultValues: { foo: formValue },
+            removeOnUnmounted,
+            children: ({ show }: API) => <>{show && <FieldArray />}</>,
+          });
 
         act(() => {
           setError("foo", [{ a: "Required", b: "Required" }]);
@@ -679,24 +692,23 @@ describe("useFieldArray", () => {
     it.each([false, [], () => []])(
       "should not remove field (input/Field)",
       async (removeOnUnmounted) => {
-        const {
-          getState,
-          setError,
-          setTouched,
-          setDirty,
-          setShow,
-        } = renderHelper({
-          isShow: true,
-          defaultValues: { foo: formValue },
-          removeOnUnmounted,
-          children: ({ fields, show }: API) =>
-            fields.map((name) => (
-              <div key={name}>
-                {show && <input data-testid={`${name}.a`} name={`${name}.a`} />}
-                {show && <Field data-testid={`${name}.b`} name={`${name}.b`} />}
-              </div>
-            )),
-        });
+        const { getState, setError, setTouched, setDirty, setShow } =
+          renderHelper({
+            isShow: true,
+            defaultValues: { foo: formValue },
+            removeOnUnmounted,
+            children: ({ fields, show }: API) =>
+              fields.map((name) => (
+                <div key={name}>
+                  {show && (
+                    <input data-testid={`${name}.a`} name={`${name}.a`} />
+                  )}
+                  {show && (
+                    <Field data-testid={`${name}.b`} name={`${name}.b`} />
+                  )}
+                </div>
+              )),
+          });
 
         act(() => {
           setError("foo", [{ a: "Required", b: "Required" }]);
