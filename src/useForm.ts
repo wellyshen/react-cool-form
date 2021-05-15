@@ -1000,7 +1000,7 @@ export default <V extends FormValues = FormValues>({
   );
 
   const registerField = useCallback<RegisterField<V>>(
-    (validateOrOptions) => (field) => {
+    (value) => (field) => {
       if (
         !field?.name ||
         controlsRef.current[field.name] ||
@@ -1008,12 +1008,12 @@ export default <V extends FormValues = FormValues>({
       )
         return;
 
-      if (isFunction(validateOrOptions)) {
-        fieldValidatorsRef.current[field.name] = validateOrOptions;
+      if (isFunction(value)) {
+        fieldValidatorsRef.current[field.name] = value;
         return;
       }
 
-      const { validate: validator, ...parsers } = validateOrOptions;
+      const { validate: validator, ...parsers } = value;
 
       if (validator) fieldValidatorsRef.current[field.name] = validator;
       fieldParsersRef.current[field.name] = parsers;

@@ -152,7 +152,7 @@ interface FieldParser {
 
 export interface RegisterField<V = any> {
   (
-    validateOrOptions:
+    value:
       | FieldValidator<V>
       | {
           validate?: FieldValidator<V>;
