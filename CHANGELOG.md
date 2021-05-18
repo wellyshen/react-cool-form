@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.2.2
+
+### Patch Changes
+
+- [#619](https://github.com/wellyshen/react-cool-form/pull/619) [`8807efd`](https://github.com/wellyshen/react-cool-form/commit/8807efd0a3fea05e870c10a4ea22546f5f85a1fc) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(types): export more types
+
 ## 0.2.1
 
 ### Patch Changes
