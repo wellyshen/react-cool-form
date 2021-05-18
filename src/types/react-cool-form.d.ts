@@ -4,12 +4,14 @@ declare module "react-cool-form" {
   // Type utils
   type ObjMap<T = boolean> = Record<string, T>;
 
-  // useForm
   type DeepProps<V, T = any> = {
     [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
   };
 
-  interface EventOptions<V> {
+  // useForm
+  export type FormValues = ObjMap<any>;
+
+  export interface EventOptions<V extends FormValues = FormValues> {
     removeField: RemoveField;
     getState: GetState;
     setValue: SetValue;
@@ -22,95 +24,6 @@ declare module "react-cool-form" {
     reset: Reset<V>;
     submit: Submit<V>;
   }
-
-  interface Use<V> {
-    (
-      path: string | string[] | ObjMap<string>,
-      options?: { defaultValues?: V; errorWithTouched?: boolean }
-    ): any;
-  }
-
-  interface Focus {
-    (name: string, delay?: number): void;
-  }
-
-  interface RemoveField {
-    (
-      name: string,
-      exclude?: ("defaultValue" | "value" | "touched" | "dirty" | "error")[]
-    ): void;
-  }
-
-  interface GetState {
-    (path?: string | string[] | ObjMap<string>): any;
-  }
-
-  interface SetValue {
-    (
-      name: string,
-      value: any | PreviousValueFn,
-      options?: {
-        [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
-      }
-    ): void;
-  }
-
-  interface SetTouched {
-    (name: string, isTouched?: boolean, shouldValidate?: boolean): void;
-  }
-
-  interface SetDirty {
-    (name: string, isDirty?: boolean): void;
-  }
-
-  interface SetError {
-    (name: string, error: any | PreviousErrorFn): void;
-  }
-
-  interface ClearErrors {
-    (name?: string | string[]): void;
-  }
-
-  interface RegisterForm {
-    (element: HTMLElement | null): void;
-  }
-
-  interface RegisterFieldReturn {
-    (
-      field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
-    ): void;
-  }
-
-  interface RegisterField<V> {
-    (validate: FieldValidator<V>): RegisterFieldReturn;
-    (options: {
-      validate?: FieldValidator<V>;
-      valueAsNumber?: boolean;
-      valueAsDate?: boolean;
-      parse?: FieldParser;
-    }): RegisterFieldReturn;
-  }
-
-  interface RunValidation {
-    (name?: string | string[]): Promise<boolean>;
-  }
-
-  interface Reset<V> {
-    (
-      values?: V | PreviousValuesFn<V> | null,
-      exclude?: (keyof FormState<V>)[] | null,
-      event?: SyntheticEvent
-    ): void;
-  }
-
-  interface Submit<V> {
-    (event?: SyntheticEvent): Promise<{
-      values?: V;
-      errors?: FormErrors<V>;
-    }>;
-  }
-
-  export type FormValues = ObjMap<any>;
 
   export type FormErrors<E extends FormValues = FormValues> = DeepProps<E>;
 
@@ -181,6 +94,99 @@ declare module "react-cool-form" {
 
   export interface OnStateChange<V extends FormValues = FormValues> {
     (formState: FormState<V>): void;
+  }
+
+  export interface RegisterForm {
+    (element: HTMLElement | null): void;
+  }
+
+  export interface RegisterFieldReturn {
+    (
+      field: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null
+    ): void;
+  }
+
+  export interface FieldOptions<V extends FormValues = FormValues> {
+    validate?: FieldValidator<V>;
+    valueAsNumber?: boolean;
+    valueAsDate?: boolean;
+    parse?: FieldParser;
+  }
+
+  export interface RegisterField<V extends FormValues = FormValues> {
+    (validate: FieldValidator<V>): RegisterFieldReturn;
+    (options: FieldOptions<V>): RegisterFieldReturn;
+  }
+
+  export interface Focus {
+    (name: string, delay?: number): void;
+  }
+
+  export interface RemoveField {
+    (
+      name: string,
+      exclude?: ("defaultValue" | "value" | "touched" | "dirty" | "error")[]
+    ): void;
+  }
+
+  export interface UseOptions<V extends FormValues = FormValues> {
+    defaultValues?: V;
+    errorWithTouched?: boolean;
+  }
+
+  export interface Use<V extends FormValues = FormValues> {
+    (path: string | string[] | ObjMap<string>, options?: UseOptions<V>): any;
+  }
+
+  export interface GetState {
+    (path?: string | string[] | ObjMap<string>): any;
+  }
+
+  export type SetValueOptions = {
+    [k in "shouldValidate" | "shouldTouched" | "shouldDirty"]?: boolean;
+  };
+
+  export interface SetValue {
+    (
+      name: string,
+      value: any | PreviousValueFn,
+      options?: SetValueOptions
+    ): void;
+  }
+
+  export interface SetTouched {
+    (name: string, isTouched?: boolean, shouldValidate?: boolean): void;
+  }
+
+  export interface SetDirty {
+    (name: string, isDirty?: boolean): void;
+  }
+
+  export interface SetError {
+    (name: string, error: any | PreviousErrorFn): void;
+  }
+
+  export interface ClearErrors {
+    (name?: string | string[]): void;
+  }
+
+  export interface RunValidation {
+    (name?: string | string[]): Promise<boolean>;
+  }
+
+  export interface Reset<V extends FormValues = FormValues> {
+    (
+      values?: V | PreviousValuesFn<V> | null,
+      exclude?: (keyof FormState<V>)[] | null,
+      event?: SyntheticEvent
+    ): void;
+  }
+
+  export interface Submit<V extends FormValues = FormValues> {
+    (event?: SyntheticEvent): Promise<{
+      values?: V;
+      errors?: FormErrors<V>;
+    }>;
   }
 
   export type FormConfig<V extends FormValues = FormValues> = Partial<{
@@ -286,28 +292,28 @@ declare module "react-cool-form" {
   ): ControlledReturn;
 
   // useFieldArray
-  type HelperOptions = Partial<{
+  export type HelperOptions = Partial<{
     shouldTouched: boolean;
     shouldDirty: boolean;
   }>;
 
-  interface Push<T> {
+  export interface Push<T = any> {
     (value: T, options?: HelperOptions): void;
   }
 
-  interface Insert<T> {
+  export interface Insert<T = any> {
     (index: number, value: T, options?: HelperOptions): void;
   }
 
-  interface Remove<T> {
+  export interface Remove<T = any> {
     (index: number): T | void;
   }
 
-  interface Swap {
+  export interface Swap {
     (indexA: number, indexB: number): void;
   }
 
-  interface Move {
+  export interface Move {
     (from: number, to: number): void;
   }
 
