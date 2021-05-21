@@ -1,8 +1,8 @@
-<p align="center">
+<h1 align="center">
   <code><strong>Hi! friends, if this library has helped you out, please support us with a ⭐️</strong></code>
   <br /><br />
   <a href="https://react-cool-form.netlify.app" title="React Cool Form"><img src="https://react-cool-form.netlify.app/img/logo-github.svg" width="300px" alt="React Cool Form"></a>
-</p>
+</h1>
 
 <p align="center">React hooks for forms state and validation, less code more performant.</p>
 
