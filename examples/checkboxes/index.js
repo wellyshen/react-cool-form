@@ -21,7 +21,7 @@ const Group = ({ title, children, error }) => (
 );
 
 function App() {
-  const { form, mon } = useForm({
+  const { form, use } = useForm({
     defaultValues: { single: true, multiple: [] },
     validate: (values) => {
       if (!values.multiple.length) return { multiple: "Required" };
@@ -34,7 +34,7 @@ function App() {
       <Group title="Single">
         <Field label="😎" id="single" name="single" type="checkbox" />
       </Group>
-      <Group title="Multitple" error={mon("errors.multiple")}>
+      <Group title="Multitple" error={use("errors.multiple")}>
         <Field
           id="apple"
           name="multiple"

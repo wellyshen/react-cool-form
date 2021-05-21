@@ -3,6 +3,10 @@ import { FocusEventHandler, MutableRefObject, SyntheticEvent } from "react";
 // Utils
 export type ObjMap<T = boolean> = Record<string, T>;
 
+type DeepProps<V, T = any> = {
+  [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
+};
+
 // Global
 export type Methods<V = any> = {
   validateOnChange: boolean;
@@ -23,10 +27,6 @@ export type Methods<V = any> = {
 } & FormMethods<V>;
 
 // useState
-type DeepProps<V, T = any> = {
-  [K in keyof V]?: V[K] extends T ? T : DeepProps<V[K]>;
-};
-
 export type FormErrors<V> = DeepProps<V>;
 
 export interface FormState<V = any> {
@@ -84,6 +84,8 @@ export type Fields = Map<
     options?: (HTMLInputElement | HTMLOptionElement)[];
   }
 >;
+
+export type Parsers = ObjMap<Omit<FieldOptions, "validate">>;
 
 export type FieldArray = ObjMap<{ fields: ObjMap; reset: () => void }>;
 
@@ -150,17 +152,17 @@ interface FieldParser {
   (value: any): any;
 }
 
+interface FieldOptions<V = any> {
+  validate?: FieldValidator<V>;
+  valueAsNumber?: boolean;
+  valueAsDate?: boolean;
+  parse?: FieldParser;
+}
+
 export interface RegisterField<V = any> {
-  (
-    validateOrOptions:
-      | FieldValidator<V>
-      | {
-          validate?: FieldValidator<V>;
-          valueAsNumber?: boolean;
-          valueAsDate?: boolean;
-          parse?: FieldParser;
-        }
-  ): (field: FieldElement | null) => void;
+  (value: FieldValidator<V> | FieldOptions<V>): (
+    field: FieldElement | null
+  ) => void;
 }
 
 export interface HandleChangeEvent {
@@ -201,13 +203,6 @@ export interface GetFormState<V> {
   ): any;
 }
 
-export interface Use<V> {
-  (
-    path: Path,
-    options?: { defaultValues?: V; errorWithTouched?: boolean }
-  ): any;
-}
-
 export interface Focus {
   (name: string, delay?: number): void;
 }
@@ -217,6 +212,13 @@ export interface RemoveField {
     name: string,
     exclude?: ("defaultValue" | "value" | "touched" | "dirty" | "error")[]
   ): void;
+}
+
+export interface Use<V> {
+  (
+    path: Path,
+    options?: { defaultValues?: V; errorWithTouched?: boolean }
+  ): any;
 }
 
 export interface GetState {
@@ -267,12 +269,6 @@ export interface Submit<V> {
     errors?: FormErrors<V>;
   }>;
 }
-
-export type Parsers = ObjMap<{
-  valueAsNumber?: boolean;
-  valueAsDate?: boolean;
-  parse?: FieldParser;
-}>;
 
 export type FormConfig<V = any> = Partial<{
   id: string;

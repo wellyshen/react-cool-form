@@ -1,5 +1,23 @@
 # react-cool-form
 
+## 0.2.2
+
+### Patch Changes
+
+- [#619](https://github.com/wellyshen/react-cool-form/pull/619) [`8807efd`](https://github.com/wellyshen/react-cool-form/commit/8807efd0a3fea05e870c10a4ea22546f5f85a1fc) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(types): export more types
+
+## 0.2.1
+
+### Patch Changes
+
+- [#615](https://github.com/wellyshen/react-cool-form/pull/615) [`712bb21`](https://github.com/wellyshen/react-cool-form/commit/712bb21736bdc5990c38e1f822812f2b20081bea) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(types): use overloads for the type of `useFormState` and the `field` method of `useForm`
+
+## 0.2.0
+
+### Minor Changes
+
+- [#610](https://github.com/wellyshen/react-cool-form/pull/610) [`072da4b`](https://github.com/wellyshen/react-cool-form/commit/072da4b842d741e022ba2125528095e624c0f3d4) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): rename `mon` to `use`
+
 ## 0.0.171
 
 ### Patch Changes

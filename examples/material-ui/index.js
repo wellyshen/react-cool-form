@@ -17,11 +17,11 @@ import {
 import "./styles.scss";
 
 function App() {
-  const { form, mon } = useForm({
+  const { form, use } = useForm({
     defaultValues: { username: "", framework: "", fruit: [], mood: "" },
     onSubmit: (values) => alert(JSON.stringify(values, undefined, 2))
   });
-  const errors = mon("errors");
+  const errors = use("errors");
 
   return (
     <form ref={form} noValidate>
@@ -34,7 +34,7 @@ function App() {
       />
       <FormControl>
         <InputLabel htmlFor="framework">Framework</InputLabel>
-        {/* When working with select, we need to enable the native mon element or you can use the "NativeSelect" instead */}
+        {/* When working with select, we need to enable the native use element or you can use the "NativeSelect" instead */}
         <Select inputProps={{ id: "framework", name: "framework" }} native>
           <option aria-label="None" value="" />
           <option value="react">React</option>

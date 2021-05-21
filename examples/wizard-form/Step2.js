@@ -17,7 +17,7 @@ const Select = forwardRef(({ label, id, children, error, ...rest }, ref) => (
 const Step2 = () => {
   const [formValues, setFormValues] = useFormValues();
   const nav = useNavigate();
-  const { form, mon, field, submit } = useForm({
+  const { form, use, field, submit } = useForm({
     // Fill in form values from context
     defaultValues: { sports: ["football"], ...formValues },
     // Pass form values for other steps via context
@@ -26,7 +26,7 @@ const Step2 = () => {
       nav("/step-3");
     }
   });
-  const [errors, values] = mon(["errors", "values"], {
+  const [errors, values] = use(["errors", "values"], {
     errorWithTouched: true
   });
 
