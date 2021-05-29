@@ -350,7 +350,7 @@ setValue("fieldName", undefined); // The field will be unset: { fieldName: "valu
 
 ### setTouched
 
-`(name: string, isTouched?: boolean, shouldValidate?: boolean) => void`
+`(name: string, isTouched?: boolean, options?: Object) => void`
 
 This method allows us to manually set/clear the touched of a field. Useful for creating custom field touched handlers.
 
@@ -361,11 +361,9 @@ const { setTouched } = useForm();
 setTouched("fieldName");
 
 // Full parameters
-setTouched(
-  "fieldName",
-  true, // (Default = true) Sets the field as touched
-  true // (Default = "validateOnBlur" option) Triggers field validation
-);
+// 2nd: (Default = true) Sets the field as touched
+// 3rd: (Default = "validateOnBlur" option) Triggers field validation
+setTouched("fieldName", true, { shouldValidate: true });
 ```
 
 We can clear the touched of a field by the following way:

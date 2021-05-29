@@ -529,7 +529,7 @@ describe("useControlled", () => {
 
         act(() => {
           setError("foo", "Required");
-          setTouched("foo", true, false);
+          setTouched("foo", true, { shouldValidate: false });
           setDirty("foo");
           setShow(false);
         });
@@ -563,7 +563,7 @@ describe("useControlled", () => {
 
         act(() => {
           setError("foo", "Required");
-          setTouched("foo", true, false);
+          setTouched("foo", true, { shouldValidate: false });
           setDirty("foo");
           setShow(false);
         });

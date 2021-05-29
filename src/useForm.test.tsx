@@ -1839,7 +1839,7 @@ describe("useForm", () => {
         children: <input data-testid="foo" name="foo" required />,
       });
 
-      setTouched("foo", true, false);
+      setTouched("foo", true, { shouldValidate: false });
       await waitFor(() => expect(getState("errors.foo")).toBeUndefined());
 
       setTouched("foo");
@@ -1957,7 +1957,7 @@ describe("useForm", () => {
 
     act(() => {
       setError("foo", "Required");
-      setTouched("foo", true, false);
+      setTouched("foo", true, { shouldValidate: false });
       setDirty("foo");
       removeField(
         "foo",
@@ -2044,7 +2044,7 @@ describe("useForm", () => {
 
         act(() => {
           setError("foo", "Required");
-          setTouched("foo", true, false);
+          setTouched("foo", true, { shouldValidate: false });
           setDirty("foo");
           setShow(false);
         });
@@ -2101,7 +2101,7 @@ describe("useForm", () => {
 
         act(() => {
           setError("foo", "Required");
-          setTouched("foo", true, false);
+          setTouched("foo", true, { shouldValidate: false });
           setDirty("foo");
           setShow(false);
         });
@@ -2159,7 +2159,7 @@ describe("useForm", () => {
 
         act(() => {
           setError("foo", "Required");
-          setTouched("foo", true, false);
+          setTouched("foo", true, { shouldValidate: false });
           setDirty("foo");
           setShow(false);
         });
@@ -2194,7 +2194,7 @@ describe("useForm", () => {
       act(() => {
         setValue("foo", "🍎", { shouldValidate: false });
         setError("foo", "Required");
-        setTouched("foo", true, false);
+        setTouched("foo", true, { shouldValidate: false });
         setDirty("foo");
       });
       act(() => setShow(false));
