@@ -505,8 +505,8 @@ describe("useFieldArray", () => {
 
       act(() => {
         setError("foo", [{ a: "Required", b: "Required" }]);
-        setTouched("foo[0].a", true, false);
-        setTouched("foo[0].b", true, false);
+        setTouched("foo[0].a", true, { shouldValidate: false });
+        setTouched("foo[0].b", true, { shouldValidate: false });
         setDirty("foo[0].a");
         setDirty("foo[0].b");
         setShow(false);
@@ -547,8 +547,8 @@ describe("useFieldArray", () => {
 
       act(() => {
         setError("foo", [{ a: "Required", b: "Required" }]);
-        setTouched("foo[0].a", true, false);
-        setTouched("foo[0].b", true, false);
+        setTouched("foo[0].a", true, { shouldValidate: false });
+        setTouched("foo[0].b", true, { shouldValidate: false });
         setDirty("foo[0].a");
         setDirty("foo[0].b");
         setShow(false);
@@ -625,8 +625,8 @@ describe("useFieldArray", () => {
 
         act(() => {
           setError("foo", [{ a: "Required", b: "Required" }]);
-          setTouched("foo[0].a", true, false);
-          setTouched("foo[0].b", true, false);
+          setTouched("foo[0].a", true, { shouldValidate: false });
+          setTouched("foo[0].b", true, { shouldValidate: false });
           setDirty("foo[0].a");
           setDirty("foo[0].b");
           setShow(false);
@@ -659,8 +659,8 @@ describe("useFieldArray", () => {
 
         act(() => {
           setError("foo", [{ a: "Required", b: "Required" }]);
-          setTouched("foo[0].a", true, false);
-          setTouched("foo[0].b", true, false);
+          setTouched("foo[0].a", true, { shouldValidate: false });
+          setTouched("foo[0].b", true, { shouldValidate: false });
           setDirty("foo[0].a");
           setDirty("foo[0].b");
           setShow(false);
@@ -712,8 +712,8 @@ describe("useFieldArray", () => {
 
         act(() => {
           setError("foo", [{ a: "Required", b: "Required" }]);
-          setTouched("foo[0].a", true, false);
-          setTouched("foo[0].b", true, false);
+          setTouched("foo[0].a", true, { shouldValidate: false });
+          setTouched("foo[0].b", true, { shouldValidate: false });
           setDirty("foo[0].a");
           setDirty("foo[0].b");
           setShow(false);

@@ -236,7 +236,11 @@ export interface SetValue {
 }
 
 export interface SetTouched {
-  (name: string, isTouched?: boolean, shouldValidate?: boolean): void;
+  (
+    name: string,
+    isTouched?: boolean,
+    options?: { shouldValidate?: boolean }
+  ): void;
 }
 
 export interface SetDirty {

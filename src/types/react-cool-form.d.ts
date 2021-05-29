@@ -154,8 +154,12 @@ declare module "react-cool-form" {
     ): void;
   }
 
+  export type SetTouchedOptions = {
+    shouldValidate?: boolean;
+  };
+
   export interface SetTouched {
-    (name: string, isTouched?: boolean, shouldValidate?: boolean): void;
+    (name: string, isTouched?: boolean, options?: SetTouchedOptions): void;
   }
 
   export interface SetDirty {
