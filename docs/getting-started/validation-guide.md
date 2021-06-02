@@ -286,7 +286,7 @@ const App = () => {
 
 ## When/How Does Validation Run?
 
-By default, React Cool Form runs all the validation methods as follows. You can tell React Cool Form when to run them by changing the [validateOnChange](../api-reference/use-form#validateonchange) and/or [validateOnBlur](../api-reference/use-form#validateonblur) depends on your needs.
+By default, React Cool Form runs all the validation methods as follows. You can tell React Cool Form when to run them by changing the [validateOnChange](../api-reference/use-form#validateonchange) and/or [validateOnBlur](../api-reference/use-form#validateonblur), depending on your needs.
 
 ### When to Run
 
