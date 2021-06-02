@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.3.0
+
+### Minor Changes
+
+- [#633](https://github.com/wellyshen/react-cool-form/pull/633) [`bcb718a`](https://github.com/wellyshen/react-cool-form/commit/bcb718add9b21c49e6832b037e0e913d9c096c6c) Thanks [@wellyshen](https://github.com/wellyshen)! - Refactor(useForm): turn the `shouldValidate` parameter of `setTouched` to object for the purpose of API consistency
+
 ## 0.2.2
 
 ### Patch Changes
