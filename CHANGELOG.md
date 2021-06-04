@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.3.1
+
+### Patch Changes
+
+- [#640](https://github.com/wellyshen/react-cool-form/pull/640) [`61e1d53`](https://github.com/wellyshen/react-cool-form/commit/61e1d533e3d51fff33cbd91997adf280167fb7fc) Thanks [@wellyshen](https://github.com/wellyshen)! - refactor(types): use `RefObject` as the type of `form` method
+
 ## 0.3.0
 
 ### Minor Changes
