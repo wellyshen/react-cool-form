@@ -1,5 +1,5 @@
 declare module "react-cool-form" {
-  import { FocusEventHandler, SyntheticEvent } from "react";
+  import { FocusEventHandler, RefCallback, SyntheticEvent } from "react";
 
   // Type utils
   type ObjMap<T = boolean> = Record<string, T>;
@@ -96,9 +96,7 @@ declare module "react-cool-form" {
     (formState: FormState<V>): void;
   }
 
-  export interface RegisterForm {
-    (element: HTMLElement | null): void;
-  }
+  export type RegisterForm = RefCallback<HTMLElement>;
 
   export interface RegisterFieldReturn {
     (
