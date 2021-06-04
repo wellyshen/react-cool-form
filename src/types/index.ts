@@ -1,4 +1,9 @@
-import { FocusEventHandler, MutableRefObject, SyntheticEvent } from "react";
+import {
+  FocusEventHandler,
+  MutableRefObject,
+  RefCallback,
+  SyntheticEvent,
+} from "react";
 
 // Utils
 export type ObjMap<T = boolean> = Record<string, T>;
@@ -140,9 +145,7 @@ interface FormValidator<V> {
     | Promise<FormErrors<V> | false | void>;
 }
 
-export interface RegisterForm {
-  (element: HTMLElement | null): void;
-}
+export type RegisterForm = RefCallback<HTMLElement>;
 
 export interface FieldValidator<V> {
   (value: any, values: V): any | Promise<any>;
