@@ -133,6 +133,17 @@ export default <V extends FormValues = FormValues>({
     [setStateRef, stateRef]
   );
 
+  const handleFocus = useCallback((name: string) => {
+    const field =
+      fieldsRef.current.get(name)?.field ||
+      fieldsRef.current.get(
+        Array.from(fieldsRef.current.keys()).find((n) => n.startsWith(name)) ||
+          ""
+      )?.field;
+
+    if (field && isFunction(field.focus)) field.focus();
+  }, []);
+
   const getFields = useCallback(
     (form: HTMLElement) =>
       Array.from(form.querySelectorAll("input,textarea,select"))
@@ -490,17 +501,44 @@ export default <V extends FormValues = FormValues>({
   ]);
 
   const runValidation = useCallback<RunValidation>(
-    (name) => {
-      if (!name) return validateForm().then((errors) => isEmptyObject(errors));
+    (name, { shouldFocus = focusOnError } = {}) => {
+      let names: string[] = [];
+
+      if (shouldFocus) {
+        names = Array.isArray(shouldFocus)
+          ? shouldFocus
+          : Array.from(fieldsRef.current.keys());
+        names = isFunction(shouldFocus) ? shouldFocus(names) : names;
+      }
+
+      if (!name)
+        return validateForm().then((errors) => {
+          if (shouldFocus) {
+            const fieldName = names.find((n) => get(errors, n));
+            if (fieldName) handleFocus(fieldName);
+          }
+
+          return isEmptyObject(errors);
+        });
 
       if (Array.isArray(name))
-        return Promise.all(name.map((n) => validateField(n))).then(
-          (errors) => !compact(errors).length
-        );
+        return Promise.all(name.map((n) => validateField(n))).then((errors) => {
+          if (shouldFocus) {
+            const fieldName = names.find((n) => !!errors[name.indexOf(n)]);
+            if (fieldName) handleFocus(fieldName);
+          }
 
-      return validateField(name).then((error) => !error);
+          return !compact(errors).length;
+        });
+
+      return validateField(name).then((error) => {
+        if (shouldFocus && error && names.includes(name)) handleFocus(name);
+
+        return !error;
+      });
     },
-    [validateField, validateForm]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [handleFocus, validateField, validateForm]
   );
 
   const getFormState = useCallback<GetFormState<V>>(
@@ -565,17 +603,6 @@ export default <V extends FormValues = FormValues>({
     },
     [stateRef]
   );
-
-  const handleFocus = useCallback((name: string) => {
-    const field =
-      fieldsRef.current.get(name)?.field ||
-      fieldsRef.current.get(
-        Array.from(fieldsRef.current.keys()).find((n) => n.startsWith(name)) ||
-          ""
-      )?.field;
-
-    if (field && isFunction(field.focus)) field.focus();
-  }, []);
 
   const focus = useCallback<Focus>(
     (name, delay) => {
@@ -774,19 +801,7 @@ export default <V extends FormValues = FormValues>({
 
         if (!isValid) {
           const { errors } = stateRef.current;
-
           onErrorRef.current(errors, getOptions(), e);
-
-          if (focusOnError) {
-            let names = Array.isArray(focusOnError)
-              ? focusOnError
-              : Array.from(fieldsRef.current.keys());
-            names = isFunction(focusOnError) ? focusOnError(names) : names;
-            const name = names.find((n) => get(errors, n));
-
-            if (name) handleFocus(name);
-          }
-
           return { errors };
         }
 
@@ -801,16 +816,7 @@ export default <V extends FormValues = FormValues>({
         setStateRef("isSubmitting", false);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      getOptions,
-      handleFocus,
-      onErrorRef,
-      onSubmitRef,
-      runValidation,
-      setStateRef,
-      stateRef,
-    ]
+    [getOptions, onErrorRef, onSubmitRef, runValidation, setStateRef, stateRef]
   );
 
   const handleChangeEvent = useCallback<HandleChangeEvent>(
