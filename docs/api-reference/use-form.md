@@ -144,8 +144,9 @@ The form submission handler will be called when the form is submitted (or when t
 
 ```js
 const methods = useForm({
-  onSubmit: async (values, options, e) => {
-    const {
+  onSubmit: async (
+    values,
+    {
       getState,
       setValue,
       setTouched,
@@ -156,9 +157,10 @@ const methods = useForm({
       removeField,
       submit,
       reset,
-    } = options;
-
-    // ...
+    },
+    e
+  ) => {
+    /* Do something... */
   },
 });
 ```
@@ -173,8 +175,9 @@ The form error handler that is called when the form is submitted (or when the [s
 
 ```js
 const methods = useForm({
-  onError: (errors, options, e) => {
-    const {
+  onError: (
+    errors,
+    {
       getState,
       setValue,
       setTouched,
@@ -185,9 +188,10 @@ const methods = useForm({
       removeField,
       submit,
       reset,
-    } = options;
-
-    // ...
+    },
+    e
+  ) => {
+    /* Do something... */
   },
 });
 ```
@@ -202,8 +206,9 @@ The form reset handler that is called when the form is reset (or when the [reset
 
 ```js
 const methods = useForm({
-  onReset: (values, options, e) => {
-    const {
+  onReset: (
+    values,
+    {
       getState,
       setValue,
       setTouched,
@@ -214,9 +219,10 @@ const methods = useForm({
       removeField,
       submit,
       reset,
-    } = options;
-
-    // ...
+    },
+    e
+  ) => {
+    /* Do something... */
   },
 });
 ```
@@ -361,9 +367,13 @@ const { setTouched } = useForm();
 setTouched("fieldName");
 
 // Full parameters
-// 2nd: (Default = true) Sets the field as touched
-// 3rd: (Default = "validateOnBlur" option) Triggers field validation
-setTouched("fieldName", true, { shouldValidate: true });
+setTouched(
+  "fieldName",
+  true, // (Default = true) Sets the field as touched
+  {
+    shouldValidate: true, // (Default = "validateOnBlur" option) Triggers field validation
+  }
+);
 ```
 
 We can clear the touched of a field by the following way:
@@ -432,7 +442,7 @@ clearErrors(["foo.bar", "foo.baz"]); // Clears "foo.bar" and "foo.baz" respectiv
 
 ### runValidation
 
-`(name?: string | string[]) => Promise<boolean>`
+`(name?: string | string[], options?: Object) => Promise<boolean>`
 
 This method allows us to manually run validation for the form or field(s).
 
@@ -456,6 +466,11 @@ const validateForm = async () => {
   const isValid = await runValidation();
   console.log("The form is: ", isValid ? "valid" : "invalid");
 };
+
+// Full parameters
+runValidation("fieldName", {
+  shouldFocus: true, // (Default = "focusOnError" option) To focus to the first field with an error within the specified fields
+});
 ```
 
 👉🏻 See the [Validation Guide](../getting-started/validation-guide) to learn more.

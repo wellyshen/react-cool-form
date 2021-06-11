@@ -4,14 +4,14 @@ import { useForm } from "react-cool-form";
 
 export default () => {
   const { form, runValidation } = useForm({
-    validate: () => ({ foo: "Required" }),
-    // focusOnError: ["foo", "bar"],
+    // validate: () => ({ foo: "Required" }),
+    focusOnError: ["foo"],
   });
 
   return (
     <>
       <form ref={form} noValidate>
-        <input name="foo" />
+        <input name="foo" required />
         <input name="bar" required />
         {/* <input type="submit" /> */}
       </form>
