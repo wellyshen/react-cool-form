@@ -62,7 +62,7 @@ const App = () => {
 We can configure the [mode of the built-in validation](../getting-started/validation-guide#displaying-error-messages) as follows:
 
 - `"message"` (default): Returns [a localized message](https://developer.mozilla.org/en-US/docs/Web/API/HTMLObjectElement/validationMessage) that describes the validation constraints that the field does not satisfy (if any)
-- `"state"`: Returns the **key of the invalid property** (e.g. "valueMissing", "tooShort" etc.) of the [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) (if any)
+- `"state"`: Returns the **key of the invalid property** (e.g. "valueMissing", "tooShort", etc.) of the [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) (if any)
 - `false`: Disable the [built-in validation](../getting-started/validation-guide#built-in-validation)
 
 ### validateOnChange
