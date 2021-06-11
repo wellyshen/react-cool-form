@@ -172,8 +172,15 @@ declare module "react-cool-form" {
     (name?: string | string[]): void;
   }
 
+  export type RunValidationOptions = {
+    shouldFocus?: boolean;
+  };
+
   export interface RunValidation {
-    (name?: string | string[]): Promise<boolean>;
+    (
+      name?: string | string[],
+      options?: RunValidationOptions
+    ): Promise<boolean>;
   }
 
   export interface Reset<V extends FormValues = FormValues> {
