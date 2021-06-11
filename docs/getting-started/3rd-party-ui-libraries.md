@@ -7,7 +7,7 @@ Life is hard but coding can be easier. The reason we ❤️ open-source software
 
 ## 1. Seamless Integration
 
-[Uncontrolled components](https://reactjs.org/docs/uncontrolled-components.html) or components that rely on native input elements (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) to work under the hood, we need to do nothing 😂. For example: [Material-UI](https://material-ui.com)'s [TextField](https://material-ui.com/components/text-fields), [Checkbox](https://material-ui.com/components/checkboxes), and [Select](https://material-ui.com/components/selects) etc.
+[Uncontrolled components](https://reactjs.org/docs/uncontrolled-components.html) or components that rely on native input elements (i.e. [input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input), [select](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select), and [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea)) to work under the hood, we need to do nothing 😂. For example: [Material-UI](https://material-ui.com)'s [TextField](https://material-ui.com/components/text-fields), [Checkbox](https://material-ui.com/components/checkboxes), and [Select](https://material-ui.com/components/selects), etc.
 
 [![Edit RCF - Material-UI](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/rcf-material-ui-xyi0b?fontsize=14&hidenavigation=1&theme=dark)
 

@@ -172,8 +172,15 @@ declare module "react-cool-form" {
     (name?: string | string[]): void;
   }
 
+  export type RunValidationOptions = {
+    shouldFocus?: boolean;
+  };
+
   export interface RunValidation {
-    (name?: string | string[]): Promise<boolean>;
+    (
+      name?: string | string[],
+      options?: RunValidationOptions
+    ): Promise<boolean>;
   }
 
   export interface Reset<V extends FormValues = FormValues> {
@@ -319,12 +326,14 @@ declare module "react-cool-form" {
     (from: number, to: number): void;
   }
 
-  export type FieldArrayConfig<T = any, V extends FormValues = FormValues> =
-    Partial<{
-      formId: string;
-      defaultValue: T[];
-      validate: FieldValidator<V>;
-    }>;
+  export type FieldArrayConfig<
+    T = any,
+    V extends FormValues = FormValues
+  > = Partial<{
+    formId: string;
+    defaultValue: T[];
+    validate: FieldValidator<V>;
+  }>;
 
   export type FieldArrayReturn<T = any> = [
     string[],

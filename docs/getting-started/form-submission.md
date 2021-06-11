@@ -81,7 +81,7 @@ Are there any errors?
 
 ## Manually Triggering Submission
 
-For some reasons (e.g. design requirement, auto-retry etc.), we might need to trigger a submission manually. However, we can use the [submit](../api-reference/use-form#submit) method to achieve it.
+For some reasons (e.g. design requirement, auto-retry, etc.), we might need to trigger a submission manually. However, we can use the [submit](../api-reference/use-form#submit) method to achieve it.
 
 ```js {17}
 import { useForm } from "react-cool-form";
