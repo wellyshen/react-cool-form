@@ -1,6 +1,5 @@
 {
   "name": "rcf-conditional-fields",
-  "version": "0.0.0",
   "description": "The conditional fields example of RCF.",
   "main": "index.js",
   "dependencies": {
