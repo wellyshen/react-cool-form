@@ -1,13 +1,12 @@
 {
   "name": "rcf-radio-group",
-  "version": "0.0.0",
   "description": "The radio group example of RCF.",
   "main": "index.js",
   "dependencies": {
-    "react": "^17.0.1",
+    "react": "^17.0.2",
     "react-cool-form": "latest",
-    "react-dom": "^17.0.1",
-    "react-scripts": "^4.0.2"
+    "react-dom": "^17.0.2",
+    "react-scripts": "^4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
