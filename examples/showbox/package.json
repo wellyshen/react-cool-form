@@ -1,6 +1,5 @@
 {
   "name": "rcf-showbox",
-  "version": "0.0.0",
   "description": "The showbox of RCF.",
   "main": "index.js",
   "dependencies": {
