@@ -1,6 +1,5 @@
 {
   "name": "rcf-checkboxes",
-  "version": "0.0.0",
   "description": "The checkboxes example of RCF.",
   "main": "index.js",
   "dependencies": {
