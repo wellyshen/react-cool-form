@@ -1,6 +1,5 @@
 {
   "name": "rcf-quick-start",
-  "version": "0.0.0",
   "description": "The quick start of RCF.",
   "main": "index.js",
   "dependencies": {
