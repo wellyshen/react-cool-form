@@ -1,6 +1,5 @@
 {
   "name": "rcf-react-select",
-  "version": "0.0.0",
   "description": "The react select example of RCF.",
   "main": "index.js",
   "dependencies": {
