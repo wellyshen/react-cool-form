@@ -1,6 +1,5 @@
 {
   "name": "rcf-schema",
-  "version": "0.0.0",
   "description": "The schema example of RCF.",
   "main": "index.js",
   "dependencies": {

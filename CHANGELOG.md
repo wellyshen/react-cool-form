@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.4.0
+
+### Minor Changes
+
+- [#654](https://github.com/wellyshen/react-cool-form/pull/654) [`291199a`](https://github.com/wellyshen/react-cool-form/commit/291199a021e6ae81af5bb5b79b77ac1f27f8b511) Thanks [@wellyshen](https://github.com/wellyshen)! - feat(useForm): add `shouldFocus` option for `runValidation` method
+
 ## 0.3.1
 
 ### Patch Changes

@@ -1,6 +1,5 @@
 {
   "name": "rcf-without-form-element",
-  "version": "0.0.0",
   "description": "The without form element example of RCF.",
   "main": "index.js",
   "dependencies": {

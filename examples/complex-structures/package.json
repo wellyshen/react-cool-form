@@ -1,6 +1,5 @@
 {
   "name": "rcf-complex-structures",
-  "version": "0.0.0",
   "description": "The complex structures example of RCF.",
   "main": "index.js",
   "dependencies": {
