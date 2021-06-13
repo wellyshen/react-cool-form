@@ -1,6 +1,5 @@
 {
   "name": "rcf-wizard-form",
-  "version": "0.0.0",
   "description": "The wizard form example of RCF.",
   "main": "index.js",
   "dependencies": {
