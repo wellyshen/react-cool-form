@@ -35,6 +35,7 @@ module.exports = {
       "examples/isolating-rerendering",
       "examples/wizard-form",
       "examples/without-form-element",
+      "examples/virtualized-lists",
     ],
     "API Reference": [
       "api-reference/use-form",
