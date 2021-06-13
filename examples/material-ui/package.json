@@ -1,6 +1,5 @@
 {
   "name": "rcf-material-ui",
-  "version": "0.0.0",
   "description": "The material-ui example of RCF.",
   "main": "index.js",
   "dependencies": {
