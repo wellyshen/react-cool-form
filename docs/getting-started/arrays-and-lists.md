@@ -3,7 +3,7 @@ id: arrays-and-lists
 title: Arrays and Lists
 ---
 
-There can be situations in which the user needs to add or remove fields from a form depending on the amount of fields they need to fill out. Using React Cool Form, we can use the [useFieldArray](../api-reference/use-field-array) hook to easily deal with this situation.
+There can be situations in which the user needs to add or remove fields from a form depends on the amount of fields they need to fill out. Using React Cool Form, we can use the [useFieldArray](../api-reference/use-field-array) hook to easily deal with this situation.
 
 ## Dealing with Array Fields
 
