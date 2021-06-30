@@ -115,7 +115,7 @@ const App = () => {
 
 > 💡 If you have written any blog post or article about React Cool Form, please open a PR to add it here.
 
-- Featured on [React Status #243](https://react.statuscode.com/issues/245).
+- Featured on [React Status #245](https://react.statuscode.com/issues/245).
 
 ## Contributors ✨
 
