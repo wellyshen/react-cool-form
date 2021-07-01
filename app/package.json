@@ -31,17 +31,17 @@
   },
   "dependencies": {
     "@emotion/react": "^11.4.0",
-    "@types/node": "^15.12.2",
+    "@types/node": "^15.12.4",
     "@types/react": "^17.0.11",
-    "@types/react-dom": "^17.0.7",
+    "@types/react-dom": "^17.0.8",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-    "typescript": "~4.3.2"
+    "typescript": "~4.3.4"
   },
   "devDependencies": {
-    "eslint-config-welly": "^1.11.1",
+    "eslint-config-welly": "^1.11.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.1",
     "rimraf": "^3.0.2",
