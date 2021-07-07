@@ -12,9 +12,9 @@
     "lint": "prettier -w . -u --loglevel silent"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-beta.2",
-    "@docusaurus/preset-classic": "2.0.0-beta.2",
-    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.2",
+    "@docusaurus/core": "^2.0.0-beta.3",
+    "@docusaurus/preset-classic": "^2.0.0-beta.3",
+    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.3",
     "@mdx-js/react": "^1.6.22",
     "clsx": "^1.1.1",
     "docusaurus-plugin-sass": "^0.2.1",
@@ -34,7 +34,7 @@
     ]
   },
   "devDependencies": {
-    "prettier": "^2.3.1",
+    "prettier": "^2.3.2",
     "sass": "^1.35.1"
   }
 }
