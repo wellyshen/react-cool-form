@@ -113,7 +113,7 @@ export default <V extends FormValues = FormValues>({
     submitCount: 0,
   });
   const { stateRef, setStateRef, observersRef } = useState<V>(
-    initialStateRef.current,
+    { ...initialStateRef.current },
     onStateChange
   );
 

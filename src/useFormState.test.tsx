@@ -12,7 +12,8 @@ interface Props extends FormStateConfig {
   children: (props: any) => JSX.Element;
   path?: Path;
   formDefaultValues?: any;
-  isError?: boolean;
+  errorVal?: string;
+  resetVal?: string;
   isTouched?: boolean;
   callback?: FormStateCallback;
   onRender?: () => void;
@@ -23,13 +24,14 @@ const Form = ({
   formId,
   path,
   formDefaultValues = defaultValues,
-  isError,
+  errorVal,
+  resetVal,
   isTouched,
   callback,
   onRender = () => null,
   ...rest
 }: Props) => {
-  const { form, setError, setTouched } = useForm({
+  const { form, setError, setTouched, reset } = useForm({
     id: formId,
     defaultValues: formDefaultValues,
   });
@@ -39,9 +41,10 @@ const Form = ({
   onRender();
 
   useEffect(() => {
-    if (isError) setError("foo", error);
+    if (errorVal) setError("foo", errorVal);
+    if (resetVal) reset({ foo: resetVal });
     if (isTouched) setTouched("foo");
-  }, [isError, isTouched, setError, setTouched]);
+  }, [errorVal, isTouched, reset, resetVal, setError, setTouched]);
 
   return <form ref={form}>{children(props)}</form>;
 };
@@ -119,6 +122,11 @@ describe("useFormState", () => {
     );
   });
 
+  it("should get reset value correctly", () => {
+    const resetVal = "🍎";
+    expect(renderHelper({ path: "values.foo", resetVal })).toBe(resetVal);
+  });
+
   it("should get state with correct format", () => {
     expect(renderHelper({ path: "values" })).toEqual(defaultValues);
     expect(renderHelper({ path: "values.foo" })).toBe(defaultValues.foo);
@@ -151,7 +159,7 @@ describe("useFormState", () => {
   });
 
   it("should get error with touched", () => {
-    const args = { path: "errors.foo", isError: true };
+    const args = { path: "errors.foo", errorVal: error };
 
     expect(renderHelper(args)).not.toBeUndefined();
 

@@ -2084,12 +2084,16 @@ describe("useForm", () => {
     const value = "🍎";
     fireEvent.input(screen.getByTestId("foo"), { target: { value } });
     await waitFor(() => {
-      expect(onStateChange).toHaveBeenCalledTimes(2);
+      expect(onStateChange).toHaveBeenCalledTimes(3);
       expect(onStateChange).toHaveBeenNthCalledWith(1, {
+        ...initialState,
+        values: { foo: "" },
+      });
+      expect(onStateChange).toHaveBeenNthCalledWith(2, {
         ...initialState,
         values: { foo: value },
       });
-      expect(onStateChange).toHaveBeenNthCalledWith(2, {
+      expect(onStateChange).toHaveBeenNthCalledWith(3, {
         ...initialState,
         values: { foo: value },
         dirty: { foo: true },
