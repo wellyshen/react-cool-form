@@ -66,11 +66,13 @@ export default <T = any, V extends FormValues = FormValues>(
   const [fields, setFields] = useState<string[]>(getFields(true));
 
   const updateFields = useCallback(() => {
-    setFields(getFields());
-    setNodesOrValues(getState("values"), {
-      shouldSetValues: false,
-      fields: Object.keys(fieldArrayRef.current[name].fields),
-    });
+    if (fieldArrayRef.current[name]) {
+      setFields(getFields());
+      setNodesOrValues(getState("values"), {
+        shouldSetValues: false,
+        fields: Object.keys(fieldArrayRef.current[name].fields),
+      });
+    }
   }, [fieldArrayRef, getFields, getState, name, setNodesOrValues]);
 
   useEffect(() => {
@@ -83,14 +85,14 @@ export default <T = any, V extends FormValues = FormValues>(
     }
 
     return () => {
-      if (shouldRemoveField(name)) removeField(name);
+      if (shouldRemoveField(name)) removeField(name, ["defaultValue"]);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!fieldArrayRef.current[name])
     fieldArrayRef.current[name] = {
-      reset: updateFields,
+      update: updateFields,
       fields: {},
     };
   if (validate) fieldValidatorsRef.current[name] = validate;
@@ -106,8 +108,8 @@ export default <T = any, V extends FormValues = FormValues>(
       let state = getState();
 
       (["values", "touched", "errors", "dirty"] as Keys[]).forEach((key) => {
-        const value = state[key][name];
-        const fieldsLength = state.values[name]?.length;
+        const value = get(state[key], name);
+        const fieldsLength = get(state.values, name)?.length;
 
         if (
           key === "values" ||
@@ -117,15 +119,12 @@ export default <T = any, V extends FormValues = FormValues>(
         )
           state = set(
             state,
-            key,
-            {
-              ...state[key],
-              [name]: handler(
-                Array.isArray(value) ? [...value] : [],
-                key,
-                fieldsLength ? fieldsLength - 1 : 0
-              ),
-            },
+            `${key}.${name}`,
+            handler(
+              Array.isArray(value) ? [...value] : [],
+              key,
+              fieldsLength ? fieldsLength - 1 : 0
+            ),
             true
           );
       });

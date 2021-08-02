@@ -704,7 +704,7 @@ export default <V extends FormValues = FormValues>({
       setNodeValue(name, value);
 
       isFieldArray(fieldArrayRef.current, name, (key) =>
-        fieldArrayRef.current[key].reset()
+        fieldArrayRef.current[key].update()
       );
 
       if (shouldTouched) setTouched(name, true, { shouldValidate: false });
@@ -774,7 +774,7 @@ export default <V extends FormValues = FormValues>({
       setStateRef("", state);
       onResetRef.current(state.values, getOptions(), e);
 
-      Object.values(fieldArrayRef.current).forEach((field) => field.reset());
+      Object.values(fieldArrayRef.current).forEach((field) => field.update());
     },
     [getOptions, onResetRef, setNodesOrValues, setStateRef, stateRef]
   );
