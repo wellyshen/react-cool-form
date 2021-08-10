@@ -50,7 +50,7 @@ export default <T = any, V extends FormValues = FormValues>(
   } = methods;
 
   const getFields = useCallback(
-    (init = false): string[] => {
+    (init = false) => {
       let fields = getState(name);
 
       if (init && isUndefined(fields)) fields = defaultValue;
@@ -63,7 +63,7 @@ export default <T = any, V extends FormValues = FormValues>(
     [getState, name]
   );
 
-  const [fields, setFields] = useState<string[]>(getFields(true));
+  const [fields, setFields] = useState(getFields(true));
 
   const updateFields = useCallback(() => {
     setFields(getFields());
