@@ -68,7 +68,7 @@ export default <T = any, V extends FormValues = FormValues>(
     [getState, name]
   );
 
-  const [fields, setFields] = useState<string[]>(getFields(true));
+  const [fields, setFields] = useState(getFields(true));
 
   useEffect(
     () =>
