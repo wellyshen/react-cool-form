@@ -2,20 +2,26 @@ import isFieldArray from "./isFieldArray";
 
 describe("isFieldArray", () => {
   it("should work correctly", () => {
-    // @ts-expect-error
-    expect(isFieldArray({ foo: true }, "foo[0].a")).toBe("foo");
+    const value = { fields: {}, update: () => null };
+    const foo = new Map([
+      ["foo", value],
+      ["foo[0].a[0]", value],
+    ]);
 
-    // @ts-expect-error
-    expect(isFieldArray({ foo: true }, "bar[0].a")).toBeUndefined();
+    expect(isFieldArray(foo, "foo[0].a")).toBe("foo");
+
+    expect(isFieldArray(foo, "foo[0].a[0].b")).toBe("foo[0].a[0]");
+
+    expect(isFieldArray(foo, "bar[0].a")).toBeUndefined();
 
     let callback = jest.fn();
-    // @ts-expect-error
-    isFieldArray({ foo: true }, "foo[0].a", callback);
+
+    isFieldArray(foo, "foo[0].a", callback);
     expect(callback).toHaveBeenCalledWith("foo");
 
     callback = jest.fn();
-    // @ts-expect-error
-    isFieldArray({ foo: true }, "bar[0].a", callback);
+
+    isFieldArray(foo, "bar[0].a", callback);
     expect(callback).not.toHaveBeenCalled();
   });
 });
