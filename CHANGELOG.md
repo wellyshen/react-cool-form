@@ -1,5 +1,11 @@
 # react-cool-form
 
+## 0.4.1
+
+### Patch Changes
+
+- [#697](https://github.com/wellyshen/react-cool-form/pull/697) [`87eb83e`](https://github.com/wellyshen/react-cool-form/commit/87eb83e32aa11c0ddc6d87e3b5ba1e53886ed622) Thanks [@wellyshen](https://github.com/wellyshen)! - fix: `reset` method not working
+
 ## 0.4.0
 
 ### Minor Changes

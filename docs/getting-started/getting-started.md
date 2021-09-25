@@ -28,7 +28,7 @@ React Cool Form supports all major browsers. For older browsers (e.g. IE11) with
 
 ## CDN
 
-If you're not using a module bundler or package manager. We also provide a [UMD](https://github.com/umdjs/umd) build which is available over the [unpkg.com](https://unpkg.com) CDN. Simply use a `<script>` tag to add it after [React CND links](https://reactjs.org/docs/cdn-links.html) as below:
+If you're not using a module bundler or package manager. We also provide a [UMD](https://github.com/umdjs/umd) build which is available over the [unpkg.com](https://unpkg.com) CDN. Simply use a `<script>` tag to add it after [React CDN links](https://reactjs.org/docs/cdn-links.html) as below:
 
 <!-- prettier-ignore-start -->
 ```html
