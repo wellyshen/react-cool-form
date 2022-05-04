@@ -1,4 +1,4 @@
 module.exports = {
-  extends: ["react-app", "react-app/jest", "welly"],
+  extends: ["react-app", "welly"],
   rules: { "react/react-in-jsx-scope": "off" },
 };
