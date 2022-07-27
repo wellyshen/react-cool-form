@@ -5,8 +5,6 @@
 
 <p align="center">React hooks for forms state and validation, less code more performant.</p>
 
-> ⚠️ Thank you for supporting me, this library isn't maintained anymore. Please consider other libraries.
-
 <div align="center">
 
 [![npm version](https://img.shields.io/npm/v/react-cool-form?style=flat-square)](https://www.npmjs.com/package/react-cool-form)
@@ -16,6 +14,8 @@
 [![netlify deploy](https://img.shields.io/netlify/3c201e27-b611-4512-b827-9523af7a1ae5?style=flat-square)](https://app.netlify.com/sites/react-cool-form/deploys)
 
 </div>
+
+> ⚠️ Thank you for supporting me, this library isn't maintained anymore. Please consider other libraries.
 
 ## Features
 
