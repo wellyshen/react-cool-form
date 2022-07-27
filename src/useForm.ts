@@ -90,7 +90,7 @@ export default <V extends FormValues = FormValues>({
   const formRef = useRef<HTMLElement>();
   const fieldsRef = useRef<Fields>(new Map());
   const fieldParsersRef = useRef<Parsers>({});
-  const fieldArrayRef = useRef<FieldArray>({});
+  const fieldArrayRef = useRef<FieldArray>(new Map());
   const controlsRef = useRef<ObjMap>({});
   const formValidatorRef = useLatest(validate);
   const fieldValidatorsRef = useRef<ObjMap<FieldValidator<V>>>({});
@@ -183,7 +183,7 @@ export default <V extends FormValues = FormValues>({
           const fieldArrayName = isFieldArray(fieldArrayRef.current, name);
 
           if (fieldArrayName)
-            fieldArrayRef.current[fieldArrayName].fields[name] = true;
+            fieldArrayRef.current.get(fieldArrayName)!.fields[name] = true;
 
           acc.set(name, {
             ...acc.get(name),
@@ -704,7 +704,7 @@ export default <V extends FormValues = FormValues>({
       setNodeValue(name, value);
 
       isFieldArray(fieldArrayRef.current, name, (key) =>
-        fieldArrayRef.current[key].reset()
+        fieldArrayRef.current.get(key)!.update()
       );
 
       if (shouldTouched) setTouched(name, true, { shouldValidate: false });
@@ -774,7 +774,7 @@ export default <V extends FormValues = FormValues>({
       setStateRef("", state);
       onResetRef.current(state.values, getOptions(), e);
 
-      Object.values(fieldArrayRef.current).forEach((field) => field.reset());
+      fieldArrayRef.current.forEach((field) => field.update());
     },
     [getOptions, onResetRef, setNodesOrValues, setStateRef, stateRef]
   );
@@ -842,8 +842,8 @@ export default <V extends FormValues = FormValues>({
         ? removeOnUnmounted
         : [
             ...Array.from(fieldsRef.current.keys()),
+            ...Array.from(fieldArrayRef.current.keys()),
             ...Object.keys(controlsRef.current),
-            ...Object.keys(fieldArrayRef.current),
           ];
       names = isFunction(removeOnUnmounted) ? removeOnUnmounted(names) : names;
 
@@ -882,10 +882,9 @@ export default <V extends FormValues = FormValues>({
 
       delete fieldParsersRef.current[name];
       delete fieldValidatorsRef.current[name];
-      delete fieldArrayRef.current[name];
       delete controlsRef.current[name];
-
-      if (fieldsRef.current.has(name)) fieldsRef.current.delete(name);
+      fieldArrayRef.current.delete(name);
+      fieldsRef.current.delete(name);
     },
     [handleUnset, stateRef]
   );

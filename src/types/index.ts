@@ -92,7 +92,7 @@ export type Fields = Map<
 
 export type Parsers = ObjMap<Omit<FieldOptions, "validate">>;
 
-export type FieldArray = ObjMap<{ fields: ObjMap; reset: () => void }>;
+export type FieldArray = Map<string, { fields: ObjMap; update: () => void }>;
 
 interface EventOptions<V> {
   removeField: RemoveField;
