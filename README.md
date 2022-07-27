@@ -1,11 +1,11 @@
-> ⚠️ Thank you for supporting me, this library isn't maintained anymore. Please consider other libraries.
-
 <p align="center">
   <br/><br/>
   <a href="https://react-cool-form.netlify.app" title="React Cool Form"><img src="https://react-cool-form.netlify.app/img/logo-github.svg" width="300px" alt="React Cool Form"></a>
 </p>
 
 <p align="center">React hooks for forms state and validation, less code more performant.</p>
+
+> ⚠️ Thank you for supporting me, this library isn't maintained anymore. Please consider other libraries.
 
 <div align="center">
 
